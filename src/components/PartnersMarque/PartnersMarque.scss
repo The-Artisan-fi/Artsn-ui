@@ -1,0 +1,28 @@
+.partners {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 3.2rem;
+
+    &__marquee {
+        background-color: #2e2e2e;
+        padding-block: 4rem;
+        &__img {
+            height: 5rem;
+            padding-inline: 8rem;
+        }
+    }
+}
+
+@media only screen and (max-width: 47.99em) {
+    .partners {
+        &__marquee {
+            &__img {
+                padding-inline: 2rem;
+                height: 5rem;
+            }
+        }
+    }
+}

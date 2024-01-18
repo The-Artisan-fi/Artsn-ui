@@ -1,0 +1,180 @@
+.footer {
+    padding-bottom: 2rem;
+
+    border-top: 1px solid #353535;
+    background: #000;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    &__top {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5rem;
+        align-items: flex-start;
+        padding-top: 2rem;
+    }
+
+    .footer-column {
+        &--1 {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+            gap: 2.5rem;
+
+            & > .footer-brand {
+                width: 25rem;
+
+                & > img {
+                    width: 100%;
+                }
+            }
+
+            & > .swiss-icon {
+                width: 6.5rem;
+            }
+        }
+
+        &--2,
+        &--3 {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            padding-top: 7rem;
+        }
+    }
+
+    &__heading {
+        color: #d8d8d8;
+        font-family: Inter;
+        font-size: 36px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 144.023%; /* 51.848px */
+        letter-spacing: 1px;
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+        list-style: none;
+    }
+
+    &__link {
+        color: #d8d8d8;
+        font-family: Inter;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 300;
+        line-height: 221.023%; /* 44.205px */
+        letter-spacing: 1px;
+        text-decoration: none;
+
+        transition: all 0.2s;
+
+        &:hover {
+            color: #fff;
+        }
+    }
+
+    &__socials {
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+        align-items: center;
+        padding-top: 2rem;
+
+        &__item {
+            width: 3rem;
+            height: 3rem;
+
+            transition: all 0.2s;
+
+            &__icon {
+                width: 100%;
+                height: 100%;
+            }
+
+            &:hover {
+                transform: translateY(-3px);
+            }
+        }
+    }
+}
+
+// media queries for responsiveness
+
+// 1. footer
+@media only screen and (max-width: 768px) {
+    .footer {
+        padding-top: 4rem;
+        &__top {
+            grid-template-columns: 1fr;
+            gap: 3rem;
+        }
+
+        .footer-column {
+            &--1 {
+                align-items: center;
+                text-align: center;
+                gap: 1.5rem;
+
+                & > .footer-brand {
+                    width: 20rem;
+                }
+
+                & > .swiss-icon {
+                    width: 5rem;
+                }
+            }
+
+            &--2,
+            &--3 {
+                padding-top: 0;
+            }
+        }
+
+        & .hr {
+            margin-block: 2rem;
+        }
+
+        &__heading {
+            font-size: 28px;
+            line-height: 144.023%; /* 40.323px */
+        }
+
+        &__list {
+            gap: 0.5rem;
+        }
+
+        &__link {
+            font-size: 16px;
+            line-height: 221.023%; /* 35.043px */
+        }
+
+        &__socials {
+            padding-top: 0;
+            gap: 1rem;
+        }
+
+        &__socials {
+            &__item {
+                width: 2.5rem;
+                height: 2.5rem;
+            }
+        }
+
+        &__bottom {
+            gap: 1rem;
+        }
+
+        &__bottom {
+            &__item {
+                width: 2.5rem;
+                height: 2.5rem;
+            }
+        }
+    }
+}
