@@ -18,10 +18,13 @@
 
 @media only screen and (max-width: 47.99em) {
     .partners {
+        padding-top: 2.5rem;
+        padding-bottom: 2.5rem;
+
         &__marquee {
             &__img {
                 padding-inline: 2rem;
-                height: 5rem;
+                height: 2rem;
             }
         }
     }

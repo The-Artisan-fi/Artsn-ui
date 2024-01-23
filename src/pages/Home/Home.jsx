@@ -289,6 +289,9 @@ const Home = () => {
                             breakpoints={{
                                 // when window width is >= 768px
                                 768: {
+                                    slidesPerView: 2,
+                                },
+                                1250: {
                                     slidesPerView: 3,
                                 },
                             }}

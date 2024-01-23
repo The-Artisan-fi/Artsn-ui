@@ -24,7 +24,7 @@
             gap: 2.5rem;
 
             & > .footer-brand {
-                width: 25rem;
+                width: 20rem;
 
                 & > img {
                     width: 100%;
@@ -48,7 +48,7 @@
     &__heading {
         color: #d8d8d8;
         font-family: Inter;
-        font-size: 36px;
+        font-size: 24px;
         font-style: normal;
         font-weight: 600;
         line-height: 144.023%; /* 51.848px */
@@ -120,10 +120,6 @@
                 align-items: center;
                 text-align: center;
                 gap: 1.5rem;
-
-                & > .footer-brand {
-                    width: 20rem;
-                }
 
                 & > .swiss-icon {
                     width: 5rem;

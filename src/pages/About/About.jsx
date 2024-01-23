@@ -8,14 +8,16 @@ import { FaLinkedin, FaTwitter } from "react-icons/fa";
 import renato from "../../assets/about/renato.webp";
 import domenico from "../../assets/about/domenico.webp";
 import paolo from "../../assets/about/paolo.webp";
-import jonathan from "../../assets/about/jonathan.webp";
 import leonardo from "../../assets/about/leonardo.webp";
 import PartnersMarque from "../../components/PartnersMarque/PartnersMarque";
 
-const teamData = [
+// video
+import video from "../../assets/about/artisan.mp4";
+
+const teamDataDesktop = [
     {
         name: "Paolo Piana",
-        title: "CFO & Co-Founder",
+        title: "CFO",
         img: paolo,
         about: [
             "Web3 Marketer & UX Designer",
@@ -49,17 +51,54 @@ const teamData = [
         linkedIn: "https://www.linkedin.com/in/domenico-fava-5bb17336/",
         twitter: "#", // Domenico's Twitter link is missing
     },
+    {
+        name: "Leonardo Donatacci",
+        title: "Head of Development",
+        img: leonardo,
+        about: ["Solana Specialist", "Teacher at Web3 builder alliance"],
+        linkedIn: "#", // Leonardo's LinkedIn link is missing
+        twitter: "https://twitter.com/L0STE_", // Adding Leonardo's Twitter link
+    },
+];
+
+// teamData array with the original order
+const teamDataMobile = [
+    {
+        name: "Renato Capizzi",
+        title: "CEO & Founder",
+        img: renato,
+        about: [
+            "The brain behind the idea",
+            "8+ years of managing experience",
+            "Cryptocurrency trader",
+        ],
+        linkedIn: "https://www.linkedin.com/in/renatocapizzi/",
+        twitter: "https://twitter.com/Capiz92",
+    },
+    {
+        name: "Paolo Piana",
+        title: "CFO ",
+        img: paolo,
+        about: [
+            "Web3 Marketer & UX Designer",
+            "2y Web3 full time (SMEs and DFINITY Foundation)",
+            "Bachelor in BA and MSc in Management of Innovation & Entrepreneurship",
+        ],
+        linkedIn: "https://www.linkedin.com/in/paolo-piana/",
+        twitter: "https://twitter.com/pinoweb3",
+    },
 
     {
-        name: "Jonathan Napolitano",
-        title: "CTO",
-        img: jonathan,
+        name: "Domenico Fava",
+        title: "Legal Advisor & Data Protection Officer",
+        img: domenico,
         about: [
-            " Blockchain and immersive applications expert",
-            "Ex Metaverse, Web3, and Blockchain Specialist for Coca-Cola",
+            "Legal expert for several entities;",
+            "Certified data protection officer, with consolidated experience;",
+            "Web 3 investor and advisor",
         ],
-        linkedIn: "#", // Jonathan's LinkedIn link is missing
-        twitter: "#", // Jonathan's Twitter link is missing
+        linkedIn: "https://www.linkedin.com/in/domenico-fava-5bb17336/",
+        twitter: "#", // Domenico's Twitter link is missing
     },
     {
         name: "Leonardo Donatacci",
@@ -70,6 +109,10 @@ const teamData = [
         twitter: "https://twitter.com/L0STE_", // Adding Leonardo's Twitter link
     },
 ];
+
+// Determine the appropriate team data based on viewport size
+const teamDataToDisplay =
+    window.innerWidth <= 768 ? teamDataMobile : teamDataDesktop;
 
 const onFinish = (values) => {
     console.log("Received values:", values);
@@ -102,7 +145,7 @@ const About = () => {
                 <div className="boxed">
                     <h2 className="heading-primary">Meet The Team</h2>
                     <div className="about__team__members">
-                        {teamData.map((member, index) => {
+                        {teamDataToDisplay.map((member, index) => {
                             return (
                                 <div
                                     key={index}
@@ -242,6 +285,16 @@ const About = () => {
                             </button>
                         </Form.Item>
                     </Form>
+                    <div className="about__contact__video">
+                        {/* locall video here */}
+                        <video
+                            src={video}
+                            autoPlay={true}
+                            loop={true}
+                            muted={true}
+                            className="about__contact__video__player"
+                        ></video>
+                    </div>
                 </div>
             </section>
         </div>

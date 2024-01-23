@@ -26,10 +26,8 @@ const Footer = () => {
                                 className="footer-brand"
                             />
                         </Link>
-                        <p className="heading-quaternary">
-                            info@theartisan-nft.com
-                        </p>
-                        <p className="heading-quaternary">
+                        <p className="body-regular">info@theartisan-nft.com</p>
+                        <p className="body-regular">
                             The Artisan is a digital boutique for investing and
                             trade fractionalized high-end collectibles.
                         </p>
