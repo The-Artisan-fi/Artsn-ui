@@ -1,0 +1,78 @@
+.modal-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #17171b;
+    height: fit-content;
+    width: 50vw;
+    padding: 2rem;
+    border:#0070f3 1px solid;
+    z-index: 100;
+}
+
+.login-container{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.login-option {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 5rem;
+    border: 1px solid #0070f3;
+    border-radius: 10px;
+    margin: 0.5rem;
+    transition: color 0.15s ease, border-color 0.15s ease;
+    width: 100%;
+}
+
+.login-btn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 25%;
+    width: 100%;
+    border-radius: 30px;
+    padding: 0.5rem;
+    color: #fff;
+    background-color: transparent;
+    border: 1px solid #0070f3;
+}
+
+.google-icon {
+    font-size: 3rem;
+}
+
+.grid {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+
+.card {
+	margin: 0.5rem;
+	padding: 0.7rem;
+	text-align: center;
+	color: #0070f3;
+	background-color: #fafafa;
+	text-decoration: none;
+	border: 1px solid #0070f3;
+	border-radius: 10px;
+	transition: color 0.15s ease, border-color 0.15s ease;
+	width: 100%;
+}
+
+.login-btn:hover,
+.login-btn:focus,
+.login-btn:active {
+	cursor: pointer;
+	background-color: #f1f1f1;
+    color: black;
+}

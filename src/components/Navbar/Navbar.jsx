@@ -5,10 +5,12 @@ import { Link, useLocation } from "react-router-dom";
 import navbrand from "../../assets/navbrand-full.webp";
 import { CgProfile } from "react-icons/cg";
 import { IoMenu, IoClose } from "react-icons/io5";
+import Web3AuthLogin from "../Web3Auth/Web3Auth";
 
 function Navbar() {
     // navbar state
     const [navbar, setNavbar] = useState(false);
+    const [displayLogin, setDisplayLogin] = useState(false);
 
     // get current path
     const { pathname } = useLocation();
@@ -69,7 +71,11 @@ function Navbar() {
                             })}
                         </div>
                         <div className="header-right">
-                            <CgProfile className="profile-icon" />
+                            <CgProfile className="profile-icon" 
+                                onClick={()=> {
+                                    setDisplayLogin(!displayLogin)
+                                }}
+                            />
                         </div>
 
                         <div className="header-right-mob">
@@ -123,10 +129,15 @@ function Navbar() {
                                 </Link>
                             );
                         })}
-                        <CgProfile className="profile-icon" />
+                        <CgProfile className="profile-icon" 
+                            onClick={()=> {
+                                setDisplayLogin(!displayLogin)
+                            }}
+                        />
                     </div>
                 </div>
             </div>
+            {displayLogin && <Web3AuthLogin />}
         </div>
     );
 }
