@@ -11,7 +11,10 @@
   },
   "dependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
+    "@solana/wallet-adapter-base": "^0.9.23",
+    "@solana/wallet-adapter-react": "^0.15.35",
     "@solana/wallet-adapter-react-ui": "^0.9.35",
+    "@solana/wallet-adapter-wallets": "^0.19.26",
     "@solana/web3.js": "^1.89.1",
     "@web3auth/base": "^7.3.1",
     "@web3auth/modal": "^7.3.1",

@@ -137,7 +137,12 @@ function Navbar() {
                     </div>
                 </div>
             </div>
-            {displayLogin && <Web3AuthLogin />}
+            {displayLogin && (
+                <div>
+                    <div className="backdrop" onClick={()=> {setDisplayLogin(false)}} />
+                    <Web3AuthLogin />
+                </div>
+            )}
         </div>
     );
 }
