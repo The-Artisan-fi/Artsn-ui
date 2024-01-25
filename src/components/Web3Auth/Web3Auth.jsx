@@ -1,7 +1,7 @@
 import "./Web3Auth.scss";
 import { Web3AuthNoModal } from "@web3auth/no-modal";
 import { CHAIN_NAMESPACES, WALLET_ADAPTERS } from "@web3auth/base";
-import { CgGoogle } from "react-icons/cg";
+import { CgGoogle, CgArrowRight } from "react-icons/cg";
 import { useEffect, useState } from "react";
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 import { SolanaPrivateKeyProvider } from "@web3auth/solana-provider";
@@ -81,7 +81,7 @@ function Web3AuthLogin() {
         }>
           <input type="email" placeholder="Login with Email" />
           <button type="submit" className="email-btn" disabled={!termsAgreed}>
-            Continue
+            <CgArrowRight />
           </button>
         </form>
       </div>
