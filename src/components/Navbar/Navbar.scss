@@ -206,5 +206,19 @@ header {
         border-radius: 55px;
         background-color: black;
         z-index: 100;
+        @media screen  and (min-height: 900px) {
+            top: 17.5rem;
+            right: 4rem;
+        }
+        @media screen and (max-height: 800px) {
+            top: 6rem;
+        }
+        @media screen and (max-height: 750px) {
+            top: 9rem;
+            right: 2rem;
+        }
+        @media screen and (max-height: 700px) {
+            top: 6rem;
+        }
     }
 }
