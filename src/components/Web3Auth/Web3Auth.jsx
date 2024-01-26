@@ -5,14 +5,23 @@ import { CgGoogle, CgArrowRight } from "react-icons/cg";
 import { useEffect, useState } from "react";
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 import { SolanaPrivateKeyProvider } from "@web3auth/solana-provider";
+import { WalletMultiButton  } from '@solana/wallet-adapter-react-ui';
 // import RPC from "./solanaRPC";
 
-import { WalletMultiButton  } from '@solana/wallet-adapter-react-ui';
+// image imports
+import logo from "../../assets/login/logo_bw.svg";
+import login_header from "../../assets/login/login_header.svg";
+import phantom from "../../assets/login/phantom_icon.svg";
+import solflare from "../../assets/login/solflare_icon.svg";
+import torus from "../../assets/login/torus_icon.svg";
+import ledger from "../../assets/login/ledger_icon.svg";
+import backpack from "../../assets/login/backpack_icon.svg";
+
+
 function Web3AuthLogin() {
     const [web3auth, setWeb3auth] = useState(null);
     const [provider, setProvider] = useState(null);
     const [loggedIn, setLoggedIn] = useState(false);
-    const [termsAgreed, setTermsAgreed] = useState(false);
 
     const clientId = "BI8MhAUT4vK4cfQZRQ_NEUYOHE3dhD4ouJif9SUgbgBeeZwP6wBlXast2pZsQJlney3nPBDb-PcMl9oF6lV67P0";
     
@@ -61,42 +70,6 @@ function Web3AuthLogin() {
         setLoggedIn(false);
     };
 
-    // RENDER VIEWS*******************************
-    const unloggedInView = (
-      <div className="web3auth-container">
-        <button 
-          onClick={login} 
-          disabled={!termsAgreed}
-          className="login-btn" 
-        >
-          <CgGoogle onClick={login} className="google-icon" />
-          Google
-        </button>
-        <form 
-          className="email-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            loginWithEmail(e.target[0].value);
-          }
-        }>
-          <input type="email" placeholder="Login with Email" />
-          <button type="submit" className="email-btn" disabled={!termsAgreed}>
-            <CgArrowRight />
-          </button>
-        </form>
-      </div>
-    );
-
-    const loggedInView = (
-        <div className="flex-container"> 
-          <div>
-            <button onClick={logout} className="login-btn">
-              Log Out
-            </button>
-          </div>
-        </div>
-      );
-
     useEffect(() => {
         const init = async () => {
             try {
@@ -144,33 +117,79 @@ function Web3AuthLogin() {
     return(
         <div className="modal-container">
             <div className="modal-header">
-              <img src="src/assets/navbrand-full.webp" alt="logo" className="logo" />
-              <p className="header-text">
-                  Lorem epsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
+              <img src={login_header} alt="login header" className="login-header" />
+              <img src={logo} alt="login header" className="logo" />
+              <div className="header-text-container">
+                <p className="header-text">
+                    Welcome to the Artisan
+                </p>
+                <p className="header-subtext">
+                  By continuing using The Artisan, you agree to our Terms of Service and Privacy Policy.
+                </p>
+                <form 
+                  className="email-form"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    loginWithEmail(e.target[0].value);
+                  }
+                }>
+                  <input type="email" placeholder="Login with Email" />
+                  <button type="submit" className="email-btn">
+                    <CgArrowRight  className="email-icon"/>
+                  </button>
+                </form>
+              </div>
             </div>
             <div className="login-container">
-              <div className="login-option">
-                  <p className="login-text">Web3 Wallet</p>
-                  <WalletMultiButton 
-                    disabled={!termsAgreed}
-                  style={{ borderRadius: '30px', height: '4rem', minWidth: 'fit-content' }}/>
+              <div className="social-login-option">
+                  <p className="social-login-text">Login with Social Accounts</p>             
+                  <div className="web3auth-container">
+                    {!loggedIn ? (
+                    <button 
+                      onClick={login} 
+                      className="google-login-btn" 
+                    >
+                      <CgGoogle onClick={login} className="google-icon" />
+                      <p className="google-login-text">
+                        Sign in with Google
+                      </p>
+                    </button>
+                    ):(
+                      <button onClick={logout} className="google-login-btn">
+                        <CgGoogle onClick={login} className="google-icon" />
+                        Log Out
+                      </button>
+                    )}
+                  </div>
               </div>
-              <div className="divider">
-                <div className="vertical-line"></div>
-                <div className="horizontal-line"></div>
-                  <span>or</span>
-                <div className="vertical-line"></div>
-                <div className="horizontal-line"></div>
+              <div className="divider-text">OR</div>
+              <div className="web3-login-option">
+                <div className="wallet-icons-container">
+                  <img src={phantom} alt="phantom" className="phantom-wallet-icon" />
+                  <img src={solflare} alt="solflare" className="solflare-wallet-icon" />
+                  <img src={backpack} alt="backpack" className="backpack-wallet-icon" />
+                  <img src={torus} alt="torus" className="torus-wallet-icon" />
+                  <img src={ledger} alt="ledger" className="ledger-wallet-icon" />
+                </div>
+                <WalletMultiButton
+                  className="wallet-btn"
+                  style={{ 
+                    borderRadius: '7px', 
+                    height: '36px', 
+                    width: '100%',
+                    background: 'linear-gradient(92.89deg, rgba(255, 153, 0, 0.26) 6.43%, rgba(151, 71, 255, 0.26) 100%), linear-gradient(93.85deg, #ff9900d3 1.67%, #9747ffd2 100%)',
+                    fontFamily: 'Inter',
+                    fontWeight: '300',
+                    fontStyle: 'normal',
+                    fontSize: '1.2rem',
+                    lineHeight: '16px',
+                    letterSpacing: '-2.6%',
+                    border: '1px solid linear-gradient(92.89deg, rgba(255, 153, 0, 0.26) 6.43%, rgba(151, 71, 255, 0.26) 100%), linear-gradient(93.85deg, #FF9900 1.67%, #9747FF 100%)',
+                  }}
+                > 
+                  Connect Web3 Wallet 
+                </WalletMultiButton>
               </div>
-              <div className="login-option">
-                <p className="login-text">Social Login</p>
-                  {loggedIn ? loggedInView : unloggedInView}
-              </div>
-            </div>
-            <div className="checkbox-container">
-                <input type="checkbox" onChange={() => {setTermsAgreed(!termsAgreed)}}/>
-                <p className="checkbox-text">I agree to the <span className="terms">Terms and Conditions</span></p>
             </div>
         </div>
     );

@@ -57,6 +57,10 @@ header {
     z-index: 1;
 }
 
+.close-login {
+    display: none;
+}
+
 .nav-link {
     color: #fff;
     font-family: Inter;
@@ -186,5 +190,21 @@ header {
     .header-mob-head-right {
         display: flex;
         gap: 1rem;
+    }
+
+    .close-login {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        position: absolute;
+        top: 14rem;
+        right: 3rem;
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
+        border-radius: 55px;
+        background-color: black;
+        z-index: 100;
     }
 }

@@ -132,6 +132,7 @@ function Navbar() {
                         <CgProfile className="profile-icon" 
                             onClick={()=> {
                                 setDisplayLogin(!displayLogin)
+                                toggleNavbar()
                             }}
                         />
                     </div>
@@ -140,6 +141,12 @@ function Navbar() {
             {displayLogin && (
                 <div>
                     <div className="backdrop" onClick={()=> {setDisplayLogin(false)}} />
+                    {/* display x that when clicked it setDisplayLogin(false) this will only appear on mobile */}
+                    <div className="close-login" onClick={()=> {setDisplayLogin(false)}}>
+                        <span className="material-symbols-outlined">
+                            <IoClose className="close-icon" />
+                        </span>
+                    </div>
                     <Web3AuthLogin />
                 </div>
             )}
