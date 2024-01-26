@@ -118,11 +118,11 @@ const Home = () => {
                 <div className="home__cta__row-1">
                     <div className="home__cta__row-1__content">
                         <h2 className="heading-primary">
-                            Invest in fraction of High-End Collectibles
+                            Invest in fractions of High-End Collectibles
                         </h2>
                         <h3 className="heading-secondary w-300">
                             Own a % of Authentic Certified Watches stored in
-                            secured volts.
+                            secured vaults.
                         </h3>
                         <a href="#" className="btn btn-primary">
                             Learn More
