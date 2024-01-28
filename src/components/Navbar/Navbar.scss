@@ -47,6 +47,13 @@ header {
     cursor: pointer;
 }
 
+.login-container {
+    height: fit-content;
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+}
+
 .backdrop {
     position: fixed;
     top: 0;
@@ -194,19 +201,21 @@ header {
 
     .close-login {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2.5rem;
         position: absolute;
-        top: 14rem;
-        right: 3rem;
-        cursor: pointer;
+        justify-content: center;
+        align-items: center;
         width: 30px;
         height: 30px;
+        top: 14rem;
+        right: 3rem;
+        padding-top: .5rem;
+        cursor: pointer;
+        font-size: 2.5rem;
         border-radius: 55px;
         background-color: black;
         z-index: 100;
-        @media screen  and (min-height: 900px) {
+        
+        @media screen  and (min-height: 890px) {
             top: 17.5rem;
             right: 4rem;
         }
@@ -219,6 +228,10 @@ header {
         }
         @media screen and (max-height: 700px) {
             top: 6rem;
+        }
+        @media screen and (max-height: 655px) {
+            top: 7rem;
+            right: .5rem;
         }
     }
 }

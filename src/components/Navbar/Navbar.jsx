@@ -139,7 +139,7 @@ function Navbar() {
                 </div>
             </div>
             {displayLogin && (
-                <div>
+                <div className="login-container">
                     <div className="backdrop" onClick={()=> {setDisplayLogin(false)}} />
                     {/* display x that when clicked it setDisplayLogin(false) this will only appear on mobile */}
                     <div className="close-login" onClick={()=> {setDisplayLogin(false)}}>
