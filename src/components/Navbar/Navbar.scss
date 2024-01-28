@@ -47,6 +47,27 @@ header {
     cursor: pointer;
 }
 
+.login-container {
+    height: fit-content;
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+}
+
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    height: 100vh;
+    width: 100vw;
+    z-index: 1;
+}
+
+.close-login {
+    display: none;
+}
+
 .nav-link {
     color: #fff;
     font-family: Inter;
@@ -176,5 +197,41 @@ header {
     .header-mob-head-right {
         display: flex;
         gap: 1rem;
+    }
+
+    .close-login {
+        display: flex;
+        position: absolute;
+        justify-content: center;
+        align-items: center;
+        width: 30px;
+        height: 30px;
+        top: 14rem;
+        right: 3rem;
+        padding-top: .5rem;
+        cursor: pointer;
+        font-size: 2.5rem;
+        border-radius: 55px;
+        background-color: black;
+        z-index: 100;
+        
+        @media screen  and (min-height: 890px) {
+            top: 17.5rem;
+            right: 4rem;
+        }
+        @media screen and (max-height: 800px) {
+            top: 6rem;
+        }
+        @media screen and (max-height: 750px) {
+            top: 9rem;
+            right: 2rem;
+        }
+        @media screen and (max-height: 700px) {
+            top: 6rem;
+        }
+        @media screen and (max-height: 655px) {
+            top: 7rem;
+            right: .5rem;
+        }
     }
 }

@@ -5,10 +5,12 @@ import { Link, useLocation } from "react-router-dom";
 import navbrand from "../../assets/navbrand-full.webp";
 import { CgProfile } from "react-icons/cg";
 import { IoMenu, IoClose } from "react-icons/io5";
+import Web3AuthLogin from "../Web3Auth/Web3Auth";
 
 function Navbar() {
     // navbar state
     const [navbar, setNavbar] = useState(false);
+    const [displayLogin, setDisplayLogin] = useState(false);
 
     // get current path
     const { pathname } = useLocation();
@@ -69,7 +71,11 @@ function Navbar() {
                             })}
                         </div>
                         <div className="header-right">
-                            <CgProfile className="profile-icon" />
+                            <CgProfile className="profile-icon" 
+                                onClick={()=> {
+                                    setDisplayLogin(!displayLogin)
+                                }}
+                            />
                         </div>
 
                         <div className="header-right-mob">
@@ -123,10 +129,27 @@ function Navbar() {
                                 </Link>
                             );
                         })}
-                        <CgProfile className="profile-icon" />
+                        <CgProfile className="profile-icon" 
+                            onClick={()=> {
+                                setDisplayLogin(!displayLogin)
+                                toggleNavbar()
+                            }}
+                        />
                     </div>
                 </div>
             </div>
+            {displayLogin && (
+                <div className="login-container">
+                    <div className="backdrop" onClick={()=> {setDisplayLogin(false)}} />
+                    {/* display x that when clicked it setDisplayLogin(false) this will only appear on mobile */}
+                    <div className="close-login" onClick={()=> {setDisplayLogin(false)}}>
+                        <span className="material-symbols-outlined">
+                            <IoClose className="close-icon" />
+                        </span>
+                    </div>
+                    <Web3AuthLogin />
+                </div>
+            )}
         </div>
     );
 }
