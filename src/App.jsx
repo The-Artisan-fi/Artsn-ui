@@ -7,6 +7,16 @@ import ComingSoon from "./pages/ComingSoon/ComingSoon";
 import NotFound from "./pages/404/404";
 import About from "./pages/About/About";
 
+import { useEffect } from 'react';
+
+const RedirectToBoutique = () => {
+  useEffect(() => {
+    window.location.href = 'https://theboutique-vr.com/';
+  }, []);
+
+  return null; // Render nothing or a loading indicator
+};
+
 function App() {
     return (
         <div className="App">
@@ -17,7 +27,7 @@ function App() {
 
                 <Route path="/fi" element={<ComingSoon />} />
                 <Route path="/market" element={<ComingSoon />} />
-                <Route path="/boutique" element={<ComingSoon />} />
+                <Route path="/boutique" element={<RedirectToBoutique />} />
                 <Route path="/faq" element={<ComingSoon />} />
                 <Route path="/tos" element={<ComingSoon />} />
                 <Route path="/privacy" element={<ComingSoon />} />
