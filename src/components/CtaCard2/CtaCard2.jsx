@@ -7,7 +7,7 @@ const CTA2Card = () => {
             <h2 className="display-3">Diversify your Portfolio</h2>
             <h3 className="heading-3 yellow">Collect Real World Assets</h3>
             <p className="caption-1">
-                Welcome in our high-end ownership and trade platform.
+                Welcome to our exclusive ownership and trading platform for high-end goods.
             </p>
             <a href="#" className="btn-cta-2">
                 Start Now

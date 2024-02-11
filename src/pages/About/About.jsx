@@ -16,64 +16,24 @@ import video from "../../assets/about/artisan.mp4";
 
 const teamDataDesktop = [
     {
-        name: "Paolo Piana",
-        title: "CFO",
-        img: paolo,
-        about: [
-            "Web3 Marketer & UX Designer",
-            "2y Web3 full time (SMEs and DFINITY Foundation)",
-            "Bachelor in BA and MSc in Management of Innovation & Entrepreneurship",
-        ],
-        linkedIn: "https://www.linkedin.com/in/paolo-piana/",
-        twitter: "https://twitter.com/pinoweb3",
-    },
-    {
         name: "Renato Capizzi",
         title: "CEO & Founder",
         img: renato,
         about: [
             "The brain behind the idea",
-            "8+ years of managing experience",
+            "8+ years of management experience.",
             "Cryptocurrency trader",
         ],
         linkedIn: "https://www.linkedin.com/in/renatocapizzi/",
         twitter: "https://twitter.com/Capiz92",
     },
     {
-        name: "Domenico Fava",
-        title: "Legal Advisor & Data Protection Officer",
-        img: domenico,
-        about: [
-            "Legal expert for several entities;",
-            "Certified data protection officer, with consolidated experience;",
-            "Web 3 investor and advisor",
-        ],
-        linkedIn: "https://www.linkedin.com/in/domenico-fava-5bb17336/",
-        twitter: "#", // Domenico's Twitter link is missing
-    },
-    {
         name: "Leonardo Donatacci",
-        title: "Head of Development",
+        title: "CTO",
         img: leonardo,
         about: ["Solana Specialist", "Teacher at Web3 builder alliance"],
         linkedIn: "#", // Leonardo's LinkedIn link is missing
         twitter: "https://twitter.com/L0STE_", // Adding Leonardo's Twitter link
-    },
-];
-
-// teamData array with the original order
-const teamDataMobile = [
-    {
-        name: "Renato Capizzi",
-        title: "CEO & Founder",
-        img: renato,
-        about: [
-            "The brain behind the idea",
-            "8+ years of managing experience",
-            "Cryptocurrency trader",
-        ],
-        linkedIn: "https://www.linkedin.com/in/renatocapizzi/",
-        twitter: "https://twitter.com/Capiz92",
     },
     {
         name: "Paolo Piana",
@@ -100,13 +60,54 @@ const teamDataMobile = [
         linkedIn: "https://www.linkedin.com/in/domenico-fava-5bb17336/",
         twitter: "#", // Domenico's Twitter link is missing
     },
+];
+
+// teamData array with the original order
+const teamDataMobile = [
+    {
+        name: "Renato Capizzi",
+        title: "CEO & Founder",
+        img: renato,
+        about: [
+            "The brain behind the idea",
+            "8+ years of management experience.",
+            "Cryptocurrency trader",
+        ],
+        linkedIn: "https://www.linkedin.com/in/renatocapizzi/",
+        twitter: "https://twitter.com/Capiz92",
+    },
     {
         name: "Leonardo Donatacci",
-        title: "Head of Development",
+        title: "CTO",
         img: leonardo,
         about: ["Solana Specialist", "Teacher at Web3 builder alliance"],
         linkedIn: "#", // Leonardo's LinkedIn link is missing
         twitter: "https://twitter.com/L0STE_", // Adding Leonardo's Twitter link
+    },
+    {
+        name: "Paolo Piana",
+        title: "CFO ",
+        img: paolo,
+        about: [
+            "Web3 Marketer & UX Designer",
+            "2y Web3 full time (SMEs and DFINITY Foundation)",
+            "Bachelor in BA and MSc in Management of Innovation & Entrepreneurship",
+        ],
+        linkedIn: "https://www.linkedin.com/in/paolo-piana/",
+        twitter: "https://twitter.com/pinoweb3",
+    },
+
+    {
+        name: "Domenico Fava",
+        title: "Legal Advisor & Data Protection Officer",
+        img: domenico,
+        about: [
+            "Legal expert for several entities;",
+            "Certified data protection officer, with consolidated experience;",
+            "Web 3 investor and advisor",
+        ],
+        linkedIn: "https://www.linkedin.com/in/domenico-fava-5bb17336/",
+        twitter: "#", // Domenico's Twitter link is missing
     },
 ];
 
@@ -130,11 +131,7 @@ const About = () => {
                             Democratizing Luxury Good Investments
                         </h1>
                         <p className="caption-1">
-                            We provide to users the possibility to invest in
-                            luxury items such as Watches, Art Pieces, Cars and
-                            more at accessible prices. <br /> These types of
-                            assets have demonstrated valuation growth rate
-                            during years.
+                            We empower users to delve into the world of watches, art pieces, cars, and beyond at prices within reach. These assets have showcased remarkable growth in valuation over the years, igniting excitement and opportunity for all.
                         </p>
                     </div>
                 </div>

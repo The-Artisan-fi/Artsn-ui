@@ -14,7 +14,7 @@ const RedirectToBoutique = () => {
     window.location.href = 'https://theboutique-vr.com/';
   }, []);
 
-  return null; // Render nothing or a loading indicator
+  return null;
 };
 
 function App() {

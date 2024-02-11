@@ -9,7 +9,7 @@ const ProductsSection = () => {
     return (
         <section className="products ">
             {/* available */}
-            <div className="products__available ">
+            {/* <div className="products__available ">
                 <h2 className="display-3 uppercase">Currently Available</h2>
 
                 <div className="products__available__slider">
@@ -67,7 +67,7 @@ const ProductsSection = () => {
                         );
                     })}
                 </div>
-            </div>
+                </div> */}
 
             <div className="products__coming ">
                 <h2 className="display-3 uppercase">Coming Soon</h2>

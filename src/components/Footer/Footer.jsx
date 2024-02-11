@@ -21,11 +21,7 @@ const Footer = () => {
             <div className="boxed">
                 <div className="footer__head">
                     <div className="footer__head__col-1">
-                        <h3 className="heading-6">Join the waitlist</h3>
-                        <p className="p-4">
-                            Our mailing list will receive news, offers and
-                            promotions
-                        </p>
+                        <h3 className="heading-6">Join our waitlist</h3>
                         <div className="footer__head__col-1__sub">
                             <input
                                 placeholder="Enter your Email"
@@ -45,15 +41,15 @@ const Footer = () => {
                             href="mailto:info@theartisan-nft.com"
                             className="label-5"
                         >
-                            info@theartisan-nft.com
+                            info@artsn.fi
                         </a>
                     </div>
 
                     <div className="footer__head__col-3">
-                        <h3 className="heading-6">Join the Community</h3>
+                        <h3 className="heading-6">Join our Community</h3>
                         <div className="footer__head__col-3__socials">
                             <a
-                                href="#"
+                                href="https://www.linkedin.com/company/the-artisan-nft/?viewAsMember=true"
                                 className="footer__head__col-3__socials__item"
                             >
                                 <img
@@ -63,7 +59,7 @@ const Footer = () => {
                                 />
                             </a>
                             <a
-                                href="#"
+                                href="https://twitter.com/The_Artisan_NFT"
                                 className="footer__head__col-3__socials__item"
                             >
                                 <img
@@ -83,7 +79,7 @@ const Footer = () => {
                                 />
                             </a>
                             <a
-                                href="#"
+                                href="https://t.me/rcapizz"
                                 className="footer__head__col-3__socials__item"
                             >
                                 <img
@@ -93,7 +89,7 @@ const Footer = () => {
                                 />
                             </a>
                             <a
-                                href="#"
+                                href="https://discord.gg/DZHY6B7Q46"
                                 className="footer__head__col-3__socials__item"
                             >
                                 <img
@@ -103,7 +99,7 @@ const Footer = () => {
                                 />
                             </a>
                             <a
-                                href="#"
+                                href="https://www.instagram.com/theartisan_nft/"
                                 className="footer__head__col-3__socials__item"
                             >
                                 <img
@@ -124,10 +120,9 @@ const Footer = () => {
                                 className="footer-brand"
                             />
                         </Link>
-                        <p className="body-regular">info@theartisan-nft.com</p>
+                        <p className="body-regular">info@artsn.fi</p>
                         <p className="body-regular">
-                            The Artisan is a digital boutique for investing and
-                            trade fractionalized high-end collectibles.
+                            The Artisan is a digital boutique specializing in fractionalized high-end collectibles
                         </p>
                         <div className="icons">
                             <img
@@ -153,7 +148,7 @@ const Footer = () => {
                             </li>
                             <li className="footer__item">
                                 <a href="/fi" className="footer__link">
-                                    The Fi
+                                    TheFi
                                 </a>
                             </li>
                             <li className="footer__item">

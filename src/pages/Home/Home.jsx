@@ -16,12 +16,12 @@ import brandVertical from "../../assets/brand-vertical.webp";
 
 // horo section text animations
 const heroTexts = [
-    "Watches.",
-    "Art.",
-    "Cars.",
-    "Wine.",
-    "Whisky.",
-    "Memorabilia.",
+    "Watches",
+    "Art",
+    "Cars",
+    "Wine",
+    "Whisky",
+    "Memorabilia",
 ];
 
 // data for partners
@@ -50,7 +50,7 @@ const Home = () => {
                 <div className="home__hero ">
                     <div className="container">
                         <h1 className="display-2  uppercase">
-                            <span className="highlight">Own. Digitally.</span>{" "}
+                            <span className="highlight">Own Digitally</span>{" "}
                             <TextTransition
                                 style={{ color: "#fff" }}
                                 springConfig={presets.gentle}
@@ -93,23 +93,24 @@ const Home = () => {
                             {/* item 1 */}
                             <div className="home__about__content__col__item item-1">
                                 <h3 className="heading-4">
-                                    Collect Fraction of High-End Collectibles
+                                    Collect Fractions of High-End Collectibles
                                 </h3>
                                 <p className="caption-2">
-                                    Own a % of Authentic Certified Luxury Good
-                                    stored in secured volts.
+                                    Own a percentage of a Certified Authentic Luxury Good
+                                    stored in secured vaults.
                                 </p>
                             </div>
 
                             {/* item 2 */}
                             <div className="home__about__content__col__item item-2">
                                 <h3 className="heading-4">
-                                    Return Potentiality
+                                    Historical Returns
                                 </h3>
                                 <p className="caption-2">
-                                    In the last 7 years the Luxury Watch Market
-                                    outperformed the S&P 500 by 117% while
-                                    Artprice100 index by 800%.
+                                    In the past 7 years, both the Luxury Watch 
+                                    Market and the Artprice100 index have 
+                                    outperformed the S&P 500, respectively by 
+                                    117% and 800%.
                                 </p>
                             </div>
 
@@ -117,8 +118,7 @@ const Home = () => {
                             <div className="home__about__content__col__item item-3">
                                 <h3 className="heading-4">Real World Assets</h3>
                                 <p className="caption-2">
-                                    Top-Tier Goods are characterized by Limited
-                                    Supply and High Demand.
+                                    Top-tier goods are distinguished by limited supply and high demand
                                 </p>
                             </div>
                         </div>
@@ -127,7 +127,7 @@ const Home = () => {
                             {/* item 4 */}
                             <div className="home__about__content__col__item item-4">
                                 <h3 className="heading-4">
-                                    Trade Your Fraction 24/7
+                                    Trade Your Fractions 24/7
                                 </h3>
                                 <p className="caption-2">
                                     Trade Fractions freely in the secondary
@@ -137,9 +137,9 @@ const Home = () => {
 
                             {/* item 5 */}
                             <div className="home__about__content__col__item item-5">
-                                <h3 className="heading-4">New DeFinance</h3>
+                                <h3 className="heading-4">Get access to our Decentralize Finance Protocol</h3>
                                 <p className="caption-2">
-                                    Utilize your Real World Assets for loans and
+                                    Use your Real World Assets as a collateral for loans and
                                     more.{" "}
                                 </p>
                             </div>
@@ -149,7 +149,7 @@ const Home = () => {
             </section>
 
             {/* Products section */}
-            <ProductsSection />
+            {<ProductsSection />}
 
             <OpportunitiesSection />
 

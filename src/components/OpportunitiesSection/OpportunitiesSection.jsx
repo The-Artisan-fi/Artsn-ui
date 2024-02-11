@@ -25,7 +25,7 @@ const opportunities = [
     },
     {
         image: opportunity3,
-        title: "The Fi",
+        title: "TheFi",
         subtitle: "Navigate Secondary Market",
         description: "Trade, Get Loans, Get Insurance.",
         url: "#",
@@ -37,7 +37,7 @@ const OpportunitiesSection = () => {
         <section className="opportunities padding">
             <div className="boxed">
                 <h2 className="heading-1">
-                    Discover The Artisan Opportunities:
+                    Discover our services:
                 </h2>
 
                 {/* cards grid */}
@@ -56,9 +56,9 @@ const OpportunitiesSection = () => {
                                     />
                                 </div>
                                 <div className="opportunities__cards__card__body">
-                                    <p className="label-3">
+                                    {/*<p className="label-3">
                                         {opportunity.subtitle}
-                                    </p>
+                                    </p>*/}
                                     <h3 className="heading-3 gold">
                                         {opportunity.title}
                                     </h3>

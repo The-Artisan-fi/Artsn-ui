@@ -13,9 +13,9 @@ const CTA1Card = () => {
                 className="cta1-card__illustration"
             />
             <p className="caption-1">
-                Get Updated And Discover All The News in The Artisan
+                Stay informed and uncover all the latest news in the artisan world
             </p>
-            <h3 className="display-3">Stay on The Loop</h3>
+            <h3 className="display-3">Stay in The Loop</h3>
 
             <div className="cta1-card__sub">
                 <input
@@ -30,7 +30,7 @@ const CTA1Card = () => {
             </div>
             <a href="#" className="btn-cta-1 ">
                 <img src={discordIcon} alt="" className="icon" />
-                <div className="text">JOIN DISCORD COMMUNITY</div>
+                <div className="text">JOIN OUR DISCORD</div>
             </a>
         </div>
     );
