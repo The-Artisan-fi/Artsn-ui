@@ -2,7 +2,9 @@ import "./Footer.scss";
 
 // footer brand
 import footerBrand from "../../assets/footer-brand.webp";
+
 import swissIcon from "../../assets/swiss-icon.webp";
+import solanaIcon from "../../assets/solana-icon.webp";
 
 // socila icons import
 import linkedIn from "../../assets/social-icons/icon1.svg";
@@ -17,6 +19,102 @@ const Footer = () => {
     return (
         <div className="footer padding">
             <div className="boxed">
+                <div className="footer__head">
+                    <div className="footer__head__col-1">
+                        <h3 className="heading-6">Join the waitlist</h3>
+                        <p className="p-4">
+                            Our mailing list will receive news, offers and
+                            promotions
+                        </p>
+                        <div className="footer__head__col-1__sub">
+                            <input
+                                placeholder="Enter your Email"
+                                type="text"
+                                className="subscribe-input"
+                            />
+                            <a href="#" className="btn label-5">
+                                {" "}
+                                SUBSCRIBE
+                            </a>
+                        </div>
+                    </div>
+
+                    <div className="footer__head__col-2">
+                        <h3 className="heading-6">Contact us</h3>
+                        <a
+                            href="mailto:info@theartisan-nft.com"
+                            className="label-5"
+                        >
+                            info@theartisan-nft.com
+                        </a>
+                    </div>
+
+                    <div className="footer__head__col-3">
+                        <h3 className="heading-6">Join the Community</h3>
+                        <div className="footer__head__col-3__socials">
+                            <a
+                                href="#"
+                                className="footer__head__col-3__socials__item"
+                            >
+                                <img
+                                    src={linkedIn}
+                                    alt=""
+                                    className="footer__head__col-3__socials__item__icon"
+                                />
+                            </a>
+                            <a
+                                href="#"
+                                className="footer__head__col-3__socials__item"
+                            >
+                                <img
+                                    src={twitter}
+                                    alt=""
+                                    className="footer__head__col-3__socials__item__icon"
+                                />
+                            </a>
+                            <a
+                                href="#"
+                                className="footer__head__col-3__socials__item"
+                            >
+                                <img
+                                    src={email}
+                                    alt=""
+                                    className="footer__head__col-3__socials__item__icon"
+                                />
+                            </a>
+                            <a
+                                href="#"
+                                className="footer__head__col-3__socials__item"
+                            >
+                                <img
+                                    src={telegram}
+                                    alt=""
+                                    className="footer__head__col-3__socials__item__icon"
+                                />
+                            </a>
+                            <a
+                                href="#"
+                                className="footer__head__col-3__socials__item"
+                            >
+                                <img
+                                    src={discord}
+                                    alt=""
+                                    className="footer__head__col-3__socials__item__icon"
+                                />
+                            </a>
+                            <a
+                                href="#"
+                                className="footer__head__col-3__socials__item"
+                            >
+                                <img
+                                    src={insta}
+                                    alt=""
+                                    className="footer__head__col-3__socials__item__icon"
+                                />
+                            </a>
+                        </div>
+                    </div>
+                </div>
                 <div className="footer__top">
                     <div className="footer-column--1">
                         <Link className="footer-brand" to={"/"}>
@@ -31,7 +129,18 @@ const Footer = () => {
                             The Artisan is a digital boutique for investing and
                             trade fractionalized high-end collectibles.
                         </p>
-                        <img src={swissIcon} alt="" className="swiss-icon" />
+                        <div className="icons">
+                            <img
+                                src={solanaIcon}
+                                alt=""
+                                className="solana-icon"
+                            />
+                            <img
+                                src={swissIcon}
+                                alt=""
+                                className="swiss-icon"
+                            />
+                        </div>
                     </div>
 
                     <div className="footer-column--2">
@@ -81,49 +190,25 @@ const Footer = () => {
                     </div>
                 </div>
                 <div className="hr"></div>
-                <div className="footer__socials">
-                    <a href="#" className="footer__socials__item">
-                        <img
-                            src={linkedIn}
-                            alt=""
-                            className="footer__socials__item__icon"
-                        />
-                    </a>
-                    <a href="#" className="footer__socials__item">
-                        <img
-                            src={twitter}
-                            alt=""
-                            className="footer__socials__item__icon"
-                        />
-                    </a>
-                    <a href="#" className="footer__socials__item">
-                        <img
-                            src={email}
-                            alt=""
-                            className="footer__socials__item__icon"
-                        />
-                    </a>
-                    <a href="#" className="footer__socials__item">
-                        <img
-                            src={telegram}
-                            alt=""
-                            className="footer__socials__item__icon"
-                        />
-                    </a>
-                    <a href="#" className="footer__socials__item">
-                        <img
-                            src={discord}
-                            alt=""
-                            className="footer__socials__item__icon"
-                        />
-                    </a>
-                    <a href="#" className="footer__socials__item">
-                        <img
-                            src={insta}
-                            alt=""
-                            className="footer__socials__item__icon"
-                        />
-                    </a>
+
+                <div className="footer__bottom">
+                    <p className="caption-5">
+                        The Artisan By TimeVerse Labs GmbH
+                    </p>
+
+                    <div className="footer__bottom__right">
+                        <a href="#" className="footer-link caption-5">
+                            Privacy Policy
+                        </a>
+                        {" - "}
+                        <a href="#" className="footer-link caption-5">
+                            Terms and Conditions
+                        </a>
+                        {" - "}
+                        <a href="#" className="footer-link caption-5">
+                            Help Center
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

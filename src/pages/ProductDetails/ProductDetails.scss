@@ -245,6 +245,18 @@
             }
         }
     }
+
+    &__cta {
+        padding-top: 5rem;
+        padding-bottom: 10rem;
+        display: flex;
+        flex-direction: column;
+        gap: 5rem;
+
+        & > .boxed {
+            width: 100%;
+        }
+    }
 }
 
 // media queries for responsiveness
@@ -263,7 +275,16 @@
                 flex-basis: 100%;
             }
             &__info {
-                flex-basis: 100%;
+                width: 100%;
+
+                &__set {
+                    width: 100%;
+
+                    &__cont {
+                        grid-template-columns: 1fr;
+                        width: 100%;
+                    }
+                }
             }
         }
 

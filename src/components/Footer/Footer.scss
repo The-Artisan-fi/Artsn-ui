@@ -1,18 +1,110 @@
 .footer {
-    padding-bottom: 2rem;
-
-    border-top: 1px solid #353535;
     background: #000;
     display: flex;
     flex-direction: column;
     gap: 2rem;
+
+    &__head {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5rem;
+        align-items: flex-start;
+
+        padding-block: 4rem;
+
+        &__col-1,
+        &__col-2,
+        &__col-3 {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        &__col-1 {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+
+            &__sub {
+                display: flex;
+                gap: 1.5rem;
+
+                & > .subscribe-input {
+                    padding: 0.5rem 1rem;
+
+                    border-radius: 4px;
+                    background: #3a3a3a;
+
+                    border: none;
+                    outline: none;
+
+                    /* Label/5 */
+                    font-family: Inter;
+                    font-size: 10px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: 14px; /* 140% */
+                    letter-spacing: -0.3px;
+                }
+
+                & > .btn {
+                    border-radius: 1rem;
+                    padding: 0.5rem 1rem;
+
+                    color: #fff;
+                    text-align: center;
+
+                    /* Label/5 */
+                    font-family: Inter;
+                    font-size: 10px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: 14px; /* 140% */
+                    letter-spacing: -0.3px;
+
+                    border-radius: 4px;
+                    border: 1px solid #7e7e7e;
+                    background: #000;
+                    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+                }
+            }
+        }
+
+        &__col-3 {
+            &__socials {
+                display: flex;
+                gap: 2rem;
+                justify-content: flex-start;
+                align-items: center;
+                padding-top: 2rem;
+
+                &__item {
+                    width: 3rem;
+                    height: 3rem;
+
+                    transition: all 0.2s;
+
+                    &__icon {
+                        width: 100%;
+                        height: 100%;
+                    }
+
+                    &:hover {
+                        transform: translateY(-3px);
+                    }
+                }
+            }
+        }
+    }
 
     &__top {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 5rem;
         align-items: flex-start;
-        padding-top: 2rem;
+        padding-bottom: 2rem;
+
+        border-top: 1px solid #353535;
     }
 
     .footer-column {
@@ -31,8 +123,18 @@
                 }
             }
 
-            & > .swiss-icon {
-                width: 6.5rem;
+            .icons {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+
+                & > .swiss-icon {
+                    width: 7rem;
+                }
+
+                & > .solana-icon {
+                    width: 7rem;
+                }
             }
         }
 
@@ -79,28 +181,11 @@
         }
     }
 
-    &__socials {
+    &__bottom {
+        padding: 1.6rem 0 0.8rem;
         display: flex;
-        gap: 2rem;
-        justify-content: center;
         align-items: center;
-        padding-top: 2rem;
-
-        &__item {
-            width: 3rem;
-            height: 3rem;
-
-            transition: all 0.2s;
-
-            &__icon {
-                width: 100%;
-                height: 100%;
-            }
-
-            &:hover {
-                transform: translateY(-3px);
-            }
-        }
+        justify-content: space-between;
     }
 }
 
@@ -109,7 +194,27 @@
 // 1. footer
 @media only screen and (max-width: 768px) {
     .footer {
-        padding-top: 4rem;
+        padding-top: 2rem;
+        padding-bottom: 0.5rem;
+
+        &__head {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            text-align: center;
+
+            &__col-2 {
+                display: none;
+            }
+
+            &__col-3 {
+                & > .heading-6 {
+                    display: none;
+                }
+            }
+        }
+
         &__top {
             grid-template-columns: 1fr;
             gap: 3rem;
@@ -124,11 +229,24 @@
                 & > .swiss-icon {
                     width: 5rem;
                 }
+
+                & > .solana-icon {
+                    width: 5rem;
+                }
+
+                & > .icons {
+                    gap: 0.5rem;
+                }
+
+                & > .body-regular {
+                    display: none;
+                }
             }
 
             &--2,
             &--3 {
                 padding-top: 0;
+                display: none;
             }
         }
 
@@ -151,11 +269,6 @@
         }
 
         &__socials {
-            padding-top: 0;
-            gap: 1rem;
-        }
-
-        &__socials {
             &__item {
                 width: 2.5rem;
                 height: 2.5rem;
@@ -167,9 +280,10 @@
         }
 
         &__bottom {
-            &__item {
-                width: 2.5rem;
-                height: 2.5rem;
+            justify-content: center;
+
+            & > .caption-5 {
+                display: none;
             }
         }
     }

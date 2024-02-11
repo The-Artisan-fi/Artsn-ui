@@ -126,10 +126,10 @@ const About = () => {
                 <Navbar />
                 <div className="about__hero padding">
                     <div className="boxed">
-                        <h1 className="heading-primary">
+                        <h1 className="heading-1">
                             Democratizing Luxury Good Investments
                         </h1>
-                        <p className="heading-tertiary w-300">
+                        <p className="caption-1">
                             We provide to users the possibility to invest in
                             luxury items such as Watches, Art Pieces, Cars and
                             more at accessible prices. <br /> These types of
@@ -143,7 +143,7 @@ const About = () => {
             {/* team section */}
             <section className="about__team padding">
                 <div className="boxed">
-                    <h2 className="heading-primary">Meet The Team</h2>
+                    <h2 className="heading-1">Meet The Team</h2>
                     <div className="about__team__members">
                         {teamDataToDisplay.map((member, index) => {
                             return (
@@ -156,18 +156,14 @@ const About = () => {
                                         alt=""
                                         className="about__team__members__member__img"
                                     />
-                                    <h2 className="heading-quaternary">
-                                        {member.name}
-                                    </h2>
-                                    <p className="body-small w-300">
-                                        {member.title}
-                                    </p>
+                                    <h2 className="heading-6">{member.name}</h2>
+                                    <p className="caption-3">{member.title}</p>
                                     <ul className="about__team__members__member__abouts">
                                         {member.about.map((fact, index) => {
                                             return (
                                                 <li
                                                     key={index}
-                                                    className="about__team__members__member__abouts__item body-xs"
+                                                    className="about__team__members__member__abouts__item caption-4"
                                                 >
                                                     {fact}
                                                 </li>

@@ -9,6 +9,7 @@ import jigen from "../../assets/home/jigen.webp";
 import nodeGate from "../../assets/home/node-gate.webp";
 import swissDao from "../../assets/home/swissdao.webp";
 import xReal from "../../assets/home/x-real.webp";
+import monaco from "../../assets/home/monaco.svg";
 
 const marqueeImages = [
     {
@@ -35,12 +36,16 @@ const marqueeImages = [
         src: xReal,
         alt: "x real",
     },
+    {
+        src: monaco,
+        alt: "monaco",
+    },
 ];
 
 const PartnersMarque = () => {
     return (
         <section className="partners">
-            <h2 className="heading-secondary">Partners</h2>
+            <h2 className="heading-3">Partners</h2>
             <div className="partners__marquee">
                 <Marquee autoFill={true}>
                     {marqueeImages.map((image) => (

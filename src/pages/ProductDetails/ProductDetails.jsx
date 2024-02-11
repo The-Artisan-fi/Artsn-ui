@@ -3,24 +3,6 @@ import "./ProductDetails.scss";
 import Navbar from "../../components/Navbar/Navbar";
 import { Progress, Collapse, Slider } from "antd";
 
-import { useParams } from "react-router-dom";
-
-// arrows for slider
-import { IoChevronForwardOutline, IoChevronBackOutline } from "react-icons/io5";
-
-// SwiperJs for Carousel
-import { Swiper, SwiperSlide } from "swiper/react";
-
-// Import Swiper styles
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
-
-// import required modules
-import { Navigation } from "swiper";
-
-import discordIcon from "../../assets/discord-icon.svg";
-
 import ImageGallery from "react-image-gallery";
 // import stylesheet if you're not already using CSS @import
 import "react-image-gallery/styles/css/image-gallery.css";
@@ -57,7 +39,9 @@ import galleryImage3 from "../../assets/product-details/product-image-3.webp";
 import galleryImage4 from "../../assets/product-details/product-image-4.webp";
 
 // slider products
-import products from "../../productData";
+import OpportunitiesSection from "../../components/OpportunitiesSection/OpportunitiesSection";
+import CTA1Card from "../../components/CtaCard1/CtaCard1";
+import ProductsSection from "../../components/ProductsSection/ProductsSection";
 
 // products data
 const LocalProducts = {
@@ -116,8 +100,6 @@ const images = [
 ];
 
 const ProductDetails = () => {
-    // const { id } = useParams();
-
     const product = LocalProducts;
 
     return (
@@ -137,8 +119,8 @@ const ProductDetails = () => {
 
                         <div className="product-details__hero__info">
                             <div className="product-details__hero__info__header">
-                                <h1 className="heading-1">{product.name}</h1>
-                                <h2 className="heading-2">{product.model}</h2>
+                                <h1 className="heading-2">{product.name}</h1>
+                                <h2 className="caption-1">{product.model}</h2>
                             </div>
 
                             <Progress
@@ -152,7 +134,7 @@ const ProductDetails = () => {
                             />
 
                             <div className="product-details__hero__info__set">
-                                <h3 className="heading-3">Asset Information</h3>
+                                <h3 className="heading-6">Asset Information</h3>
                                 <div className="product-details__hero__info__set__cont">
                                     <div className="market-value">
                                         <p className="body">Market Value</p>
@@ -170,7 +152,7 @@ const ProductDetails = () => {
                             </div>
 
                             <div className="product-details__hero__info__set">
-                                <h3 className="heading-3"> Performance Info</h3>
+                                <h3 className="heading-6"> Performance Info</h3>
                                 <div className="product-details__hero__info__set__cont">
                                     <div className="past-returns">
                                         <p className="body">Past Returns</p>
@@ -214,7 +196,7 @@ const ProductDetails = () => {
                 <div className="boxed">
                     {/* faqs (about) section */}
                     <div className="product-details__about__faq ">
-                        <h2 className="heading-2">About</h2>
+                        <h2 className="heading-5">About</h2>
 
                         <Collapse expandIconPosition={"right"} size="large">
                             {faqItems.map((item) => (
@@ -230,7 +212,7 @@ const ProductDetails = () => {
 
                     {/* net return calculations */}
                     <div className="product-details__about__calc ">
-                        <h3 className="heading-3">
+                        <h3 className="heading-6">
                             Calculate your Earning Potential
                         </h3>
                         <p className="body">1 = 100 USDC</p>
@@ -247,220 +229,14 @@ const ProductDetails = () => {
             </div>
 
             {/* products sections */}
-            <section className="home__products padding">
-                {/* available */}
-                <div className="home__products__available boxed">
-                    <h2 className="heading-secondary uppercase">
-                        Currently Available
-                    </h2>
+            <ProductsSection />
 
-                    <div className="home__products__available__slider">
-                        <IoChevronBackOutline className="prev-avail" />
-                        <Swiper
-                            slidesPerView={1}
-                            spaceBetween={30}
-                            slidesPerGroup={1}
-                            loop={true}
-                            loopFillGroupWithBlank={true}
-                            navigation={{
-                                nextEl: ".next-avail",
-                                prevEl: ".prev-avail",
-                            }}
-                            modules={[Navigation]}
-                            className="mySwiper"
-                            breakpoints={{
-                                // when window width is >= 768px
-                                768: {
-                                    slidesPerView: 3,
-                                },
-                            }}
-                        >
-                            {products.available.map((item) => {
-                                return (
-                                    <SwiperSlide key={item.id}>
-                                        <div className="home__products__available__slider__item">
-                                            <div className="item-top">
-                                                <img
-                                                    src={item.image}
-                                                    alt={item.name}
-                                                    className="item-top-img"
-                                                />
-                                            </div>
-                                            <div className="item-body">
-                                                <p className="body-xs w-600">
-                                                    {item.increment}
-                                                </p>
-                                                <div className="item-body-details">
-                                                    <p className="body-small w-600  uppercase">
-                                                        {item.name}
-                                                    </p>
-                                                    <a
-                                                        href="#"
-                                                        className="btn btn-primary-small "
-                                                    >
-                                                        INVEST
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </SwiperSlide>
-                                );
-                            })}
-                        </Swiper>
-                        <IoChevronForwardOutline className="next-avail" />
-                    </div>
-                </div>
+            {/* Opportunities section */}
+            <OpportunitiesSection />
 
-                <div className="home__products__coming boxed">
-                    <h2 className="heading-secondary uppercase">Coming Soon</h2>
-
-                    <div className="home__products__coming__slider">
-                        <IoChevronBackOutline className="prev-coming" />
-                        <Swiper
-                            slidesPerView={1}
-                            spaceBetween={30}
-                            slidesPerGroup={1}
-                            loop={true}
-                            loopFillGroupWithBlank={true}
-                            navigation={{
-                                nextEl: ".next-coming",
-                                prevEl: ".prev-coming",
-                            }}
-                            modules={[Navigation]}
-                            className="mySwiper"
-                            breakpoints={{
-                                // when window width is >= 768px
-                                768: {
-                                    slidesPerView: 3,
-                                },
-                            }}
-                        >
-                            {products.comingSoon.map((item) => {
-                                return (
-                                    <SwiperSlide key={item.id}>
-                                        <div className="home__products__coming__slider__item">
-                                            <div className="item-top">
-                                                <img
-                                                    src={item.image}
-                                                    alt={item.name}
-                                                    className="item-top-img"
-                                                />
-                                            </div>
-                                            <div className="item-body">
-                                                <p className="body-xs w-600">
-                                                    {item.increment}
-                                                </p>
-                                                <div className="item-body-details">
-                                                    <p className="body-small w-600  uppercase">
-                                                        {item.name}
-                                                    </p>
-                                                    <p className="btn btn-primary-small">
-                                                        {item.releaseDate}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </SwiperSlide>
-                                );
-                            })}
-                        </Swiper>
-                        <IoChevronForwardOutline className="next-coming" />
-                    </div>
-                </div>
-            </section>
-
-            {/* opportunities */}
-            <div className="home__opportunities padding">
+            <div className="product-details__cta padding">
                 <div className="boxed">
-                    <h2 className="heading-secondary">
-                        discover the investments opportunities:
-                    </h2>
-
-                    {/* cards grid */}
-                    <div className="home__opportunities__cards">
-                        <div className="home__opportunities__cards__item card-1">
-                            <h3 className="heading-secondary">Invest</h3>
-                            <p className="body-regular">
-                                Trade fractions of Original Certified Watches.
-                            </p>
-                        </div>
-                        <div className="home__opportunities__cards__item card-2">
-                            <h3 className="heading-secondary">
-                                The Marketplace
-                            </h3>
-                            <p className="body-regular">
-                                Discover and buy original certified watches.{" "}
-                            </p>
-                        </div>
-                        <div className="home__opportunities__cards__item card-3">
-                            <h3 className="heading-secondary">
-                                The Meta Boutique
-                            </h3>
-                            <p className="body-regular">
-                                Discover our investments opportunity via a
-                                digital experience{" "}
-                            </p>
-                        </div>
-                    </div>
-
-                    {/* cta row 3 */}
-                    <section className="home__cta__row-3">
-                        <h2 className="heading-primary">Start Now</h2>
-                        <h3 className="heading-secondary w-400">
-                            register & diversify your investments
-                        </h3>
-                        <a href="#" className="btn btn-primary">
-                            INVEST
-                        </a>
-                    </section>
-                </div>
-            </div>
-
-            {/* cta */}
-
-            <div className="home__bottom-cta padding">
-                <div className="boxed">
-                    {/* row 1 */}
-                    <div className="home__bottom-cta__row-1">
-                        <h2 className="heading-primary">
-                            Don’t miss any opportunity
-                        </h2>
-                        <h3 className="heading-secondary w-300">
-                            Stay updated and discover all the news in The
-                            Artisan
-                        </h3>
-
-                        <div className="home__bottom-cta__row-1__sub">
-                            <input
-                                placeholder="Enter your Email"
-                                type="text"
-                                className="subscribe-input"
-                            />
-                            <a href="#" className="btn btn-primary">
-                                {" "}
-                                SUBSCRIBE
-                            </a>
-                        </div>
-                        <a href="#" className="btn btn-primary discord-btn">
-                            <img src={discordIcon} alt="" className="icon" />
-                            <div className="text">JOIN DISCORD COMMUNITY</div>
-                        </a>
-                    </div>
-
-                    {/* row 2 */}
-                    <div className="home__bottom-cta__row-2 ">
-                        <h2 className="heading-primary">
-                            Diversify your Portfolio & invest in Real World
-                            Assets
-                        </h2>
-                        <h3 className="heading-secondary w-300">
-                            Welcome in our high-end ownership and trade
-                            platform.
-                        </h3>
-                        <a href="#" className="btn btn-primary uppercase">
-                            Start Now
-                        </a>
-                    </div>
+                    <CTA1Card />
                 </div>
             </div>
         </div>
