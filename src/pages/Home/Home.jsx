@@ -15,24 +15,33 @@ import aboutIllustration from "../../assets/home/home-about-illustration-1.webp"
 import brandVertical from "../../assets/brand-vertical.webp";
 
 // horo section text animations
-const heroTexts = [
-    "Watches",
-    "Art",
-    "Cars",
-    "Wine",
-    "Whisky",
-    "Memorabilia",
-];
+const heroTexts = ["Watches", "Art", "Cars", "Wine", "Whisky", "Memorabilia"];
 
 // data for partners
 import PartnersMarque from "../../components/PartnersMarque/PartnersMarque";
 import OpportunitiesSection from "../../components/OpportunitiesSection/OpportunitiesSection";
 import CTA1Card from "../../components/CtaCard1/CtaCard1";
 import CTA2Card from "../../components/CtaCard2/CtaCard2";
-import ProductsSection from "../../components/ProductsSection/ProductsSection";
-
+import ProductsSectionDesktop from "../../components/ProductsSectionDesktop/ProductsSectionDesktop";
+import ProductsSectionMobile from "../../components/ProductsSectionMobile/ProductsSectionMobile";
 const Home = () => {
     const [index, setIndex] = useState(0);
+
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+
+        // Attach the event listener for window resize
+        window.addEventListener("resize", handleResize);
+
+        // Clean up the event listener on component unmount
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
 
     useEffect(() => {
         const intervalId = setInterval(
@@ -96,8 +105,8 @@ const Home = () => {
                                     Collect Fractions of High-End Collectibles
                                 </h3>
                                 <p className="caption-2">
-                                    Own a percentage of a Certified Authentic Luxury Good
-                                    stored in secured vaults.
+                                    Own a percentage of a Certified Authentic
+                                    Luxury Good stored in secured vaults.
                                 </p>
                             </div>
 
@@ -107,9 +116,9 @@ const Home = () => {
                                     Historical Returns
                                 </h3>
                                 <p className="caption-2">
-                                    In the past 7 years, both the Luxury Watch 
-                                    Market and the Artprice100 index have 
-                                    outperformed the S&P 500, respectively by 
+                                    In the past 7 years, both the Luxury Watch
+                                    Market and the Artprice100 index have
+                                    outperformed the S&P 500, respectively by
                                     117% and 800%.
                                 </p>
                             </div>
@@ -118,7 +127,8 @@ const Home = () => {
                             <div className="home__about__content__col__item item-3">
                                 <h3 className="heading-4">Real World Assets</h3>
                                 <p className="caption-2">
-                                    Top-tier goods are distinguished by limited supply and high demand
+                                    Top-tier goods are distinguished by limited
+                                    supply and high demand
                                 </p>
                             </div>
                         </div>
@@ -137,10 +147,13 @@ const Home = () => {
 
                             {/* item 5 */}
                             <div className="home__about__content__col__item item-5">
-                                <h3 className="heading-4">Get access to our Decentralize Finance Protocol</h3>
+                                <h3 className="heading-4">
+                                    Get access to our Decentralize Finance
+                                    Protocol
+                                </h3>
                                 <p className="caption-2">
-                                    Use your Real World Assets as a collateral for loans and
-                                    more.{" "}
+                                    Use your Real World Assets as a collateral
+                                    for loans and more.{" "}
                                 </p>
                             </div>
                         </div>
@@ -149,8 +162,9 @@ const Home = () => {
             </section>
 
             {/* Products section */}
-            {<ProductsSection />}
+            {isMobile ? <ProductsSectionMobile /> : <ProductsSectionDesktop />}
 
+            {/* Opportunities sectin */}
             <OpportunitiesSection />
 
             {/* cta  */}
