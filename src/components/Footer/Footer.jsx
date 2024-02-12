@@ -5,6 +5,8 @@ import footerBrand from "../../assets/footer-brand.webp";
 
 import swissIcon from "../../assets/swiss-icon.webp";
 import solanaIcon from "../../assets/solana-icon.webp";
+import mailIcon from "../../assets/social-icons/icon4.svg";
+
 
 // socila icons import
 import linkedIn from "../../assets/social-icons/icon1.svg";
@@ -21,27 +23,14 @@ const Footer = () => {
             <div className="boxed">
                 <div className="footer__head">
                     <div className="footer__head__col-1">
-                        <h3 className="heading-6">Join our waitlist</h3>
-                        <div className="footer__head__col-1__sub">
-                            <input
-                                placeholder="Enter your Email"
-                                type="text"
-                                className="subscribe-input"
-                            />
-                            <a href="#" className="btn label-5">
-                                {" "}
-                                SUBSCRIBE
-                            </a>
-                        </div>
+                        <a href="https://tally.so/r/mYWaJz" className="heading-6">
+                            Join the Waiting List
+                        </a>
                     </div>
 
                     <div className="footer__head__col-2">
-                        <h3 className="heading-6">Contact us</h3>
-                        <a
-                            href="mailto:info@theartisan-nft.com"
-                            className="label-5"
-                        >
-                            info@artsn.fi
+                        <a href="https://tally.so/r/wgMGzP" className="heading-6">
+                            Contact Us
                         </a>
                     </div>
 
