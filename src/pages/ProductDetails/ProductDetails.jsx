@@ -1,5 +1,7 @@
 import "./ProductDetails.scss";
 
+import { useEffect, useState } from "react";
+
 import Navbar from "../../components/Navbar/Navbar";
 import { Progress, Collapse, Slider } from "antd";
 
@@ -41,7 +43,8 @@ import galleryImage4 from "../../assets/product-details/product-image-4.webp";
 // slider products
 import OpportunitiesSection from "../../components/OpportunitiesSection/OpportunitiesSection";
 import CTA1Card from "../../components/CtaCard1/CtaCard1";
-import ProductsSection from "../../components/ProductsSection/ProductsSection";
+import ProductsSectionDesktop from "../../components/ProductsSectionDesktop/ProductsSectionDesktop";
+import ProductsSectionMobile from "../../components/ProductsSectionMobile/ProductsSectionMobile";
 
 // products data
 const LocalProducts = {
@@ -101,6 +104,22 @@ const images = [
 
 const ProductDetails = () => {
     const product = LocalProducts;
+
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+
+        // Attach the event listener for window resize
+        window.addEventListener("resize", handleResize);
+
+        // Clean up the event listener on component unmount
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
 
     return (
         <div className="product-details">
@@ -229,7 +248,7 @@ const ProductDetails = () => {
             </div>
 
             {/* products sections */}
-            <ProductsSection />
+            {isMobile ? <ProductsSectionMobile /> : <ProductsSectionDesktop />}
 
             {/* Opportunities section */}
             <OpportunitiesSection />
