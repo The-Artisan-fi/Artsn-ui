@@ -9,8 +9,8 @@ const CTA2Card = () => {
             <p className="caption-1">
                 Welcome to our exclusive ownership and trading platform for high-end goods.
             </p>
-            <a href="#" className="btn-cta-2">
-                Start Now
+            <a href="https://tally.so/r/mYWaJz" className="btn-cta-2">
+                Join the Waitlist
             </a>
             <img
                 src={cta2Illustration}

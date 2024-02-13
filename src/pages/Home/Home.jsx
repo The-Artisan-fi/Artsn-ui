@@ -71,8 +71,8 @@ const Home = () => {
                         <h2 className="heading-1">
                             Collect & Trade Luxury Goods
                         </h2>
-                        <a href="#" className="btn btn-gold">
-                            START NOW
+                        <a href="https://tally.so/r/mYWaJz" className="btn btn-gold">
+                            JOIN THE WAITLIST
                         </a>
 
                         <div
@@ -165,7 +165,7 @@ const Home = () => {
             {isMobile ? <ProductsSectionMobile /> : <ProductsSectionDesktop />}
 
             {/* Opportunities sectin */}
-            <OpportunitiesSection />
+            {/*<OpportunitiesSection />*/}
 
             {/* cta  */}
             <section className="home__cta padding">
@@ -178,8 +178,8 @@ const Home = () => {
                     <h3 className="caption-1">
                         Register & Diversify your Portfolio
                     </h3>
-                    <a href="#" className="btn btn-primary">
-                        START NOW
+                    <a href="https://tally.so/r/mYWaJz" className="btn btn-primary">
+                        JOIN THE WAITLIST                    
                     </a>
                 </div>
             </section>

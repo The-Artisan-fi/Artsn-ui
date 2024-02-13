@@ -3,6 +3,7 @@ import "./CtaCard1.scss";
 import cta1Illustration from "../../assets/home/cta-1-illustration.webp";
 
 import discordIcon from "../../assets/discord-icon.svg";
+import mailIcon from "../../assets/social-icons/icon4.svg";
 
 const CTA1Card = () => {
     return (
@@ -15,20 +16,18 @@ const CTA1Card = () => {
             <h3 className="display-3">Stay in The Loop</h3>
 
             <div className="cta1-card__sub">
-                <input
-                    placeholder="Enter your Email"
-                    type="text"
-                    className="subscribe-input"
-                />
-                <a href="#" className="btn btn-primary">
-                    {" "}
-                    SUBSCRIBE
+                <a href="https://tally.so/r/nrAPvX" className="btn btn-primary">
+                    <img src={mailIcon} alt="" className="icon" />
+                    subscribe to our Newsletter
                 </a>
+
+                <a href="https://discord.com/invite/TWPkseGJEG" className="btn btn-primary">
+                    <img src={discordIcon} alt="" className="icon" />
+                    <div className="text">JOIN OUR DISCORD</div>
+                </a>
+
             </div>
-            <a href="#" className="btn-cta-1 ">
-                <img src={discordIcon} alt="" className="icon" />
-                <div className="text">JOIN OUR DISCORD</div>
-            </a>
+            
         </div>
     );
 };
