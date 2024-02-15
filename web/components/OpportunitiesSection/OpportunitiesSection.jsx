@@ -1,30 +1,23 @@
 import "@/styles/OpportunitiesSection.scss";
 
-// opportunitiees
-import opportunity1 from "../../assets/home/meta.webp";
-import opportunity2 from "../../assets/home/collect.webp";
-import opportunity3 from "../../assets/home/fi.webp";
-
-import arrowRight from "../../assets/home/arrow-right.svg";
-
 // data for opportunities section
 const opportunities = [
     {
-        image: opportunity1,
+        image: "/assets/home/meta.webp",
         title: "The Meta Boutique",
         subtitle: "Try and Buy the Luxury Goods.",
         description: "Look around and enjoy our platform in Virtual Reality.",
         url: "#",
     },
     {
-        image: opportunity2,
+        image: "/assets/home/collect.webp",
         title: "Collect",
         subtitle: "Own and Trade Luxury Assets.",
         description: "Buy fractions of Luxury Assets. ",
         url: "#",
     },
     {
-        image: opportunity3,
+        image: "/assets/home/fi.webp",
         title: "TheFi",
         subtitle: "Navigate Secondary Market",
         description: "Trade, Get Loans, Get Insurance.",
@@ -68,7 +61,7 @@ const OpportunitiesSection = () => {
                                         </p>
                                         <a href={opportunity.url}>
                                             <img
-                                                src={arrowRight}
+                                                src="/assets/home/arrow-right.svg"
                                                 alt=""
                                                 className="icon"
                                             />
