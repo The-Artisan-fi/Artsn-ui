@@ -30,7 +30,7 @@ function Navbar() {
         },
         {
             to: "/fi",
-            name: "The Fi",
+            name: "TheFi",
         },
         {
             to: "https://theboutique-vr.com/",
