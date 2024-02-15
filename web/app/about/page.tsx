@@ -25,30 +25,60 @@ const teamDataDesktop = [
         name: "Leonardo Donatacci",
         title: "CTO",
         img: "/assets/about/leonardo.webp",
-        about: ["Solana Specialist", "Teacher at Web3 builder alliance"],
+        about: [
+            "Solana Specialist", 
+            "Teacher at Web3 builder alliance"
+        ],        
         linkedIn: "#", // Leonardo's LinkedIn link is missing
         twitter: "https://twitter.com/L0STE_", // Adding Leonardo's Twitter link
     },
     {
+        name: "Brian Frederiksen",
+        title: "COO",
+        img: "/assets/about/leonardo.jpeg",
+        about: [
+            "Managing Partner & Monaco Foundry CEO",
+            "WEOPTIT Senior Government Advisor", 
+            "Finland Global Head of Business Development", 
+            "IBM Watson Chief Strategy & Operating Officer", 
+            "Managing Partner, Monaco Foundry",
+            "CEO, WEOPTIT", 
+            "Senior Government Advisor, Finland", 
+            "Global Head of Business Development, IBM Watson", 
+            "Chief Strategy & Operating Officer, Merck & Co",
+        ],
+        linkedIn: "https://www.linkedin.com/in/brianfrederiksen/", // Leonardo's LinkedIn link is missing
+        twitter: "#", 
+    },
+    {
         name: "Paolo Piana",
-        title: "CFO ",
+        title: "Lead UX/UI Designer",
         img: "/assets/about/paolo.webp",
         about: [
             "Web3 Marketer & UX Designer",
             "2y Web3 full time (SMEs and DFINITY Foundation)",
-            "Bachelor in BA and MSc in Management of Innovation & Entrepreneurship",
         ],
         linkedIn: "https://www.linkedin.com/in/paolo-piana/",
         twitter: "https://twitter.com/pinoweb3",
     },
-
+    {
+        name: "Macarena Segura",
+        title: "Lead Strategic Partnership",
+        img: "/assets/about/macarena.jpeg",
+        about: [
+            "International lawyer ",
+            "Regulatory advisory in blockchain, virtual currencies & financial assets. " 
+        ],
+        linkedIn: "https://www.linkedin.com/in/macarena-linaza-segura/",
+        twitter: "#", // Macarena's Twitter link is missing
+    },
     {
         name: "Domenico Fava",
         title: "Legal Advisor & Data Protection Officer",
         img: "/assets/about/domenico.webp",
         about: [
             "Legal expert for several entities;",
-            "Certified data protection officer, with consolidated experience;",
+            "Certified data protection officer",
             "Web 3 investor and advisor",
         ],
         linkedIn: "https://www.linkedin.com/in/domenico-fava-5bb17336/",
@@ -74,30 +104,60 @@ const teamDataMobile = [
         name: "Leonardo Donatacci",
         title: "CTO",
         img: "/assets/about/leonardo.webp",
-        about: ["Solana Specialist", "Teacher at Web3 builder alliance"],
+        about: [
+            "Solana Specialist", 
+            "Teacher at Web3 builder alliance"
+        ],        
         linkedIn: "#", // Leonardo's LinkedIn link is missing
         twitter: "https://twitter.com/L0STE_", // Adding Leonardo's Twitter link
     },
     {
+        name: "Brian Frederiksen",
+        title: "COO",
+        img: "/assets/about/leonardo.jpeg",
+        about: [
+            "Managing Partner & Monaco Foundry CEO",
+            "WEOPTIT Senior Government Advisor", 
+            "Finland Global Head of Business Development", 
+            "IBM Watson Chief Strategy & Operating Officer", 
+            "Managing Partner, Monaco Foundry",
+            "CEO, WEOPTIT", 
+            "Senior Government Advisor, Finland", 
+            "Global Head of Business Development, IBM Watson", 
+            "Chief Strategy & Operating Officer, Merck & Co",
+        ],
+        linkedIn: "https://www.linkedin.com/in/brianfrederiksen/", // Leonardo's LinkedIn link is missing
+        twitter: "#", 
+    },
+    {
         name: "Paolo Piana",
-        title: "CFO ",
+        title: "Lead UX/UI Designer",
         img: "/assets/about/paolo.webp",
         about: [
             "Web3 Marketer & UX Designer",
             "2y Web3 full time (SMEs and DFINITY Foundation)",
-            "Bachelor in BA and MSc in Management of Innovation & Entrepreneurship",
         ],
         linkedIn: "https://www.linkedin.com/in/paolo-piana/",
         twitter: "https://twitter.com/pinoweb3",
     },
-
+    {
+        name: "Macarena Segura",
+        title: "Lead Strategic Partnership",
+        img: "/assets/about/macarena.jpeg",
+        about: [
+            "International lawyer ",
+            "Regulatory advisory in blockchain, virtual currencies & financial assets. " 
+        ],
+        linkedIn: "https://www.linkedin.com/in/macarena-linaza-segura/",
+        twitter: "#", // Macarena's Twitter link is missing
+    },
     {
         name: "Domenico Fava",
         title: "Legal Advisor & Data Protection Officer",
         img: "/assets/about/domenico.webp",
         about: [
             "Legal expert for several entities;",
-            "Certified data protection officer, with consolidated experience;",
+            "Certified data protection officer",
             "Web 3 investor and advisor",
         ],
         linkedIn: "https://www.linkedin.com/in/domenico-fava-5bb17336/",

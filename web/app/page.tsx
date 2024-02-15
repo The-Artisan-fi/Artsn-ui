@@ -144,8 +144,7 @@ const Home = () => {
                             {/* item 5 */}
                             <div className="home__about__content__col__item item-5">
                                 <h3 className="heading-4">
-                                    Get access to our Decentralize Finance
-                                    Protocol
+                                    Get access to our DeFi Protocol
                                 </h3>
                                 <p className="caption-2">
                                     Use your Real World Assets as a collateral
