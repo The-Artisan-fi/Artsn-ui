@@ -18,7 +18,7 @@ const CTA1Card = () => {
             <div className="cta1-card__sub">
                 <a href="https://tally.so/r/nrAPvX" className="btn btn-primary">
                     <img src={mailIcon} alt="" className="icon" />
-                    subscribe to our Newsletter
+                    Get our Newsletter
                 </a>
 
                 <a href="https://discord.com/invite/TWPkseGJEG" className="btn btn-primary">

@@ -14,31 +14,33 @@ import monaco from "../../assets/home/monaco.svg";
 const marqueeImages = [
     {
         src: cryptoValley,
-        alt: "crypto valley",
+        alt: "Crypto Valley",
+        link: "https://cryptovalley.swiss/"
     },
     {
         src: ros,
-        alt: "ros",
+        alt: "Ros Jewelier",
+        link: "https://www.rosjuweliers.nl/nl/"
     },
     {
         src: jigen,
-        alt: "jigen",
+        alt: "Jigen",
+        link: "https://www.jigen.io/"
     },
     {
         src: nodeGate,
-        alt: "node gate",
+        alt: "Node Gate",
+        link: "https://www.nodegate.io/"
     },
     {
         src: swissDao,
-        alt: "swiss dao",
-    },
-    {
-        src: xReal,
-        alt: "x real",
+        alt: "Swiss Dao",
+        link: "https://www.linkedin.com/company/swissdaospace/?originalSubdomain=ch"
     },
     {
         src: monaco,
-        alt: "monaco",
+        alt: "Monaco Foundry",
+        link: "https://www.monacofoundry.com/"
     },
 ];
 
@@ -49,12 +51,18 @@ const PartnersMarque = () => {
             <div className="partners__marquee">
                 <Marquee autoFill={true}>
                     {marqueeImages.map((image) => (
-                        <img
+                        <a
                             key={image.alt}
-                            src={image.src}
-                            alt={image.alt}
-                            className="partners__marquee__img"
-                        />
+                            href={image.link}
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                        >
+                            <img
+                                src={image.src}
+                                alt={image.alt}
+                                className="partners__marquee__img"
+                            />
+                        </a>
                     ))}
                 </Marquee>
             </div>
@@ -63,3 +71,4 @@ const PartnersMarque = () => {
 };
 
 export default PartnersMarque;
+
