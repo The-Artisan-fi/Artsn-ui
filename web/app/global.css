@@ -21,6 +21,10 @@ body {
   color: #fff;
 }
 
+a {
+  text-decoration: none;
+}
+
 /* custom scrolbar */
 /* width */
 ::-webkit-scrollbar {
@@ -46,162 +50,306 @@ body {
 
 /* // text variants */
 
-.heading-xl {
-  /* XL */
-  font-family: Inter;
-  font-size: 80px;
-  font-style: italic;
-  font-weight: 200;
-  line-height: 100.449%; /* 80.359px */
-  letter-spacing: 17.5px;
-  text-transform: uppercase;
-
-  @media only screen and (max-width: 600px) {
-      font-size: 4.8rem;
-  }
-}
-
-.heading-lg {
-  /* L */
-  font-family: Inter;
-  font-size: 64px;
-  font-weight: 200;
-  line-height: 100.449%; /* 64.287px */
-  letter-spacing: 17.5px;
-
-  @media only screen and (max-width: 600px) {
-      font-size: 3.6rem;
-      letter-spacing: 6px;
-  }
-}
-
-.heading-primary {
-  /* H1 */
-  text-align: center;
-  font-family: Inter;
-  font-size: 48px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 100%; /* 48px */
-  text-transform: capitalize;
-
-  @media only screen and (max-width: 600px) {
-      font-size: 3.4rem;
-  }
-}
-
-.heading-secondary {
-  /* H2 */
-  font-family: Inter;
-  font-size: 32px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 100%; /* 32px */
-  letter-spacing: 1px;
-  text-transform: uppercase;
-
-  @media only screen and (max-width: 600px) {
-      font-size: 2.6rem;
-  }
-}
-
-.heading-tertiary {
+.display-1 {
   color: #fff;
-  font-family: Inter;
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 110.949%; /* 31.066px */
 
-  @media only screen and (max-width: 600px) {
-      font-size: 2.4rem;
+  /* Display/1 */
+  font-family: Inter;
+  font-size: 96px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120px; /* 125% */
+  letter-spacing: -2.88px;
+}
+
+.display-2 {
+  color: #fff;
+
+  /* Display/2 */
+  font-family: Inter;
+  font-size: 72px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 96px; /* 133.333% */
+  letter-spacing: -2.16px;
+
+  @media only screen and (max-width: 769px) {
+      /* Heading/1 */
+      font-size: 40px;
+      line-height: 52px; /* 130% */
   }
 }
 
-.heading-quaternary {
-  font-family: Inter;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 100%; /* 20px */
-  letter-spacing: 1px;
+.display-3 {
+  color: #fff;
 
-  @media only screen and (max-width: 600px) {
-      font-size: 2.2rem;
+  /* Display/3 */
+  font-family: Inter;
+  font-size: 56px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 72px; /* 128.571% */
+  letter-spacing: -1.68px;
+
+  @media only screen and (max-width: 769px) {
+      /* Heading/2 */
+      font-size: 36px;
+      line-height: 44px; /* 122.222% */
   }
 }
 
-.body-regular {
-  font-family: "Inter";
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 25px;
-}
-
-.body-small {
-  font-family: Inter;
-  font-size: 14px;
-  font-style: normal;
-  line-height: 100%; /* 14px */
-  letter-spacing: 1px;
-  font-weight: 400;
-}
-
-.body-xs {
-  font-family: Inter;
-  font-size: 10px;
-  font-style: italic;
-  font-weight: 200;
-  line-height: 100%; /* 10px */
-  letter-spacing: 1px;
-  text-transform: lowercase;
-}
-
-.body-tiny {
-  font-family: Inter;
-  font-size: 8px;
-  font-style: italic;
-  font-weight: 300;
-  line-height: 100%; /* 8px */
-  letter-spacing: 1px;
-}
-
-/* @Manay's Typography */
 .heading-1 {
+  color: #fff;
+
+  /* Heading/1 */
   font-family: Inter;
-  font-size: 36px;
+  font-size: 40px;
   font-style: normal;
-  font-weight: 500;
-  line-height: 100%; /* 36px */
-  letter-spacing: 1px;
+  font-weight: 600;
+  line-height: 52px; /* 130% */
+
+  @media only screen and (max-width: 769px) {
+      /* Heading/5 */
+      font-family: Inter;
+      font-size: 24px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 32px; /* 133.333% */
+  }
 }
 
 .heading-2 {
+  color: #fff;
+
+  /* Heading/2 */
   font-family: Inter;
-  font-size: 24px;
+  font-size: 36px;
   font-style: normal;
-  font-weight: 300;
-  line-height: 100%; /* 24px */
-  letter-spacing: 1px;
+  font-weight: 600;
+  line-height: 44px; /* 122.222% */
 }
 
 .heading-3 {
+  color: #fff;
+
+  /* Heading/3 */
+  font-family: Inter;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 40px; /* 125% */
+
+  @media only screen and (max-width: 769px) {
+      /* Heading/4 */
+      font-size: 28px;
+      line-height: 36px;
+  }
+}
+
+.heading-4 {
+  color: #fff;
+
+  /* Heading/4 */
+  font-family: Inter;
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 36px; /* 128.571% */
+}
+
+.heading-5 {
+  color: #fff;
+
+  /* Heading/5 */
+  font-family: Inter;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 32px; /* 133.333% */
+}
+
+.heading-6 {
+  color: #fff;
+
+  /* Heading/6 */
   font-family: Inter;
   font-size: 20px;
   font-style: normal;
-  font-weight: 500;
-  line-height: 100%; /* 20px */
-  letter-spacing: 1px;
+  font-weight: 600;
+  line-height: 24px; /* 120% */
 }
 
-.body {
+.label-1 {
+  color: #fff;
+
+  /* Label/1 */
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 28px; /* 155.556% */
+  letter-spacing: -0.324px;
+}
+
+.label-2 {
+  color: #fff;
+
+  /* Label/2 */
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px; /* 125% */
+  letter-spacing: -0.32px;
+}
+
+.label-3 {
+  color: #fff;
+
+  /* Label/3 */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px; /* 142.857% */
+  letter-spacing: -0.308px;
+}
+
+.label-4 {
+  color: #fff;
+
+  /* Label/4 */
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 16px; /* 133.333% */
+  letter-spacing: -0.312px;
+}
+
+.label-5 {
+  color: #fff;
+
+  /* Label/5 */
+  font-family: Inter;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 14px; /* 140% */
+  letter-spacing: -0.3px;
+}
+
+.caption-1 {
+  color: #fff;
+
+  /* Caption/1 X Large */
+  font-family: Inter;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 91.667% */
+  letter-spacing: 0.36px;
+
+  @media only screen and (max-width: 769px) {
+      font-size: 18px;
+      letter-spacing: 0.27px;
+  }
+}
+
+.caption-2 {
+  color: #fff;
+
+  /* Caption/L/Regular */
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px; /* 155.556% */
+  letter-spacing: 0.27px;
+}
+
+.caption-3 {
+  color: #fff;
+
+  /* Caption/2 */
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
-  line-height: 100%; /* 16px */
-  letter-spacing: 1px;
+  line-height: 18px; /* 112.5% */
+  letter-spacing: 0.24px;
+}
+
+.caption-4 {
+  color: #fff;
+
+  /* Caption/3 */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px; /* 142.857% */
+  letter-spacing: 0.21px;
+}
+
+.caption-5 {
+  color: #fff;
+
+  /* Caption/4 */
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px; /* 133.333% */
+  letter-spacing: 0.24px;
+}
+
+.body-regular {
+  color: #d3d3d3;
+
+  /* Paragraph/1 */
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 28px; /* 155.556% */
+  letter-spacing: -0.324px;
+}
+
+.p-2 {
+  color: #fff;
+
+  /* Paragraph/2 */
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 150% */
+  letter-spacing: -0.32px;
+}
+
+.p-3 {
+  color: #fff;
+
+  /* Paragraph/3 */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px; /* 142.857% */
+  letter-spacing: -0.308px;
+}
+
+.p-4 {
+  color: #fff;
+
+  /* Paragraph/4 */
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px; /* 133.333% */
+  letter-spacing: -0.312px;
 }
 
 .uppercase {
@@ -244,6 +392,19 @@ body {
 
 /* colors */
 
+.highlight {
+  background: linear-gradient(
+      351deg,
+      #ae5e00 21.53%,
+      #f90 52.82%,
+      rgba(255, 153, 0, 0.37) 84.12%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline;
+}
+
 .highlight-1 {
   background: linear-gradient(110deg, #807c79 0.56%, #ddb07b 28.88%);
   background-clip: text;
@@ -258,12 +419,16 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
+.gold {
+  color: #ffc46d;
+}
+
 .yellow {
   color: #f90;
 }
 
 .green {
-  color: #23b371;
+  color: #03d181;
 }
 
 .red {
@@ -315,12 +480,14 @@ body {
 
 .ant-collapse-header-text {
   color: #d9d9d9;
+
+  /* Label/1 */
   font-family: Inter;
-  font-size: 20px;
+  font-size: 18px;
   font-style: normal;
-  font-weight: 500;
-  line-height: 100%; /* 20px */
-  letter-spacing: 1px;
+  font-weight: 600;
+  line-height: 28px; /* 155.556% */
+  letter-spacing: -0.324px;
 }
 
 .ant-collapse-content {
@@ -426,22 +593,13 @@ body {
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
-.btn-yellow {
-  color: #fff;
-  text-align: center;
-  font-size: 16px !important;
-
-  line-height: 100%; /* 20px */
-  text-transform: uppercase;
-
-  border-radius: 25px;
-  border: 0.5px solid #fff;
-
-  background: linear-gradient(95deg, #7e6e5e 0.59%, #a3825f 101.59%);
+.btn-gold {
+  border-radius: 7px;
+  border: 1px solid #fea14ba1;
+  background: rgba(255, 153, 0, 0.05);
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 
-  padding: 1.4rem 4rem;
-  transition: all 0.2s;
+  padding: 1rem 5rem;
 
   &:hover {
       transform: translateY(-2px);
@@ -457,12 +615,16 @@ body {
 }
 
 .btn-white {
-  color: #000;
+  color: #17171b;
   text-align: center;
+
+  /* Label/2 */
+  font-family: Inter;
   font-size: 16px;
-  font-weight: 400;
-  line-height: 100%; /* 20px */
-  text-transform: uppercase;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px; /* 125% */
+  letter-spacing: -0.32px;
 
   border-radius: 25px;
   border: 1px solid #7e7e7e;
@@ -497,14 +659,14 @@ body {
   }
 }
 
-.btn-item {
+/* .btn-item {
   color: #d9d9d9;
   text-align: center;
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
-  line-height: 100%; /* 16px */
+  line-height: 100%; 
   letter-spacing: 1px;
   text-transform: uppercase;
 
@@ -530,7 +692,7 @@ body {
       padding: 1rem 1.5rem !important;
       font-weight: 400 !important;
   }
-}
+} */
 
 .btn-link-mob {
   color: #fff;

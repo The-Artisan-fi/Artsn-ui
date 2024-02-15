@@ -27,7 +27,7 @@ export default function RootLayout({
         />
         <title>The Artisan</title>
       </head>
-      <body suppressHydrationWarning>
+      <body>
         <ClusterProvider>
           <SolanaProvider>
             <AppLayout>

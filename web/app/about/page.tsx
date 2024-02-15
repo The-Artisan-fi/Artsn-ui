@@ -2,7 +2,7 @@
 import type { NextPage } from "next";
 import { useState, useEffect } from "react";
 import "@/styles/About.scss";
-import { Form, Input } from "antd";
+// import { Form, Input } from "antd";
 
 import { FaLinkedin, FaTwitter } from "react-icons/fa";
 
@@ -10,9 +10,29 @@ import PartnersMarque from "@/components/PartnersMarque/PartnersMarque";
 
 const teamDataDesktop = [
     {
+        name: "Renato Capizzi",
+        title: "CEO & Founder",
+        img: "/assets/about/renato.webp",
+        about: [
+            "The brain behind the idea",
+            "8+ years of management experience.",
+            "Cryptocurrency trader",
+        ],
+        linkedIn: "https://www.linkedin.com/in/renatocapizzi/",
+        twitter: "https://twitter.com/Capiz92",
+    },
+    {
+        name: "Leonardo Donatacci",
+        title: "CTO",
+        img: "/assets/about/leonardo.webp",
+        about: ["Solana Specialist", "Teacher at Web3 builder alliance"],
+        linkedIn: "#", // Leonardo's LinkedIn link is missing
+        twitter: "https://twitter.com/L0STE_", // Adding Leonardo's Twitter link
+    },
+    {
         name: "Paolo Piana",
-        title: "CFO",
-        img: "/about/paolo.webp",
+        title: "CFO ",
+        img: "/assets/about/paolo.webp",
         about: [
             "Web3 Marketer & UX Designer",
             "2y Web3 full time (SMEs and DFINITY Foundation)",
@@ -21,22 +41,11 @@ const teamDataDesktop = [
         linkedIn: "https://www.linkedin.com/in/paolo-piana/",
         twitter: "https://twitter.com/pinoweb3",
     },
-    {
-        name: "Renato Capizzi",
-        title: "CEO & Founder",
-        img: "/about/renato.webp",
-        about: [
-            "The brain behind the idea",
-            "8+ years of managing experience",
-            "Cryptocurrency trader",
-        ],
-        linkedIn: "https://www.linkedin.com/in/renatocapizzi/",
-        twitter: "https://twitter.com/Capiz92",
-    },
+
     {
         name: "Domenico Fava",
         title: "Legal Advisor & Data Protection Officer",
-        img: "/about/domenico.webp",
+        img: "/assets/about/domenico.webp",
         about: [
             "Legal expert for several entities;",
             "Certified data protection officer, with consolidated experience;",
@@ -44,14 +53,6 @@ const teamDataDesktop = [
         ],
         linkedIn: "https://www.linkedin.com/in/domenico-fava-5bb17336/",
         twitter: "#", // Domenico's Twitter link is missing
-    },
-    {
-        name: "Leonardo Donatacci",
-        title: "Head of Development",
-        img: "/about/leonardo.webp",
-        about: ["Solana Specialist", "Teacher at Web3 builder alliance"],
-        linkedIn: "#", // Leonardo's LinkedIn link is missing
-        twitter: "https://twitter.com/L0STE_", // Adding Leonardo's Twitter link
     },
 ];
 
@@ -60,19 +61,27 @@ const teamDataMobile = [
     {
         name: "Renato Capizzi",
         title: "CEO & Founder",
-        img: "/about/renato.webp",
+        img: "/assets/about/renato.webp",
         about: [
             "The brain behind the idea",
-            "8+ years of managing experience",
+            "8+ years of management experience.",
             "Cryptocurrency trader",
         ],
         linkedIn: "https://www.linkedin.com/in/renatocapizzi/",
         twitter: "https://twitter.com/Capiz92",
     },
     {
+        name: "Leonardo Donatacci",
+        title: "CTO",
+        img: "/assets/about/leonardo.webp",
+        about: ["Solana Specialist", "Teacher at Web3 builder alliance"],
+        linkedIn: "#", // Leonardo's LinkedIn link is missing
+        twitter: "https://twitter.com/L0STE_", // Adding Leonardo's Twitter link
+    },
+    {
         name: "Paolo Piana",
         title: "CFO ",
-        img: "/about/paolo.webp",
+        img: "/assets/about/paolo.webp",
         about: [
             "Web3 Marketer & UX Designer",
             "2y Web3 full time (SMEs and DFINITY Foundation)",
@@ -85,7 +94,7 @@ const teamDataMobile = [
     {
         name: "Domenico Fava",
         title: "Legal Advisor & Data Protection Officer",
-        img: "/about/domenico.webp",
+        img: "/assets/about/domenico.webp",
         about: [
             "Legal expert for several entities;",
             "Certified data protection officer, with consolidated experience;",
@@ -94,23 +103,15 @@ const teamDataMobile = [
         linkedIn: "https://www.linkedin.com/in/domenico-fava-5bb17336/",
         twitter: "#", // Domenico's Twitter link is missing
     },
-    {
-        name: "Leonardo Donatacci",
-        title: "Head of Development",
-        img: "/about/leonardo.webp",
-        about: ["Solana Specialist", "Teacher at Web3 builder alliance"],
-        linkedIn: "#", // Leonardo's LinkedIn link is missing
-        twitter: "https://twitter.com/L0STE_", // Adding Leonardo's Twitter link
-    },
 ];
 
 
 const About: NextPage = (props) => {
     const [teamDataToDisplay, setTeamDataToDisplay] = useState(teamDataMobile);
-    const onFinish = (values: unknown) => {
-        console.log("Received values:", values);
-        // You can handle form submission logic here
-    };
+    // const onFinish = (values: unknown) => {
+    //     console.log("Received values:", values);
+    //     // You can handle form submission logic here
+    // };
 
     useEffect(() => {
         // Set the appropriate team data based on viewport size
@@ -139,15 +140,11 @@ const About: NextPage = (props) => {
             <div className="about__header">
                 <div className="about__hero padding">
                     <div className="boxed">
-                        <h1 className="heading-primary">
+                        <h1 className="heading-1">
                             Democratizing Luxury Good Investments
                         </h1>
-                        <p className="heading-tertiary w-300">
-                            We provide to users the possibility to invest in
-                            luxury items such as Watches, Art Pieces, Cars and
-                            more at accessible prices. <br /> These types of
-                            assets have demonstrated valuation growth rate
-                            during years.
+                        <p className="caption-1">
+                            We empower users to delve into the world of watches, art pieces, cars, and beyond at prices within reach. These assets have showcased remarkable growth in valuation over the years, igniting excitement and opportunity for all.
                         </p>
                     </div>
                 </div>
@@ -156,7 +153,7 @@ const About: NextPage = (props) => {
             {/* team section */}
             <section className="about__team padding">
                 <div className="boxed">
-                    <h2 className="heading-primary">Meet The Team</h2>
+                    <h2 className="heading-1">Meet The Team</h2>
                     <div className="about__team__members">
                         {teamDataToDisplay.map((member, index) => {
                             return (
@@ -169,18 +166,14 @@ const About: NextPage = (props) => {
                                         alt=""
                                         className="about__team__members__member__img"
                                     />
-                                    <h2 className="heading-quaternary">
-                                        {member.name}
-                                    </h2>
-                                    <p className="body-small w-300">
-                                        {member.title}
-                                    </p>
+                                    <h2 className="heading-6">{member.name}</h2>
+                                    <p className="caption-3">{member.title}</p>
                                     <ul className="about__team__members__member__abouts">
                                         {member.about.map((fact, index) => {
                                             return (
                                                 <li
                                                     key={index}
-                                                    className="about__team__members__member__abouts__item body-xs"
+                                                    className="about__team__members__member__abouts__item caption-4"
                                                 >
                                                     {fact}
                                                 </li>
@@ -213,103 +206,6 @@ const About: NextPage = (props) => {
 
             {/* partners section */}
             <PartnersMarque />
-
-            {/* contact us form */}
-            <section className="about__contact padding">
-                <div className="boxed">
-                    <Form
-                        name="contactForm"
-                        onFinish={onFinish}
-                        layout="vertical"
-                        className="about__contact__form"
-                    >
-                        {/* Name Field */}
-                        <Form.Item
-                            label="Name"
-                            name="name"
-                            rules={[
-                                {
-                                    message: "Please enter your name!",
-                                },
-                            ]}
-                        >
-                            <Input
-                                style={{
-                                    backgroundColor: "black",
-                                    color: "white",
-                                    borderRadius: "27px",
-                                    border: "1px solid #525252",
-                                    padding: "10px",
-                                }}
-                            />
-                        </Form.Item>
-
-                        {/* Email Field */}
-                        <Form.Item
-                            label="Email"
-                            name="email"
-                            rules={[
-                                {
-                                    message: "Please enter your email!",
-                                },
-                                {
-                                    message:
-                                        "Please enter a valid email address!",
-                                },
-                            ]}
-                        >
-                            <Input
-                                style={{
-                                    backgroundColor: "black",
-                                    color: "white",
-                                    borderRadius: "27px",
-                                    border: "1px solid #525252",
-                                    padding: "10px",
-                                }}
-                            />
-                        </Form.Item>
-
-                        {/* Message Field */}
-                        <Form.Item
-                            label="Message"
-                            name="message"
-                            rules={[
-                                {
-                                    message: "Please enter your message!",
-                                },
-                            ]}
-                        >
-                            <Input.TextArea
-                                rows={4}
-                                style={{
-                                    backgroundColor: "black",
-                                    color: "white",
-                                    borderRadius: "27px",
-                                    border: "1px solid #525252",
-                                    padding: "10px",
-                                }}
-                            />
-                        </Form.Item>
-
-                        {/* Submit Button */}
-                        <Form.Item>
-                            <button className="btn btn-primary" type="submit">
-                                Submit
-                            </button>
-                        </Form.Item>
-                    </Form>
-                    <div className="about__contact__video">
-                        {/* locall video here */}
-                        <video
-                            src="/about/artisan.mp4"
-                            autoPlay={true}
-                            loop={true}
-                            muted={true}
-                            className="about__contact__video__player"
-                        ></video>
-                    </div>
-                </div>
-            </section>
         </div>
     );
 };

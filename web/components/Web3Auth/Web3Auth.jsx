@@ -109,8 +109,8 @@ function Web3AuthLogin() {
     return(
         <div className="modal-container">
             <div className="modal-header">
-              <img src="/login/login_header.svg" alt="login header" className="login-header" />
-              <img src="/login/logo_bw.svg" alt="login header" className="logo" />
+              <img src="assets/login/login_header.svg" alt="login header" className="login-header" />
+              <img src="assets/login/logo_bw.svg" alt="login header" className="logo" />
               <div className="header-text-container">
                 <p className="header-text">
                     Welcome to the Artisan
@@ -157,11 +157,11 @@ function Web3AuthLogin() {
               <div className="divider-text">OR</div>
               <div className="web3-login-option">
                 <div className="wallet-icons-container">
-                  <img src="/login/phantom_icon.svg" alt="phantom" className="phantom-wallet-icon" />
-                  <img src="/login/solflare_icon.svg" alt="solflare" className="solflare-wallet-icon" />
-                  <img src="/login/backpack_icon.svg" alt="backpack" className="backpack-wallet-icon" />
-                  <img src="/login/torus_icon.svg" alt="torus" className="torus-wallet-icon" />
-                  <img src="/login/ledger_icon.svg" alt="ledger" className="ledger-wallet-icon" />
+                  <img src="assets/login/phantom_icon.svg" alt="phantom" className="phantom-wallet-icon" />
+                  <img src="assets/login/solflare_icon.svg" alt="solflare" className="solflare-wallet-icon" />
+                  <img src="assets/login/backpack_icon.svg" alt="backpack" className="backpack-wallet-icon" />
+                  <img src="assets/login/torus_icon.svg" alt="torus" className="torus-wallet-icon" />
+                  <img src="assets/login/ledger_icon.svg" alt="ledger" className="ledger-wallet-icon" />
                 </div>
                 <WalletMultiButton
                   className="wallet-btn"

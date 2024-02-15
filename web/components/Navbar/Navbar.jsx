@@ -33,7 +33,7 @@ function Navbar() {
             name: "The Fi",
         },
         {
-            to: "/boutique",
+            to: "https://theboutique-vr.com/",
             name: "The Boutique",
         },
         {
@@ -47,7 +47,7 @@ function Navbar() {
     ];
 
     return (
-        <div className="navbar" suppressHydrationWarning>
+        <div className="navbar" >
             <header className="padding">
                 <div className="boxed">
                     <div className="header-content">

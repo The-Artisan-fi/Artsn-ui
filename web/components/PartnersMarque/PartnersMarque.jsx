@@ -4,27 +4,27 @@ import Marquee from "react-fast-marquee";
 
 const marqueeImages = [
     {
-        src: "/home/crypto-valley.webp",
+        src: "assets/home/crypto-valley.webp",
         alt: "crypto valley",
     },
     {
-        src: "/home/ros.webp",
+        src: "assets/home/ros.webp",
         alt: "ros",
     },
     {
-        src: "/home/jigen.webp",
+        src: "assets/home/jigen.webp",
         alt: "jigen",
     },
     {
-        src: "/home/node-gate.webp",
+        src: "assets/home/node-gate.webp",
         alt: "node gate",
     },
     {
-        src: "/home/swissdao.webp",
+        src: "assets/home/swissdao.webp",
         alt: "swiss dao",
     },
     {
-        src: "/home/x-real.webp",
+        src: "assets/home/x-real.webp",
         alt: "x real",
     },
 ];
