@@ -9,7 +9,8 @@
     "anchor-test": "nx run anchor:anchor test",
     "build": "nx build web",
     "dev": "nx serve web",
-    "reset": "nx reset"
+    "reset": "nx reset",
+    "export": "next export"
   },
   "private": true,
   "dependencies": {
