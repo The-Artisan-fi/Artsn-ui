@@ -13,7 +13,7 @@
                 rgba(0, 0, 0, 0.3),
                 rgba(0, 0, 0, 0)
             ),
-            "/about/about-hero-bg.webp";
+            url("/assets/about/about-hero-bg.webp");
         background-size: contain;
         background-position: right bottom;
         background-repeat: no-repeat;
@@ -45,7 +45,7 @@
                 rgba(255, 255, 255, 0) 60%,
                 rgba(23, 23, 27, 1) 80%
             ),
-            "assets/about/wavy-bg.svg";
+            url("/assets/about/wavy-bg.svg");
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center, center;
@@ -121,7 +121,7 @@
                 rgba(255, 255, 255, 0) 60%,
                 rgba(23, 23, 27, 1) 80%
             ),
-            "assets/about/wavy-bg.svg";
+            url("/assets/about/wavy-bg.svg");
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center, center;
