@@ -17,20 +17,22 @@ import ProductsSectionMobile from "@/components/ProductsSectionMobile/ProductsSe
 const Home = () => {
     const [index, setIndex] = useState(0);
 
-    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const [isMobile, setIsMobile] = useState(true);
 
     useEffect(() => {
-        const handleResize = () => {
-            setIsMobile(window.innerWidth < 768);
-        };
+        if(window){
+            const handleResize = () => {
+                setIsMobile(window.innerWidth < 768);
+            };
 
-        // Attach the event listener for window resize
-        window.addEventListener("resize", handleResize);
+            // Attach the event listener for window resize
+            window.addEventListener("resize", handleResize);
 
-        // Clean up the event listener on component unmount
-        return () => {
-            window.removeEventListener("resize", handleResize);
-        };
+            // Clean up the event listener on component unmount
+            return () => {
+                window.removeEventListener("resize", handleResize);
+            };
+        }
     }, []);
 
     useEffect(() => {
