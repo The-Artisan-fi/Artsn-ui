@@ -44,10 +44,11 @@ const teamDataDesktop = [
         title: "COO",
         img: brian,
         about: [
-            "Managing Partner & Monaco Foundry CEO",
-            "WEOPTIT Senior Government Advisor", 
-            "Finland Global Head of Business Development", 
-            "IBM Watson Chief Strategy & Operating Officer", 
+            "Managing Partner, Monaco Foundry",
+            "CEO, WEOPTIT", 
+            "Senior Government Advisor, Finland", 
+            "Global Head of Business Development, IBM Watson", 
+            "Chief Strategy & Operating Officer, Merck & Co",
         ],
         linkedIn: "https://www.linkedin.com/in/brianfrederiksen/", // Leonardo's LinkedIn link is missing
         twitter: "#", 
