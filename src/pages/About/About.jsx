@@ -33,8 +33,9 @@ const teamDataDesktop = [
         title: "CTO",
         img: leonardo,
         about: [
-            "Solana Specialist", 
-            "Teacher at Web3 builder alliance"
+            "Solana Specialist",
+            "Senior Protocol & Smart Contract Developer", 
+            "Teacher & Educator at Web3 builder alliance"
         ],
         linkedIn: "#", // Leonardo's LinkedIn link is missing
         twitter: "https://twitter.com/L0STE_", // Adding Leonardo's Twitter link
@@ -48,7 +49,7 @@ const teamDataDesktop = [
             "CEO, WEOPTIT", 
             "Senior Government Advisor, Finland", 
             "Global Head of Business Development, IBM Watson", 
-            "Chief Strategy & Operating Officer, Merck & Co",
+            "Chief Strategy & Operating Officer, Merck & Co Healthcare Services",
         ],
         linkedIn: "https://www.linkedin.com/in/brianfrederiksen/", // Leonardo's LinkedIn link is missing
         twitter: "#", 
