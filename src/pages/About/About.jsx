@@ -45,13 +45,13 @@ const teamDataDesktop = [
         title: "COO",
         img: brian,
         about: [
-            "Managing Partner, Monaco Foundry",
-            "CEO, WEOPTIT", 
-            "Senior Government Advisor, Finland", 
-            "Global Head of Business Development, IBM Watson", 
-            "Chief Strategy & Operating Officer, Merck & Co Healthcare Services",
+            "Managing Partner - Monaco Foundry",
+            "CEO - WEOPTIT", 
+            "Senior Government Advisor - Finland", 
+            "Global Head of Business Development - IBM Watson", 
+            "Chief Strategy & Operating Officer - Merck & Co Healthcare Services",
         ],
-        linkedIn: "https://www.linkedin.com/in/brianfrederiksen/", // Leonardo's LinkedIn link is missing
+        linkedIn: "https://www.linkedin.com/in/brianfrederiksen/",
         twitter: "#", 
     },
     {
@@ -60,25 +60,28 @@ const teamDataDesktop = [
         img: paolo,
         about: [
             "Web3 Marketer & UX Designer",
-            "2y Web3 full time (SMEs and DFINITY Foundation)",
+            "Web3 full time (SMEs and DFINITY Foundation)",
         ],
         linkedIn: "https://www.linkedin.com/in/paolo-piana/",
         twitter: "https://twitter.com/pinoweb3",
     },
     {
         name: "Macarena Segura",
-        title: "Lead Strategic Partnership",
+        title: "Regulatory & Strategy Lead",
         img: macarena,
         about: [
-            "International lawyer ",
-            "Regulatory advisory in blockchain, virtual currencies & financial assets. " 
+            "International Fintech Lawyer",
+            "Blockchain, RegTech, Cybersecurity, IDV, Crypto Assets, Web3",
+            "Regulatory Supervisor - Bank de España",
+            "Regulatory Advisory Fintech & Digital Assets - KPMG",
+            "Regulatory Advisory Fintech & Digital Assets - PwC"
         ],
         linkedIn: "https://www.linkedin.com/in/macarena-linaza-segura/",
         twitter: "#", // Macarena's Twitter link is missing
     },
     {
         name: "Domenico Fava",
-        title: "Legal Advisor & Data Protection Officer",
+        title: "Identity Verification & Data Protection",
         img: domenico,
         about: [
             "Legal expert for several entities",
@@ -109,8 +112,9 @@ const teamDataMobile = [
         title: "CTO",
         img: leonardo,
         about: [
-            "Solana Specialist", 
-            "Teacher at Web3 builder alliance"
+            "Solana Specialist",
+            "Senior Protocol & Smart Contract Developer", 
+            "Teacher & Educator at Web3 builder alliance"
         ],
         linkedIn: "#", // Leonardo's LinkedIn link is missing
         twitter: "https://twitter.com/L0STE_", // Adding Leonardo's Twitter link
@@ -120,10 +124,13 @@ const teamDataMobile = [
         title: "COO",
         img: brian,
         about: [
-            "Managing Partner & Monaco Foundry CEO",
-            "WEOPTIT Senior Government Advisor, Finland Global Head of Business Development, IBM Watson Chief Strategy & Operating Officer", 
+            "Managing Partner - Monaco Foundry",
+            "CEO - WEOPTIT", 
+            "Senior Government Advisor - Finland", 
+            "Global Head of Business Development - IBM Watson", 
+            "Chief Strategy & Operating Officer - Merck & Co Healthcare Services",
         ],
-        linkedIn: "https://www.linkedin.com/in/brianfrederiksen/", // Leonardo's LinkedIn link is missing
+        linkedIn: "https://www.linkedin.com/in/brianfrederiksen/",
         twitter: "#", 
     },
     {
@@ -132,25 +139,28 @@ const teamDataMobile = [
         img: paolo,
         about: [
             "Web3 Marketer & UX Designer",
-            "2y Web3 full time (SMEs and DFINITY Foundation)",
+            "Web3 full time (SMEs and DFINITY Foundation)",
         ],
         linkedIn: "https://www.linkedin.com/in/paolo-piana/",
         twitter: "https://twitter.com/pinoweb3",
     },
     {
         name: "Macarena Segura",
-        title: "Lead Strategic Partnership",
+        title: "Regulatory & Strategy Lead",
         img: macarena,
         about: [
-            "International lawyer ",
-            "Regulatory advisory in blockchain, virtual currencies & financial assets. " 
+            "International Fintech Lawyer",
+            "Blockchain, RegTech, Cybersecurity, IDV, Crypto Assets, Web3",
+            "Regulatory Supervisor - Bank de España",
+            "Regulatory Advisory Fintech & Digital Assets - KPMG",
+            "Regulatory Advisory Fintech & Digital Assets - PwC"
         ],
         linkedIn: "https://www.linkedin.com/in/macarena-linaza-segura/",
         twitter: "#", // Macarena's Twitter link is missing
     },
     {
         name: "Domenico Fava",
-        title: "Legal Advisor & Data Protection Officer",
+        title: "Identity Verification & Data Protection",
         img: domenico,
         about: [
             "Legal expert for several entities",
