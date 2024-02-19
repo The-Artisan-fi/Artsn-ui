@@ -8,14 +8,65 @@ import "swiper/css/free-mode";
 
 // import required modules
 import { FreeMode, Mousewheel } from "swiper";
+import { useWallet, useConnection } from "@solana/wallet-adapter-react";
+import { AnchorProvider, Program, Connection } from "@coral-xyz/anchor";
+import { IDL, PROGRAM_ID } from "@/components/Utils/idl";
 
-import products from "@/components/Utils/productData";
+const formatDateToDddMmm = (timestamp) => {
+    const date = new Date(timestamp * 1000);
+    const day = date.getDate();
+    const minute = date.getMinutes();
 
+    const paddedDay = day.toString().padStart(2, '0');
+    const paddedMinute = minute.toString().padStart(2, '0');
+
+    return `${paddedDay}::${paddedMinute}`;
+};
 
 const ProductsSectionDesktop = () => {
+    const [products, setProducts] = useState({ available: [], comingSoon: [] });
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            const provider = new AnchorProvider(new Connection("http://localhost:8899"), null, {});
+            const program = new Program(IDL, PROGRAM_ID, provider);
+
+            try {
+                const productList = await program.account.listing.all();
+                const currentTime = Math.floor(Date.now() / 1000);
+                
+                const availableProducts = productList.filter(product => product.account.starting_time < currentTime);
+                const comingSoonProducts = productList.filter(product => product.account.starting_time >= currentTime);
+
+                setProducts({
+                    available: availableProducts.map(product => ({
+                        id: product.account.id,
+                        name: product.account.name,
+                        image: product.account.img,
+                        fractionsLeft: `${product.account.share_sold} / ${product.account.share}`,
+                        startingPrice: `${product.account.price} USD`,
+                        earningPotential: "TBD",
+                    })),
+                    comingSoon: comingSoonProducts.map(product => ({
+                        id: product.account.id,
+                        name: product.account.name,
+                        image: product.account.img,
+                        releaseDate: formatDateToDddMmm(product.account.starting_time),
+                        startingPrice: `${product.account.price} USD`,
+                        earningPotential: "TBD",
+                    })),
+                });
+            } catch (error) {
+                console.error("Failed to fetch products:", error);
+            }
+        };
+
+        fetchProducts();
+    }, []);
+    
     return (
         <section className="products ">
-            {/* available
+            {/* Available */}
             <div className="products__available ">
                 <div className="products__available__slider">
                     <Swiper
@@ -103,7 +154,7 @@ const ProductsSectionDesktop = () => {
                         })}
                     </Swiper>
                 </div>
-            </div> */}
+            </div>
             {/* coming soon */}
             <div className="products__coming ">
                 <div className="products__coming__slider">
