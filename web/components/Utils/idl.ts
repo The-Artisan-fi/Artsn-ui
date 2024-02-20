@@ -1,3 +1,6 @@
+import { Address } from "@coral-xyz/anchor";
+
+
 export type Fragment = {
   "version": "0.1.0",
   "name": "the_artisan",
@@ -1211,4 +1214,4 @@ export const IDL: Fragment = {
 }
 
 
-export const PROGRAM_ID = "5yRcNyhKR7BpAx8DUrqfuhjcpMEVKxdQT1KAS8o72ZAW"
+export const PROGRAM_ID = "5yRcNyhKR7BpAx8DUrqfuhjcpMEVKxdQT1KAS8o72ZAW" as Address
