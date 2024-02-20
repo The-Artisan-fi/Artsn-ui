@@ -1,12 +1,20 @@
 import "@/styles/ProductsSectionMobile.scss";
-
-import products from "@/components/Utils/productData";
-
+import { useEffect, useState } from "react";
+// import products from "@/components/Utils/productData";
+import { fetchProducts } from "@/hooks/fetchProducts";
 const ProductsSectionMobile = () => {
+    const [products, setProducts] = useState({ available: [], comingSoon: [] });
+
+    useEffect(() => {
+        fetchProducts().then((products) => {
+            console.log('products', products)
+            setProducts(products);
+        });
+    }, []);
     return (
         <section className="products ">
             {/* available */}
-            {/* <div className="products__available ">
+            <div className="products__available ">
                 <h2 className="display-3 uppercase">Currently Available</h2>
 
                 <div className="products__available__slider">
@@ -17,7 +25,7 @@ const ProductsSectionMobile = () => {
                                 className="products__available__slider__item"
                             >
                                 <img
-                                    src={borderBg}
+                                    src="/assets/product-border-bg.png"
                                     alt=""
                                     className="products__available__slider__item__bg"
                                 />
@@ -64,7 +72,7 @@ const ProductsSectionMobile = () => {
                         );
                     })}
                 </div>
-                </div> */}
+            </div>
 
             <div className="products__coming ">
                 <h2 className="display-3 uppercase">Coming Soon</h2>

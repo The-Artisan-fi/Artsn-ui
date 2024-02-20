@@ -41,9 +41,10 @@ const PartnersMarque = () => {
             <h2 className="heading-secondary">Partners</h2>
             <div className="partners__marquee">
                 <Marquee autoFill={true}>
-                    {marqueeImages.map((image) => (
+                    {marqueeImages.map((image, index) => (
                         <a
-                        href={image.link}
+                            key={index}
+                            href={image.link}
                             target="_blank" 
                             rel="noopener noreferrer"
                         >

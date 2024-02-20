@@ -1,0 +1,71 @@
+import { clusterApiUrl, Connection, PublicKey, Keypair } from "@solana/web3.js";
+import { Program, AnchorProvider, setProvider } from "@coral-xyz/anchor";
+import { IDL, PROGRAM_ID } from "@/components/Utils/idl";
+
+export const fetchProducts = async () => {
+        const connection = new Connection(clusterApiUrl("devnet"), {
+                commitment: "confirmed",
+            });
+
+        const wallet = Keypair.generate();
+
+        // @ts-expect-error - wallet is dummy variable, signing is not needed
+        const provider = new AnchorProvider(connection, wallet, {});
+        setProvider(provider);
+
+        const program = new Program(IDL, PROGRAM_ID);
+
+        const formatDateToDddMmm = (timestamp: number) => {
+            const date = new Date(timestamp * 1000);
+            const day = date.getDate();
+            const minute = date.getMinutes();
+        
+            const paddedDay = day.toString().padStart(2, '0');
+            const paddedMinute = minute.toString().padStart(2, '0');
+        
+            return `${paddedDay}::${paddedMinute}`;
+        };
+
+        try {
+            const all_program_accounts = await connection.getProgramAccounts(new PublicKey(PROGRAM_ID));
+            console.log('program_info', all_program_accounts)
+            const productList = all_program_accounts.map((account) => {
+                try {
+                    const decode = program.coder.accounts.decode("listing", account.account.data);
+                    return decode;
+                } catch (error) {
+                    // do nothing
+                }
+            });
+
+            const productListDecoded = productList.filter((pda) => pda !== undefined);
+
+            const currentTime = Math.floor(Date.now() / 1000);
+            
+            const availableProducts = productListDecoded.filter(product => product.startingTime < currentTime);
+            const comingSoonProducts = productListDecoded.filter(product => product.startingTime >= currentTime);
+
+            const products = {
+                available: availableProducts.map(product => ({
+                    id: product.id,
+                    name: product.name,
+                    image: product.img,
+                    fractionsLeft: `${product.share_sold} / ${product.share}`,
+                    startingPrice: `${product.price} USD`,
+                    earningPotential: "TBD",
+                })),
+                comingSoon: comingSoonProducts.map(product => ({
+                    id: product.id,
+                    name: product.name,
+                    image: product.img,
+                    releaseDate: formatDateToDddMmm(product.starting_time),
+                    startingPrice: `${product.price} USD`,
+                    earningPotential: "TBD",
+                })),
+            };
+
+            return products;
+        } catch (error) {
+            console.error("Failed to fetch products:", error);
+        }
+    };
