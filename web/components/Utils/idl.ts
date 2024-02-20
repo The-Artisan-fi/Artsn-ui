@@ -1209,3 +1209,6 @@ export const IDL: Fragment = {
     }
   ]
 }
+
+
+export const PROGRAM_ID = "5yRcNyhKR7BpAx8DUrqfuhjcpMEVKxdQT1KAS8o72ZAW"
