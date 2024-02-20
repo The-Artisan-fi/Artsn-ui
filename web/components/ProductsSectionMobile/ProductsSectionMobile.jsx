@@ -7,7 +7,6 @@ const ProductsSectionMobile = () => {
 
     useEffect(() => {
         fetchProducts().then((products) => {
-            console.log('products', products)
             setProducts(products);
         });
     }, []);

@@ -1,4 +1,4 @@
-import { clusterApiUrl, Connection, PublicKey, Keypair } from "@solana/web3.js";
+import { clusterApiUrl, Connection, PublicKey, Keypair, DataSizeFilter, GetProgramAccountsConfig } from "@solana/web3.js";
 import { Program, AnchorProvider, setProvider } from "@coral-xyz/anchor";
 import { IDL, PROGRAM_ID } from "@/components/Utils/idl";
 
@@ -27,14 +27,21 @@ export const fetchProducts = async () => {
         };
 
         try {
-            const all_program_accounts = await connection.getProgramAccounts(new PublicKey(PROGRAM_ID));
-            console.log('program_info', all_program_accounts)
+            const size_filter: DataSizeFilter = {
+                dataSize: 204,
+            };
+            const get_accounts_config: GetProgramAccountsConfig = {
+                commitment: "confirmed",
+                filters: [size_filter]
+            };
+            const all_program_accounts = await connection.getProgramAccounts(new PublicKey(PROGRAM_ID), get_accounts_config);
+
             const productList = all_program_accounts.map((account) => {
                 try {
                     const decode = program.coder.accounts.decode("listing", account.account.data);
                     return decode;
                 } catch (error) {
-                    // do nothing
+                   console.log('error decoding account', account, error)
                 }
             });
 

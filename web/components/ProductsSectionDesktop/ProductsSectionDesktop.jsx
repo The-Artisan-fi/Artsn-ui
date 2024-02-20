@@ -16,7 +16,6 @@ const ProductsSectionDesktop = () => {
 
     useEffect(() => {
         fetchProducts().then((products) => {
-            console.log('products', products)
             setProducts(products);
         });
     }, []);
