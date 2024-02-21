@@ -22,7 +22,7 @@ export const fetchProducts = async () => {
         
             const paddedDay = day.toString().padStart(2, '0');
             const paddedMinute = minute.toString().padStart(2, '0');
-        
+            
             return `${paddedDay}::${paddedMinute}`;
         };
 
@@ -39,33 +39,36 @@ export const fetchProducts = async () => {
             const productList = all_program_accounts.map((account) => {
                 try {
                     const decode = program.coder.accounts.decode("listing", account.account.data);
-                    return decode;
+                    // console.log('decode', account.pubkey.toBase58());
+                    return {
+                        accountPubkey: account.pubkey.toBase58(),
+                        ...decode
+                    };
                 } catch (error) {
                    console.log('error decoding account', account, error)
                 }
             });
-
-            const productListDecoded = productList.filter((pda) => pda !== undefined);
-
             const currentTime = Math.floor(Date.now() / 1000);
             
-            const availableProducts = productListDecoded.filter(product => product.startingTime < currentTime);
-            const comingSoonProducts = productListDecoded.filter(product => product.startingTime >= currentTime);
+            const availableProducts = productList.filter(product => product.startingTime < currentTime);
+            const comingSoonProducts = productList.filter(product => product.startingTime >= currentTime);
 
             const products = {
                 available: availableProducts.map(product => ({
                     id: product.id,
+                    accountPubkey: product.accountPubkey,
                     name: product.name,
                     image: product.img,
-                    fractionsLeft: `${product.share_sold} / ${product.share}`,
+                    fractionsLeft: `${product.shareSold} / ${product.share}`,
                     startingPrice: `${product.price} USD`,
                     earningPotential: "TBD",
                 })),
                 comingSoon: comingSoonProducts.map(product => ({
                     id: product.id,
+                    accountPubkey: product.accountPubkey,
                     name: product.name,
                     image: product.img,
-                    releaseDate: formatDateToDddMmm(product.starting_time),
+                    releaseDate: formatDateToDddMmm(product.startingTime),
                     startingPrice: `${product.price} USD`,
                     earningPotential: "TBD",
                 })),

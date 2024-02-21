@@ -1,5 +1,6 @@
 import "@/styles/ProductsSectionDesktop.scss";
 import { useState, useEffect } from "react";
+import { useRouter }from "next/navigation";
 // SwiperJs for Carousel
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -13,7 +14,7 @@ import { fetchProducts } from "@/hooks/fetchProducts";
 
 const ProductsSectionDesktop = () => {
     const [products, setProducts] = useState({ available: [], comingSoon: [] });
-
+    const router = useRouter();
     useEffect(() => {
         fetchProducts().then((products) => {
             setProducts(products);
@@ -51,61 +52,60 @@ const ProductsSectionDesktop = () => {
                                 </h2>
                             </div>
                         </SwiperSlide>
-                        {products.comingSoon.map((item) => {
+                        {products.available.map((item) => {
                             return (
-                                <SwiperSlide key={item.id}>
-                                    <div
-                                        key={item.id}
-                                        className="products__available__slider__item"
-                                    >
+                                <div
+                                    key={item.id}
+                                    className="products__available__slider__item"
+                                    onClick={() => {
+                                        router.push(`/product/${item.accountPubkey.toString()}`)
+                                    }}
+                                >
+                                    <img
+                                        src="/assets/product-border-bg.png"
+                                        alt=""
+                                        className="products__available__slider__item__bg"
+                                    />
+                                    <div className="item-top">
                                         <img
-                                            src="/assets/product-border-bg.png"
-                                            alt=""
-                                            className="products__available__slider__item__bg"
+                                            src={item.image}
+                                            alt={item.name}
+                                            className="item-top-img"
                                         />
-                                        <div className="item-top">
-                                            <img
-                                                src={item.image}
-                                                alt={item.name}
-                                                className="item-top-img"
-                                            />
-                                        </div>
-                                        <div className="item-body">
-                                            <h3 className="heading-6">
-                                                {item.name}
-                                            </h3>
+                                    </div>
+                                    <div className="item-body">
+                                        <h3 className="heading-6">{item.name}</h3>
 
-                                            <div className="item-body-details">
-                                                <div className="item-body-details-set">
-                                                    <p className="label-5">
-                                                        RELEASE
-                                                    </p>
-                                                    <p className="label-3">
-                                                        {item.releaseDate}
-                                                    </p>
-                                                </div>
+                                        <div className="item-body-details">
+                                            <div className="item-body-details-set">
+                                                <p className="label-5">
+                                                    FRACTIONS LEFT
+                                                </p>
+                                                <p className="label-3">
+                                                    {item.fractionsLeft}
+                                                </p>
+                                            </div>
 
-                                                <div className="item-body-details-set">
-                                                    <p className="label-5">
-                                                        STARTING FROM
-                                                    </p>
-                                                    <p className="label-3">
-                                                        {item.startingPrice}
-                                                    </p>
-                                                </div>
+                                            <div className="item-body-details-set">
+                                                <p className="label-5">
+                                                    STARTING FROM
+                                                </p>
+                                                <p className="label-3">
+                                                    {item.startingPrice}
+                                                </p>
+                                            </div>
 
-                                                <div className="item-body-details-set">
-                                                    <p className="label-5">
-                                                        EARNING POTENTIAL
-                                                    </p>
-                                                    <p className="label-3 green">
-                                                        {item.earningPotential}
-                                                    </p>
-                                                </div>
+                                            <div className="item-body-details-set">
+                                                <p className="label-5">
+                                                    EARNING POTENTIAL
+                                                </p>
+                                                <p className="label-3 green">
+                                                    {item.earningPotential}
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
-                                </SwiperSlide>
+                                </div>
                             );
                         })}
                     </Swiper>
