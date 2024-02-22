@@ -10,6 +10,8 @@ import CTA1Card from "@/components/CtaCard1/CtaCard1";
 import ImageGallery from "react-image-gallery";
 // import stylesheet if you're not already using CSS @import
 import "react-image-gallery/styles/css/image-gallery.css";
+import { useLazyQuery } from "@apollo/client";
+import { listing } from "@/lib/listings";
 
 type ProductDetails = {
     id: number;
@@ -107,16 +109,30 @@ const images = [
 ];
 
 export default function ProductDetails({ params }: { params: { id: string } }) {
-    const [loading, setLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
     const product = LocalProducts;
     // const [product, setProduct] = useState();
-
     const [isMobile, setIsMobile] = useState(true);
-
+    const [variables, setVariables] = useState({
+        associatedId: "",
+      });
+    const [getDetails, { loading, error, data }] = useLazyQuery(listing, {
+        variables,
+    });
+    if(!loading && data != undefined){
+        console.log("data", data.listings[0]);
+    }
+    if(!loading && error != undefined){
+        console.log("error", error);
+    }
     useEffect(() => {
         if(window){
             const handleResize = () => {
-                setIsMobile(window.innerWidth < 768);
+                if(window.innerWidth < 768){
+                    setIsMobile(true);
+                } else {
+                    // setIsMobile(false);
+                }
             };
 
             // Attach the event listener for window resize
@@ -134,8 +150,10 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
         fetchProductDetails(accountPubkey)
             .then((res) => {
                 console.log('product details', res);
+                setVariables({associatedId: "1234"});
+                getDetails();
                 // setProduct(res);
-                setLoading(false)
+                setIsLoading(false)
             })
             .catch((err) => {
                 console.error("Failed to fetch product details:", err);
@@ -144,7 +162,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
 
     return (
         <>
-            {loading ? (
+            {isLoading ? (
                 <div>Loading...</div>
             ) : (
                 <div className="product-details">
