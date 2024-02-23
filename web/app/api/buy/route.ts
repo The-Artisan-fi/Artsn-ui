@@ -1,11 +1,8 @@
 import * as anchor from "@coral-xyz/anchor";
 import { IDL, Fragment, PROGRAM_ID} from "@/components/Utils/idl";
 import {
-    LAMPORTS_PER_SOL,
     PublicKey,
     SystemProgram,
-    ComputeBudgetProgram,
-    sendAndConfirmTransaction,
     Keypair,
     Transaction,
     Connection
@@ -16,52 +13,8 @@ import {
     TOKEN_2022_PROGRAM_ID, 
     TOKEN_PROGRAM_ID, 
     createAssociatedTokenAccountIdempotentInstruction, 
-    createMint, 
-    createMintToInstruction, 
     getAssociatedTokenAddressSync, 
-    getOrCreateAssociatedTokenAccount, 
-    mintTo,
-    getAssociatedTokenAddress,
-    createAssociatedTokenAccountInstruction,
  } from "@solana/spl-token";
-  
-
-
-// Program Test Function
-// it("Buy Share", async () => {
-    
-//     const createAtaIx = createAssociatedTokenAccountIdempotentInstruction(
-//       buyer.publicKey,
-//       buyerFractionAta,
-//       buyer.publicKey,
-//       fraction,
-//       TOKEN_2022_PROGRAM_ID,
-//       ASSOCIATED_TOKEN_PROGRAM_ID,
-//     );
-
-//     const buyShareIx = await program.methods
-    //     .buyListing()
-    //     .accounts({
-    //       buyer: buyer.publicKey,
-    //       buyerProfile,
-    //       buyerCurrencyAta,
-    //       buyerFractionAta,
-    //       listing,
-    //       listingCurrencyAta,
-    //       fraction,
-    //       currency: currency.publicKey,
-    //       auth,
-    //       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-    //       tokenProgram: TOKEN_PROGRAM_ID,
-    //       token2022Program: TOKEN_2022_PROGRAM_ID,
-    //       systemProgram: SystemProgram.programId,
-    //     })
-    //     .instruction();
-
-//     const tx = new Transaction().add(createAtaIx).add(buyShareIx);
-//     await sendAndConfirmTransaction(connection, tx, [buyer], {skipPreflight: true}).then(confirm).then(log);
-//   });
-// });
 
 //https://spl-token-faucet.com/?token-name=USDC-Dev
 const USDC_DEV = new PublicKey("Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr");
@@ -109,14 +62,14 @@ export async function POST( request: Request ) {
             ASSOCIATED_TOKEN_PROGRAM_ID,
         );
 
-        const profileInitIx = await await program.methods
-            .initializeProfileAccount()
-            .accounts({
-                user: buyer_publicKey,
-                profile: buyerProfile,
-                systemProgram: SystemProgram.programId,
-            })
-            .instruction();
+        // const profileInitIx = await await program.methods
+        //     .initializeProfileAccount()
+        //     .accounts({
+        //         user: buyer_publicKey,
+        //         profile: buyerProfile,
+        //         systemProgram: SystemProgram.programId,
+        //     })
+        //     .instruction();
 
         const buyShareIx = await program.methods
             .buyListing()

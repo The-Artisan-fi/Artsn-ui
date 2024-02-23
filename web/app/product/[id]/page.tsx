@@ -12,7 +12,7 @@ import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
 import { useLazyQuery } from "@apollo/client";
 import { listing } from "@/lib/queries";
-import { Keypair, Transaction, Connection } from "@solana/web3.js";
+import { Transaction, Connection } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 
 type ProductDetails = {
@@ -156,7 +156,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
         
             const signature = await sendTransaction(tx, connection, {skipPreflight: true});
             console.log(
-                `Transaction sent: https://explorer.solana/tx/${signature}?cluster=devnet`
+                `Transaction sent: https://explorer.solana.com/tx/${signature}?cluster=devnet`
               );
         } catch (error) {
             console.error('Error sending transaction', error);
