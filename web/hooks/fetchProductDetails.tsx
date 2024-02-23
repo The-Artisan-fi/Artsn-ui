@@ -17,7 +17,7 @@ export const fetchProductDetails = async (accountPubkey: string) => {
 
     try {
         const account_info = await connection.getAccountInfo(new PublicKey(accountPubkey))
-        const product_details = program.coder.accounts.decode("listing", account_info!.data);
+        const product_details = program.coder.accounts.decode("Listing", account_info!.data);
 
         const product = {
             id: product_details.id,

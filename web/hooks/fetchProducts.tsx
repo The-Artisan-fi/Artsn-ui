@@ -28,18 +28,18 @@ export const fetchProducts = async () => {
 
         try {
             const size_filter: DataSizeFilter = {
-                dataSize: 204,
+                dataSize: 68,
             };
             const get_accounts_config: GetProgramAccountsConfig = {
                 commitment: "confirmed",
                 filters: [size_filter]
             };
             const all_program_accounts = await connection.getProgramAccounts(new PublicKey(PROGRAM_ID), get_accounts_config);
-
+            console.log('all_program_accounts', all_program_accounts)
             const productList = all_program_accounts.map((account) => {
                 try {
-                    const decode = program.coder.accounts.decode("listing", account.account.data);
-                    // console.log('decode', account.pubkey.toBase58());
+                    const decode = program.coder.accounts.decode("Listing", account.account.data);
+                    console.log('decode', decode.id.toNumber());
                     return {
                         accountPubkey: account.pubkey.toBase58(),
                         ...decode

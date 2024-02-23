@@ -12,6 +12,8 @@ import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
 import { useLazyQuery } from "@apollo/client";
 import { listing } from "@/lib/queries";
+import { Keypair, Transaction, Connection } from "@solana/web3.js";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 type ProductDetails = {
     id: number;
@@ -109,22 +111,59 @@ const images = [
 ];
 
 export default function ProductDetails({ params }: { params: { id: string } }) {
+    const { publicKey, sendTransaction } = useWallet();
+    const connection = new Connection(
+        process.env.NEXT_PUBLIC_HELIUS_DEVNET!,
+        "confirmed"
+    );
     const [isLoading, setIsLoading] = useState(true);
     const product = LocalProducts;
     // const [product, setProduct] = useState();
     const [isMobile, setIsMobile] = useState(true);
     const [variables, setVariables] = useState({
+        id: "",
         associatedId: "",
       });
     const [getDetails, { loading, error, data }] = useLazyQuery(listing, {
         variables,
     });
     if(!loading && data != undefined){
-        console.log("data", data.listings[0]);
+        // console.log("data", data.listings[0]);
     }
     if(!loading && error != undefined){
         console.log("error", error);
     }
+
+    // BUY FRACTION FUNCTIONALITY*************************************************
+    async function buyListing() {        
+        try {
+            if(!publicKey){
+                console.log('no public key');
+                return;
+            }
+            const response = await fetch('/api/buy', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: variables.id,
+                    publicKey: publicKey.toBase58(),
+                })
+            })
+            const txData = await response.json();
+            const tx = Transaction.from(Buffer.from(txData.transaction, "base64"));
+        
+            const signature = await sendTransaction(tx, connection, {skipPreflight: true});
+            console.log(
+                `Transaction sent: https://explorer.solana/tx/${signature}?cluster=devnet`
+              );
+        } catch (error) {
+            console.error('Error sending transaction', error);
+        }
+    }
+    // ***************************************************************************
+
     useEffect(() => {
         if(window){
             const handleResize = () => {
@@ -150,7 +189,10 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
         fetchProductDetails(accountPubkey)
             .then((res) => {
                 console.log('product details', res);
-                setVariables({associatedId: "1234"});
+                setVariables({
+                    id: res?.id.toNumber(),
+                    associatedId: "1234"
+                });
                 getDetails();
                 // setProduct(res);
                 setIsLoading(false)
@@ -245,7 +287,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                         </div>
                                     </div>
 
-                                    <a href="#" className="btn btn-white">
+                                    <a onClick={buyListing} className="btn btn-white">
                                         INVEST IN FRACTIONS
                                     </a>
                                 </div>

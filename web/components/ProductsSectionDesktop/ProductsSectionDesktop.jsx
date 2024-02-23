@@ -17,6 +17,7 @@ const ProductsSectionDesktop = () => {
     const router = useRouter();
     useEffect(() => {
         fetchProducts().then((products) => {
+            console.log('listed products', products)
             setProducts(products);
         });
     }, []);
