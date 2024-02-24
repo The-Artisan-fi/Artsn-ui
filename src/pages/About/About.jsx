@@ -10,6 +10,8 @@ import paolo from "../../assets/about/paolo.webp";
 import leonardo from "../../assets/about/leonardo.webp";
 import macarena from "../../assets/about/macarena.webp";
 import brian from "../../assets/about/brian.jpeg";
+import craig from "../../assets/about/craig.jpg";
+import simone from "../../assets/about/simone.jpeg";
 import PartnersMarque from "../../components/PartnersMarque/PartnersMarque";
 
 // video
@@ -66,6 +68,21 @@ const teamDataDesktop = [
         twitter: "https://twitter.com/pinoweb3",
     },
     {
+        name: "Craig Pollock",
+        title: "F1 Ambassador",
+        img: craig,
+        about: [
+            "F1 - Formula Equal (F=)",
+            "Partner and Senior Advisor - Monaco Foundry",
+            "Founder & Chairman - Pure Corporation Sa",
+            "Founder - PK Racing IndyCar",
+            "Co-Founder - Stellar Management Ltd. Managing Jacques Villeneuve, Ayrton Senna Foundation rights, Prost rights",
+            "F1 hybrid Power Unit Design and Development"
+        ],
+        linkedIn: "https://www.linkedin.com/in/craig-pollock-538a9412/",
+        twitter: "#",
+    },
+    {
         name: "Macarena Segura",
         title: "Regulatory & Strategy Lead",
         img: macarena,
@@ -79,6 +96,20 @@ const teamDataDesktop = [
         linkedIn: "https://www.linkedin.com/in/macarena-linaza-segura/",
         twitter: "#", // Macarena's Twitter link is missing
     },
+    // {
+    //     name: "Simone Leonardi",
+    //     title: "Tax & Fiscal Expert",
+    //     img: simone,
+    //     about: [
+    //         "National and Internationl Fiscal Expert",
+    //         "International Corporate Tax Senior Manager - KPMG",
+    //         "Director - Fiduciaria Antonini",
+    //         "Member - Fiscal Association",
+    //         "Member - Register of Accountant Trustees Ticino Canton", 
+    //     ],
+    //     linkedIn: "https://www.linkedin.com/in/simone-leonardi-a6a13a12/",
+    //     twitter: "#", // Macarena's Twitter link is missing
+    // },
     {
         name: "Domenico Fava",
         title: "Identity Verification & Data Protection",
@@ -145,6 +176,21 @@ const teamDataMobile = [
         twitter: "https://twitter.com/pinoweb3",
     },
     {
+        name: "Craig Pollock",
+        title: "F1 Ambassador",
+        img: craig,
+        about: [
+            "F1 - Formula Equal (F=)",
+            "Partner and Senior Advisor - Monaco Foundry",
+            "Founder & Chairman - Pure Corporation Sa",
+            "Founder - PK Racing IndyCar",
+            "Co-Founder - Stellar Management Ltd. Managing Jacques Villeneuve, Ayrton Senna Foundation rights, Prost rights",
+            "F1 hybrid Power Unit Design and Development"
+        ],
+        linkedIn: "https://www.linkedin.com/in/craig-pollock-538a9412/",
+        twitter: "#",
+    },
+    {
         name: "Macarena Segura",
         title: "Regulatory & Strategy Lead",
         img: macarena,
@@ -158,6 +204,20 @@ const teamDataMobile = [
         linkedIn: "https://www.linkedin.com/in/macarena-linaza-segura/",
         twitter: "#", // Macarena's Twitter link is missing
     },
+    // {
+    //     name: "Simone Leonardi",
+    //     title: "Tax & Fiscal Expert",
+    //     img: simone,
+    //     about: [
+    //         "National and Internationl Fiscal Expert",
+    //         "International Corporate Tax Senior Manager - KPMG",
+    //         "Director - Fiduciaria Antonini",
+    //         "Member - Fiscal Association",
+    //         "Member - Register of Accountant Trustees Ticino Canton", 
+    //     ],
+    //     linkedIn: "https://www.linkedin.com/in/simone-leonardi-a6a13a12/",
+    //     twitter: "#", // Macarena's Twitter link is missing
+    // },
     {
         name: "Domenico Fava",
         title: "Identity Verification & Data Protection",

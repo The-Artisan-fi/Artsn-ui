@@ -1,0 +1,45 @@
+- [36minfo[39m Creating an optimized production build...
+- [36minfo[39m Compiled successfully
+- [36minfo[39m Skipping linting
+- [36minfo[39m Checking validity of types...
+- [36minfo[39m Collecting page data...
+- [36minfo[39m Generating static pages (0/13)
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+- [36minfo[39m Generating static pages (3/13)
+- [36minfo[39m Generating static pages (6/13)
+- [36minfo[39m Generating static pages (9/13)
+- [36minfo[39m Generating static pages (13/13)
+- [36minfo[39m Finalizing page optimization...
+
+[4mRoute (app)[24m                                [4mSize[24m     [4mFirst Load JS[24m
+┌ ○ /                                      22.3 kB         [32m125 kB[39m
+├ ○ /_not-found                            0 B                [32m0 B[39m
+├ ○ /about                                 5.34 kB        [32m82.9 kB[39m
+├ ○ /api/hello                             0 B                [32m0 B[39m
+├ ○ /boutique                              191 B          [32m77.8 kB[39m
+├ ○ /faq                                   191 B          [32m77.8 kB[39m
+├ ○ /fi                                    191 B          [32m77.8 kB[39m
+├ ○ /help                                  191 B          [32m77.8 kB[39m
+├ ○ /market                                137 B          [32m77.7 kB[39m
+├ ○ /privacy                               191 B          [32m77.8 kB[39m
+├ λ /product/[id]                          80.9 kB         [31m[1m605 kB[22m[39m
+└ ○ /tos                                   181 B          [32m77.8 kB[39m
++ First Load JS shared by all              [32m77.6 kB[39m
+  ├ chunks/25b6c4a8-6c37ed5754636965.js    50.5 kB
+  ├ chunks/62-8b2dd20b714b41fc.js          24.9 kB
+  ├ chunks/main-app-e77d565272113104.js    220 B
+  └ chunks/webpack-e2710df2ec1a8fd0.js     1.98 kB
+
+[4mRoute (pages)[24m                              [4mSize[24m     [4mFirst Load JS[24m
+─ ○ /404                                   184 B          [32m75.2 kB[39m
++ First Load JS shared by all              [32m75 kB[39m
+  ├ chunks/framework-1fbbe69cdfaf1369.js   45.1 kB
+  ├ chunks/main-82f2e7911d352b03.js        27.8 kB
+  ├ chunks/pages/_app-054378d69e22805a.js  198 B
+  └ chunks/webpack-e2710df2ec1a8fd0.js     1.98 kB
+
+λ  (Server)  server-side renders at runtime (uses [36mgetInitialProps[39m or [36mgetServerSideProps[39m)
+○  (Static)  automatically rendered as static HTML (uses no initial props)
+
