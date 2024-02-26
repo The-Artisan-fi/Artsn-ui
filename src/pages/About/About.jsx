@@ -72,12 +72,11 @@ const teamDataDesktop = [
         title: "F1 Ambassador",
         img: craig,
         about: [
-            "F1 - Formula Equal (F=)",
+            "Founding Partner - F1 - Formula Equal (F=)",
             "Partner and Senior Advisor - Monaco Foundry",
-            "Founder & Chairman - Pure Corporation Sa",
+            "Founder & Chairman - Pure Corporation Sa - F1 Hybrid Power Unit Design And Development",
             "Founder - PK Racing IndyCar",
             "Co-Founder - Stellar Management Ltd. Managing Jacques Villeneuve, Ayrton Senna Foundation rights, Prost rights",
-            "F1 hybrid Power Unit Design and Development"
         ],
         linkedIn: "https://www.linkedin.com/in/craig-pollock-538a9412/",
         twitter: "#",
@@ -180,12 +179,11 @@ const teamDataMobile = [
         title: "F1 Ambassador",
         img: craig,
         about: [
-            "F1 - Formula Equal (F=)",
+            "Founding Partner - F1 - Formula Equal (F=)",
             "Partner and Senior Advisor - Monaco Foundry",
-            "Founder & Chairman - Pure Corporation Sa",
+            "Founder & Chairman - Pure Corporation Sa - F1 Hybrid Power Unit Design And Development",
             "Founder - PK Racing IndyCar",
             "Co-Founder - Stellar Management Ltd. Managing Jacques Villeneuve, Ayrton Senna Foundation rights, Prost rights",
-            "F1 hybrid Power Unit Design and Development"
         ],
         linkedIn: "https://www.linkedin.com/in/craig-pollock-538a9412/",
         twitter: "#",
