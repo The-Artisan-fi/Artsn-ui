@@ -7,6 +7,7 @@ import {
     Keypair,
     TransactionMessage,
     VersionedTransaction,
+    TransactionInstruction,
   } from "@solana/web3.js";
   import { CustomChainConfig, IProvider } from "@web3auth/base";
   import { SolanaWallet } from "@web3auth/solana-provider";
@@ -57,7 +58,7 @@ import {
       }
     };
   
-    sendTransaction = async (): Promise<string> => {
+    sendTransaction = async (tx: TransactionInstruction): Promise<string> => {
       try {
         const solanaWallet = new SolanaWallet(this.provider);
   
@@ -76,12 +77,12 @@ import {
           toPubkey: new PublicKey(accounts[0]),
           lamports: 0.01 * LAMPORTS_PER_SOL,
         });
-  
+        console.log('[public key]', accounts[0])
         const transaction = new Transaction({
           blockhash: block.blockhash,
           lastValidBlockHeight: block.lastValidBlockHeight,
           feePayer: new PublicKey(accounts[0]),
-        }).add(TransactionInstruction);
+        }).add(tx);
   
         const { signature } = await solanaWallet.signAndSendTransaction(
           transaction
@@ -174,8 +175,8 @@ import {
         throw error;
       }
     };
-    signAllTransaction = async (): Promise<Transaction[]> => {
-      try {
+    signAllTransaction = async (tx: TransactionInstruction): Promise<Transaction[]> => {
+
         const solanaWallet = new SolanaWallet(this.provider);
         const connectionConfig = await solanaWallet.request<string[], CustomChainConfig>({ method: "solana_provider_config", params: [] });
         const conn = new Connection(connectionConfig.rpcTarget);
@@ -183,31 +184,16 @@ import {
         const pubKey = await solanaWallet.requestAccounts();
         const { blockhash } = await conn.getRecentBlockhash("finalized");
   
-        const TransactionInstruction = SystemProgram.transfer({
-          fromPubkey: new PublicKey(pubKey[0]),
-          toPubkey: new PublicKey(pubKey[0]),
-          lamports: 0.01 * LAMPORTS_PER_SOL,
-        });
-        const TransactionInstruction1 = SystemProgram.transfer({
-          fromPubkey: new PublicKey(pubKey[0]),
-          toPubkey: new PublicKey(pubKey[0]),
-          lamports: 0.02 * LAMPORTS_PER_SOL,
-        });
-        const TransactionInstruction2 = SystemProgram.transfer({
-          fromPubkey: new PublicKey(pubKey[0]),
-          toPubkey: new PublicKey(pubKey[0]),
-          lamports: 0.03 * LAMPORTS_PER_SOL,
-        });
-        const transaction = new Transaction({ recentBlockhash: blockhash, feePayer: new PublicKey(pubKey[0]) }).add(TransactionInstruction);
-        const transaction1 = new Transaction({ recentBlockhash: blockhash, feePayer: new PublicKey(pubKey[0]) }).add(TransactionInstruction1);
-        const transaction2 = new Transaction({ recentBlockhash: blockhash, feePayer: new PublicKey(pubKey[0]) }).add(TransactionInstruction2);
+        // const TransactionInstruction = SystemProgram.transfer({
+        //   fromPubkey: new PublicKey(pubKey[0]),
+        //   toPubkey: new PublicKey(pubKey[0]),
+        //   lamports: 0.01 * LAMPORTS_PER_SOL,
+        // });
+
+        const transaction = new Transaction({ recentBlockhash: blockhash, feePayer: new PublicKey(pubKey[0]) }).add(tx);
   
-        const signedTx = await solanaWallet.signAllTransactions([transaction, transaction1, transaction2]);
+        const signedTx = await solanaWallet.signAllTransactions([transaction]);
         return signedTx;
-      } catch (error) {
-        throw error;
-        // return error as string;
-      }
     };
   
   

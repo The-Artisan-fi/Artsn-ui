@@ -1,4 +1,6 @@
 import "@/styles/ProductsSectionDesktop.scss";
+import { useState, useEffect } from "react";
+import { useRouter }from "next/navigation";
 // SwiperJs for Carousel
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -8,14 +10,22 @@ import "swiper/css/free-mode";
 
 // import required modules
 import { FreeMode, Mousewheel } from "swiper";
-
+import { fetchProducts } from "@/hooks/fetchProducts";
 import products from "@/components/Utils/productData";
 
-
 const ProductsSectionDesktop = () => {
+    // const [products, setProducts] = useState({ available: [], comingSoon: [] });
+    const router = useRouter();
+    // useEffect(() => {
+    //     fetchProducts().then((products) => {
+    //         console.log('listed products', products)
+    //         setProducts(products);
+    //     });
+    // }, []);
+    
     return (
         <section className="products ">
-            {/* available
+            {/* Available */}
             <div className="products__available ">
                 <div className="products__available__slider">
                     <Swiper
@@ -37,73 +47,80 @@ const ProductsSectionDesktop = () => {
                             },
                         }}
                     >
-                        <SwiperSlide>
+                        <SwiperSlide
+                            style={{
+                                height: "528px",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                            }}
+                        >
                             <div className="products__available__slider__item-1">
                                 <h2 className="display-3 uppercase">
                                     Currently Available
                                 </h2>
                             </div>
                         </SwiperSlide>
-                        {products.comingSoon.map((item) => {
+                        {products.available.map((item) => {
                             return (
-                                <SwiperSlide key={item.id}>
-                                    <div
-                                        key={item.id}
-                                        className="products__available__slider__item"
-                                    >
+                                <div
+                                    key={item.id}
+                                    // className="products__available__slider__item"
+                                    style={{ cursor: "pointer", height: "528px" }}
+                                    onClick={() => {
+                                        router.push(`/product/${item.accountPubkey.toString()}`)
+                                    }}
+                                >
+                                    <img
+                                        src="/assets/product-border-bg.png"
+                                        alt=""
+                                        className="products__available__slider__item__bg"
+                                    />
+                                    <div className="item-top">
                                         <img
-                                            src={borderBg}
-                                            alt=""
-                                            className="products__available__slider__item__bg"
+                                            src={item.image}
+                                            alt={item.name}
+                                            className="item-top-img"
                                         />
-                                        <div className="item-top">
-                                            <img
-                                                src={item.image}
-                                                alt={item.name}
-                                                className="item-top-img"
-                                            />
-                                        </div>
-                                        <div className="item-body">
-                                            <h3 className="heading-6">
-                                                {item.name}
-                                            </h3>
+                                    </div>
+                                    <div className="item-body">
+                                        <h3 className="heading-6">{item.name}</h3>
 
-                                            <div className="item-body-details">
-                                                <div className="item-body-details-set">
-                                                    <p className="label-5">
-                                                        RELEASE
-                                                    </p>
-                                                    <p className="label-3">
-                                                        {item.releaseDate}
-                                                    </p>
-                                                </div>
+                                        <div className="item-body-details">
+                                            <div className="item-body-details-set">
+                                                <p className="label-5">
+                                                    FRACTIONS LEFT
+                                                </p>
+                                                <p className="label-3">
+                                                    {item.fractionsLeft}
+                                                </p>
+                                            </div>
 
-                                                <div className="item-body-details-set">
-                                                    <p className="label-5">
-                                                        STARTING FROM
-                                                    </p>
-                                                    <p className="label-3">
-                                                        {item.startingPrice}
-                                                    </p>
-                                                </div>
+                                            <div className="item-body-details-set">
+                                                <p className="label-5">
+                                                    STARTING FROM
+                                                </p>
+                                                <p className="label-3">
+                                                    {item.startingPrice}
+                                                </p>
+                                            </div>
 
-                                                <div className="item-body-details-set">
-                                                    <p className="label-5">
-                                                        EARNING POTENTIAL
-                                                    </p>
-                                                    <p className="label-3 green">
-                                                        {item.earningPotential}
-                                                    </p>
-                                                </div>
+                                            <div className="item-body-details-set">
+                                                <p className="label-5">
+                                                    EARNING POTENTIAL
+                                                </p>
+                                                <p className="label-3 green">
+                                                    {item.earningPotential}
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
-                                </SwiperSlide>
+                                </div>
                             );
                         })}
                     </Swiper>
                 </div>
-            </div> */}
+            </div>
             {/* coming soon */}
             <div className="products__coming ">
                 <div className="products__coming__slider">

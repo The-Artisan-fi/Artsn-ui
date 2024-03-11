@@ -2,6 +2,7 @@ import "@/styles/Footer.scss";
 
 import Link from "next/link";
 
+
 const Footer = () => {
     return (
         <div className="footer padding">
@@ -9,7 +10,13 @@ const Footer = () => {
                 <div className="footer__head">
                     <div className="footer__head__col-1">
                         <a href="https://tally.so/r/mYWaJz" className="heading-6">
-                            Join the Waiting List
+                            Launching Soon
+                        </a>
+                        <span className="email-form__label">
+                        Sign up with the mail for receiving news, offers and promotions
+                        </span>
+                        <a href="https://tally.so/r/mYWaJz" className="btn-primary">
+                            JOIN THE WAITLIST
                         </a>
                     </div>
 
@@ -17,6 +24,9 @@ const Footer = () => {
                         <a href="https://tally.so/r/wgMGzP" className="heading-6">
                             Contact Us
                         </a>
+                        <span className="label">
+                            info@theartisan-nft.com
+                        </span>
                     </div>
 
                     <div className="footer__head__col-3">
@@ -83,18 +93,28 @@ const Footer = () => {
                                 />
                             </a>
                         </div>
+                        <span className="label mobile">
+                            info@artsn.fi
+                        </span>
                     </div>
                 </div>
                 <div className="footer__top">
                     <div className="footer-column--1">
                         <Link className="footer-brand" href={"/"}>
                             <img
-                                src="/assets/footer-brand.webp"
+                                src="/assets/footer-logo1.png"
                                 alt=""
-                                className="footer-brand"
+                                className="footer-brand1"
+                            />
+                            <img
+                                src="/assets/footer-logo2.png"
+                                alt=""
+                                className="footer-brand2"
                             />
                         </Link>
-                        <p className="body-regular">info@artsn.fi</p>
+                        <p className="body-mob">
+                            Own and Collect Luxury Goods
+                        </p>
                         <p className="body-regular">
                             The Artisan is a digital boutique specializing in fractionalized high-end collectibles
                         </p>
@@ -113,49 +133,35 @@ const Footer = () => {
                     </div>
 
                     <div className="footer-column--2">
-                        <p className="footer__heading">Browse</p>
-                        <ul className="footer__list">
-                            <li className="footer__item">
-                                <a href="/market" className="footer__link">
-                                    The Market
-                                </a>
-                            </li>
-                            <li className="footer__item">
-                                <a href="/fi" className="footer__link">
-                                    TheFi
-                                </a>
-                            </li>
-                            <li className="footer__item">
-                                <a href="https://theboutique-vr.com/" className="footer__link">
-                                    The Boutique
-                                </a>
-                            </li>
-                            <li className="footer__item">
-                                <a href="/about" className="footer__link">
-                                    About Us
-                                </a>
-                            </li>
-                        </ul>
+                        <p className="heading">Browse</p>
+                        <div className="footer__list">
+                            <a href="/market" className="footer__link">
+                                The Market
+                            </a>
+                            <a href="/fi" className="footer__link">
+                                TheFi
+                            </a>
+                            <a href="https://theboutique-vr.com/" className="footer__link">
+                                The Boutique
+                            </a>
+                            <a href="/about" className="footer__link">
+                                About Us
+                            </a>
+                        </div>
                     </div>
                     <div className="footer-column--3 ">
-                        <p className="footer__heading">Resources</p>
-                        <ul className="footer__list">
-                            <li className="footer__item">
-                                <a href="tos" className="footer__link">
-                                    Terms and Conditions
-                                </a>
-                            </li>
-                            <li className="footer__item">
-                                <a href="/privacy" className="footer__link">
-                                    Privacy Policy
-                                </a>
-                            </li>
-                            <li className="footer__item">
-                                <a href="/help" className="footer__link">
-                                    Help Center
-                                </a>
-                            </li>
-                        </ul>
+                        <p className="heading">Resources</p>
+                        <div className="footer__list">
+                            <a href="tos" className="footer__link">
+                                Terms and Conditions
+                            </a>
+                            <a href="/privacy" className="footer__link">
+                                Privacy Policy
+                            </a>
+                            <a href="/help" className="footer__link">
+                                Help Center
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <div className="hr"></div>
