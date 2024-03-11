@@ -5,8 +5,9 @@ import {
     SystemProgram,
     Keypair,
     Transaction,
-    Connection
+    Connection,
   } from "@solana/web3.js";
+  import * as b58 from "bs58";
   
 
 export async function POST( request: Request ) {
@@ -40,18 +41,23 @@ export async function POST( request: Request ) {
         const { blockhash } = await connection.getLatestBlockhash("finalized");
 
         const feeKey = process.env.PRIVATE_KEY!;
-        // generate a new keypair from the private key which is a Uint8Array
-        const feePayer = Keypair.fromSecretKey(Uint8Array.from(JSON.parse(feeKey)));
+        
+        // const feePayer = Keypair.fromSecretKey(Uint8Array.from(JSON.parse(feeKey)));
+        // console.log(feePayer.publicKey.toBase58());
+
+        // generate a new keypair from the private key which is a Base58 string
+        const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
         console.log(feePayer.publicKey.toBase58());
+
         const transaction = new Transaction({
             recentBlockhash: blockhash,
             feePayer: buyer_publicKey,
             // feePayer: feePayer.publicKey,
         });
-    
+        
         transaction.add(profileInitIx);
-        // transaction.partialSign(feePayer);
-
+        // transaction.sign(feePayer);
+        
         const serializedTransaction = transaction.serialize({
             requireAllSignatures: false,
           });

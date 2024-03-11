@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useWallet } from "@solana/wallet-adapter-react";
 import { Transaction, Connection, PublicKey } from "@solana/web3.js";
 import { checkLogin } from '../Web3Auth/checkLogin';
-
+import { toast } from 'react-toastify';
 interface ProfileModalProps {
     showModal: boolean;
     handleClose: () => void;
@@ -48,7 +48,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose }) =
                 const signature = await sendTransaction(tx, connection , {
                     skipPreflight: true,
                 });
-                
+
                 console.log(
                     `Transaction sent: https://explorer.solana.com/tx/${signature}?cluster=devnet`
                 );
@@ -73,7 +73,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose }) =
                 const tx = Transaction.from(Buffer.from(txData.transaction, "base64"));
                 console.log('sending tx to web3auth', tx)
                 const signature = await rpc.sendTransaction(tx);
-                
+                toast.success(`Transaction sent: ${signature}`);
                 console.log(
                     `Web3Auth Transaction sent: https://explorer.solana.com/tx/${signature}?cluster=devnet`
                 );

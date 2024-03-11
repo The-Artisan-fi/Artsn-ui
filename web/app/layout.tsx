@@ -2,7 +2,8 @@ import './global.css';
 import { AppLayout } from '@/components/Ui/app-layout';
 import { ClusterProvider } from '@/components/Cluster/cluster-data-access';
 import { SolanaProvider } from '@/components/Solana/solana-provider';
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export const metadata = {
   title: 'The Artisan',
   description: 'A luxury watch digital boutique',

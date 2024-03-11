@@ -12,6 +12,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import Web3AuthLogin from "../Web3Auth/Web3Auth";
 import { checkLogin } from "../Web3Auth/checkLogin";
 import ProfileModal from "../Profile/ProfileModal";
+import { ToastContainer, toast } from "react-toastify";
 
 function Navbar() {
     // navbar state
@@ -89,6 +90,7 @@ function Navbar() {
             })
             const profile = await response.json();
             console.log('profile', profile.profile);
+            toast.success('Profile exists');
             setBuyerProfileExists(profile.profile);
         } catch (error) {
             console.error('Error sending transaction', error);
@@ -306,6 +308,18 @@ function Navbar() {
                     />
                 </div>
             )}
+            <ToastContainer
+                position="bottom-left"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+              />
         </div>
     );
 }
