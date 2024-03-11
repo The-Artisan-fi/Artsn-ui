@@ -39,12 +39,18 @@ export async function POST( request: Request ) {
 
         const { blockhash } = await connection.getLatestBlockhash("finalized");
 
+        const feeKey = process.env.PRIVATE_KEY!;
+        // generate a new keypair from the private key which is a Uint8Array
+        const feePayer = Keypair.fromSecretKey(Uint8Array.from(JSON.parse(feeKey)));
+        console.log(feePayer.publicKey.toBase58());
         const transaction = new Transaction({
             recentBlockhash: blockhash,
             feePayer: buyer_publicKey,
+            // feePayer: feePayer.publicKey,
         });
     
         transaction.add(profileInitIx);
+        // transaction.partialSign(feePayer);
 
         const serializedTransaction = transaction.serialize({
             requireAllSignatures: false,

@@ -42,9 +42,12 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose }) =
                     })
                 })
                 const txData = await response.json();
+                console.log('txData', txData)
                 const tx = Transaction.from(Buffer.from(txData.transaction, "base64"));
             
-                const signature = await sendTransaction(tx, connection, {skipPreflight: true});
+                const signature = await sendTransaction(tx, connection , {
+                    skipPreflight: true,
+                });
                 
                 console.log(
                     `Transaction sent: https://explorer.solana.com/tx/${signature}?cluster=devnet`

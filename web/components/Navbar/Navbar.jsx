@@ -164,7 +164,7 @@ function Navbar() {
                                             }
                                         }}
                                     >
-                                        {publicKey | web3AuthPublicKey ? 'Start Collecting' : 'Login'}
+                                        {!publicKey && !web3AuthPublicKey ? 'Login' : 'Start Collecting'}  
                                     </button>
                                 )}
                                 {publicKey && !web3AuthPublicKey &&(
@@ -268,7 +268,7 @@ function Navbar() {
                                     }
                                 }}
                             >
-                                {publicKey | web3AuthPublicKey && !buyerProfileExists ? 'Start Collecting' : 'Login'}
+                                {!publicKey && !web3AuthPublicKey ? 'Login' : 'Start Collecting'}  
                             </button>
                         )}
 
