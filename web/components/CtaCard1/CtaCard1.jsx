@@ -8,8 +8,24 @@ const CTA1Card = () => {
                 alt=""
                 className="cta1-card__illustration"
             />
-            <h3 className="display-3">Stay in The Loop</h3>
+            <div className="cta1-card__content">
+                <div className="cta1-card__content__title">
+                    <p className="heading-secondary">
+                        Get Updated And Discover All The News in The Artisan
+                    </p>
+                    <h3 className="display-3">
+                        Get Priority, {" "}
+                        <br className="heading-break"/>
+                        Join the Waitlist
+                    </h3>
+                </div>
+                <div className="cta1-card__sub">
+                    <a href="https://tally.so/r/nrAPvX" className="sub-btn uppercase">
+                        <img src="/assets/social-icons/icon4.svg" alt="" className="icon" />
+                        Join the Waitlist Now
+                    </a>
 
+<<<<<<< HEAD
             <div className="cta1-card__sub">
                 <a href="https://tally.so/r/nrAPvX" className="btn btn-primary">
                     <img src="/assets/social-icons/icon4.svg" alt="" className="icon" />
@@ -20,7 +36,14 @@ const CTA1Card = () => {
                     <img src="/assets/discord-icon.svg" alt="" className="icon" />
                     <div className="text">JOIN OUR DISCORD</div>
                 </a>
+=======
+                    <a href="https://discord.com/invite/TWPkseGJEG" className="sub-btn uppercase">
+                        <img src="/assets/discord-icon.svg" alt="" className="icon" />
+                        <div className="text">Join Discord Community</div>
+                    </a>
+>>>>>>> @{-1}
 
+                </div>
             </div>
             
         </div>

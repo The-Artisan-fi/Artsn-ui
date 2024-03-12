@@ -1,8 +1,8 @@
 // Navigation bar
 .navbar {
     font-family: Montserrat;
-    padding-top: 2rem;
-    padding-bottom: 2rem;
+    padding: 28px 20px 28px 20px;
+    width: 100vw;
 }
 header {
     width: 100%;
@@ -26,6 +26,28 @@ header {
     align-items: center;
     justify-content: space-between;
     gap: 4.2rem;
+}
+
+.btn {
+    // margin-left: 50px;
+    // margin-right: 20px;
+    height: auto;
+    width: auto;
+    display: flex;
+    padding: 10px 15px;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    border-radius: 7px;
+    border: 1px solid #F90;
+    background: rgba(255, 153, 0, 0.30);
+    color: #FFF;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: 1px;
 }
 
 .header-left {
@@ -82,6 +104,10 @@ header {
     text-decoration: none;
 }
 
+.header-container-mob {
+    display: none;
+}
+
 .header-right-mob {
     display: none;
 }
@@ -97,6 +123,7 @@ header {
     z-index: 1000;
     display: none;
 }
+
 .header-mob-head {
     width: 100%;
     display: flex;
@@ -117,6 +144,7 @@ header {
     display: flex;
     flex-direction: column;
     align-items: center;
+    align-content: center;
     justify-content: flex-start;
     padding-top: 6vh;
     height: 90vh;
@@ -167,6 +195,10 @@ header {
         display: none;
     }
 
+    .header-container-mob {
+        display: none;
+    }
+
     .header-right-mob {
         display: flex;
         gap: 3rem;
@@ -183,9 +215,43 @@ header {
     }
 }
 
-@media screen and (max-width: 600px) {
-    .navbrand img {
-        width: 15rem;
+@media screen and (max-width: 999px) {
+    .navbar {
+        padding: 0 0 0 0;
+        margin-bottom: 5rem;
+    }
+
+    .navbrand {
+        display: none;
+    }
+
+    .navbrand-mob img {
+        width: 80px;
+        height: 80px;
+        flex-shrink: 0;
+    }
+
+    .header-container-mob {
+        display: flex;
+        flex-direction: row;
+        display: flex;
+        width: 100vw;
+        height: 84px;
+        padding: 5px 25px 18px 25px;
+        justify-content: space-between;
+        align-items: center;
+        flex-shrink: 0;
+    }
+
+    .icon-menu {
+        width: 30px;
+        height: 30px;
+        flex-shrink: 0;
+    }
+
+    .profile-icon {
+        width: 30px;
+        height: 30px;
     }
 
     .header-right-mob {

@@ -35,11 +35,18 @@ export const fetchProducts = async () => {
                 filters: [size_filter]
             };
             const all_program_accounts = await connection.getProgramAccounts(new PublicKey(PROGRAM_ID), get_accounts_config);
+<<<<<<< HEAD
             console.log('all_program_accounts', all_program_accounts)
             const productList = all_program_accounts.map((account) => {
                 try {
                     const decode = program.coder.accounts.decode("Listing", account.account.data);
                     console.log('decode', decode.id.toNumber());
+=======
+            const productList = all_program_accounts.map((account) => {
+                try {
+                    const decode = program.coder.accounts.decode("Listing", account.account.data);
+                    // console.log('decode', decode.id.toNumber());
+>>>>>>> @{-1}
                     return {
                         accountPubkey: account.pubkey.toBase58(),
                         ...decode

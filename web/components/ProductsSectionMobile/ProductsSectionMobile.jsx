@@ -1,6 +1,7 @@
 import "@/styles/ProductsSectionMobile.scss";
 import { useEffect, useState } from "react";
 import { useRouter }from "next/navigation";
+<<<<<<< HEAD
 // import products from "@/components/Utils/productData";
 import { fetchProducts } from "@/hooks/fetchProducts";
 const ProductsSectionMobile = () => {
@@ -12,11 +13,28 @@ const ProductsSectionMobile = () => {
             setProducts(products);
         });
     }, []);
+=======
+import products from "@/components/Utils/productData";
+import { fetchProducts } from "@/hooks/fetchProducts";
+const ProductsSectionMobile = () => {
+    // const [products, setProducts] = useState({ available: [], comingSoon: [] });
+    const router = useRouter();
+    // useEffect(() => {
+    //     fetchProducts().then((products) => {
+    //         console.log('listed products', products)
+    //         setProducts(products);
+    //     });
+    // }, []);
+>>>>>>> @{-1}
     return (
         <section className="products ">
             {/* available */}
             <div className="products__available ">
+<<<<<<< HEAD
                 <h2 className="display-3 uppercase">Currently Available</h2>
+=======
+                <h2 className="display">Currently available</h2>
+>>>>>>> @{-1}
 
                 <div className="products__available__slider">
                     {products.available.map((item) => {
@@ -41,7 +59,10 @@ const ProductsSectionMobile = () => {
                                     />
                                 </div>
                                 <div className="item-body">
-                                    <h3 className="heading-6">{item.name}</h3>
+                                    <h3 className="heading-6">
+                                        {item.name} <br/>
+                                        {item.description}
+                                    </h3>
 
                                     <div className="item-body-details">
                                         <div className="item-body-details-set">
@@ -71,6 +92,16 @@ const ProductsSectionMobile = () => {
                                             </p>
                                         </div>
                                     </div>
+
+                                    <button 
+                                        className="collect-btn"
+                                        onClick={() => {
+                                            // router.push(`/product/${item.accountPubkey.toString()}`)
+                                            router.push(`/product/1`);
+                                        }}
+                                    >
+                                        <p className="text">COLLECT NOW (TESTNET)</p>
+                                    </button>
                                 </div>
                             </div>
                         );
@@ -79,7 +110,7 @@ const ProductsSectionMobile = () => {
             </div>
 
             <div className="products__coming ">
-                <h2 className="display-3 uppercase">Coming Soon</h2>
+                <h2 className="display">Coming soon</h2>
 
                 <div className="products__coming__slider">
                     {products.comingSoon.map((item) => {
@@ -100,13 +131,16 @@ const ProductsSectionMobile = () => {
                                         className="item-top-img"
                                     />
                                 </div>
-                                <div className="item-body">
-                                    <h3 className="heading-6">{item.name}</h3>
+                                <div className="item-body coming-soon" style={{marginTop: "20px"}}>
+                                    <h3 className="heading-6">
+                                        {item.name} <br/>
+                                        {item.description}
+                                    </h3>
 
                                     <div className="item-body-details">
                                         <div className="item-body-details-set">
-                                            <p className="label-5">RELEASE</p>
-                                            <p className="label-3">
+                                            <p className="label-5 release">RELEASE</p>
+                                            <p className="label-3 release-date">
                                                 {item.releaseDate}
                                             </p>
                                         </div>
