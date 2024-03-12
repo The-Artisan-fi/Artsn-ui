@@ -20,7 +20,7 @@ export async function checkLogin(){
     const web3auth = new Web3AuthNoModal({
       clientId,
       chainConfig,
-      web3AuthNetwork: "sapphire_devnet",
+      web3AuthNetwork: "sapphire_mainnet",
     });
 
 

@@ -351,4 +351,3 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
     );
 };
 
-

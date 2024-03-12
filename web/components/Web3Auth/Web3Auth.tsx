@@ -96,7 +96,7 @@ const Web3AuthLogin: React.FC<ProfileModalProps> = ({showModal, handleClose}) =>
               const web3auth = new Web3AuthNoModal({
                 clientId,
                 chainConfig,
-                web3AuthNetwork: "sapphire_devnet",
+                web3AuthNetwork: "sapphire_mainnet",
               });
       
               setWeb3auth(web3auth);

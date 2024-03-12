@@ -54,13 +54,21 @@ export default function Create() {
         const { data } = useSWR<{ Key?: string }[]>("/api/aws/s3/upload", fetcher)
         if(!data) return null
         console.log("images ",data)
+        // filter for images w/ Key AqANMWkAuFCaRxjtRFqDDxydvRr7xWrEQ1ZNVRnGwkrK/ and end in .jpg
+        const filteredData = data.filter((image) => image.Key?.includes(
+            "AqANMWkAuFCaRxjtRFqDDxydvRr7xWrEQ1ZNVRnGwkrK/"
+        ) && image.Key?.includes(".jpg"))
+        console.log('filteredData', filteredData)
         // @ts-expect-error : data is not null
-        return data?.map((image) => <S3Image Key={image.Key} />)
+        return filteredData?.map((image) => <S3Image Key={image.Key} />)
     }
 
     const S3Image = ({ Key }: { Key: string }) => {
         const { data } = useSWR<{ src: string }>(`/api/aws/s3/get/${Key}`, fetcher)
-        if (!data) return null
+        if (!data) {
+            console.log('no data')
+            return null
+        }
         console.log(data)
         return <Image src={data.src} style={{height: '60px', width: '60px'}}/>
     }

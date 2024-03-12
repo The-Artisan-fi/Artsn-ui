@@ -1,17 +1,17 @@
 import "@/styles/ProductsSectionMobile.scss";
 import { useEffect, useState } from "react";
 import { useRouter }from "next/navigation";
-import products from "@/components/Utils/productData";
+// import products from "@/components/Utils/productData";
 import { fetchProducts } from "@/hooks/fetchProducts";
 const ProductsSectionMobile = () => {
-    // const [products, setProducts] = useState({ available: [], comingSoon: [] });
+    const [products, setProducts] = useState({ available: [], comingSoon: [] });
     const router = useRouter();
-    // useEffect(() => {
-    //     fetchProducts().then((products) => {
-    //         console.log('listed products', products)
-    //         setProducts(products);
-    //     });
-    // }, []);
+    useEffect(() => {
+        fetchProducts().then((products) => {
+            console.log('listed products', products)
+            setProducts(products);
+        });
+    }, []);
     return (
         <section className="products ">
             {/* available */}
@@ -75,8 +75,8 @@ const ProductsSectionMobile = () => {
                                     <button 
                                         className="collect-btn"
                                         onClick={() => {
-                                            // router.push(`/product/${item.accountPubkey.toString()}`)
-                                            router.push(`/product/1`);
+                                            router.push(`/product/${item.accountPubkey.toString()}`)
+                                            // router.push(`/product/1`);
                                         }}
                                     >
                                         <p className="text">COLLECT NOW (TESTNET)</p>
