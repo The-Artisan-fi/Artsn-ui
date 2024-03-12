@@ -14,6 +14,8 @@ import { useLazyQuery } from "@apollo/client";
 import { listing } from "@/lib/queries";
 import { Transaction, Connection } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
+import Link from "next/link";
+import { toast } from "react-toastify";
 
 type ProductDetails = {
     id: number;
@@ -158,8 +160,10 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
             console.log(
                 `Transaction sent: https://explorer.solana.com/tx/${signature}?cluster=devnet`
               );
+            toast.success(<Link href={`https://explorer.solana.com/tx/${signature}?cluster=devnet`}> Transaction sent </Link>);
         } catch (error) {
             console.error('Error sending transaction', error);
+            toast.error('Error sending transaction');
         }
     }
     // ***************************************************************************

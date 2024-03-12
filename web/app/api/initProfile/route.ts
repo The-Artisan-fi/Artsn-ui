@@ -28,35 +28,27 @@ export async function POST( request: Request ) {
 
         // VARIABLES
         const buyerProfile = PublicKey.findProgramAddressSync([Buffer.from('profile'), buyer_publicKey.toBuffer()], program.programId)[0];
-
-        const profileInitIx = await await program.methods
+        const feeKey = process.env.PRIVATE_KEY!;
+        const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
+        const profileInitIx = await program.methods
             .initializeProfileAccount()
             .accounts({
+                payer: feePayer.publicKey,
                 user: buyer_publicKey,
                 profile: buyerProfile,
                 systemProgram: SystemProgram.programId,
             })
-            .instruction();
+            .instruction()
 
         const { blockhash } = await connection.getLatestBlockhash("finalized");
 
-        const feeKey = process.env.PRIVATE_KEY!;
-        
-        // const feePayer = Keypair.fromSecretKey(Uint8Array.from(JSON.parse(feeKey)));
-        // console.log(feePayer.publicKey.toBase58());
-
-        // generate a new keypair from the private key which is a Base58 string
-        const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
-        console.log(feePayer.publicKey.toBase58());
-
         const transaction = new Transaction({
             recentBlockhash: blockhash,
-            feePayer: buyer_publicKey,
-            // feePayer: feePayer.publicKey,
+            feePayer: feePayer.publicKey,
         });
         
         transaction.add(profileInitIx);
-        // transaction.sign(feePayer);
+        transaction.partialSign(feePayer);
         
         const serializedTransaction = transaction.serialize({
             requireAllSignatures: false,
