@@ -13,6 +13,13 @@ export const listing = gql`
             images
             marketValue
             pastReturns
+            basicInfo
+            currency
+            description
+            model
+            offerViews
+            sold
+            total
         }
     }
     `;
@@ -29,6 +36,13 @@ export const allListings = gql`
             images
             marketValue
             pastReturns
+            basicInfo
+            currency
+            description
+            model
+            offerViews
+            sold
+            total
         }
     }
 `;
