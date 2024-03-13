@@ -5,8 +5,9 @@ import {
     SystemProgram,
     Keypair,
     Transaction,
-    Connection
+    Connection,
   } from "@solana/web3.js";
+  import * as b58 from "bs58";
   
 
 export async function POST( request: Request ) {
@@ -27,25 +28,28 @@ export async function POST( request: Request ) {
 
         // VARIABLES
         const buyerProfile = PublicKey.findProgramAddressSync([Buffer.from('profile'), buyer_publicKey.toBuffer()], program.programId)[0];
-
-        const profileInitIx = await await program.methods
+        const feeKey = process.env.PRIVATE_KEY!;
+        const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
+        const profileInitIx = await program.methods
             .initializeProfileAccount()
             .accounts({
+                payer: feePayer.publicKey,
                 user: buyer_publicKey,
                 profile: buyerProfile,
                 systemProgram: SystemProgram.programId,
             })
-            .instruction();
+            .instruction()
 
         const { blockhash } = await connection.getLatestBlockhash("finalized");
-
+        console.log('blockhash', blockhash)
         const transaction = new Transaction({
             recentBlockhash: blockhash,
-            feePayer: buyer_publicKey,
+            feePayer: feePayer.publicKey,
         });
-    
+        
         transaction.add(profileInitIx);
-
+        transaction.partialSign(feePayer);
+        
         const serializedTransaction = transaction.serialize({
             requireAllSignatures: false,
           });

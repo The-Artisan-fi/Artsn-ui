@@ -93,6 +93,11 @@ export type Fragment = {
           "isSigner": true
         },
         {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
           "name": "profile",
           "isMut": true,
           "isSigner": false
@@ -201,7 +206,7 @@ export type Fragment = {
           "isSigner": false
         },
         {
-          "name": "watch",
+          "name":"watch",
           "isMut": true,
           "isSigner": false
         },
@@ -222,7 +227,7 @@ export type Fragment = {
         },
         {
           "name": "reference",
-          "type": "u64"
+          "type": "string"
         },
         {
           "name": "diamater",
@@ -247,10 +252,6 @@ export type Fragment = {
         {
           "name": "yearOfProduction",
           "type": "u16"
-        },
-        {
-          "name": "uri",
-          "type": "string"
         }
       ]
     },
@@ -319,6 +320,10 @@ export type Fragment = {
         {
           "name": "startingTime",
           "type": "i64"
+        },
+        {
+          "name": "uri",
+          "type": "string"
         }
       ]
     },
@@ -327,6 +332,11 @@ export type Fragment = {
       "accounts": [
         {
           "name": "buyer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "payer",
           "isMut": true,
           "isSigner": true
         },
@@ -403,7 +413,7 @@ export type Fragment = {
   "accounts": [
     {
       "name": "Protocol",
-      "type": {
+      "type":  {
         "kind": "struct",
         "fields": [
           {
@@ -413,207 +423,212 @@ export type Fragment = {
         ]
       }
     },
-    {"name": "Admin",
-    "type": {
-      "kind": "struct",
-      "fields": [
-        {
-          "name": "publickey",
-          "type": "publicKey"
-        },
-        {
-          "name": "username",
-          "type": "string"
-        },
-        {
-          "name": "initialized",
-          "type": "i64"
-        }
-      ]
-    }
-  },
-  {
-    "name": "Profile",
-    "type": {
-      "kind": "struct",
-      "fields": [
-        {
-          "name": "membership",
-          "type": {
-            "defined": "Membership"
+    {
+      "name": "Admin",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "publickey",
+            "type": "publicKey"
+          },
+          {
+            "name": "username",
+            "type": "string"
+          },
+          {
+            "name": "initialized",
+            "type": "i64"
           }
-        },
-        {
-          "name": "isVerified",
-          "type": "bool"
-        },
-        {
-          "name": "spending",
-          "type": "u64"
-        }
-      ]
+        ]
+      }
+    },
+    {
+      "name": "Profile",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "membership",
+            "type": {
+              "defined": "Membership"
+            }
+          },
+          {
+            "name": "isVerified",
+            "type": "bool"
+          },
+          {
+            "name": "spending",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Watch",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "brand",
+            "type": "string"
+          },
+          {
+            "name": "model",
+            "type": "string"
+          },
+          {
+            "name": "reference",
+            "type": "string"
+          },
+          {
+            "name": "diamater",
+            "type": "u8"
+          },
+          {
+            "name": "movement",
+            "type": "string"
+          },
+          {
+            "name": "dialColor",
+            "type": "string"
+          },
+          {
+            "name": "caseMaterial",
+            "type": "string"
+          },
+          {
+            "name": "braceletMaterial",
+            "type": "string"
+          },
+          {
+            "name": "yearOfProduction",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Listing",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "u64"
+          },
+          {
+            "name": "watch",
+            "type": "publicKey"
+          },
+          {
+            "name": "reference",
+            "type": "string"
+          },
+          {
+            "name": "share",
+            "type": "u16"
+          },
+          {
+            "name": "shareSold",
+            "type": "u16"
+          },
+          {
+            "name": "price",
+            "type": "u64"
+          },
+          {
+            "name": "startingTime",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CompletedListing",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "u64"
+          },
+          {
+            "name": "watch",
+            "type": "publicKey"
+          },
+          {
+            "name": "reference",
+            "type": "string"
+          },
+          {
+            "name": "share",
+            "type": "u16"
+          },
+          {
+            "name": "price",
+            "type": "u64"
+          }
+        ]
+      }
     }
-  },
-  {
-    "name": "Watch",
-    "type": {
-      "kind": "struct",
-      "fields": [
-        {
-          "name": "brand",
-          "type": "string"
-        },
-        {
-          "name": "model",
-          "type": "string"
-        },
-        {
-          "name": "reference",
-          "type": "u64"
-        },
-        {
-          "name": "diamater",
-          "type": "u8"
-        },
-        {
-          "name": "movement",
-          "type": "string"
-        },
-        {
-          "name": "dialColor",
-          "type": "string"
-        },
-        {
-          "name": "caseMaterial",
-          "type": "string"
-        },
-        {
-          "name": "braceletMaterial",
-          "type": "string"
-        },
-        {
-          "name": "yearOfProduction",
-          "type": "u16"
-        },
-        {
-          "name": "uri",
-          "type": "string"
-        }
-      ]
+  ],
+  "types": [
+    {
+      "name": "BuyingError",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "NotVerified"
+          },
+          {
+            "name": "NotTimeYet"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Membership",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Platinum"
+          },
+          {
+            "name": "Gold"
+          },
+          {
+            "name": "Basic"
+          }
+        ]
+      }
     }
-  },
-  {
-    "name": "Listing",
-    "type": {
-      "kind": "struct",
-      "fields": [
-        {
-          "name": "id",
-          "type": "u64"
-        },
-        {
-          "name": "watch",
-          "type": "publicKey"
-        },
-        {
-          "name": "share",
-          "type": "u16"
-        },
-        {
-          "name": "shareSold",
-          "type": "u16"
-        },
-        {
-          "name": "price",
-          "type": "u64"
-        },
-        {
-          "name": "startingTime",
-          "type": "i64"
-        }
-      ]
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "Unauthorized",
+      "msg": "You are not authorized to perform this action"
+    },
+    {
+      "code": 6001,
+      "name": "ProfileAlreadyVerified",
+      "msg": "You are already verified!"
+    },
+    {
+      "code": 6002,
+      "name": "InvalidMembershipType",
+      "msg": "You passed in the wrong Membership Type!"
+    },
+    {
+      "code": 6003,
+      "name": "InvalidCondition",
+      "msg": "You used an invalid condition"
     }
-  },
-  {
-    "name": "CompletedListing",
-    "type": {
-      "kind": "struct",
-      "fields": [
-        {
-          "name": "id",
-          "type": "u64"
-        },
-        {
-          "name": "watch",
-          "type": "publicKey"
-        },
-        {
-          "name": "share",
-          "type": "u16"
-        },
-        {
-          "name": "price",
-          "type": "u64"
-        }
-      ]
-    }
-  }
-],
-"types": [
-  {
-    "name": "BuyingError",
-    "type": {
-      "kind": "enum",
-      "variants": [
-        {
-          "name": "NotVerified"
-        },
-        {
-          "name": "NotTimeYet"
-        }
-      ]
-    }
-  },
-  {
-    "name": "Membership",
-    "type": {
-      "kind": "enum",
-      "variants": [
-        {
-          "name": "Platinum"
-        },
-        {
-          "name": "Gold"
-        },
-        {
-          "name": "Basic"
-        }
-      ]
-    }
-  }
-],
-"errors": [
-  {
-    "code": 6000,
-    "name": "Unauthorized",
-    "msg": "You are not authorized to perform this action"
-  },
-  {
-    "code": 6001,
-    "name": "ProfileAlreadyVerified",
-    "msg": "You are already verified!"
-  },
-  {
-    "code": 6002,
-    "name": "InvalidMembershipType",
-    "msg": "You passed in the wrong Membership Type!"
-  },
-  {
-    "code": 6003,
-    "name": "InvalidCondition",
-    "msg": "You used an invalid condition"
-  }
-]
+  ]
 }
   
 export const IDL: Fragment = {
@@ -708,6 +723,11 @@ export const IDL: Fragment = {
           "isSigner": true
         },
         {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
           "name": "profile",
           "isMut": true,
           "isSigner": false
@@ -816,7 +836,7 @@ export const IDL: Fragment = {
           "isSigner": false
         },
         {
-          "name": "watch",
+          "name":"watch",
           "isMut": true,
           "isSigner": false
         },
@@ -837,7 +857,7 @@ export const IDL: Fragment = {
         },
         {
           "name": "reference",
-          "type": "u64"
+          "type": "string"
         },
         {
           "name": "diamater",
@@ -862,10 +882,6 @@ export const IDL: Fragment = {
         {
           "name": "yearOfProduction",
           "type": "u16"
-        },
-        {
-          "name": "uri",
-          "type": "string"
         }
       ]
     },
@@ -934,6 +950,10 @@ export const IDL: Fragment = {
         {
           "name": "startingTime",
           "type": "i64"
+        },
+        {
+          "name": "uri",
+          "type": "string"
         }
       ]
     },
@@ -942,6 +962,11 @@ export const IDL: Fragment = {
       "accounts": [
         {
           "name": "buyer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "payer",
           "isMut": true,
           "isSigner": true
         },
@@ -1018,7 +1043,7 @@ export const IDL: Fragment = {
   "accounts": [
     {
       "name": "Protocol",
-      "type": {
+      "type":  {
         "kind": "struct",
         "fields": [
           {
@@ -1028,208 +1053,213 @@ export const IDL: Fragment = {
         ]
       }
     },
-    {"name": "Admin",
-    "type": {
-      "kind": "struct",
-      "fields": [
-        {
-          "name": "publickey",
-          "type": "publicKey"
-        },
-        {
-          "name": "username",
-          "type": "string"
-        },
-        {
-          "name": "initialized",
-          "type": "i64"
-        }
-      ]
-    }
-  },
-  {
-    "name": "Profile",
-    "type": {
-      "kind": "struct",
-      "fields": [
-        {
-          "name": "membership",
-          "type": {
-            "defined": "Membership"
+    {
+      "name": "Admin",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "publickey",
+            "type": "publicKey"
+          },
+          {
+            "name": "username",
+            "type": "string"
+          },
+          {
+            "name": "initialized",
+            "type": "i64"
           }
-        },
-        {
-          "name": "isVerified",
-          "type": "bool"
-        },
-        {
-          "name": "spending",
-          "type": "u64"
-        }
-      ]
+        ]
+      }
+    },
+    {
+      "name": "Profile",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "membership",
+            "type": {
+              "defined": "Membership"
+            }
+          },
+          {
+            "name": "isVerified",
+            "type": "bool"
+          },
+          {
+            "name": "spending",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Watch",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "brand",
+            "type": "string"
+          },
+          {
+            "name": "model",
+            "type": "string"
+          },
+          {
+            "name": "reference",
+            "type": "string"
+          },
+          {
+            "name": "diamater",
+            "type": "u8"
+          },
+          {
+            "name": "movement",
+            "type": "string"
+          },
+          {
+            "name": "dialColor",
+            "type": "string"
+          },
+          {
+            "name": "caseMaterial",
+            "type": "string"
+          },
+          {
+            "name": "braceletMaterial",
+            "type": "string"
+          },
+          {
+            "name": "yearOfProduction",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Listing",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "u64"
+          },
+          {
+            "name": "watch",
+            "type": "publicKey"
+          },
+          {
+            "name": "reference",
+            "type": "string"
+          },
+          {
+            "name": "share",
+            "type": "u16"
+          },
+          {
+            "name": "shareSold",
+            "type": "u16"
+          },
+          {
+            "name": "price",
+            "type": "u64"
+          },
+          {
+            "name": "startingTime",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CompletedListing",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "u64"
+          },
+          {
+            "name": "watch",
+            "type": "publicKey"
+          },
+          {
+            "name": "reference",
+            "type": "string"
+          },
+          {
+            "name": "share",
+            "type": "u16"
+          },
+          {
+            "name": "price",
+            "type": "u64"
+          }
+        ]
+      }
     }
-  },
-  {
-    "name": "Watch",
-    "type": {
-      "kind": "struct",
-      "fields": [
-        {
-          "name": "brand",
-          "type": "string"
-        },
-        {
-          "name": "model",
-          "type": "string"
-        },
-        {
-          "name": "reference",
-          "type": "u64"
-        },
-        {
-          "name": "diamater",
-          "type": "u8"
-        },
-        {
-          "name": "movement",
-          "type": "string"
-        },
-        {
-          "name": "dialColor",
-          "type": "string"
-        },
-        {
-          "name": "caseMaterial",
-          "type": "string"
-        },
-        {
-          "name": "braceletMaterial",
-          "type": "string"
-        },
-        {
-          "name": "yearOfProduction",
-          "type": "u16"
-        },
-        {
-          "name": "uri",
-          "type": "string"
-        }
-      ]
+  ],
+  "types": [
+    {
+      "name": "BuyingError",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "NotVerified"
+          },
+          {
+            "name": "NotTimeYet"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Membership",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Platinum"
+          },
+          {
+            "name": "Gold"
+          },
+          {
+            "name": "Basic"
+          }
+        ]
+      }
     }
-  },
-  {
-    "name": "Listing",
-    "type": {
-      "kind": "struct",
-      "fields": [
-        {
-          "name": "id",
-          "type": "u64"
-        },
-        {
-          "name": "watch",
-          "type": "publicKey"
-        },
-        {
-          "name": "share",
-          "type": "u16"
-        },
-        {
-          "name": "shareSold",
-          "type": "u16"
-        },
-        {
-          "name": "price",
-          "type": "u64"
-        },
-        {
-          "name": "startingTime",
-          "type": "i64"
-        }
-      ]
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "Unauthorized",
+      "msg": "You are not authorized to perform this action"
+    },
+    {
+      "code": 6001,
+      "name": "ProfileAlreadyVerified",
+      "msg": "You are already verified!"
+    },
+    {
+      "code": 6002,
+      "name": "InvalidMembershipType",
+      "msg": "You passed in the wrong Membership Type!"
+    },
+    {
+      "code": 6003,
+      "name": "InvalidCondition",
+      "msg": "You used an invalid condition"
     }
-  },
-  {
-    "name": "CompletedListing",
-    "type": {
-      "kind": "struct",
-      "fields": [
-        {
-          "name": "id",
-          "type": "u64"
-        },
-        {
-          "name": "watch",
-          "type": "publicKey"
-        },
-        {
-          "name": "share",
-          "type": "u16"
-        },
-        {
-          "name": "price",
-          "type": "u64"
-        }
-      ]
-    }
-  }
-],
-"types": [
-  {
-    "name": "BuyingError",
-    "type": {
-      "kind": "enum",
-      "variants": [
-        {
-          "name": "NotVerified"
-        },
-        {
-          "name": "NotTimeYet"
-        }
-      ]
-    }
-  },
-  {
-    "name": "Membership",
-    "type": {
-      "kind": "enum",
-      "variants": [
-        {
-          "name": "Platinum"
-        },
-        {
-          "name": "Gold"
-        },
-        {
-          "name": "Basic"
-        }
-      ]
-    }
-  }
-],
-"errors": [
-  {
-    "code": 6000,
-    "name": "Unauthorized",
-    "msg": "You are not authorized to perform this action"
-  },
-  {
-    "code": 6001,
-    "name": "ProfileAlreadyVerified",
-    "msg": "You are already verified!"
-  },
-  {
-    "code": 6002,
-    "name": "InvalidMembershipType",
-    "msg": "You passed in the wrong Membership Type!"
-  },
-  {
-    "code": 6003,
-    "name": "InvalidCondition",
-    "msg": "You used an invalid condition"
-  }
-]
+  ]
 }
 
 
-export const PROGRAM_ID = "we8AGpPieosNsVRDMQLVo8yLsgo2eBS7nCSPyye5cK8" as Address
+export const PROGRAM_ID = "2wj57nXtBwFAJS7mezos1mWirfVJWqxiqYAVtSt7W6F6" as Address

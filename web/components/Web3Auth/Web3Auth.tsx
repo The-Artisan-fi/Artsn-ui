@@ -23,10 +23,10 @@ const Web3AuthLogin: React.FC<ProfileModalProps> = ({showModal, handleClose}) =>
     const [loggedIn, setLoggedIn] = useState<boolean>(false);
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
 
-    const handleCloseModal = () => {
-        setIsOpen(false);
-        handleClose();
-    }
+    // const handleCloseModal = () => {
+    //     setIsOpen(false);
+    //     handleClose();
+    // }
     
     function uiConsole(...args: string[] | object[]) {
         const el = document.querySelector("#console>p");
@@ -113,7 +113,6 @@ const Web3AuthLogin: React.FC<ProfileModalProps> = ({showModal, handleClose}) =>
       
               await web3auth.init();
               setProvider(web3auth.provider);
-              console.log('provider', provider)
               if (web3auth.connected) {
                 setLoggedIn(true);
               }
@@ -160,18 +159,20 @@ const Web3AuthLogin: React.FC<ProfileModalProps> = ({showModal, handleClose}) =>
                   <div className="web3auth-container">
                     {!loggedIn ? (
                     <button 
-                      onClick={login} 
+                      onClick={() => login()} 
                       className="google-login-btn" 
                     >
-                      <CgGoogle onClick={login} className="google-icon" />
+                      <CgGoogle className="google-icon" />
                       <p className="google-login-text">
                         Sign in with Google
                       </p>
                     </button>
                     ):(
-                      <button onClick={logout} className="google-login-btn">
-                        <CgGoogle onClick={login} className="google-icon" />
-                        Log Out
+                      <button onClick={() => logout()} className="google-login-btn" >
+                        <CgGoogle className="google-icon" />
+                        <p className="google-login-text" style={{width: 'fit-content'}}>
+                          Log Out
+                        </p>
                       </button>
                     )}
                   </div>

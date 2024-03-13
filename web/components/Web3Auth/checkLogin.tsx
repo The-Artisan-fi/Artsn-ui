@@ -42,12 +42,11 @@ export async function checkLogin(){
       if (!rpc || !web3auth.provider) {
         console.log("rpc is null");
       }
-      console.log('logged in!!!')
       const account = await rpc.getAccounts();
-      localStorage.setItem("web3pubkey", account[0]);
 
       return {
         connected: true,
+        account: account[0],
         rpc: rpc,
       };
     } else {

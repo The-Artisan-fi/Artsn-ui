@@ -54,16 +54,17 @@ export default function Create() {
         const { data } = useSWR<{ Key?: string }[]>("/api/aws/s3/upload", fetcher)
         if(!data) return null
         console.log("images ",data)
-<<<<<<< HEAD
-=======
+
         // @ts-expect-error : data is not null
->>>>>>> @{-1}
         return data?.map((image) => <S3Image Key={image.Key} />)
     }
 
     const S3Image = ({ Key }: { Key: string }) => {
         const { data } = useSWR<{ src: string }>(`/api/aws/s3/get/${Key}`, fetcher)
-        if (!data) return null
+        if (!data) {
+            console.log('no data')
+            return null
+        }
         console.log(data)
         return <Image src={data.src} style={{height: '60px', width: '60px'}}/>
     }
@@ -189,10 +190,7 @@ export default function Create() {
                 </div>
             )}
             {loading && <p>Submitting...</p>}
-<<<<<<< HEAD
             {error && <p>Submission error! {error}</p>}
-=======
->>>>>>> @{-1}
         </div>
     )
 }

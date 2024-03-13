@@ -11,7 +11,8 @@ import "swiper/css/free-mode";
 // import required modules
 import { FreeMode, Mousewheel } from "swiper";
 import { fetchProducts } from "@/hooks/fetchProducts";
-<<<<<<< HEAD
+// import products from "@/components/Utils/productData";
+
 
 const ProductsSectionDesktop = () => {
     const [products, setProducts] = useState({ available: [], comingSoon: [] });
@@ -22,19 +23,7 @@ const ProductsSectionDesktop = () => {
             setProducts(products);
         });
     }, []);
-=======
-import products from "@/components/Utils/productData";
 
-const ProductsSectionDesktop = () => {
-    // const [products, setProducts] = useState({ available: [], comingSoon: [] });
-    const router = useRouter();
-    // useEffect(() => {
-    //     fetchProducts().then((products) => {
-    //         console.log('listed products', products)
-    //         setProducts(products);
-    //     });
-    // }, []);
->>>>>>> @{-1}
     
     return (
         <section className="products ">
@@ -78,12 +67,9 @@ const ProductsSectionDesktop = () => {
                             return (
                                 <div
                                     key={item.id}
-<<<<<<< HEAD
-                                    className="products__available__slider__item"
-=======
                                     // className="products__available__slider__item"
                                     style={{ cursor: "pointer", height: "528px" }}
->>>>>>> @{-1}
+
                                     onClick={() => {
                                         router.push(`/product/${item.accountPubkey.toString()}`)
                                     }}
@@ -95,7 +81,8 @@ const ProductsSectionDesktop = () => {
                                     />
                                     <div className="item-top">
                                         <img
-                                            src={item.image}
+                                            // src={item.image}
+                                            src='/assets/home/products/Audemars-piguet-Royaloak.webp'
                                             alt={item.name}
                                             className="item-top-img"
                                         />

@@ -2,9 +2,11 @@ import '@/styles/ProfileModal.scss';
 import React, { useState, useEffect } from 'react';
 // import { signAllTransaction, signTransaction } from '@/components/Web3Auth/solanaRPC';
 import { useWallet } from "@solana/wallet-adapter-react";
-import { Transaction, Connection, PublicKey } from "@solana/web3.js";
+import { Transaction, Connection } from "@solana/web3.js";
 import { checkLogin } from '../Web3Auth/checkLogin';
-
+import { toast } from 'react-toastify';
+import RPC from "@/components/Web3Auth/solanaRPC";
+import Link from 'next/link';
 interface ProfileModalProps {
     showModal: boolean;
     handleClose: () => void;
@@ -14,7 +16,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose }) =
     const { publicKey, sendTransaction } = useWallet();
     const [isOpen, setIsOpen] = useState(showModal);
     const [web3AuthPublicKey, setWeb3AuthPublicKey] = useState<string | null>(null);
-    const [rpc, setRpc] = useState<any>(null);
+    const [rpc, setRpc] = useState<RPC | null>(null);
     const connection = new Connection(
         process.env.NEXT_PUBLIC_HELIUS_DEVNET!,
         "confirmed"
@@ -44,8 +46,8 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose }) =
                 const txData = await response.json();
                 const tx = Transaction.from(Buffer.from(txData.transaction, "base64"));
             
-                const signature = await sendTransaction(tx, connection, {skipPreflight: true});
-                
+                const signature = await sendTransaction(tx, connection);
+                toast.success(<Link href={`https://explorer.solana.com/tx/${signature}?cluster=devnet`}> Transaction sent </Link>);
                 console.log(
                     `Transaction sent: https://explorer.solana.com/tx/${signature}?cluster=devnet`
                 );
@@ -56,7 +58,6 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose }) =
             }
 
             if(web3AuthPublicKey !== null && !publicKey){
-                console.log('web3auth public key', web3AuthPublicKey);
                 const response = await fetch('/api/initProfile', {
                     method: 'POST',
                     headers: {
@@ -68,13 +69,12 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose }) =
                 })
                 const txData = await response.json();
                 const tx = Transaction.from(Buffer.from(txData.transaction, "base64"));
-                console.log('sending tx to web3auth', tx)
-                const signature = await rpc.sendTransaction(tx);
+                const signature = await rpc!.sendTransaction(tx);
                 
                 console.log(
                     `Web3Auth Transaction sent: https://explorer.solana.com/tx/${signature}?cluster=devnet`
                 );
-                
+                toast.success(<Link href={`https://explorer.solana.com/tx/${signature}?cluster=devnet`}> Transaction sent </Link>);
                 if(signature){
                     setTimeout(() => {
                         handleCloseModal();
@@ -83,6 +83,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose }) =
             }
         } catch (error) {
             console.error('Error sending transaction', error);
+            toast.error('Error sending transaction');
         }
     }
 
@@ -92,13 +93,11 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose }) =
         }
         checkLogin().then((res) => {
             if(res !== false){
-                const web3pubkey = localStorage.getItem("web3pubkey");
-                if(web3pubkey){
-                    setWeb3AuthPublicKey(web3pubkey);
+                if(res.account){
+                    setWeb3AuthPublicKey(res.account);
                 }
                 if(res.rpc !== null){
                     setRpc(res.rpc);
-                    console.log('rpc', rpc);
                 }
             }
         });

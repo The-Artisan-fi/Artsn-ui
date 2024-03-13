@@ -12,6 +12,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import Web3AuthLogin from "../Web3Auth/Web3Auth";
 import { checkLogin } from "../Web3Auth/checkLogin";
 import ProfileModal from "../Profile/ProfileModal";
+import { ToastContainer } from "react-toastify";
 
 function Navbar() {
     // navbar state
@@ -77,7 +78,6 @@ function Navbar() {
 
     async function checkBuyerProfile(key) {        
         try {
-            console.log('checking profile')
             const response = await fetch('/api/getProfile', {
                 method: 'POST',
                 headers: {
@@ -88,7 +88,6 @@ function Navbar() {
                 })
             })
             const profile = await response.json();
-            console.log('profile', profile.profile);
             setBuyerProfileExists(profile.profile);
         } catch (error) {
             console.error('Error sending transaction', error);
@@ -103,22 +102,15 @@ function Navbar() {
             checkBuyerProfile(publicKey.toBase58());
         }
         if(web3AuthPublicKey) {
-            console.log('checking profile', web3AuthPublicKey)
             checkBuyerProfile(web3AuthPublicKey);
         }
     }, [publicKey, displayProfileModal, web3AuthPublicKey]);
 
     useEffect(() => {
         if(web3AuthPublicKey == null) {
-            console.log('checking login');
             checkLogin().then((res) => {
-                console.log('res', res)
                 if(res.connected){
-                    console.log('web3pubkey', localStorage.getItem("web3pubkey"));
-                    const web3pubkey = localStorage.getItem("web3pubkey");
-                    if(web3pubkey){
-                        setWeb3AuthPublicKey(web3pubkey);
-                    }
+                    setWeb3AuthPublicKey(res.account);
                 }
             });
         }
@@ -164,7 +156,7 @@ function Navbar() {
                                             }
                                         }}
                                     >
-                                        {publicKey | web3AuthPublicKey ? 'Start Collecting' : 'Login'}
+                                        {!publicKey && !web3AuthPublicKey ? 'Login' : 'Start Collecting'}  
                                     </button>
                                 )}
                                 {publicKey && !web3AuthPublicKey &&(
@@ -268,7 +260,7 @@ function Navbar() {
                                     }
                                 }}
                             >
-                                {publicKey | web3AuthPublicKey && !buyerProfileExists ? 'Start Collecting' : 'Login'}
+                                {!publicKey && !web3AuthPublicKey ? 'Login' : 'Start Collecting'}  
                             </button>
                         )}
 
@@ -306,6 +298,18 @@ function Navbar() {
                     />
                 </div>
             )}
+            <ToastContainer
+                position="bottom-left"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+              />
         </div>
     );
 }
