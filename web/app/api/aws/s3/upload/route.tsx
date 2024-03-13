@@ -10,8 +10,13 @@ const Bucket = process.env.NEXT_PUBLIC_BUCKET_NAME;
 const s3 = new S3Client({
   region: process.env.NEXT_PUBLIC_AWS_REGION,
   credentials: {
+<<<<<<< HEAD
+    accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID as string,
+    secretAccessKey: process.env.NEXT_PUBLIC_WS_SECRET_ACCESS_KEY as string,
+=======
     accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_ID as string,
     secretAccessKey: process.env.NEXT_PUBLIC_WS as string,
+>>>>>>> @{-1}
   },
 });
 

@@ -44,7 +44,11 @@ export function AppLayout({ children }: { children: ReactNode }) {
     <ApolloProvider client={client}>
       <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
         <Navbar />
+<<<<<<< HEAD
+        <div style={{ flexGrow: 1, padding: '6px' }}>{children}</div>
+=======
         <div style={{ flexGrow: 1 }}>{children}</div>
+>>>>>>> @{-1}
         <Footer />
       </div>
     </ApolloProvider>

@@ -5,27 +5,33 @@ import Marquee from "react-fast-marquee";
 const marqueeImages = [
     {
         src: "assets/home/crypto-valley.webp",
-        alt: "crypto valley",
+        alt: "Crypto Valley",
+        link: "https://cryptovalley.swiss/"
     },
     {
         src: "assets/home/ros.webp",
-        alt: "ros",
+        alt: "Ros Jewelier",
+        link: "https://www.rosjuweliers.nl/nl/"
     },
     {
         src: "assets/home/jigen.webp",
-        alt: "jigen",
+        alt: "Jigen",
+        link: "https://www.jigen.io/"
     },
     {
         src: "assets/home/node-gate.webp",
-        alt: "node gate",
+        alt: "Node Gate",
+        link: "https://www.nodegate.io/"
     },
     {
         src: "assets/home/swissdao.webp",
-        alt: "swiss dao",
+        alt: "Swiss Dao",
+        link: "https://www.linkedin.com/company/swissdaospace/?originalSubdomain=ch"
     },
     {
-        src: "assets/home/x-real.webp",
-        alt: "x real",
+        src: "assets/home/monaco.svg",
+        alt: "Monaco Foundry",
+        link: "https://www.monacofoundry.com/"
     },
 ];
 
@@ -35,13 +41,19 @@ const PartnersMarque = () => {
             <h2 className="heading-secondary">Partners</h2>
             <div className="partners__marquee">
                 <Marquee autoFill={true}>
-                    {marqueeImages.map((image) => (
-                        <img
-                            key={image.alt}
-                            src={image.src}
-                            alt={image.alt}
-                            className="partners__marquee__img"
-                        />
+                    {marqueeImages.map((image, index) => (
+                        <a
+                            key={index}
+                            href={image.link}
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                        >
+                            <img
+                                src={image.src}
+                                alt={image.alt}
+                                className="partners__marquee__img"
+                            />
+                        </a>
                     ))}
                 </Marquee>
             </div>

@@ -52,6 +52,12 @@ export const fetchProducts = async () => {
                     // shareSold: 0
                     // startingTime: BN {negative: 0, words: Array(2), length: 2, red: null}
                     // watch: PublicKey {_bn: BN}
+            const all_program_accounts = await connection.getProgramAccounts(new PublicKey(PROGRAM_ID), get_accounts_config);
+
+            const productList = all_program_accounts.map((account) => {
+                try {
+                    const decode = program.coder.accounts.decode("Listing", account.account.data);
+                    // console.log('decode', decode.id.toNumber());
                     return {
                         accountPubkey: account.pubkey.toBase58(),
                         ...decode

@@ -464,8 +464,8 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                             </div>
                                         </div>
                                     </div>
-
                                     <a onClick={buyListing} className="btn btn-white" style={{ justifyContent: "center" }}>
+
                                         INVEST IN FRACTIONS
                                     </a>
                                 </div>

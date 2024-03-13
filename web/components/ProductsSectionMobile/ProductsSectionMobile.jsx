@@ -15,10 +15,12 @@ const ProductsSectionMobile = () => {
         });
         setProductsLoading(false);
     }, []);
+
     return (
         <section className="products ">
             {/* available */}
             <div className="products__available ">
+
                 <h2 className="display">Currently available</h2>
                 {productsLoading ? (
                     <div>Loading...</div>
@@ -30,6 +32,7 @@ const ProductsSectionMobile = () => {
                                     key={item.id}
                                     className="products__available__slider__item"
                                 >
+
                                     <img
                                         src="/assets/product-border-bg.png"
                                         alt=""
