@@ -27,90 +27,78 @@ type ProductDetails = {
     earningPotential: string;
 };
 
-// const faqItems = [
-//     {
-//         key: "1",
-//         question: "Basic Info",
-//         answer: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-//     },
-//     {
-//         key: "2",
-//         question: "Product Description",
-//         answer: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
-//     },
-//     {
-//         key: "3",
-//         question: "Certificate of Authenticity",
-//         answer: "Contrary to popular belief, Lorem Ipsum is not simply random text.",
-//     },
-//     {
-//         key: "4",
-//         question: "Asset Details",
-//         answer: "Contrary to popular belief, Lorem Ipsum is not simply random text.",
-//     },
-// ];
+type OffChainData = {
+    associatedId: string;
+    images: string[];
+    assetDetails: string
+    expectedNetReturn: string;
+    marketValue: string;
+    pastReturns: string;
+    earningPotential: string;
+    earningPotentialDuration: string;
+    basicInfo: string;
+    currency: string;
+    description: string;
+    model: string;
+    offerViews: string;
+    sold: string;
+    total: string;
+}
 
+type OnChainData = {
+    id: number;
+    share: number;
+    shareSold: number;
+    startingPrice: number;
+    watchKey: string;
+    reference: string;
+    braceletMaterial: string;
+    brand: string;
+    caseMaterial: string;
+    dialColor: string;
+    diamater: number;
+    model: string;
+    movement: string;
+    yearOfProduction: number;
+};
 
-// products data
-// const LocalProducts = {
-//     id: 1,
-//     name: "Audemars Piguet",
-//     model: "Royal Oak (extra thin)",
-//     price: 100,
-//     currency: "CHF",
-//     img: "/assets/home/products/Audemars-piguet-Royaloak.webp",
-//     sold: 150,
-//     total: 300,
-//     stockTag: "Almost Sold Out!",
+type Product = {
+    id: number;
+    reference: string;
+    name: string;
+    model: string;
+    marketValue: number;
+    price: number;
+    currency: string;
+    img: string;
+    sold: number;
+    total: number;
+    stockTag: string;
+    fractionLeft: number;
+    pastReturns: string;
+    pastReturnsSuffix: string;
+    earningPotential: string;
+    earningPotentialSuffix: string;
+    earningPotentialDuration: string;
+    expectedNetReturn: string;
+    offerViews: number;
+    investUrl: string;
+    description: string;
+    gallery: string[];
+}
 
-//     // stats
-//     fractionLeft: 0,
-//     pastReturns: "+22,00%",
-//     pastReturnsSuffix: "p.a.",
-//     earningPotential: "+8,1%",
-//     earningPotentialSuffix: "p.a.",
-//     earningPotentialDuration: "Over 5 years",
+type FAQ = {
+    key: string;
+    question: string;
+    answer: string;
+}
 
-//     // product page
-//     expectedNetReturn: "+8,1%",
-//     offerViews: 3002,
+type Image = {
+    original: string
+    thumbnail: string,
+    originalHeight: number,
+}
 
-//     investUrl: "#",
-
-//     // description
-//     description:
-//         "Experience the iconic Royal Oak, whose pioneering design and craftsmanship embody Audemars Piguet's uncompromising vision of luxury.",
-//     gallery: [
-//         "/assets/product-details/product-image-1.webp",
-//         "/assets/public/product-details/product-image-2.webp",
-//         "/assets/public/product-details/product-image-3.webp",
-//         "/assets/public/product-details/product-image-4.webp",
-//     ],
-// };
-
-// const images = [
-//     {
-//         original: "/assets/product-details/product-image-2.webp",
-//         thumbnail: "/assets/product-details/product-image-2.webp",
-//         originalHeight: 500,
-//     },
-//     {
-//         original: "/assets/product-details/product-image-1.webp",
-//         thumbnail: "/assets/product-details/product-image-1.webp",
-//         originalHeight: 500,
-//     },
-
-//     {
-//         original: "/assets/product-details/product-image-3.webp",
-//         thumbnail: "/assets/product-details/product-image-3.webp",
-//         originalHeight: 500,
-//     },
-//     {
-//         original: "/assets/product-details/product-image-4.webp",
-//         thumbnail: "/assets/product-details/product-image-4.webp",
-//         originalHeight: 500,
-//     },
-// ];
 
 export default function ProductDetails({ params }: { params: { id: string } }) {
     const { publicKey, sendTransaction } = useWallet();
@@ -118,89 +106,13 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
         process.env.NEXT_PUBLIC_HELIUS_DEVNET!,
         "confirmed"
     );
-    const [isLoading, setIsLoading] = useState(true);
-    const [images, setImages] = useState([
-        {
-            original: "/assets/product-details/product-image-2.webp",
-            thumbnail: "/assets/product-details/product-image-2.webp",
-            originalHeight: 500,
-        },
-        {
-            original: "/assets/product-details/product-image-1.webp",
-            thumbnail: "/assets/product-details/product-image-1.webp",
-            originalHeight: 500,
-        },
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
-        {
-            original: "/assets/product-details/product-image-3.webp",
-            thumbnail: "/assets/product-details/product-image-3.webp",
-            originalHeight: 500,
-        },
-        {
-            original: "/assets/product-details/product-image-4.webp",
-            thumbnail: "/assets/product-details/product-image-4.webp",
-            originalHeight: 500,
-        },
-    ]);
-    const [faqItems, setFaqItems] = useState([
-        {
-            key: "1",
-            question: "Basic Info",
-            answer: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-        },
-        {
-            key: "2",
-            question: "Product Description",
-            answer: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
-        },
-        {
-            key: "3",
-            question: "Certificate of Authenticity",
-            answer: "Contrary to popular belief, Lorem Ipsum is not simply random text.",
-        },
-        {
-            key: "4",
-            question: "Asset Details",
-            answer: "Contrary to popular belief, Lorem Ipsum is not simply random text.",
-        },
-    ]);
-    const [product, setProduct] = useState({
-        id: null,
-        name: "Audemars Piguet",
-        model: "Royal Oak (extra thin)",
-        marketValue: 100,
-        price: 100,
-        currency: "CHF",
-        img: "/assets/home/products/Audemars-piguet-Royaloak.webp",
-        sold: 150,
-        total: 300,
-        stockTag: "Almost Sold Out!",
-
-        // stats
-        fractionLeft: 0,
-        pastReturns: "+22,00%",
-        pastReturnsSuffix: "p.a.",
-        earningPotential: "+8,1%",
-        earningPotentialSuffix: "p.a.",
-        earningPotentialDuration: "Over 5 years",
-
-        // product page
-        expectedNetReturn: "+8,1%",
-        offerViews: 3002,
-
-        investUrl: "#",
-
-        // description
-        description:
-            "Experience the iconic Royal Oak, whose pioneering design and craftsmanship embody Audemars Piguet's uncompromising vision of luxury.",
-        gallery: [
-            "/assets/product-details/product-image-1.webp",
-            "/assets/public/product-details/product-image-2.webp",
-            "/assets/public/product-details/product-image-3.webp",
-            "/assets/public/product-details/product-image-4.webp",
-        ],
-    });
-    // const [product, setProduct] = useState();
+    const [faqItems, setFaqItems] = useState<Array<FAQ>>();
+    const [onChainData, setOnChainData] = useState<OnChainData>();
+    const [offChainData, setOffChainData] = useState<OffChainData | undefined>(undefined);
+    const [product, setProduct] = useState<Product>();
+    const [images, setImages] = useState<Array<Image>>();
     const [isMobile, setIsMobile] = useState(true);
     const [variables, setVariables] = useState({
         associatedId: "",
@@ -208,87 +120,9 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
     const [getDetails, { loading, error, data }] = useLazyQuery(listing, {
         variables,
     });
-    if(!loading && data != undefined && product.id === null){
+    if(!loading && data != undefined && offChainData == undefined){
         console.log("data", data.listings[0]);
-        const listing = {
-            id: data.listings[0]._id,
-            name: "Audemars Piguet", // on chain - name
-            model: data.listings[0].model, // not listed
-            marketValue: data.listings[0].marketValue,
-            price: 100, //on chain - starting price
-            currency: data.listings[0].currency, // not listed 
-            img: "/assets/home/products/Audemars-piguet-Royaloak.webp", // on chain - image
-            sold: data.listings[0].sold, // not listed
-            total: data.listings[0].total, // not listed
-            stockTag: "Almost Sold Out!", // not listed
-            
-            // stats
-            fractionLeft: 0, // not listed
-            pastReturns: data.listings[0].pastReturns,
-            pastReturnsSuffix: "p.a.", // not listed
-            earningPotential: data.listings[0].earningPotential,
-            earningPotentialSuffix: "p.a.", // not listed
-            earningPotentialDuration: data.listings[0].earningPotentialDuration, 
-        
-            // product page
-            expectedNetReturn: data.listings[0].expectedNetReturn,
-            offerViews: data.listings[0].offerViews, // not listed
-        
-            investUrl: "#",
-        
-            // description
-            description: data.listings[0].description,
-            gallery: [
-                ...data.listings[0].images
-            ],
-        };
-        const listing_info = [
-            {
-                key: "1",
-                question: "Basic Info",
-                answer: data.listings[0].basicInfo,
-            },
-            {
-                key: "2",
-                question: "Product Description",
-                answer: data.listings[0].description,
-            },
-            {
-                key: "3",
-                question: "Certificate of Authenticity",
-                answer: "Contrary to popular belief, Lorem Ipsum is not simply random text.",
-            },
-            {
-                key: "4",
-                question: "Asset Details",
-                answer: data.listings[0].assetDetails,
-            }
-        ];
-        // const product_images = data.listings[0].images.map((image: string) => {
-        //     return {
-        //         original: image,
-        //         thumbnail: image,
-        //         originalHeight: 500,
-        //     }
-        // });
-        // map the product images but also sort them by their ending so they are in order, they will end in -1, -2, -3, -4
-        const product_images = data.listings[0].images.map((image: string) => {
-            return {
-                original: image,
-                thumbnail: image,
-                originalHeight: 500,
-            }
-        }).sort((a: any, b: any) => {
-            console.log("a", typeof a.original);
-            const aEnding = a.original.split("-").pop();
-            const bEnding = b.original.split("-").pop();
-            return parseInt(aEnding) - parseInt(bEnding);
-        });
-       
-
-        setProduct(listing);
-        setFaqItems(listing_info);
-        setImages(product_images);
+        setOffChainData(data.listings[0]);
     }
     if(!loading && error != undefined){
         console.log("error", error);
@@ -302,13 +136,18 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                 console.log('no public key');
                 return;
             }
+            if(!product){
+                console.log('no product');
+                return;
+            }
             const response = await fetch('/api/buy', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    id: variables.associatedId,
+                    id: product.id,
+                    reference: product.reference,
                     publicKey: publicKey.toBase58(),
                 })
             })
@@ -318,7 +157,6 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
             const signature = await sendTransaction(tx, connection, 
                 {
                     skipPreflight: true,
-                    preflightCommitment: "confirmed",
                 },
             );
             console.log(
@@ -329,6 +167,72 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
             console.error('Error sending transaction', error);
             toast.error('Error sending transaction');
         }
+    }
+    // **************************Data Functions***********************************
+    async function fetchData(accountPubkey: string) {
+        const on_chain_data: OnChainData | undefined = await fetchProductDetails(accountPubkey);
+        // console.log('on chain data', on_chain_data)
+
+        const product_images = offChainData!.images.map((image: string) => {
+            return {
+                original: image,
+                thumbnail: image,
+                originalHeight: 500,
+            }
+        })
+
+        const product_info ={
+            id: on_chain_data!.id,
+            reference: on_chain_data!.reference,
+            name: on_chain_data!.brand,
+            model: on_chain_data!.model,
+            marketValue: parseInt(offChainData!.marketValue),
+            price: on_chain_data!.startingPrice,
+            currency: offChainData!.currency,
+            img: offChainData!.images[0],
+            sold: on_chain_data!.shareSold,
+            total: on_chain_data!.share,
+            stockTag: "Almost Sold Out!",
+            fractionLeft: on_chain_data!.share - on_chain_data!.shareSold,
+            pastReturns: offChainData!.pastReturns,
+            pastReturnsSuffix: "p.a.",
+            earningPotential: offChainData!.earningPotential,
+            earningPotentialSuffix: "p.a.",
+            earningPotentialDuration: offChainData!.earningPotentialDuration,
+            expectedNetReturn: offChainData!.expectedNetReturn,
+            offerViews: parseInt(offChainData!.offerViews),
+            investUrl: "#",
+            description: offChainData!.description,
+            gallery: offChainData!.images,
+        }
+
+        const faq_items = [
+            {
+                key: "1",
+                question: "Basic Info",
+                answer: offChainData!.basicInfo,
+            },
+            {
+                key: "2",
+                question: "Product Description",
+                answer: offChainData!.description,
+            },
+            {
+                key: "3",
+                question: "Certificate of Authenticity",
+                answer: "Contrary to popular belief, Lorem Ipsum is not simply random text.",
+            },
+            {
+                key: "4",
+                question: "Asset Details",
+                answer: offChainData!.assetDetails,
+            },
+        ]
+        
+        setFaqItems(faq_items);
+        setProduct(product_info);
+        setImages(product_images);
+        setIsLoading(false);
     }
     // ***************************************************************************
 
@@ -353,32 +257,25 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
     }, []);
 
     useEffect(() => {
-        if(product.id !== null){
+        const accountPubkey = params.id;
+        if(accountPubkey === undefined){
             return;
         }
-        const accountPubkey = params.id;
+        if(offChainData){
+            return
+        }
         setVariables({
             associatedId: accountPubkey
         });
-        // fetchProductDetails(accountPubkey)
-        //     .then((res) => {
-        //         console.log('res', res)
-        //     })
-        //     .catch((err) => {
-        //         console.log('err', err)
-        //     });
+        getDetails()
+        
+    }, [params.id]);
 
-        getDetails().then(() => {
-            // console.log('data', data.listings[0]);
-            
-        })
-        .catch((err) => {
-            console.log('err', err);
-        });
-        // setProduct(res);
-        setIsLoading(false)
-            
-    }, [product.id]);
+    useEffect(() => {
+        if(offChainData){
+            fetchData(offChainData.associatedId);
+        }
+    }, [offChainData]);
 
     return (
         <>
@@ -394,14 +291,14 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                         showNav={false}
                                         showPlayButton={false}
                                         showBullets={true}
-                                        items={images}
+                                        items={images!}
                                     />
                                 </div>
 
                                 <div className="product-details__hero__info">
                                     <div className="product-details__hero__info__header">
-                                        <h1 className="heading-2">{product.name}</h1>
-                                        <h2 className="caption-1">{product.model}</h2>
+                                        <h1 className="heading-2">{product!.name}</h1>
+                                        <h2 className="caption-1">{product!.model}</h2>
                                     </div>
 
                                     <Progress
@@ -420,13 +317,13 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                             <div className="market-value">
                                                 <p className="body">Market Value</p>
                                                 <p className="heading-2 w-700">
-                                                    {product.marketValue} €
+                                                    {product!.marketValue} €
                                                 </p>
                                             </div>
                                             <div className="fraction-left">
                                                 <p className="body">Market Value</p>
                                                 <p className="heading-2 w-700">
-                                                    {product.marketValue} €
+                                                    {product!.marketValue} €
                                                 </p>
                                             </div>
                                         </div>
@@ -439,7 +336,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                                 <p className="body">Past Returns</p>
                                                 <p className="heading-2">
                                                     <span className="w-700">
-                                                        +{product.pastReturns}%{" "}
+                                                        +{product!.pastReturns}%{" "}
                                                     </span>
                                                     <span className="body-xs">
                                                         p.a.
@@ -450,12 +347,12 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                                 <p className="body">
                                                     <span>Earning Potential</span>
                                                     <span className="body-tiny">
-                                                        (over {product.earningPotentialDuration})
+                                                        (over {product!.earningPotentialDuration})
                                                     </span>
                                                 </p>
                                                 <p className="heading-2">
                                                     <span className="w-700">
-                                                        +{product.earningPotential}%{" "}
+                                                        +{product!.earningPotential}%{" "}
                                                     </span>
                                                     <span className="body-xs">
                                                         p.a.
@@ -464,8 +361,8 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                             </div>
                                         </div>
                                     </div>
-                                    <a onClick={buyListing} className="btn btn-white" style={{ justifyContent: "center" }}>
 
+                                    <a onClick={buyListing} className="btn btn-white" style={{ justifyContent: "center" }}>
                                         INVEST IN FRACTIONS
                                     </a>
                                 </div>
@@ -480,7 +377,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                 <h2 className="heading-5">About</h2>
 
                                 <Collapse expandIconPosition={"right"} size="large">
-                                    {faqItems.map((item) => (
+                                    {faqItems!.map((item) => (
                                         <Collapse.Panel
                                             key={item.key}
                                             header={item.question}
