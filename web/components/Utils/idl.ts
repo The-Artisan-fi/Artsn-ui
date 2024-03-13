@@ -206,7 +206,7 @@ export type Fragment = {
           "isSigner": false
         },
         {
-          "name": "watch",
+          "name":"watch",
           "isMut": true,
           "isSigner": false
         },
@@ -227,7 +227,7 @@ export type Fragment = {
         },
         {
           "name": "reference",
-          "type": "u64"
+          "type": "string"
         },
         {
           "name": "diamater",
@@ -252,10 +252,6 @@ export type Fragment = {
         {
           "name": "yearOfProduction",
           "type": "u16"
-        },
-        {
-          "name": "uri",
-          "type": "string"
         }
       ]
     },
@@ -324,6 +320,10 @@ export type Fragment = {
         {
           "name": "startingTime",
           "type": "i64"
+        },
+        {
+          "name": "uri",
+          "type": "string"
         }
       ]
     },
@@ -413,7 +413,7 @@ export type Fragment = {
   "accounts": [
     {
       "name": "Protocol",
-      "type": {
+      "type":  {
         "kind": "struct",
         "fields": [
           {
@@ -480,7 +480,7 @@ export type Fragment = {
           },
           {
             "name": "reference",
-            "type": "u64"
+            "type": "string"
           },
           {
             "name": "diamater",
@@ -505,10 +505,6 @@ export type Fragment = {
           {
             "name": "yearOfProduction",
             "type": "u16"
-          },
-          {
-            "name": "uri",
-            "type": "string"
           }
         ]
       }
@@ -525,6 +521,10 @@ export type Fragment = {
           {
             "name": "watch",
             "type": "publicKey"
+          },
+          {
+            "name": "reference",
+            "type": "string"
           },
           {
             "name": "share",
@@ -557,6 +557,10 @@ export type Fragment = {
           {
             "name": "watch",
             "type": "publicKey"
+          },
+          {
+            "name": "reference",
+            "type": "string"
           },
           {
             "name": "share",
@@ -832,7 +836,7 @@ export const IDL: Fragment = {
           "isSigner": false
         },
         {
-          "name": "watch",
+          "name":"watch",
           "isMut": true,
           "isSigner": false
         },
@@ -853,7 +857,7 @@ export const IDL: Fragment = {
         },
         {
           "name": "reference",
-          "type": "u64"
+          "type": "string"
         },
         {
           "name": "diamater",
@@ -878,10 +882,6 @@ export const IDL: Fragment = {
         {
           "name": "yearOfProduction",
           "type": "u16"
-        },
-        {
-          "name": "uri",
-          "type": "string"
         }
       ]
     },
@@ -950,6 +950,10 @@ export const IDL: Fragment = {
         {
           "name": "startingTime",
           "type": "i64"
+        },
+        {
+          "name": "uri",
+          "type": "string"
         }
       ]
     },
@@ -1039,7 +1043,7 @@ export const IDL: Fragment = {
   "accounts": [
     {
       "name": "Protocol",
-      "type": {
+      "type":  {
         "kind": "struct",
         "fields": [
           {
@@ -1106,7 +1110,7 @@ export const IDL: Fragment = {
           },
           {
             "name": "reference",
-            "type": "u64"
+            "type": "string"
           },
           {
             "name": "diamater",
@@ -1131,10 +1135,6 @@ export const IDL: Fragment = {
           {
             "name": "yearOfProduction",
             "type": "u16"
-          },
-          {
-            "name": "uri",
-            "type": "string"
           }
         ]
       }
@@ -1151,6 +1151,10 @@ export const IDL: Fragment = {
           {
             "name": "watch",
             "type": "publicKey"
+          },
+          {
+            "name": "reference",
+            "type": "string"
           },
           {
             "name": "share",
@@ -1183,6 +1187,10 @@ export const IDL: Fragment = {
           {
             "name": "watch",
             "type": "publicKey"
+          },
+          {
+            "name": "reference",
+            "type": "string"
           },
           {
             "name": "share",
@@ -1254,4 +1262,4 @@ export const IDL: Fragment = {
 }
 
 
-export const PROGRAM_ID = "we8AGpPieosNsVRDMQLVo8yLsgo2eBS7nCSPyye5cK8" as Address
+export const PROGRAM_ID = "2wj57nXtBwFAJS7mezos1mWirfVJWqxiqYAVtSt7W6F6" as Address

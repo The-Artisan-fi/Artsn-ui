@@ -34,14 +34,18 @@ export async function POST( request: Request ) {
     try {
         const req = await request.json();
         const buyer_publicKey = new PublicKey(req.publicKey);
-        const id = req.id;
-
+        console.log('buyer_publicKey', buyer_publicKey.toBase58());
+        // const id = req.id;
+        const id = 10817;
         // VARIABLES
-        const reference = 16520;
-        const watch = PublicKey.findProgramAddressSync([Buffer.from('watch'),  new anchor.BN(reference).toBuffer("le", 8)], program.programId)[0];
-      
+        const reference = "15202ST.OO.1240ST.01";
+        
+        const watch = PublicKey.findProgramAddressSync([Buffer.from('watch'),  Buffer.from(reference)], program.programId)[0];
+        console.log('watch', watch.toBase58());
         const listing = PublicKey.findProgramAddressSync([Buffer.from('listing'), watch.toBuffer(), new anchor.BN(id).toBuffer("le", 8)], program.programId)[0];
+        console.log('listing', listing.toBase58());
         const fraction = PublicKey.findProgramAddressSync([Buffer.from('fraction'), listing.toBuffer()], program.programId)[0];
+        console.log('fraction', fraction.toBase58());
         const metadata = PublicKey.findProgramAddressSync([Buffer.from('metadata'), fraction.toBuffer()], program.programId)[0];
         
         const auth = PublicKey.findProgramAddressSync([Buffer.from('auth')], program.programId)[0];

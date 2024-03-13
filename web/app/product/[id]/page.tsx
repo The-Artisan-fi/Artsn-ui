@@ -296,6 +296,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
 
     // BUY FRACTION FUNCTIONALITY*************************************************
     async function buyListing() {        
+        console.log('buying listing')
         try {
             if(!publicKey){
                 console.log('no public key');
@@ -314,7 +315,12 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
             const txData = await response.json();
             const tx = Transaction.from(Buffer.from(txData.transaction, "base64"));
         
-            const signature = await sendTransaction(tx, connection, {skipPreflight: true});
+            const signature = await sendTransaction(tx, connection, 
+                {
+                    skipPreflight: true,
+                    preflightCommitment: "confirmed",
+                },
+            );
             console.log(
                 `Transaction sent: https://explorer.solana.com/tx/${signature}?cluster=devnet`
               );
@@ -459,7 +465,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                         </div>
                                     </div>
 
-                                    <a onClick={() => buyListing} className="btn btn-white" style={{ justifyContent: "center" }}>
+                                    <a onClick={buyListing} className="btn btn-white" style={{ justifyContent: "center" }}>
                                         INVEST IN FRACTIONS
                                     </a>
                                 </div>

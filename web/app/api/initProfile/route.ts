@@ -41,7 +41,7 @@ export async function POST( request: Request ) {
             .instruction()
 
         const { blockhash } = await connection.getLatestBlockhash("finalized");
-
+        console.log('blockhash', blockhash)
         const transaction = new Transaction({
             recentBlockhash: blockhash,
             feePayer: feePayer.publicKey,

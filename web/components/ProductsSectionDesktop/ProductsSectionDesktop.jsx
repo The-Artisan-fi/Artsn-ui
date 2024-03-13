@@ -11,17 +11,17 @@ import "swiper/css/free-mode";
 // import required modules
 import { FreeMode, Mousewheel } from "swiper";
 import { fetchProducts } from "@/hooks/fetchProducts";
-import products from "@/components/Utils/productData";
+// import products from "@/components/Utils/productData";
 
 const ProductsSectionDesktop = () => {
-    // const [products, setProducts] = useState({ available: [], comingSoon: [] });
+    const [products, setProducts] = useState({ available: [], comingSoon: [] });
     const router = useRouter();
-    // useEffect(() => {
-    //     fetchProducts().then((products) => {
-    //         console.log('listed products', products)
-    //         setProducts(products);
-    //     });
-    // }, []);
+    useEffect(() => {
+        fetchProducts().then((products) => {
+            console.log('listed products', products)
+            setProducts(products);
+        });
+    }, []);
     
     return (
         <section className="products ">
@@ -78,7 +78,8 @@ const ProductsSectionDesktop = () => {
                                     />
                                     <div className="item-top">
                                         <img
-                                            src={item.image}
+                                            // src={item.image}
+                                            src='/assets/home/products/Audemars-piguet-Royaloak.webp'
                                             alt={item.name}
                                             className="item-top-img"
                                         />

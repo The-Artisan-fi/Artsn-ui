@@ -37,7 +37,7 @@ const Footer = () => {
                                 className="footer__head__col-3__socials__item"
                             >
                                 <img
-                                    src="assets/social-icons/icon1.svg"
+                                    src="/assets/social-icons/icon1.svg"
                                     alt=""
                                     className="footer__head__col-3__socials__item__icon"
                                 />
