@@ -6,8 +6,6 @@ import Link from "next/link";
 const Footer = () => {
     return (
         <div className="footer padding">
-<<<<<<< HEAD
-=======
             <div className="boxed">
                 <div className="footer__head">
                     <div className="footer__head__col-1">
@@ -100,7 +98,6 @@ const Footer = () => {
                         </span>
                     </div>
                 </div>
->>>>>>> @{-1}
                 <div className="footer__top">
                     <div className="footer-column--1">
                         <Link className="footer-brand" href={"/"}>
@@ -153,90 +150,6 @@ const Footer = () => {
                         </div>
                     </div>
                     <div className="footer-column--3 ">
-<<<<<<< HEAD
-                        <p className="footer__heading">Resources</p>
-                        <ul className="footer__list">
-                            <li className="footer__item">
-                                <a href="tos" className="footer__link">
-                                    Terms and Conditions
-                                </a>
-                            </li>
-                            <li className="footer__item">
-                                <a href="https://leonardo-donatacci.notion.site/ARTSN-Privacy-Policy-6ec675287a134d7a9eead54d2aa91905?pvs=74" className="footer__link">
-                                    Privacy Policy
-                                </a>
-                            </li>
-                            <li className="footer__item">
-                                <a href="https://tally.so/r/wgMGzP" className="footer__link">
-                                    Contact Us
-                                </a>
-                            </li>
-                            <li className="footer__item">
-                            <div className="footer__head__col-3__socials">
-                                <a
-                                    href="https://www.linkedin.com/company/the-artisan-nft/?viewAsMember=true"
-                                    className="footer__head__col-3__socials__item"
-                                >
-                                    <img
-                                        src="assets/social-icons/icon1.svg"
-                                        alt=""
-                                        className="footer__head__col-3__socials__item__icon"
-                                    />
-                                </a>
-                                <a
-                                    href="https://twitter.com/The_Artisan_NFT"
-                                    className="footer__head__col-3__socials__item"
-                                >
-                                    <img
-                                        src="/assets/social-icons/icon2.svg"
-                                        alt=""
-                                        className="footer__head__col-3__socials__item__icon"
-                                    />
-                                </a>
-                                <a
-                                    href="#"
-                                    className="footer__head__col-3__socials__item"
-                                >
-                                    <img
-                                        src="/assets/social-icons/icon4.svg"
-                                        alt=""
-                                        className="footer__head__col-3__socials__item__icon"
-                                    />
-                                </a>
-                                <a
-                                    href="https://t.me/rcapizz"
-                                    className="footer__head__col-3__socials__item"
-                                >
-                                    <img
-                                        src="/assets/social-icons/icon6.svg"
-                                        alt=""
-                                        className="footer__head__col-3__socials__item__icon"
-                                    />
-                                </a>
-                                <a
-                                    href="https://discord.gg/DZHY6B7Q46"
-                                    className="footer__head__col-3__socials__item"
-                                >
-                                    <img
-                                        src="/assets/social-icons/icon3.svg"
-                                        alt=""
-                                        className="footer__head__col-3__socials__item__icon"
-                                    />
-                                </a>
-                                <a
-                                    href="https://www.instagram.com/theartisan_nft/"
-                                    className="footer__head__col-3__socials__item"
-                                >
-                                    <img
-                                        src="/assets/social-icons/icon5.svg"
-                                        alt=""
-                                        className="footer__head__col-3__socials__item__icon"
-                                    />
-                                </a>
-                            </div>
-                            </li>
-                        </ul>
-=======
                         <p className="heading">Resources</p>
                         <div className="footer__list">
                             <a href="tos" className="footer__link">
@@ -249,7 +162,6 @@ const Footer = () => {
                                 Help Center
                             </a>
                         </div>
->>>>>>> @{-1}
                     </div>
                 </div>
                 <div className="hr"></div>
@@ -260,7 +172,7 @@ const Footer = () => {
                     </p>
 
                     <div className="footer__bottom__right">
-                        <a href="https://leonardo-donatacci.notion.site/ARTSN-Privacy-Policy-6ec675287a134d7a9eead54d2aa91905?pvs=74" className="footer-link caption-5">
+                        <a href="#" className="footer-link caption-5">
                             Privacy Policy
                         </a>
                         {" - "}
@@ -268,11 +180,11 @@ const Footer = () => {
                             Terms and Conditions
                         </a>
                         {" - "}
-                        <a href="https://tally.so/r/wgMGzP" className="footer-link caption-5">
-                            Contact Us
+                        <a href="#" className="footer-link caption-5">
+                            Help Center
                         </a>
-                        
                     </div>
+                </div>
             </div>
         </div>
     );

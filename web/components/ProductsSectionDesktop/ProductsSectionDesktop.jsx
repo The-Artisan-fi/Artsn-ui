@@ -13,7 +13,6 @@ import { FreeMode, Mousewheel } from "swiper";
 import { fetchProducts } from "@/hooks/fetchProducts";
 // import products from "@/components/Utils/productData";
 
-
 const ProductsSectionDesktop = () => {
     const [products, setProducts] = useState({ available: [], comingSoon: [] });
     const router = useRouter();
@@ -23,7 +22,6 @@ const ProductsSectionDesktop = () => {
             setProducts(products);
         });
     }, []);
-
     
     return (
         <section className="products ">
@@ -69,7 +67,6 @@ const ProductsSectionDesktop = () => {
                                     key={item.id}
                                     // className="products__available__slider__item"
                                     style={{ cursor: "pointer", height: "528px" }}
-
                                     onClick={() => {
                                         router.push(`/product/${item.accountPubkey.toString()}`)
                                     }}
@@ -82,7 +79,7 @@ const ProductsSectionDesktop = () => {
                                     <div className="item-top">
                                         <img
                                             // src={item.image}
-                                            src='/assets/home/products/Audemars-piguet-Royaloak.webp'
+                                            src='/Users/matt/Desktop/Artisan/artisan/web/public/assets/home/products/Audemars-piguet-Royaloak.webp'
                                             alt={item.name}
                                             className="item-top-img"
                                         />

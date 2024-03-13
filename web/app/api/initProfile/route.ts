@@ -7,7 +7,7 @@ import {
     Transaction,
     Connection,
   } from "@solana/web3.js";
-  import * as b58 from "bs58";
+import * as b58 from "bs58";
   
 
 export async function POST( request: Request ) {

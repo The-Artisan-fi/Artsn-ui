@@ -234,11 +234,7 @@ const Home = () => {
                                     soon
                                 </p>
                                 <h3 className="heading-4">
-<<<<<<< HEAD
-                                    Get access to our DeFi Protocol
-=======
                                     New <span className="emphasis">DeFinance</span>
->>>>>>> @{-1}
                                 </h3>
                                 <p className="caption-2">
                                     Utilize your Real World Assets for loans and more. 
