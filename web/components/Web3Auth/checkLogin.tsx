@@ -43,7 +43,6 @@ export async function checkLogin(){
         console.log("rpc is null");
       }
       const account = await rpc.getAccounts();
-
       return {
         connected: true,
         account: account[0],

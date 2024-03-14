@@ -12,10 +12,14 @@ import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
 import { useLazyQuery } from "@apollo/client";
 import { listing } from "@/lib/queries";
-import { Transaction, Connection } from "@solana/web3.js";
+import { Transaction, Connection, Keypair } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import Link from "next/link";
 import { toast } from "react-toastify";
+import { checkLogin } from '@/components/Web3Auth/checkLogin';
+import RPC from "@/components/Web3Auth/solanaRPC";
+import { encodeURL, TransactionRequestURLFields } from "@solana/pay";
+import QrModal from "@/components/Qr/QrModal";
 
 type ProductDetails = {
     id: number;
@@ -102,6 +106,8 @@ type Image = {
 
 export default function ProductDetails({ params }: { params: { id: string } }) {
     const { publicKey, sendTransaction } = useWallet();
+    const [web3AuthPublicKey, setWeb3AuthPublicKey] = useState<string | null>(null);
+    const [rpc, setRpc] = useState<RPC | null>(null);
     const connection = new Connection(
         process.env.NEXT_PUBLIC_HELIUS_DEVNET!,
         "confirmed"
@@ -109,11 +115,13 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const [faqItems, setFaqItems] = useState<Array<FAQ>>();
-    const [onChainData, setOnChainData] = useState<OnChainData>();
     const [offChainData, setOffChainData] = useState<OffChainData | undefined>(undefined);
     const [product, setProduct] = useState<Product>();
     const [images, setImages] = useState<Array<Image>>();
     const [isMobile, setIsMobile] = useState(true);
+    const [solanaUrl, setSolanaUrl] = useState<URL>();
+    const [refKey, setRefKey] = useState<string>();
+    const [displayQr, setDisplayQr] = useState<boolean>(false);
     const [variables, setVariables] = useState({
         associatedId: "",
       });
@@ -130,16 +138,8 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
 
     // BUY FRACTION FUNCTIONALITY*************************************************
     async function buyListing() {        
-        console.log('buying listing')
         try {
-            if(!publicKey){
-                console.log('no public key');
-                return;
-            }
-            if(!product){
-                console.log('no product');
-                return;
-            }
+            if(publicKey && product){
             const response = await fetch('/api/buy', {
                 method: 'POST',
                 headers: {
@@ -159,15 +159,133 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                     skipPreflight: true,
                 },
             );
+            
+            const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash()
+            
+            toast.promise(
+                connection.confirmTransaction({
+                    blockhash,
+                    lastValidBlockHeight,
+                    signature: signature
+                }),
+                {
+                    pending: 'Transaction pending...',
+                    success: {
+                        render(){
+                            return (
+                                <div>
+                                    <Link 
+                                        style={{color: 'black'}}
+                                        target='_blank'  
+                                        href={`https://explorer.solana.com/tx/${signature}?cluster=devnet`}
+                                    > 
+                                        Transaction Confirmed 
+                                    </Link>
+                                </div>
+                            )
+                        }
+                    },
+                    error: 'Error sending transaction'
+                }
+            );
+            
             console.log(
                 `Transaction sent: https://explorer.solana.com/tx/${signature}?cluster=devnet`
-              );
-            toast.success(<Link href={`https://explorer.solana.com/tx/${signature}?cluster=devnet`}> Transaction sent </Link>);
+            );
+
+            } 
+            if(web3AuthPublicKey !== null && !publicKey && product){
+                const response = await fetch('/api/buy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: product.id,
+                        reference: product.reference,
+                        publicKey: web3AuthPublicKey,
+                    })
+                })
+                const txData = await response.json();
+                const tx = Transaction.from(Buffer.from(txData.transaction, "base64"));
+                const signature = await rpc!.sendTransaction(tx);
+                
+                const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
+
+                console.log(
+                    `Transaction sent: https://explorer.solana.com/tx/${signature}?cluster=devnet`
+                );
+                toast.promise(
+                    connection.confirmTransaction({
+                        blockhash,
+                        lastValidBlockHeight,
+                        signature: signature
+                    }),
+                    {
+                        pending: 'Transaction pending...',
+                        success: {
+                            render(){
+                                return (
+                                    <div>
+                                        <Link 
+                                            style={{color: 'black'}}
+                                            target='_blank'  
+                                            href={`https://explorer.solana.com/tx/${signature}?cluster=devnet`}
+                                        > 
+                                            Transaction Confirmed 
+                                        </Link>
+                                    </div>
+                                )
+                            }
+                        },
+                        error: 'Error sending transaction'
+                    }
+                );
+            }
+
+            
         } catch (error) {
             console.error('Error sending transaction', error);
-            toast.error('Error sending transaction');
+            toast.error(
+                <p style={{color: 'black'}}>
+                    Error sending transaction
+                </p>
+            );
         }
     }
+    // ***************************QR Code Logic************************************
+    async function getQrCode() {
+        try{
+            const { location } = window
+    
+            // id: product.id,
+            //         reference: product.reference,
+                    // publicKey: publicKey.toBase58(),
+            const refKey = Keypair.generate().publicKey.toBase58();
+            console.log('refKey', refKey)
+            setRefKey(refKey);
+            const apiUrl = `${location.protocol}//${location.host}/api/qr/buy/?&id=${product?.id}&reference=${product?.reference}&refKey=${refKey}`
+            console.log('api url', apiUrl)
+            
+            const urlParams: TransactionRequestURLFields = {
+                link: new URL(apiUrl),
+                label: "Artisan",
+                message: "Thanks for your order! 🤑",
+            }
+            const solanaUrl = encodeURL(urlParams)
+            setSolanaUrl(solanaUrl);
+            setDisplayQr(true);
+        } catch (error) {
+            console.error('Error generating QR code', error);
+            toast.error(
+                <p style={{color: 'black'}}>
+                    Error generating QR code
+                </p>
+            );
+        };
+    };
+
+
     // **************************Data Functions***********************************
     async function fetchData(accountPubkey: string) {
         const on_chain_data: OnChainData | undefined = await fetchProductDetails(accountPubkey);
@@ -254,6 +372,22 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                 window.removeEventListener("resize", handleResize);
             };
         }
+    }, []);
+
+    useEffect(() => {
+        if(publicKey){
+            return;
+        }
+        checkLogin().then((res) => {
+            if(res !== false){
+                if(res.account){
+                    setWeb3AuthPublicKey(res.account);
+                }
+                if(res.rpc !== null){
+                    setRpc(res.rpc);
+                }
+            }
+        });
     }, []);
 
     useEffect(() => {
@@ -362,7 +496,18 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                         </div>
                                     </div>
 
-                                    <a onClick={buyListing} className="btn btn-white" style={{ justifyContent: "center" }}>
+                                    <a 
+                                        onClick={
+                                        ()=>{
+                                            if(!publicKey && !web3AuthPublicKey){
+                                                getQrCode();
+                                            }else {
+                                                buyListing();
+                                            }
+                                        }} 
+                                        className="btn btn-white" 
+                                        style={{ justifyContent: "center" }}
+                                    >
                                         INVEST IN FRACTIONS
                                     </a>
                                 </div>
@@ -417,6 +562,17 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                             <CTA1Card />
                         </div>
                     </div>
+                </div>
+            )}
+            {displayQr && solanaUrl && refKey && (
+                <div>
+                    <div className="backdrop" onClick={()=> {setDisplayQr(false)}} />
+                    <QrModal 
+                        showModal={displayQr}
+                        solanaUrl={solanaUrl}
+                        refKey={refKey}
+                        handleClose={() => setDisplayQr(false)}
+                    />
                 </div>
             )}
         </>
