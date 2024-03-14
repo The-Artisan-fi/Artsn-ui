@@ -10,7 +10,6 @@ const ProductsSectionMobile = () => {
     useEffect(() => {
         if(products.available.length > 0) return;
         fetchProducts().then((products) => {
-            console.log('listed products', products)
             setProducts(products);
         });
         setProductsLoading(false);

@@ -99,6 +99,7 @@ function Navbar() {
             return;
         }
         if(publicKey) {
+            console.log("CONNECTED: ", publicKey.toBase58());
             checkBuyerProfile(publicKey.toBase58());
         }
         if(web3AuthPublicKey) {
@@ -110,6 +111,7 @@ function Navbar() {
         if(web3AuthPublicKey == null) {
             checkLogin().then((res) => {
                 if(res.connected){
+                    console.log("CONNECTED: ", res.account);
                     setWeb3AuthPublicKey(res.account);
                 }
             });
@@ -300,7 +302,7 @@ function Navbar() {
             )}
             <ToastContainer
                 position="bottom-left"
-                autoClose={3000}
+                autoClose={2000}
                 hideProgressBar={false}
                 newestOnTop={false}
                 closeOnClick
@@ -308,8 +310,11 @@ function Navbar() {
                 pauseOnFocusLoss
                 draggable
                 pauseOnHover
-                theme="dark"
-              />
+                theme="colored"
+                // style={{
+                //     backgroundColor: "#aaaaaa"
+                // }}
+            />
         </div>
     );
 }

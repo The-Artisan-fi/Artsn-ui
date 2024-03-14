@@ -39,11 +39,11 @@ export const fetchProducts = async () => {
              get_accounts_config
              );
 
-             console.log('all_program_accounts', all_program_accounts)
+            //  console.log('all_program_accounts', all_program_accounts)
             const productList = all_program_accounts.map((account) => {
                 try {
                     const decode = program.coder.accounts.decode("Listing", account.account.data);
-                    console.log('decode', decode);
+                    // console.log('decode', decode);
                     // 
                     // id: BN {negative: 0, words: Array(3), length: 1, red: null}
                     // price: BN {negative: 0, words: Array(3), length: 1, red: null}
@@ -89,7 +89,6 @@ export const fetchProducts = async () => {
                     reference: product.reference,
                 })),
             };
-            console.log('products', products.available[0].id.toNumber());
             return products;
         } catch (error) {
             console.error("Failed to fetch products:", error);
