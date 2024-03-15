@@ -5,7 +5,7 @@ import {
     SystemProgram,
     Keypair,
     Transaction,
-    Connection
+    Connection,
   } from "@solana/web3.js";
   
   import { 
@@ -30,7 +30,7 @@ export type MakeTransactionOutputData = {
 export async function GET( request: Request, res: Response ){
     return new Response(JSON.stringify({
       label: "The Artisan",
-      icon: "https://artisan-one.vercel.app/assets/navbrand-full.webp",
+      icon: "https://artisan-one.vercel.app/assets/footer-logo1.png",
     }))
 }
 
@@ -49,14 +49,12 @@ export async function POST( request: Request) {
         const req = await request.json();
         const { account } = req as MakeTransactionInputData
         
-        // get the url search params from the request
         const searchParams = new URLSearchParams(request.url);
         const id_string = searchParams.get('id');
         const reference = searchParams.get('reference');
         const refKey = searchParams.get('refKey');
         const id = Number(id_string!);
         const buyer_publicKey = new PublicKey(account);
-        
         const watch = PublicKey.findProgramAddressSync([Buffer.from('watch'),  Buffer.from(reference!)], program.programId)[0];
         const listing = PublicKey.findProgramAddressSync([Buffer.from('listing'), watch.toBuffer(), new anchor.BN(id).toBuffer("le", 8)], program.programId)[0];
         const fraction = PublicKey.findProgramAddressSync([Buffer.from('fraction'), listing.toBuffer()], program.programId)[0];
@@ -73,12 +71,21 @@ export async function POST( request: Request) {
         const buyerProfileAccount = await connection.getAccountInfo(
             buyerProfile
         );
-
-
+        
         const feeKey = process.env.PRIVATE_KEY!;
         const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
 
-        const profileInitIx = await await program.methods
+        // console.log('watch', watch.toBase58())
+        // console.log('listing', listing.toBase58())
+        // console.log('fraction', fraction.toBase58())
+        // console.log('auth', auth.toBase58())
+        // console.log('buyerProfile', buyerProfile.toBase58())
+        // console.log('buyerFractionAta', buyerFractionAta.toBase58())
+        // console.log('listingCurrencyAta', listingCurrencyAta.toBase58())
+        // console.log('buyerCurrencyAta', buyerCurrencyAta.toBase58())
+        // console.log('feePayer', feePayer.publicKey.toBase58())
+
+        const profileInitIx = await program.methods
             .initializeProfileAccount()
             .accounts({
                 payer: feePayer.publicKey,
@@ -122,10 +129,10 @@ export async function POST( request: Request) {
             feePayer: feePayer.publicKey
         });
 
-        if(buyerProfileAccount === null){
+        if(!buyerProfileAccount){
             transaction.add(profileInitIx);
         }
-
+        
         transaction.add(buyShareIx);
 
         transaction.partialSign(feePayer);
@@ -137,12 +144,30 @@ export async function POST( request: Request) {
 
         const message = "Enjoy your Fraction from The Artisan!"
 
+        // ****************VERSIONED TRANSACTION****************
+        //     const transaction = new VersionedTransaction(
+        //         new TransactionMessage({
+        //             payerKey: feePayer.publicKey,
+        //             recentBlockhash: blockhash,
+        //             instructions: [buyShareIx],
+        //         }).compileToV0Message(),
+        //     );
+        //     transaction.sign([feePayer]);
+
+        //     const serializedTransaction = transaction.serialize();
+        //     const base64 = Buffer.from(serializedTransaction).toString('base64');
+
+        //     const message = "Enjoy your Fraction from The Artisan!"
+            
+        //     // get a simulated transaction response 
+        //     const response = await connection.simulateTransaction(transaction);
+        //     console.log('simulated response', response);
+
         return new Response(JSON.stringify({transaction: base64, message: message }), {
             headers: {
                 'content-type': 'application/json',
             },
         });
-
     } catch (e) {
         console.log(e);
         throw e;
