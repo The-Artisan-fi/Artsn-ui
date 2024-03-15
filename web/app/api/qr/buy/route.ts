@@ -72,7 +72,7 @@ export async function POST( request: Request) {
             buyerProfile
         );
         
-        const feeKey = process.env.NEXT_PUBLIC_PRIVATE_KEY!;
+        const feeKey = process.env.PRIVATE_KEY!;
         const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
 
         // console.log('watch', watch.toBase58())
