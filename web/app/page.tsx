@@ -4,7 +4,7 @@ import "@/styles/Home.scss";
 
 // import TextTransition, { presets } from "react-text-transition";
 
-// horo section text animations
+// hero section text animations
 const heroTexts = ["Watches", "Art", "Cars", "Wine", "Whisky", "Memorabilia"];
 
 // data for partners
@@ -14,6 +14,14 @@ import CTA1Card from "@/components/CtaCard1/CtaCard1";
 import CTA2Card from "@/components/CtaCard2/CtaCard2";
 import ProductsSectionDesktop from "@/components/ProductsSectionDesktop/ProductsSectionDesktop";
 import ProductsSectionMobile from "@/components/ProductsSectionMobile/ProductsSectionMobile";
+
+// Images
+import Image from "next/image";
+import overlay from "@/public/assets/home/overlay.svg"
+import arrow from "@/public/assets/arrow.svg"
+import arrowBlur from "@/public/assets/arrow-blur.svg"
+import homeAboutIllustration2 from "@/public/assets/home/home-about-illustration-2.webp"
+
 const Home = () => {
     const [index, setIndex] = useState(0);
     const [opacity, setOpacity] = useState(0);
@@ -127,11 +135,11 @@ const Home = () => {
                                 alt=""
                                 className="home__hero__illustration"
                             /> */}
-                            <img
+                            <Image
                                 className="overlay"
                                 style={{ width: "100%" }}
-                                src="/assets/home/overlay.svg"
-                                alt=""
+                                src={overlay}
+                                alt="overlay"
                             />
                         </div>
                         {/* <div className="home__hero__overlay"> */}
@@ -158,23 +166,26 @@ const Home = () => {
                             <br /><span className="emphasis">Grow.</span>
                         </h1>
                         <div className="home__about__illustration__img1">
-                            <img
-                                src="/assets/arrow.svg"
-                                alt=""
+                            <Image
+                                src={arrow}
+                                alt="arrow"
                                 className="home__about__illustration__img1"
+                                loading="lazy"
                             />
                         </div>
                         <div className="home__about__illustration__img2">
-                            <img
-                                src="/assets/arrow-blur.svg"
-                                alt=""
+                            <Image
+                                src={arrowBlur}
+                                alt="arrow blur"
                                 className="home__about__illustration__img2"
+                                loading="lazy"
                             />
                         </div>
-                        <img
-                            src="/assets/home/home-about-illustration-2.webp"
-                            alt=""
+                        <Image
+                            src={homeAboutIllustration2}
+                            alt="about illustration"
                             className="home__about__illustration__img3"
+                            loading="lazy"
                         />
                     </div>
                     <div className="home__about__content">
@@ -247,7 +258,7 @@ const Home = () => {
 
             {/* Products section */}
             {isMobile ? <ProductsSectionMobile /> : <ProductsSectionDesktop />}
-            {/* <ProductsSectionMobile /> */}
+
             {/* Opportunities sectin */}
             {/*<OpportunitiesSection />*/}
 

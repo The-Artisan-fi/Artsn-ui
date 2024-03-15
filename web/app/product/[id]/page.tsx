@@ -140,58 +140,58 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
     async function buyListing() {        
         try {
             if(publicKey && product){
-            const response = await fetch('/api/buy', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    id: product.id,
-                    reference: product.reference,
-                    publicKey: publicKey.toBase58(),
-                })
-            })
-            const txData = await response.json();
-            const tx = Transaction.from(Buffer.from(txData.transaction, "base64"));
-        
-            const signature = await sendTransaction(tx, connection, 
-                {
-                    skipPreflight: true,
-                },
-            );
-            
-            const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash()
-            
-            toast.promise(
-                connection.confirmTransaction({
-                    blockhash,
-                    lastValidBlockHeight,
-                    signature: signature
-                }),
-                {
-                    pending: 'Transaction pending...',
-                    success: {
-                        render(){
-                            return (
-                                <div>
-                                    <Link 
-                                        style={{color: 'black'}}
-                                        target='_blank'  
-                                        href={`https://explorer.solana.com/tx/${signature}?cluster=devnet`}
-                                    > 
-                                        Transaction Confirmed 
-                                    </Link>
-                                </div>
-                            )
-                        }
+                const response = await fetch('/api/buy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
                     },
-                    error: 'Error sending transaction'
-                }
-            );
+                    body: JSON.stringify({
+                        id: product.id,
+                        reference: product.reference,
+                        publicKey: publicKey.toBase58(),
+                    })
+                })
+                const txData = await response.json();
+                const tx = Transaction.from(Buffer.from(txData.transaction, "base64"));
             
-            console.log(
-                `Transaction sent: https://explorer.solana.com/tx/${signature}?cluster=devnet`
-            );
+                const signature = await sendTransaction(tx, connection, 
+                    {
+                        skipPreflight: true,
+                    },
+                );
+                
+                const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash()
+                
+                toast.promise(
+                    connection.confirmTransaction({
+                        blockhash,
+                        lastValidBlockHeight,
+                        signature: signature
+                    }),
+                    {
+                        pending: 'Transaction pending...',
+                        success: {
+                            render(){
+                                return (
+                                    <div>
+                                        <Link 
+                                            style={{color: 'black'}}
+                                            target='_blank'  
+                                            href={`https://explorer.solana.com/tx/${signature}?cluster=devnet`}
+                                        > 
+                                            Transaction Confirmed 
+                                        </Link>
+                                    </div>
+                                )
+                            }
+                        },
+                        error: 'Error sending transaction'
+                    }
+                );
+                
+                console.log(
+                    `Transaction sent: https://explorer.solana.com/tx/${signature}?cluster=devnet`
+                );
 
             } 
             if(web3AuthPublicKey !== null && !publicKey && product){
@@ -242,8 +242,6 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                     }
                 );
             }
-
-            
         } catch (error) {
             console.error('Error sending transaction', error);
             toast.error(
@@ -259,12 +257,11 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
             const { location } = window
     
             // id: product.id,
-            //         reference: product.reference,
-                    // publicKey: publicKey.toBase58(),
+            // reference: product.reference,
+            // publicKey: publicKey.toBase58(),
             const refKey = Keypair.generate().publicKey.toBase58();
-            console.log('refKey', refKey)
             setRefKey(refKey);
-            const apiUrl = `${location.protocol}//${location.host}/api/qr/buy/?&id=${product?.id}&reference=${product?.reference}&refKey=${refKey}`
+            const apiUrl = `${location.protocol}//${location.host}/api/qr/buy?new=true&id=${product?.id}&reference=${product?.reference}&refKey=${refKey}`
             console.log('api url', apiUrl)
             
             const urlParams: TransactionRequestURLFields = {
@@ -272,7 +269,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                 label: "Artisan",
                 message: "Thanks for your order! 🤑",
             }
-            const solanaUrl = encodeURL(urlParams)
+            const solanaUrl = encodeURL(urlParams,)
             setSolanaUrl(solanaUrl);
             setDisplayQr(true);
         } catch (error) {
