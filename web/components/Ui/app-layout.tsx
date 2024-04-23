@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import { ReactNode } from 'react';
 import Navbar from '@/components/Navbar/Navbar';
 import Footer from '@/components/Footer/Footer';
@@ -8,7 +8,7 @@ import {
   ApolloProvider,
   HttpLink,
   InMemoryCache,
-} from "@apollo/client";
+} from '@apollo/client';
 
 const graphqlUri = process.env.NEXT_PUBLIC_MONGO_ENDPOINT;
 const app = new Realm.App('artisan-gql-scrtu');
@@ -16,7 +16,7 @@ async function getValidAccessToken() {
   if (!app.currentUser) {
     await app.logIn(Realm.Credentials.anonymous());
   } else {
-    // An already logged in user's access token might be stale. Tokens must be refreshed after 
+    // An already logged in user's access token might be stale. Tokens must be refreshed after
     // 30 minutes. To guarantee that the token is valid, we refresh the user's access token.
     await app.currentUser.refreshAccessToken();
   }
@@ -37,7 +37,6 @@ const client = new ApolloClient({
   }),
   cache: new InMemoryCache(),
 });
-
 
 export function AppLayout({ children }: { children: ReactNode }) {
   return (
