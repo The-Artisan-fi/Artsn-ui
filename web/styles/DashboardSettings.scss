@@ -1,0 +1,28 @@
+.settings {
+    background-color: #1e1e22;
+    padding: 5rem 4rem 6rem;
+    border-radius: 2rem;
+  
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+  
+    &__row {
+      display: flex;
+      gap: 2rem;
+      width: 100%;
+    }
+  
+    &__row-half {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+  
+    &__col {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      width: 100%;
+    }
+  }

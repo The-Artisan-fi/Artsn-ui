@@ -9,7 +9,7 @@ const heroTexts = ["Watches", "Art", "Cars", "Wine", "Whisky", "Memorabilia"];
 
 // data for partners
 import PartnersMarque from "@/components/PartnersMarque/PartnersMarque";
-// import OpportunitiesSection from "@/components/OpportunitiesSection/OpportunitiesSection";
+import OpportunitiesSection from "@/components/OpportunitiesSection/OpportunitiesSection";
 import CTA1Card from "@/components/CtaCard1/CtaCard1";
 import CTA2Card from "@/components/CtaCard2/CtaCard2";
 import ProductsSectionDesktop from "@/components/ProductsSectionDesktop/ProductsSectionDesktop";
@@ -260,7 +260,7 @@ const Home = () => {
             {isMobile ? <ProductsSectionMobile /> : <ProductsSectionDesktop />}
 
             {/* Opportunities sectin */}
-            {/*<OpportunitiesSection />*/}
+            <OpportunitiesSection />
 
             {/* cta  */}
             {/* <section className="home__cta padding">
