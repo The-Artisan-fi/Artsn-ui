@@ -1,16 +1,31 @@
 'use client';
 
-import '../../styles/DashboardNav.scss';
+import '@/styles/DashboardNav.scss';
 import Link from 'next/link';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { Button, Popover, Avatar, List } from 'antd';
 import { LuBell } from 'react-icons/lu';
 import { LuBellDot } from 'react-icons/lu';
+import { useLazyQuery } from "@apollo/client";
+import { userProfileBasic } from "@/lib/queries";
 
 const DashboardNav = () => {
   const [open, setOpen] = useState(false);
-
+  const { publicKey } = useWallet();
+  const [variables, setVariables] = useState({ wallet: ''});
+  const [profileImg, setProfileImg] = useState('');
+  const [userName, setUserName] = useState('');
+  const [getDetails, { loading, error, data }] = useLazyQuery(userProfileBasic , {variables});
+  if(!loading && data != undefined && profileImg == ''){
+    console.log("data", data);
+    setProfileImg(data.users[0].profileImg);
+    setUserName(data.users[0].userName);
+  }
+  if(!loading && error != undefined){
+      console.log("error", error);
+  }
   const [haveNotifications, setHaveNotifications] = useState(true);
 
   const hide = () => {
@@ -33,6 +48,13 @@ const DashboardNav = () => {
       renderItem={(item) => <List.Item key={item.id}>{item.text}</List.Item>}
     />
   );
+
+  useEffect(() => {
+    if(publicKey) {
+      setVariables({wallet: publicKey.toBase58()});
+      getDetails();
+    }
+  }, [publicKey]);
 
   return (
     <div className="dashboard-nav">
@@ -62,9 +84,11 @@ const DashboardNav = () => {
           ></Button>
         </Popover>
         <Avatar
-          src={'https://gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50'}
+          src={profileImg}
         />
-        <p className="dashboard-nav__user-name">Leo</p>
+        <p className="dashboard-nav__user-name">
+          {userName}
+        </p>
       </div>
     </div>
   );

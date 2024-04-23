@@ -1,18 +1,34 @@
 'use client';
-import '../../../styles/DashboardProfile.scss';
-import { useState } from 'react';
+import '@/styles/DashboardProfile.scss';
+import { useEffect, useState } from 'react';
 import { Upload, Input, message } from 'antd';
 import ImgCrop from 'antd-img-crop';
 
 import { MdOutlineFileUpload } from 'react-icons/md';
 import { FaLock } from 'react-icons/fa';
 import { FaCopy } from 'react-icons/fa';
+import { useLazyQuery } from "@apollo/client";
+import { user } from "@/lib/queries";
+import { useWallet } from '@solana/wallet-adapter-react';
 
 const Profile = () => {
+  const { publicKey } = useWallet();
+  const [offChainData, setOffChainData] = useState(undefined);
   const [fileList, setFileList] = useState([]);
   const onChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
   };
+  const [variables, setVariables] = useState({
+    wallet: "",
+  });
+  const [getDetails, { loading, error, data }] = useLazyQuery(user , {variables});
+  if(!loading && data != undefined && offChainData == undefined){
+    console.log("data", data);
+    setOffChainData(data.users[0]);
+  }
+  if(!loading && error != undefined){
+      console.log("error", error);
+  }
   const onPreview = async (file) => {
     let src = file.url;
     if (!src) {
@@ -27,6 +43,13 @@ const Profile = () => {
     const imgWindow = window.open(src);
     imgWindow?.document.write(image.outerHTML);
   };
+
+  useEffect(() => {
+    if (publicKey) {
+      setVariables({ wallet: publicKey.toBase58() });
+      getDetails();
+    }
+  }, [publicKey]);
 
   return (
     <div className="profile">
@@ -50,11 +73,14 @@ const Profile = () => {
       <div className="profile__input-row">
         <div className="profile__input-col">
           <p className="caption-3">FULL NAME</p>
-          <Input size="large" placeholder="Enter Your Name" />
+          <Input 
+            size="large" 
+            placeholder={offChainData ? offChainData.fullName : 'Enter Your Full Name'}
+          />
         </div>
         <div className="profile__input-col">
           <p className="caption-3">USERNAME</p>
-          <Input size="large" placeholder="Enter Your Username" />
+          <Input size="large" placeholder={offChainData ? offChainData.userName : 'Enter Your Username'} />
         </div>
       </div>
 
@@ -65,9 +91,10 @@ const Profile = () => {
             suffix={<FaLock />}
             size="large"
             placeholder="Enter Your Email"
-            value={'leo.donateac22@gmail.com'}
+            value={offChainData ? offChainData.email : ''}
             type="email"
             disabled={true}
+            style={{ color: 'white'}}
           />
         </div>
         <div className="profile__input-col">
@@ -76,15 +103,17 @@ const Profile = () => {
             suffix={
               <FaCopy
                 onClick={() => {
+                  navigator.clipboard.writeText(publicKey.toBase58());
                   message.success('Copied!');
                 }}
                 style={{ cursor: 'pointer', color: 'white' }}
               />
             }
-            value={'0x473895634895hjfgd7834sdgyerterhgr'}
+            value={publicKey ? publicKey.toBase58() : 'Connect Wallet'}
             size="large"
             placeholder="Enter Your"
             disabled={true}
+            style={{ color: 'white'}}
           />
         </div>
       </div>

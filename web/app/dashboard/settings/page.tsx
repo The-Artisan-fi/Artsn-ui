@@ -1,10 +1,33 @@
 'use client';
-import '../../../styles/DashboardSettings.scss';
+import '@/styles/DashboardSettings.scss';
 import { Button, Input, Select, message } from 'antd';
-
+import { useEffect, useState } from 'react';
 import { HiOutlineLogout } from 'react-icons/hi';
+import { useLazyQuery } from "@apollo/client";
+import { userCurrencyPref } from "@/lib/queries";
+import { useWallet } from '@solana/wallet-adapter-react';
 
 const SettingsPage = () => {
+  const { publicKey } = useWallet();
+  const [currencyPref, setCurrencyPref] = useState('');
+  const [variables, setVariables] = useState({ wallet: '' });
+
+  const [getDetails, { loading, error, data }] = useLazyQuery(userCurrencyPref , {variables});
+  if(!loading && data != undefined && currencyPref == '' ){
+    console.log("data", data);
+    setCurrencyPref(data.users[0].currencyPreference);
+  }
+  if(!loading && error != undefined){
+      console.log("error", error);
+  }
+
+  useEffect(() => {
+    if (publicKey) {
+      setVariables({ wallet: publicKey.toBase58() });
+      getDetails();
+    }
+  }, [publicKey]);
+
   return (
     <div className="settings">
       <div className="settings__row">
@@ -16,7 +39,7 @@ const SettingsPage = () => {
             style={{
               width: '100%',
             }}
-            placeholder="Search to Select"
+            placeholder={currencyPref ? currencyPref : 'Select Currency'}
             optionFilterProp="children"
             filterOption={(input, option) =>
               (option?.label ?? '').includes(input)
@@ -73,6 +96,7 @@ const SettingsPage = () => {
             size="large"
             placeholder="Enter Your"
             disabled={true}
+            style={{ color: 'white'}}
           />
         </div>
       </div>

@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 
 // arrow left and arrow right
 
@@ -31,7 +31,7 @@ const DashboardLayout = ({ children }) => {
   const [selectedKeys, setSelectedKeys] = useState(['1']);
   const [activeTabTitle, setActiveTabTitle] = useState('Inventory');
   const router = useRouter();
-
+  const currentPath = usePathname();
   const handleMenuSelect = ({ key, item }) => {
     setSelectedKeys([key]);
     setActiveTabTitle(item.props.title);
@@ -61,6 +61,22 @@ const DashboardLayout = ({ children }) => {
     router.push(url);
   };
 
+  useEffect(() => {
+    console.log('currentPath', currentPath);
+    if (currentPath === '/dashboard') {
+      setSelectedKeys(['1']);
+      setActiveTabTitle('Inventory');
+    } else if (currentPath === '/dashboard/profile') {
+      setSelectedKeys(['2']);
+      setActiveTabTitle('Profile');
+    } else if (currentPath === '/dashboard/wallet') {
+      setSelectedKeys(['3']);
+      setActiveTabTitle('Wallet');
+    } else if (currentPath === '/dashboard/settings') {
+      setSelectedKeys(['4']);
+      setActiveTabTitle('Settings');
+    }
+  }, [currentPath]);
   return (
     <Layout style={{ height: '100%', backgroundColor: '#17171b' }}>
       <Sider

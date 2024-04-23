@@ -1,7 +1,6 @@
-import DashboardLayout from '@/components/DashboardLayout/DashboardLayout';
-import DashboardNav from '@/components/DashboardNav/DashboardNav';
-import { mintToChecked } from '@solana/spl-token';
-
+import DashboardLayout from '@/components/Dashboard/DashboardLayout/DashboardLayout';
+import DashboardNav from '@/components/Dashboard/DashboardNav/DashboardNav';
+// import { mintToChecked } from '@solana/spl-token';
 import React from 'react';
 
 const layout = ({ children }) => {
