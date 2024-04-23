@@ -11,7 +11,7 @@ import ImageGallery from "react-image-gallery";
 // import stylesheet if you're not already using CSS @import
 import "react-image-gallery/styles/css/image-gallery.css";
 import { useLazyQuery } from "@apollo/client";
-import { listing } from "@/lib/queries";
+import { listing, user } from "@/lib/queries";
 import { Transaction, Connection, Keypair } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import Link from "next/link";
@@ -125,9 +125,11 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
     const [variables, setVariables] = useState({
         associatedId: "",
       });
-    const [getDetails, { loading, error, data }] = useLazyQuery(listing, {
-        variables,
-    });
+    const [getDetails, { loading, error, data }] = useLazyQuery(
+        listing, {
+            variables,
+        }
+    );
     if(!loading && data != undefined && offChainData == undefined){
         console.log("data", data.listings[0]);
         setOffChainData(data.listings[0]);

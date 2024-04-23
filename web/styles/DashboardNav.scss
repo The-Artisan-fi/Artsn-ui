@@ -1,0 +1,24 @@
+.dashboard-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  
+    padding: 2rem 2rem 3rem;
+  
+    &__navbrand {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      gap: 1rem;
+  
+      &__img {
+        width: 20rem;
+      }
+    }
+  
+    &__right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+  }
