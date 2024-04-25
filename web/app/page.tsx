@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect } from "react";
+import dynamic from 'next/dynamic';
 import "@/styles/Home.scss";
 
 // import TextTransition, { presets } from "react-text-transition";
@@ -21,6 +22,31 @@ import overlay from "@/public/assets/home/overlay.svg"
 import arrow from "@/public/assets/arrow.svg"
 import arrowBlur from "@/public/assets/arrow-blur.svg"
 import homeAboutIllustration2 from "@/public/assets/home/home-about-illustration-2.webp"
+
+// Components
+// hero section text animations
+const heroTexts = ["Watches", "Art", "Cars", "Wine", "Whisky", "Memorabilia"];
+// import OpportunitiesSection from "@/components/OpportunitiesSection/OpportunitiesSection";
+const PartnersMarque = dynamic(() => import("@/components/PartnersMarque/PartnersMarque"), {
+    loading: () => <p>Loading...</p>,
+    ssr: false,
+});
+const CTA1Card = dynamic(() => import("@/components/CtaCards/CtaCard1"), {
+    loading: () => <p>Loading...</p>,
+    ssr: false,
+});
+const CTA2Card = dynamic(() => import("@/components/CtaCards/CtaCard2"), {
+    loading: () => <p>Loading...</p>,
+    ssr: false,
+});
+const ProductsSectionDesktop = dynamic(() => import("@/components/ProductsSectionDesktop/ProductsSectionDesktop"), {
+    loading: () => <p>Loading...</p>,
+    ssr: false,
+});
+const ProductsSectionMobile = dynamic(() => import("@/components/ProductsSectionMobile/ProductsSectionMobile"), {
+    loading: () => <p>Loading...</p>,
+    ssr: false,
+});
 
 const Home = () => {
     const [index, setIndex] = useState(0);
@@ -123,8 +149,8 @@ const Home = () => {
                             <h2 className="heading-1">
                                 Collect & Trade Luxury Goods
                             </h2>
-                            <a href="https://tally.so/r/mYWaJz" className="btn-primary">
-                                JOIN THE WAITLIST
+                            <a href="/collect-fraction" className="btn-primary uppercase">
+                                Start Collecting
                             </a>
                         </div>
                         <div

@@ -1,6 +1,13 @@
 'use client';
 import '@/styles/DashboardSettings.scss';
-import { Button, Input, Select, message } from 'antd';
+import Dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
+// import { message } from 'antd';
+const Button = Dynamic(() => import('antd').then((mod) => mod.Button), { ssr: false });
+const Input = Dynamic(() => import('antd').then((mod) => mod.Input), { ssr: false });
+const Select = Dynamic(() => import('antd').then((mod) => mod.Select), { ssr: false });
+// const message = Dynamic(() => import('antd').then((mod) => mod.message), { ssr: false });
+
 import { useEffect, useState } from 'react';
 import { HiOutlineLogout } from 'react-icons/hi';
 import { useLazyQuery } from "@apollo/client";
@@ -8,7 +15,8 @@ import { userCurrencyPref } from "@/lib/queries";
 import { useWallet } from '@solana/wallet-adapter-react';
 
 const SettingsPage = () => {
-  const { publicKey } = useWallet();
+  const { publicKey, disconnect } = useWallet();
+  const router = useRouter();
   const [currencyPref, setCurrencyPref] = useState('');
   const [variables, setVariables] = useState({ wallet: '' });
 
@@ -83,7 +91,7 @@ const SettingsPage = () => {
             suffix={
               <Button
                 onClick={() => {
-                  message.success('Gonna Delete This!');
+                  // message.success('Gonna Delete This!');
                 }}
                 danger
                 size="small"
@@ -112,6 +120,10 @@ const SettingsPage = () => {
             gap: '1rem',
           }}
           size="large"
+          onClick={() => {
+            disconnect();
+            router.push('/');
+          }}
         >
           LOG OUT
           <HiOutlineLogout style={{ fontSize: '2rem' }} />

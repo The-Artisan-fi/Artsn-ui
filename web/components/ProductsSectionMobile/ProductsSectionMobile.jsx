@@ -1,12 +1,16 @@
 import "@/styles/ProductsSectionMobile.scss";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter }from "next/navigation";
 // import products from "@/components/Utils/productData";
 import { fetchProducts } from "@/hooks/fetchProducts";
+import ProductBorder from "@/public/assets/product-border-bg.png";
+import Audemar from "@/public/assets/home/products/Audemars-piguet-Royaloak.webp";
 const ProductsSectionMobile = () => {
     const [products, setProducts] = useState({ available: [], comingSoon: [] });
     const [productsLoading, setProductsLoading] = useState(true);
     const router = useRouter();
+
     useEffect(() => {
         if(products.available.length > 0) return;
         fetchProducts().then((products) => {
@@ -14,6 +18,7 @@ const ProductsSectionMobile = () => {
         });
         setProductsLoading(false);
     }, []);
+    
     return (
         <section className="products ">
             {/* available */}
@@ -29,16 +34,16 @@ const ProductsSectionMobile = () => {
                                     key={item.id}
                                     className="products__available__slider__item"
                                 >
-                                    <img
-                                        src="/assets/product-border-bg.png"
-                                        alt=""
+                                    <Image
+                                        src={ProductBorder}
+                                        alt="product border"
                                         className="products__available__slider__item__bg"
                                     />
                                     <div className="item-top">
-                                        <img
+                                        <Image
+                                            src={Audemar}
                                             // src={item.image}
-                                            src='/assets/home/products/Audemars-piguet-Royaloak.webp'
-                                            alt={item.name}
+                                            alt="product"
                                             className="item-top-img"
                                         />
                                     </div>
@@ -84,7 +89,7 @@ const ProductsSectionMobile = () => {
                                                 // router.push(`/product/1`);
                                             }}
                                         >
-                                            <p className="text">COLLECT NOW (TESTNET)</p>
+                                            <p className="text">COLLECT NOW</p>
                                         </button>
                                     </div>
                                 </div>
@@ -106,15 +111,14 @@ const ProductsSectionMobile = () => {
                                     key={item.id}
                                     className="products__coming__slider__item"
                                 >
-                                    <img
-                                        src="/assets/product-border-bg.png"
-                                        alt=""
+                                    <Image
+                                        src={ProductBorder}
+                                        alt="product border"
                                         className="products__coming__slider__item__bg"
                                     />
                                     <div className="item-top">
-                                        <img
+                                        <Image
                                             src={item.image}
-                                            // src='/assets/home/products/AqANMWkAuFCaRxjtRFqDDxydvRr7xWrEQ1ZNVRnGwkrK-1.jpg'
                                             alt={item.name}
                                             className="item-top-img"
                                         />

@@ -6,12 +6,12 @@ import {
     Keypair,
     Transaction,
     Connection,
+    // sendAndConfirmTransaction,
   } from "@solana/web3.js";
 import * as b58 from "bs58";
   
 
 export async function POST( request: Request ) {
-    console.log('route pinged')
     const wallet = Keypair.generate();
     const connection = new Connection(
         process.env.NEXT_PUBLIC_HELIUS_DEVNET!,
@@ -41,7 +41,6 @@ export async function POST( request: Request ) {
             .instruction()
 
         const { blockhash } = await connection.getLatestBlockhash("finalized");
-        console.log('blockhash', blockhash)
         const transaction = new Transaction({
             recentBlockhash: blockhash,
             feePayer: feePayer.publicKey,

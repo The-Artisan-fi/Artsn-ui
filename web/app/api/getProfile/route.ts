@@ -6,7 +6,6 @@ import {
     Connection
   } from "@solana/web3.js";
   
-
 export async function POST( request: Request ) {
     console.log('get profile route pinged')
     const wallet = Keypair.generate();
@@ -30,7 +29,7 @@ export async function POST( request: Request ) {
         const profileAccount = await connection.getAccountInfo(buyerProfile);
 
         if(profileAccount !== null){
-            return new Response(JSON.stringify({profile: true }), {
+            return new Response(JSON.stringify({profile: profileAccount }), {
                 headers: {
                     'content-type': 'application/json',
                 },

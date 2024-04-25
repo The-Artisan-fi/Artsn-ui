@@ -1,27 +1,37 @@
 'use client';
 import React, { useState } from 'react';
-import '../../styles/DashboardInventory.scss';
-
-import { Radio, Table } from 'antd';
+import Image from 'next/image';
+import '@/styles/DashboardInventory.scss';
 import { FiArrowUpRight } from 'react-icons/fi';
-
-import { Line } from '@ant-design/plots';
+import dynamic from 'next/dynamic';
+const Table  = dynamic(() => import('antd').then((mod) => mod.Table), { ssr: false });
+const Radio  = dynamic(() => import('antd').then((mod) => mod.Radio.Group), { ssr: false });
+const Line = dynamic(() => import('@ant-design/plots').then((mod) => mod.Line), {
+  ssr: false,
+});
+import Audemars from "@/public/assets/home/products/Audemars-piguet-Royaloak.webp"
+// import { useWallet } from '@solana/wallet-adapter-react';
 
 // Graph configurations
 
 const optionsWithDisabled = [
-  { label: 'Weekly', value: 'Weekly' },
+  // { label: 'Weekly', value: 'Weekly' },
   { label: 'Monthly', value: 'Monthly' },
 ];
 
 const data = [
-  { day: 'Mo', value: 3 },
-  { day: 'Tu', value: 4 },
-  { day: 'Wed', value: 3.5 },
-  { day: 'Th', value: 5 },
-  { day: 'Fr', value: 4.2 },
-  { day: 'Sa', value: 4.8 },
-  { day: 'Su', value: 3.7 },
+  { day: 'Jan', value: 3 },
+  { day: 'Feb', value: 4 },
+  { day: 'Mar', value: 3.5 },
+  { day: 'Apr', value: 5 },
+  { day: 'May', value: 4.2 },
+  { day: 'Jun', value: 4.8 },
+  { day: 'July', value: 3.7 },
+  { day: 'Aug', value: 3.5 },
+  { day: 'Sep', value: 4.2 },
+  { day: 'Oct', value: 4.5 },
+  { day: 'Nov', value: 4.7 },
+  { day: 'Dec', value: 3.8 },
 ];
 
 const config = {
@@ -120,15 +130,7 @@ const dataSource = [
     title: 'Audemars Piguet Royal Oak Extra Thin, 2019',
     value: 935,
     amount: 6213,
-  },
-  {
-    key: 10,
-    no: 10,
-    item: 'Item 10',
-    title: 'Title 10',
-    value: 358,
-    amount: 6324,
-  },
+  }
 ];
 
 const columns = [
@@ -145,11 +147,11 @@ const columns = [
     key: 'item',
 
     render: (text, record) => (
-      <img
+      <Image
         width={40}
-        height={40}
-        src="/assets/home/products/Audemars-piguet-Royaloak.webp"
-        alt=""
+        height={50}
+        src={Audemars}
+        alt="Audemars Piguet Royal Oak Extra Thin, 2019"
       />
     ),
   },
@@ -163,7 +165,7 @@ const columns = [
     dataIndex: 'value',
     key: 'value',
 
-    render: (text, record) => <p>{`${text}ETH`}</p>,
+    render: (text, record) => <p>{`${text}◎`}</p>,
   },
 
   {
@@ -190,11 +192,21 @@ const columns = [
 
 const Dashboard = () => {
   const [value4, setValue4] = useState('Weekly');
+  // const { publicKey } = useWallet();
 
   const onChange4 = ({ target: { value } }) => {
     console.log('radio4 checked', value);
     setValue4(value);
   };
+
+  // useEffect(() => {
+  //   if (publicKey) {
+  //     console.log('decoding profile data')
+  //     decodeProfileData(publicKey).then((data) => {
+  //       console.log('decoded profile data returned', data);
+  //     });
+  //   }
+  // }, [publicKey]);
 
   return (
     <div className="dashboard-inventory">
@@ -202,7 +214,7 @@ const Dashboard = () => {
         <div className="dashboard-inventory__top__graph">
           <div className="dashboard-inventory__top__graph__head">
             <p className="caption-2">Wallet Value</p>
-            <Radio.Group
+            <Radio
               options={optionsWithDisabled}
               onChange={onChange4}
               value={value4}
@@ -229,10 +241,10 @@ const Dashboard = () => {
           <p className="caption-1">Top Gainer</p>
           <div className="item-body">
             <p className="p-4">+18.4%</p>
-            <img
-              src="/assets/home/products/Audemars-piguet-Royaloak.webp"
+            <Image
+              src={Audemars}
               className="item-img"
-              alt=""
+              alt="Audemars Piguet Royal Oak Extra Thin, 2019"
             />
             <p className="p-4">Gained</p>
           </div>
@@ -244,10 +256,10 @@ const Dashboard = () => {
           <p className="caption-1">Most Valued</p>
           <div className="item-body">
             <p className="p-4">$5631</p>
-            <img
-              src="/assets/home/products/Audemars-piguet-Royaloak.webp"
+            <Image
+              src={Audemars}
               className="item-img"
-              alt=""
+              alt="Audemars Piguet Royal Oak Extra Thin, 2019"
             />
             <p className="p-4">Fraction Value</p>
           </div>
@@ -262,12 +274,14 @@ const Dashboard = () => {
             border: '1px solid #3d3d3d',
             borderRadius: '10px',
             overflow: 'hidden',
+            backgroundColor: '#1e1e22',
           }}
           size="medium"
           scroll={{ x: 'max-content' }}
           // bordered={true}
           dataSource={dataSource}
           columns={columns}
+          lazy={true}
         />
       </div>
     </div>

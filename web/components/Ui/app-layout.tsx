@@ -8,8 +8,8 @@ import {
   ApolloProvider,
   HttpLink,
   InMemoryCache,
-} from '@apollo/client';
-
+} from "@apollo/client";
+import { usePathname } from 'next/navigation';
 const graphqlUri = process.env.NEXT_PUBLIC_MONGO_ENDPOINT;
 const app = new Realm.App('artisan-gql-scrtu');
 async function getValidAccessToken() {
@@ -39,12 +39,13 @@ const client = new ApolloClient({
 });
 
 export function AppLayout({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
   return (
     <ApolloProvider client={client}>
       <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-        <Navbar />
+        {!pathname.includes('dashboard') && <Navbar />}
         <div style={{ flexGrow: 1 }}>{children}</div>
-        <Footer />
+        {!pathname.includes('dashboard') && <Footer />}
       </div>
     </ApolloProvider>
   );

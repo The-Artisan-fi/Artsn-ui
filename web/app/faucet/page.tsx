@@ -142,6 +142,8 @@ export default function FaucetPage() {
                     <QrModal
                         showModal={displayQr}
                         solanaUrl={solanaUrl}
+                        header="Faucet"
+                        message="Scan to get USDC - Dev tokens"
                         refKey={refKey}
                         handleClose={() => setDisplayQr(false)}
                     />

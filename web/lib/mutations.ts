@@ -50,3 +50,33 @@ export const ADD_LISTING = gql`
     }
   }
 `;
+
+export const ADD_USER = gql`
+  mutation(
+    $fullName: String!
+    $userName: String!
+    $email: String!
+    $wallet: String!
+    $currencyPreference: String!
+    $profileImg: String!
+  ) {
+    insertOneUser(
+      data: {
+        fullName: $fullName
+        userName: $userName
+        email: $email
+        wallet: $wallet
+        currencyPreference: $currencyPreference
+        profileImg: $profileImg
+      }
+    ) {
+      _id
+      fullName
+      userName
+      email
+      wallet
+      currencyPreference
+      profileImg
+    }
+  }
+`;

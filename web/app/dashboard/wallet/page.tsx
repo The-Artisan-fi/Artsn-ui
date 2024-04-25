@@ -1,11 +1,15 @@
 'use client'
-import '../../../styles/DashboardWallet.scss';
+import '@/styles/DashboardWallet.scss';
 import { useEffect, useState } from 'react';
-import { RiMoneyDollarCircleFill } from 'react-icons/ri';
-import { SiSolana } from 'react-icons/si';
+import Dynamic from 'next/dynamic';
+import Image from 'next/image';
+const RiMoneyDollarCircleFill = Dynamic(() => import('react-icons/ri').then((mod) => mod.RiMoneyDollarCircleFill), { ssr: false });
+// const SiSolana = Dynamic(() => import('react-icons/si').then((mod) => mod.SiSolana), { ssr: false });
 import { useWallet } from "@solana/wallet-adapter-react";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { getAssociatedTokenAddress, getAccount } from '@solana/spl-token';
+import ArtisanIcon from "@/public/assets/artisan-icon.png"
+
 
 const WalletPage = () => {
   const [solBalance, setSolBalance] = useState<number | null>(null);
@@ -44,9 +48,9 @@ const WalletPage = () => {
   return (
     <div className="wallet">
       <div className="wallet__item item-1">
-        <img
-          src="/assets/artisan-icon.png"
-          alt=""
+        <Image
+          src={ArtisanIcon}
+          alt="Artisan Icon"
           className="wallet__item__img"
         />
         <div className="wallet__item__details">
@@ -57,9 +61,10 @@ const WalletPage = () => {
         <div className="wallet__item__action">
           <span className="p-5">EST. BALANCE</span>
           <span className="h-6">
-            {
+            {/* {
               solBalance ? solBalance.toFixed(4) : '0.00'
-            }
+            } */}
+            {usdcBalance ? usdcBalance.toFixed(2) : '0.00'}
           </span>
         </div>
       </div>
@@ -73,15 +78,19 @@ const WalletPage = () => {
             {usdcBalance ? usdcBalance.toFixed(2) : '0.00'}
           </p>
         </div>
-
-        <div className="wallet__item__action">
-          <span className="p-3">DEPOSIT USDC </span>
+        <div className="wallet__item__action__container">
+          <div className="wallet__item__action__container__btn">
+            <span className="p-3">DEPOSIT USDC </span>
+          </div>
+          <div className="wallet__item__action__container__btn">
+            <span className="p-3">DEPOSIT SOL</span>
+          </div>
         </div>
       </div>
 
       {/* item 3 */}
 
-      <div className="wallet__item">
+      {/* <div className="wallet__item">
         <SiSolana className="wallet__item__icon" />
         <div className="wallet__item__details">
           <p className="p-4 dimmed">SOLANA</p>
@@ -93,7 +102,7 @@ const WalletPage = () => {
         <div className="wallet__item__action">
           <span className="p-3">DEPOSIT SOL</span>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
