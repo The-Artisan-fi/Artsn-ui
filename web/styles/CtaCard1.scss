@@ -167,7 +167,8 @@
         padding-bottom: 62px;
         width: 100%;
         flex-shrink: 0;
-        min-height: 672px;
+        min-height: fit-content;
+        height: 672px;
         flex-shrink: 0;
         display: flex;
         flex-direction: column;

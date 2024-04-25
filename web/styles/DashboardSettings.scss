@@ -25,4 +25,21 @@
       gap: 1rem;
       width: 100%;
     }
+
+    .ant-select > .ant-select-selector {
+      background-color: #1e1e22;
+      
+    }
+
+    .ant-select > .ant-select-arrow {
+      color: white;
+    }
+
+    .ant-select > .ant-select-selector > .ant-select-selection-placeholder {
+      color: white;
+    }
+
+    .ant-select > .ant-select-selector > .ant-select-selection-item {
+      color: white;
+    }
   }

@@ -52,6 +52,7 @@ export const fetchProducts = async () => {
                     // shareSold: 0
                     // startingTime: BN {negative: 0, words: Array(2), length: 2, red: null}
                     // watch: PublicKey {_bn: BN}
+                    console.log('')
                     return {
                         accountPubkey: account.pubkey.toBase58(),
                         ...decode
@@ -71,7 +72,8 @@ export const fetchProducts = async () => {
                     accountPubkey: product.accountPubkey,
                     name: product.name,
                     image: product.img,
-                    fractionsLeft: `${product.shareSold} / ${product.share}`,
+                    // fractions left should display the remaining shares available / total shares
+                    fractionsLeft: `${product.share - product.shareSold} / ${product.share}`,
                     startingPrice: `${product.price} USD`,
                     earningPotential: "TBD",
                     watch: product.watch.toBase58(),

@@ -1,4 +1,6 @@
 import "@/styles/CtaCard2.scss";
+import Image from "next/image";
+import Illustration from "@/public/assets/home/cta-2-illustration.webp";
 
 const CTA2Card = () => {
     return (
@@ -13,9 +15,9 @@ const CTA2Card = () => {
             <button className="btn-cta-2 uppercase">
                 Start Now
             </button>
-            <img
-                src="/assets/home/cta-2-illustration.webp"
-                alt=""
+            <Image
+                src={Illustration}
+                alt="cta illustration"
                 className="cta2-card__illustration"
             />
         </div>

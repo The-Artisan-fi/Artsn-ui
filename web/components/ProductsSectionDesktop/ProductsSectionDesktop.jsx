@@ -1,5 +1,6 @@
 import "@/styles/ProductsSectionDesktop.scss";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { useRouter }from "next/navigation";
 // SwiperJs for Carousel
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -12,6 +13,8 @@ import "swiper/css/free-mode";
 import { FreeMode, Mousewheel } from "swiper";
 import { fetchProducts } from "@/hooks/fetchProducts";
 // import products from "@/components/Utils/productData";
+import ProductBorder from "@/public/assets/product-border-bg.png";
+import Audemar from "@/public/assets/home/products/Audemars-piguet-Royaloak.webp";
 
 const ProductsSectionDesktop = () => {
     const [products, setProducts] = useState({ available: [], comingSoon: [] });
@@ -70,15 +73,15 @@ const ProductsSectionDesktop = () => {
                                         router.push(`/product/${item.accountPubkey.toString()}`)
                                     }}
                                 >
-                                    <img
-                                        src="/assets/product-border-bg.png"
-                                        alt=""
+                                    <Image
+                                        src={ProductBorder}
+                                        alt="product border"
                                         className="products__available__slider__item__bg"
                                     />
                                     <div className="item-top">
-                                        <img
+                                        <Image
                                             // src={item.image}
-                                            src='/Users/matt/Desktop/Artisan/artisan/web/public/assets/home/products/Audemars-piguet-Royaloak.webp'
+                                            src={Audemar}
                                             alt={item.name}
                                             className="item-top-img"
                                         />
@@ -157,13 +160,13 @@ const ProductsSectionDesktop = () => {
                                         key={item.id}
                                         className="products__coming__slider__item"
                                     >
-                                        <img
-                                            src="/assets/product-border-bg.png"
-                                            alt=""
+                                        <Image
+                                            src={ProductBorder}
+                                            alt="product border"
                                             className="products__coming__slider__item__bg"
                                         />
                                         <div className="item-top">
-                                            <img
+                                            <Image
                                                 src={item.image}
                                                 alt={item.name}
                                                 className="item-top-img"

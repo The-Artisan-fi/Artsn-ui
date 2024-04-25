@@ -55,6 +55,12 @@ export async function POST( request: Request) {
         const refKey = searchParams.get('refKey');
         const id = Number(id_string!);
         const buyer_publicKey = new PublicKey(account);
+        console.log('id', id)
+        console.log('reference', reference)
+        console.log('refKey', refKey)
+        console.log('buyer_publicKey', buyer_publicKey.toBase58())
+
+
         const watch = PublicKey.findProgramAddressSync([Buffer.from('watch'),  Buffer.from(reference!)], program.programId)[0];
         const listing = PublicKey.findProgramAddressSync([Buffer.from('listing'), watch.toBuffer(), new anchor.BN(id).toBuffer("le", 8)], program.programId)[0];
         const fraction = PublicKey.findProgramAddressSync([Buffer.from('fraction'), listing.toBuffer()], program.programId)[0];
@@ -75,15 +81,15 @@ export async function POST( request: Request) {
         const feeKey = process.env.PRIVATE_KEY!;
         const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
 
-        // console.log('watch', watch.toBase58())
-        // console.log('listing', listing.toBase58())
-        // console.log('fraction', fraction.toBase58())
-        // console.log('auth', auth.toBase58())
-        // console.log('buyerProfile', buyerProfile.toBase58())
-        // console.log('buyerFractionAta', buyerFractionAta.toBase58())
-        // console.log('listingCurrencyAta', listingCurrencyAta.toBase58())
-        // console.log('buyerCurrencyAta', buyerCurrencyAta.toBase58())
-        // console.log('feePayer', feePayer.publicKey.toBase58())
+        console.log('watch', watch.toBase58())
+        console.log('listing', listing.toBase58())
+        console.log('fraction', fraction.toBase58())
+        console.log('auth', auth.toBase58())
+        console.log('buyerProfile', buyerProfile.toBase58())
+        console.log('buyerFractionAta', buyerFractionAta.toBase58())
+        console.log('listingCurrencyAta', listingCurrencyAta.toBase58())
+        console.log('buyerCurrencyAta', buyerCurrencyAta.toBase58())
+        console.log('feePayer', feePayer.publicKey.toBase58())
 
         const profileInitIx = await program.methods
             .initializeProfileAccount()
@@ -99,8 +105,22 @@ export async function POST( request: Request) {
         const buyShareIx = await program.methods
             .buyListing()
             .accounts({
-                buyer: buyer_publicKey,
+                // buyer: buyer_publicKey,
+                // payer: feePayer.publicKey,
+                // buyerProfile,
+                // buyerCurrencyAta,
+                // buyerFractionAta,
+                // listing,
+                // listingCurrencyAta,
+                // fraction,
+                // currency: USDC_DEV,
+                // auth,
+                // associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+                // tokenProgram: TOKEN_PROGRAM_ID,
+                // token2022Program: TOKEN_2022_PROGRAM_ID,
+                // systemProgram: SystemProgram.programId,
                 payer: feePayer.publicKey,
+                buyer: buyer_publicKey,
                 buyerProfile,
                 buyerCurrencyAta,
                 buyerFractionAta,

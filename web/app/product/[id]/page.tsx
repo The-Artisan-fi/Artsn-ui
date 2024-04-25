@@ -1,107 +1,31 @@
 "use client"
 import "@/styles/ProductDetails.scss";
+import Dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
-import { Progress, Collapse, Slider } from "antd";
+const Progress = Dynamic(() => import("antd").then((mod) => mod.Progress), { ssr: false });
+const Collapse = Dynamic(() => import("antd").then((mod) => mod.Collapse), { ssr: false });
+const Panel = Dynamic(() => import("antd").then((mod) => mod.Collapse.Panel), { ssr: false });
+const Slider = Dynamic(() => import("antd").then((mod) => mod.Slider), { ssr: false });
 import { fetchProductDetails } from "@/hooks/fetchProductDetails";
-import ProductsSectionDesktop from "@/components/ProductsSectionDesktop/ProductsSectionDesktop";
-import ProductsSectionMobile from "@/components/ProductsSectionMobile/ProductsSectionMobile";
-import OpportunitiesSection from "@/components/OpportunitiesSection/OpportunitiesSection";
-import CTA1Card from "@/components/CtaCard1/CtaCard1";
-import ImageGallery from "react-image-gallery";
-// import stylesheet if you're not already using CSS @import
+const ProductsSectionDesktop = Dynamic(() => import("@/components/ProductsSectionDesktop/ProductsSectionDesktop"), { ssr: false });
+const ProductsSectionMobile = Dynamic(() => import("@/components/ProductsSectionMobile/ProductsSectionMobile"), { ssr: false });
+const OpportunitiesSection = Dynamic(() => import("@/components/OpportunitiesSection/OpportunitiesSection"), { ssr: false });
+const CTA1Card = Dynamic(() => import("@/components/CtaCards/CtaCard1"), { ssr: false });
+const ImageGallery = Dynamic(() => import("react-image-gallery"), { ssr: false });
 import "react-image-gallery/styles/css/image-gallery.css";
 import { useLazyQuery } from "@apollo/client";
-import { listing, user } from "@/lib/queries";
-import { Transaction, Connection, Keypair } from "@solana/web3.js";
+import { listing } from "@/lib/queries";
+import { Connection, Keypair } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
-import Link from "next/link";
-import { toast } from "react-toastify";
-import { checkLogin } from '@/components/Web3Auth/checkLogin';
+import { checkLogin } from '@/components/Web3Auth/solanaRPC';
 import RPC from "@/components/Web3Auth/solanaRPC";
 import { encodeURL, TransactionRequestURLFields } from "@solana/pay";
-import QrModal from "@/components/Qr/QrModal";
-
-type ProductDetails = {
-    id: number;
-    mint: string;
-    name: string;
-    image: string;
-    fractionsLeft: string;
-    startingPrice: string;
-    earningPotential: string;
-};
-
-type OffChainData = {
-    associatedId: string;
-    images: string[];
-    assetDetails: string
-    expectedNetReturn: string;
-    marketValue: string;
-    pastReturns: string;
-    earningPotential: string;
-    earningPotentialDuration: string;
-    basicInfo: string;
-    currency: string;
-    description: string;
-    model: string;
-    offerViews: string;
-    sold: string;
-    total: string;
-}
-
-type OnChainData = {
-    id: number;
-    share: number;
-    shareSold: number;
-    startingPrice: number;
-    watchKey: string;
-    reference: string;
-    braceletMaterial: string;
-    brand: string;
-    caseMaterial: string;
-    dialColor: string;
-    diamater: number;
-    model: string;
-    movement: string;
-    yearOfProduction: number;
-};
-
-type Product = {
-    id: number;
-    reference: string;
-    name: string;
-    model: string;
-    marketValue: number;
-    price: number;
-    currency: string;
-    img: string;
-    sold: number;
-    total: number;
-    stockTag: string;
-    fractionLeft: number;
-    pastReturns: string;
-    pastReturnsSuffix: string;
-    earningPotential: string;
-    earningPotentialSuffix: string;
-    earningPotentialDuration: string;
-    expectedNetReturn: string;
-    offerViews: number;
-    investUrl: string;
-    description: string;
-    gallery: string[];
-}
-
-type FAQ = {
-    key: string;
-    question: string;
-    answer: string;
-}
-
-type Image = {
-    original: string
-    thumbnail: string,
-    originalHeight: number,
-}
+const QrModal = Dynamic(() => import("@/components/Qr/QrModal"), { ssr: false });
+import { FaQrcode } from "react-icons/fa";
+const Web3Auth = Dynamic(() => import("@/components/Web3Auth/Web3Auth"), { ssr: false });
+import { buyTx } from "@/components/Protocol/functions";
+import { toastPromise, toastError } from "@/helpers/toast";
+import type { ProductDetails, OffChainData, OnChainData, Product, FAQ, Image } from "@/helpers/types";
 
 
 export default function ProductDetails({ params }: { params: { id: string } }) {
@@ -122,6 +46,9 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
     const [solanaUrl, setSolanaUrl] = useState<URL>();
     const [refKey, setRefKey] = useState<string>();
     const [displayQr, setDisplayQr] = useState<boolean>(false);
+    const [displayLoginModal, setDisplayLoginModal] = useState<boolean>(false);
+    const [sliderValue, setSliderValue] = useState<number>(30);
+    // const [displayProfileModal, setDisplayProfileModal] = useState<boolean>(false);
     const [variables, setVariables] = useState({
         associatedId: "",
       });
@@ -142,115 +69,18 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
     async function buyListing() {        
         try {
             if(publicKey && product){
-                const response = await fetch('/api/buy', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        id: product.id,
-                        reference: product.reference,
-                        publicKey: publicKey.toBase58(),
-                    })
-                })
-                const txData = await response.json();
-                const tx = Transaction.from(Buffer.from(txData.transaction, "base64"));
-            
-                const signature = await sendTransaction(tx, connection, 
-                    {
-                        skipPreflight: true,
-                    },
-                );
-                
-                const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash()
-                
-                toast.promise(
-                    connection.confirmTransaction({
-                        blockhash,
-                        lastValidBlockHeight,
-                        signature: signature
-                    }),
-                    {
-                        pending: 'Transaction pending...',
-                        success: {
-                            render(){
-                                return (
-                                    <div>
-                                        <Link 
-                                            style={{color: 'black'}}
-                                            target='_blank'  
-                                            href={`https://explorer.solana.com/tx/${signature}?cluster=devnet`}
-                                        > 
-                                            Transaction Confirmed 
-                                        </Link>
-                                    </div>
-                                )
-                            }
-                        },
-                        error: 'Error sending transaction'
-                    }
-                );
-                
-                console.log(
-                    `Transaction sent: https://explorer.solana.com/tx/${signature}?cluster=devnet`
-                );
-
+               const tx = await buyTx(product.id, product.reference, publicKey.toBase58());
+                const signature = await sendTransaction(tx!, connection, {skipPreflight: true,});
+                await toastPromise(signature)
             } 
             if(web3AuthPublicKey !== null && !publicKey && product){
-                const response = await fetch('/api/buy', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        id: product.id,
-                        reference: product.reference,
-                        publicKey: web3AuthPublicKey,
-                    })
-                })
-                const txData = await response.json();
-                const tx = Transaction.from(Buffer.from(txData.transaction, "base64"));
-                const signature = await rpc!.sendTransaction(tx);
-                
-                const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
-
-                console.log(
-                    `Transaction sent: https://explorer.solana.com/tx/${signature}?cluster=devnet`
-                );
-                toast.promise(
-                    connection.confirmTransaction({
-                        blockhash,
-                        lastValidBlockHeight,
-                        signature: signature
-                    }),
-                    {
-                        pending: 'Transaction pending...',
-                        success: {
-                            render(){
-                                return (
-                                    <div>
-                                        <Link 
-                                            style={{color: 'black'}}
-                                            target='_blank'  
-                                            href={`https://explorer.solana.com/tx/${signature}?cluster=devnet`}
-                                        > 
-                                            Transaction Confirmed 
-                                        </Link>
-                                    </div>
-                                )
-                            }
-                        },
-                        error: 'Error sending transaction'
-                    }
-                );
+                const tx = await buyTx(product.id, product.reference, web3AuthPublicKey);
+                const signature = await rpc!.sendTransaction(tx!);
+                await toastPromise(signature)
             }
         } catch (error) {
             console.error('Error sending transaction', error);
-            toast.error(
-                <p style={{color: 'black'}}>
-                    Error sending transaction
-                </p>
-            );
+            toastError('Error sending transaction')
         }
     }
     // ***************************QR Code Logic************************************
@@ -276,11 +106,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
             setDisplayQr(true);
         } catch (error) {
             console.error('Error generating QR code', error);
-            toast.error(
-                <p style={{color: 'black'}}>
-                    Error generating QR code
-                </p>
-            );
+            toastError('Error generating QR code')
         };
     };
 
@@ -288,8 +114,8 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
     // **************************Data Functions***********************************
     async function fetchData(accountPubkey: string) {
         const on_chain_data: OnChainData | undefined = await fetchProductDetails(accountPubkey);
-        // console.log('on chain data', on_chain_data)
-
+        console.log('on chain data', on_chain_data)
+        console.log('off chain data', offChainData)
         const product_images = offChainData!.images.map((image: string) => {
             return {
                 original: image,
@@ -378,7 +204,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
             return;
         }
         checkLogin().then((res) => {
-            if(res !== false){
+            if(res){
                 if(res.account){
                     setWeb3AuthPublicKey(res.account);
                 }
@@ -435,7 +261,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                     </div>
 
                                     <Progress
-                                        percent={70}
+                                        percent={Number((((product!.sold )/product!.total) * 100).toFixed(0))}
                                         status="active"
                                         showInfo={true}
                                         strokeColor="#23B371"
@@ -494,21 +320,39 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                             </div>
                                         </div>
                                     </div>
-
-                                    <a 
-                                        onClick={
-                                        ()=>{
-                                            if(!publicKey && !web3AuthPublicKey){
-                                                getQrCode();
-                                            }else {
-                                                buyListing();
-                                            }
-                                        }} 
-                                        className="btn btn-white" 
-                                        style={{ justifyContent: "center" }}
-                                    >
-                                        INVEST IN FRACTIONS
-                                    </a>
+                                    <div className="btn-container" style={{width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                                        <a 
+                                            onClick={
+                                            ()=>{
+                                                if(!publicKey && !web3AuthPublicKey){
+                                                    getQrCode();
+                                                }else {
+                                                    buyListing();
+                                                }
+                                            }} 
+                                            className="btn btn-white" 
+                                            style={{ 
+                                                justifyContent: "center", 
+                                                width: !publicKey && !web3AuthPublicKey ? '49%' : '85%'
+                                            }}
+                                        >
+                                            {!publicKey && !web3AuthPublicKey ? 'Buy with QR' :'INVEST IN FRACTIONS'}
+                                        </a>
+                                        
+                                        {!publicKey && !web3AuthPublicKey ? (
+                                            <button className="btn btn-white" style={{ justifyContent: "center", width: '49%' }} onClick={()=> setDisplayLoginModal(true)}>
+                                                Login
+                                            </button>
+                                        ):(
+                                            <a 
+                                                onClick={getQrCode}
+                                                // className="btn btn-white" 
+                                                style={{ justifyContent: "center", cursor: 'pointer'}}
+                                            >
+                                                <FaQrcode size={30} />
+                                            </a>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -522,12 +366,12 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
 
                                 <Collapse expandIconPosition={"right"} size="large">
                                     {faqItems!.map((item) => (
-                                        <Collapse.Panel
+                                        <Panel
                                             key={item.key}
                                             header={item.question}
                                         >
                                             <p className="body white">{item.answer}</p>
-                                        </Collapse.Panel>
+                                        </Panel>
                                     ))}
                                 </Collapse>
                             </div>
@@ -541,10 +385,13 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                 <Slider
                                     className="product-details__about__calc__range"
                                     defaultValue={30}
+                                    onChange={(value) => setSliderValue(value)}
                                 />
                                 <div className="product-details__about__calc__returns">
                                     <p>Expected Net Return</p>
-                                    <p className="green">+27,61 USDC</p>
+                                    <p className="green">
+                                        {(sliderValue * Number(product!.expectedNetReturn)).toFixed(2)}{" "}{product!.currency}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -570,7 +417,18 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                         showModal={displayQr}
                         solanaUrl={solanaUrl}
                         refKey={refKey}
+                        header={`${product?.name} | ${product?.model}`}
+                        message={`Scan the QR code to purchase ${product?.name} for ${product?.price} ${product?.currency}`}
                         handleClose={() => setDisplayQr(false)}
+                    />
+                </div>
+            )}
+            {displayLoginModal && (
+                <div className="login-container">
+                    <div className="backdrop" onClick={()=> {setDisplayLoginModal(false)}} />
+                    <Web3Auth
+                        showModal={displayLoginModal}
+                        handleClose={() => {setDisplayLoginModal(false)}}
                     />
                 </div>
             )}

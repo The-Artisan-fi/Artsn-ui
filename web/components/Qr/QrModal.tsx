@@ -1,8 +1,7 @@
 import '@/styles/QrModal.scss';
 import React, { useState, useEffect } from 'react';
 import { Connection, PublicKey } from "@solana/web3.js";
-import { toast } from 'react-toastify';
-import Link from 'next/link';
+import { toastPromise } from '@/helpers/toast';
 import Image from 'next/image';
 import { createQR, findReference, FindReferenceError, ValidateTransferError } from "@solana/pay"
 
@@ -10,10 +9,12 @@ interface QrModalProps {
     showModal: boolean;
     solanaUrl: URL;
     refKey: string;
+    header: string;
+    message: string;
     handleClose: () => void;
 }
 
-const QrModal: React.FC<QrModalProps> = ({ showModal, solanaUrl, refKey, handleClose }) => {
+const QrModal: React.FC<QrModalProps> = ({ showModal, solanaUrl, refKey, header, message, handleClose }) => {
     const [isOpen, setIsOpen] = useState(showModal);
     const [qrCode, setQrCode] = useState<string>();
     const [signature, setSignature] = useState<string>();
@@ -41,42 +42,10 @@ const QrModal: React.FC<QrModalProps> = ({ showModal, solanaUrl, refKey, handleC
         }
         };
         reader.readAsDataURL(qrBlob);
-
-       
-        // const found = await findReference(connection, new PublicKey(refKey));
-        
     }
 
-    async function confirm() {
-        const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
-
-        toast.promise(
-            connection.confirmTransaction({
-                blockhash,
-                lastValidBlockHeight,
-                signature: signature!
-            }),
-            {
-                pending: 'Transaction pending...',
-                success: {
-                    render(){
-                        return (
-                            <div>
-                                <Link 
-                                    style={{color: 'black'}}
-                                    target='_blank'  
-                                    href={`https://explorer.solana.com/tx/${signature}?cluster=devnet`}
-                                > 
-                                    Transaction Confirmed 
-                                </Link>
-                            </div>
-                        )
-                    }
-                },
-                error: 'Error sending transaction'
-            }
-        );
-
+    async function confirm(signature: string) {
+        await toastPromise(signature);
         handleCloseModal();
     }
 
@@ -86,7 +55,7 @@ const QrModal: React.FC<QrModalProps> = ({ showModal, solanaUrl, refKey, handleC
 
     useEffect(() => {
         if(signature){
-            confirm();
+            confirm(signature);
         }
     }, [signature]);
 
@@ -129,7 +98,7 @@ const QrModal: React.FC<QrModalProps> = ({ showModal, solanaUrl, refKey, handleC
                                 Buy Fractions
                             </p>
                             <p className="header-subtext">
-                                Scan the QR code to purchase or connect your wallet.
+                                {message}
                             </p>
                         </div>
                     </div>

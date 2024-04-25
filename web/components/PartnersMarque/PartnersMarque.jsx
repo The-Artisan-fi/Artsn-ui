@@ -1,30 +1,36 @@
 import "@/styles/PartnersMarque.scss";
-
+import Image from "next/image";
 import Marquee from "react-fast-marquee";
+import CryptoValley from "@/public/assets/home/crypto-valley.webp";
+import Ros from "@/public/assets/home/ros.webp";
+import Jigen from "@/public/assets/home/jigen.webp";
+import NodeGate from "@/public/assets/home/node-gate.webp";
+import SwissDao from "@/public/assets/home/swissdao.webp";
+import XReal from "@/public/assets/home/x-real.webp";
 
 const marqueeImages = [
     {
-        src: "assets/home/crypto-valley.webp",
+        src: CryptoValley,
         alt: "crypto valley",
     },
     {
-        src: "assets/home/ros.webp",
+        src: Ros,
         alt: "ros",
     },
     {
-        src: "assets/home/jigen.webp",
+        src: Jigen,
         alt: "jigen",
     },
     {
-        src: "assets/home/node-gate.webp",
+        src: NodeGate,
         alt: "node gate",
     },
     {
-        src: "assets/home/swissdao.webp",
+        src: SwissDao,
         alt: "swiss dao",
     },
     {
-        src: "assets/home/x-real.webp",
+        src: XReal,
         alt: "x real",
     },
 ];
@@ -36,7 +42,7 @@ const PartnersMarque = () => {
             <div className="partners__marquee">
                 <Marquee autoFill={true}>
                     {marqueeImages.map((image) => (
-                        <img
+                        <Image
                             key={image.alt}
                             src={image.src}
                             alt={image.alt}

@@ -1,7 +1,12 @@
 'use client';
 import '@/styles/DashboardProfile.scss';
 import { useEffect, useState } from 'react';
-import { Upload, Input, message } from 'antd';
+import Dynamic from 'next/dynamic';
+const Upload = Dynamic(() => import('antd').then((mod) => mod.Upload), { ssr: false });
+const Input = Dynamic(() => import('antd').then((mod) => mod.Input), { ssr: false });
+const message = Dynamic(() => import('antd').then((mod) => mod.message), { ssr: false });
+
+// import { Upload, Input, message } from 'antd';
 import ImgCrop from 'antd-img-crop';
 
 import { MdOutlineFileUpload } from 'react-icons/md';
@@ -74,13 +79,25 @@ const Profile = () => {
         <div className="profile__input-col">
           <p className="caption-3">FULL NAME</p>
           <Input 
+            className="profile__input-col__input"
             size="large" 
-            placeholder={offChainData ? offChainData.fullName : 'Enter Your Full Name'}
+            style={{ backgroundColor: '#1e1e22', color: 'white'}}
+            value={offChainData ? offChainData.fullName : ''}
+            onChange={(e) => {
+              setOffChainData({ ...offChainData, fullName: e.target.value });
+            }}
           />
         </div>
         <div className="profile__input-col">
           <p className="caption-3">USERNAME</p>
-          <Input size="large" placeholder={offChainData ? offChainData.userName : 'Enter Your Username'} />
+          <Input 
+            size="large" 
+            value={offChainData ? offChainData.userName : ''}
+            style={{ backgroundColor: '#1e1e22', color: 'white'}}
+            onChange={(e) => {
+              setOffChainData({ ...offChainData, userName: e.target.value });
+            }}
+          />
         </div>
       </div>
 

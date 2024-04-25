@@ -23,7 +23,8 @@
       gap: 2.5rem;
   
       & .dimmed {
-        color: #454545;
+        // color: #454545;
+        color: white;
       }
   
       &__img {
@@ -65,6 +66,46 @@
         &:hover {
           background-color: #ffffff26;
         }
+
+        &__container {
+          margin-left: auto;
+          display: flex;
+          flex-direction: row;
+          gap: 2rem;
+  
+          &__btn {
+            margin-left: auto;
+    
+            border: 1px solid #ffffff80;
+            padding: 1.2rem 2rem;
+            border-radius: 1rem;
+      
+            font-family: Inter;
+            font-size: 14px;
+            font-weight: 500;
+      
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+      
+            cursor: pointer;
+            transition: all 0.2s;
+      
+            & > .p-5 {
+              font-family: Inter;
+              font-size: 8px;
+              font-weight: 300;
+            }
+      
+            &:hover {
+              background-color: #ffffff26;
+            }
+          }
+        }
       }
+
+      
     }
   }

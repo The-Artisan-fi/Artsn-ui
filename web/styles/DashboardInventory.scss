@@ -122,6 +122,7 @@
   
     &__body {
       &__table {
+        
         &__action {
           display: flex;
           align-items: center;
@@ -129,8 +130,32 @@
   
           & > .btn-table {
             color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            background-color: transparent;
+            border: 1px solid white;
           }
         }
       }
+    }
+
+    .ant-table-container {
+      background-color: #1e1e22;
+      color: white;
+    }
+
+    .ant-table-thead > tr > th, .ant-table-thead > tr > td {
+      background-color: #1e1e22;
+      color: white;
+    }
+
+    .ant-table-cell-row-hover {
+      background-color: #18af2d;
+    }
+
+
+    .ant-table-tbody > tr.ant-table-row:hover > td {
+      background-color: white;
+      color: #1e1e22;
     }
   }

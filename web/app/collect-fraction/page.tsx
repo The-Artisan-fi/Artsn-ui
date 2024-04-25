@@ -1,10 +1,25 @@
 'use client';
-import CTA1Card from '@/components/CtaCard1/CtaCard1';
-import '../../styles/CollectFraction.scss';
+import '@/styles/CollectFraction.scss';
 import { useState, useEffect } from 'react';
-import ProductsSectionMobile from '@/components/ProductsSectionMobile/ProductsSectionMobile';
-import ProductsSectionDesktop from '@/components/ProductsSectionDesktop/ProductsSectionDesktop';
-import OpportunitiesSection from '@/components/OpportunitiesSection/OpportunitiesSection';
+import Image from 'next/image';
+import dynamic from 'next/dynamic';
+import CollectFractionImg from "@/public/assets/collect-fraction/collect-fraction-hero-illustration.webp"
+const CTA1Card = dynamic(() => import("@/components/CtaCards/CtaCard1"), {
+  loading: () => <p>Loading...</p>,
+  ssr: false,
+});
+const ProductsSectionDesktop = dynamic(() => import("@/components/ProductsSectionDesktop/ProductsSectionDesktop"), {
+  loading: () => <p>Loading...</p>,
+  ssr: false,
+});
+const ProductsSectionMobile = dynamic(() => import("@/components/ProductsSectionMobile/ProductsSectionMobile"), {
+  loading: () => <p>Loading...</p>,
+  ssr: false,
+});
+const OpportunitiesSection = dynamic(() => import("@/components/OpportunitiesSection/OpportunitiesSection"), {
+  loading: () => <p>Loading...</p>,
+  ssr: false,
+});
 
 const CollectFraction = () => {
   const [isMobile, setIsMobile] = useState(true);
@@ -32,9 +47,14 @@ const CollectFraction = () => {
     <div className="collect-fraction">
       <div className="collect-fraction__hero">
         <div className="boxed">
-          <img
+          {/* <img
             src="/assets/collect-fraction/collect-fraction-hero-illustration.webp"
             alt=""
+            className="collect-fraction__hero__img"
+          /> */}
+          <Image
+            src={CollectFractionImg}
+            alt="hero illustration"
             className="collect-fraction__hero__img"
           />
           <h1 className="display-2">

@@ -1,13 +1,23 @@
 import "@/styles/Web3Auth.scss";
 import React, { useState, useEffect } from "react";
-import { Web3AuthNoModal } from "@web3auth/no-modal";
-import { CHAIN_NAMESPACES, WALLET_ADAPTERS, IProvider } from "@web3auth/base";
+import Image from "next/image";
 import { CgGoogle, CgArrowRight } from "react-icons/cg";
-import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
-import { SolanaPrivateKeyProvider } from "@web3auth/solana-provider";
 import { WalletMultiButton  } from '@solana/wallet-adapter-react-ui';
 import { useWallet } from "@solana/wallet-adapter-react";
+import {
+  checkLogin,
+  login,
+  loginWithEmail,
+  logout,
+} from "./solanaRPC";
 // import RPC from "./solanaRPC";
+import LoginHeader from "@/public/assets/login/login_header.svg";
+import Logo from "@/public/assets/login/logo_bw.svg";
+import Phantom from "@/public/assets/login/phantom_icon.svg"
+import Solflare from "@/public/assets/login/solflare_icon.svg"
+import Backpack from "@/public/assets/login/backpack_icon.svg"
+import Torus from "@/public/assets/login/torus_icon.svg"
+import Ledger from "@/public/assets/login/ledger_icon.svg"
 
 interface ProfileModalProps {
   showModal: boolean;
@@ -17,121 +27,25 @@ interface ProfileModalProps {
 
 const Web3AuthLogin: React.FC<ProfileModalProps> = ({showModal, handleClose}) => {
     const { publicKey } = useWallet();
-    const [isOpen, setIsOpen] = useState(showModal);
-    const [web3auth, setWeb3auth] = useState<Web3AuthNoModal | null>(null);
-    const [provider, setProvider] = useState<IProvider | null>(null);
     const [loggedIn, setLoggedIn] = useState<boolean>(false);
-    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
-
-    // const handleCloseModal = () => {
-    //     setIsOpen(false);
-    //     handleClose();
-    // }
-    
-    function uiConsole(...args: string[] | object[]) {
-        const el = document.querySelector("#console>p");
-        if (el) {
-          el.innerHTML = JSON.stringify(args || {}, null, 2);
-        }
-    }    
-    
-    const login = async () => {
-        if (!web3auth) {
-          uiConsole("web3auth not initialized yet");
-          return;
-        }
-        const web3authProvider: IProvider | null = await web3auth.connectTo(
-          WALLET_ADAPTERS.OPENLOGIN,
-          {
-            loginProvider: "google",
-          },
-        );
-        if(!web3authProvider) {
-          uiConsole("web3authProvider not initialized yet");
-          return;
-        }
-        setProvider(web3authProvider);
-    };
-
-    const loginWithEmail = async (email: string) => {
-      if (!web3auth) {
-        uiConsole("web3auth not initialized yet");
-        return;
-      }
-      const web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
-        loginProvider: "email_passwordless",
-        extraLoginOptions: {
-          login_hint: email, // email to send the OTP to
-        },
-      });
-      if(!web3authProvider) {
-        uiConsole("web3authProvider not initialized yet");
-        return;
-      }
-      setProvider(web3authProvider);
-    };
-
-    const logout = async () => {
-        if (!web3auth) {
-          uiConsole("web3auth not initialized yet");
-          return;
-        }
-        await web3auth.logout();
-        setProvider(null);
-        setLoggedIn(false);
-    };
 
     useEffect(() => {
-        const init = async () => {
-            try {
-              const chainConfig = {
-                chainNamespace: CHAIN_NAMESPACES.SOLANA,
-                chainId: "0x3", // Please use 0x1 for Mainnet, 0x2 for Testnet, 0x3 for Devnet
-                rpcTarget: "https://api.devnet.solana.com",
-                displayName: "Solana Devnet",
-                blockExplorer: "https://explorer.solana.com",
-                ticker: "SOL",
-                tickerName: "Solana Token",
-              };
-              const web3auth = new Web3AuthNoModal({
-                clientId,
-                chainConfig,
-                web3AuthNetwork: "sapphire_mainnet",
-              });
-      
-              setWeb3auth(web3auth);
-      
-              const privateKeyProvider = new SolanaPrivateKeyProvider({ config: { chainConfig } });
-      
-              const openloginAdapter = new OpenloginAdapter({
-                privateKeyProvider,
-                adapterSettings: {
-                  uxMode: "redirect",
-                }
-              });
-              web3auth.configureAdapter(openloginAdapter);
-      
-              await web3auth.init();
-              setProvider(web3auth.provider);
-              if (web3auth.connected) {
-                setLoggedIn(true);
-              }
-            } catch (error) {
-              console.error(error);
-            }
-          };
-    
-        init();
-      }, []);
-
+      if(!loggedIn) {
+        checkLogin().then((res) => {
+          if(res) {
+            setLoggedIn(res.connected);
+          }
+        });
+      }
+    }, [loggedIn]);
 
     return(
       <>
-        {isOpen && (
+        {showModal && (
           <div className="modal-container">
             <div className="modal-header">
-              <img src="/assets/login/login_header.svg" alt="login header" className="login-header" />
-              <img src="/assets/login/logo_bw.svg" alt="login header" className="logo" />
+              <Image src={LoginHeader} alt="login header" className="login-header" />
+              <Image src={Logo} alt="login header" className="logo" />
               <div className="header-text-container">
                 <p className="header-text">
                     Welcome to the Artisan
@@ -158,17 +72,28 @@ const Web3AuthLogin: React.FC<ProfileModalProps> = ({showModal, handleClose}) =>
                   <p className="social-login-text">Login with Social Accounts</p>             
                   <div className="web3auth-container">
                     {!loggedIn ? (
-                    <button 
-                      onClick={() => login()} 
-                      className="google-login-btn" 
-                    >
-                      <CgGoogle className="google-icon" />
-                      <p className="google-login-text">
-                        Sign in with Google
-                      </p>
-                    </button>
-                    ):(
-                      <button onClick={() => logout()} className="google-login-btn" >
+                      <button 
+                        onClick={() => login().then((res) => {
+                          if(res) {
+                            setLoggedIn(true);
+                          }
+                        })} 
+                        className="google-login-btn" 
+                      >
+                        <CgGoogle className="google-icon" />
+                        <p className="google-login-text">
+                          Sign in with Google
+                        </p>
+                      </button>
+                    ) : (
+                      <button 
+                        onClick={() => logout().then((res) => {
+                          if(res) {
+                            setLoggedIn(false);
+                          }
+                        })} 
+                        className="google-login-btn" 
+                      >
                         <CgGoogle className="google-icon" />
                         <p className="google-login-text" style={{width: 'fit-content'}}>
                           Log Out
@@ -180,11 +105,11 @@ const Web3AuthLogin: React.FC<ProfileModalProps> = ({showModal, handleClose}) =>
               <div className="divider-text">OR</div>
               <div className="web3-login-option">
                 <div className="wallet-icons-container">
-                  <img src="/assets/login/phantom_icon.svg" alt="phantom" className="phantom-wallet-icon" />
-                  <img src="/assets/login/solflare_icon.svg" alt="solflare" className="solflare-wallet-icon" />
-                  <img src="/assets/login/backpack_icon.svg" alt="backpack" className="backpack-wallet-icon" />
-                  <img src="/assets/login/torus_icon.svg" alt="torus" className="torus-wallet-icon" />
-                  <img src="/assets/login/ledger_icon.svg" alt="ledger" className="ledger-wallet-icon" />
+                  <Image src={Phantom} alt="phantom logo" className="phantom-wallet-icon" />
+                  <Image src={Solflare} alt="solflare logo" className="solflare-wallet-icon" />
+                  <Image src={Backpack} alt="backpack logo" className="backpack-wallet-icon" />
+                  <Image src={Torus} alt="torus logo" className="torus-wallet-icon" />
+                  <Image src={Ledger} alt="ledger logo" className="ledger-wallet-icon" />
                 </div>
                 <WalletMultiButton
                   className="wallet-btn"

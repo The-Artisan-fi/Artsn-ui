@@ -21,8 +21,8 @@ import { IoWallet } from 'react-icons/io5';
 import { IoWalletOutline } from 'react-icons/io5';
 
 // settings icon
-import { IoSettings } from 'react-icons/io5';
-import { IoSettingsOutline } from 'react-icons/io5';
+// import { IoSettings } from 'react-icons/io5';
+// import { IoSettingsOutline } from 'react-icons/io5';
 
 import { Layout, Menu, Button } from 'antd';
 const { Header, Sider, Content } = Layout;
@@ -62,7 +62,6 @@ const DashboardLayout = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log('currentPath', currentPath);
     if (currentPath === '/dashboard') {
       setSelectedKeys(['1']);
       setActiveTabTitle('Inventory');
@@ -120,16 +119,16 @@ const DashboardLayout = ({ children }) => {
               label: 'Wallet',
               title: 'Wallet',
             },
-            {
-              key: '4',
-              icon: selectedKeys.includes('4') ? (
-                <IoSettings />
-              ) : (
-                <IoSettingsOutline />
-              ),
-              label: 'Settings',
-              title: 'Settings',
-            },
+            // {
+            //   key: '4',
+            //   icon: selectedKeys.includes('4') ? (
+            //     <IoSettings />
+            //   ) : (
+            //     <IoSettingsOutline />
+            //   ),
+            //   label: 'Settings',
+            //   title: 'Settings',
+            // },
           ]}
         />
       </Sider>
