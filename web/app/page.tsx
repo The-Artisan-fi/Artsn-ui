@@ -8,14 +8,6 @@ import "@/styles/Home.scss";
 // hero section text animations
 const heroTexts = ["Watches", "Art", "Cars", "Wine", "Whisky", "Memorabilia"];
 
-// data for partners
-import PartnersMarque from "@/components/PartnersMarque/PartnersMarque";
-import OpportunitiesSection from "@/components/OpportunitiesSection/OpportunitiesSection";
-import CTA1Card from "@/components/CtaCard1/CtaCard1";
-import CTA2Card from "@/components/CtaCard2/CtaCard2";
-import ProductsSectionDesktop from "@/components/ProductsSectionDesktop/ProductsSectionDesktop";
-import ProductsSectionMobile from "@/components/ProductsSectionMobile/ProductsSectionMobile";
-
 // Images
 import Image from "next/image";
 import overlay from "@/public/assets/home/overlay.svg"
@@ -23,10 +15,6 @@ import arrow from "@/public/assets/arrow.svg"
 import arrowBlur from "@/public/assets/arrow-blur.svg"
 import homeAboutIllustration2 from "@/public/assets/home/home-about-illustration-2.webp"
 
-// Components
-// hero section text animations
-const heroTexts = ["Watches", "Art", "Cars", "Wine", "Whisky", "Memorabilia"];
-// import OpportunitiesSection from "@/components/OpportunitiesSection/OpportunitiesSection";
 const PartnersMarque = dynamic(() => import("@/components/PartnersMarque/PartnersMarque"), {
     loading: () => <p>Loading...</p>,
     ssr: false,
@@ -44,6 +32,10 @@ const ProductsSectionDesktop = dynamic(() => import("@/components/ProductsSectio
     ssr: false,
 });
 const ProductsSectionMobile = dynamic(() => import("@/components/ProductsSectionMobile/ProductsSectionMobile"), {
+    loading: () => <p>Loading...</p>,
+    ssr: false,
+});
+const OpportunitiesSection = dynamic(() => import("@/components/OpportunitiesSection/OpportunitiesSection"), {
     loading: () => <p>Loading...</p>,
     ssr: false,
 });
