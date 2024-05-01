@@ -1,6 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
 import '@/styles/Home.scss';
+'use client';
+import { useState, useEffect } from 'react';
+import '@/styles/Home.scss';
 
 import TextTransition, { presets } from 'react-text-transition';
 
