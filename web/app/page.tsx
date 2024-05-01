@@ -21,7 +21,7 @@ import homeBriefIllustration from '../public/assets/home/home-brief-illustraiton
 
 import productImage from '../public/assets/dummy-product.png';
 import Rolex from '@/public/assets/home/products/Rolex-Cosmograph-daytona.webp';
-import Audemar from '@/public/assets/home/products/Audemars-Piguet-Royaloak.webp';
+import Audemar from '@/public/assets/home/products/Audemars-piguet-Royaloak.webp';
 import Ferrai from '@/public/assets/home/products/ferrari512-testa-rossa.webp';
 import Picasso from '@/public/assets/home/products/Pablo-Picasso-les-femmes-d-alger.png';
 
