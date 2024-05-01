@@ -18,7 +18,7 @@ import solanaSwissIcon from '../public/assets/home/solana-swiss-icons.webp';
 import aboutIllustration from '../public/assets/home/home-about-illustraiton.webp';
 
 import homeBriefIllustration from '../public/assets/home/home-brief-illustraiton.webp';
-
+import overlay from '@/public/assets/home/overlay.png';
 import productImage from '../public/assets/dummy-product.png';
 import Rolex from '@/public/assets/home/products/Rolex-Cosmograph-daytona.webp';
 import Audemar from '@/public/assets/home/products/Audemars-piguet-Royaloak.webp';
@@ -123,7 +123,12 @@ const Home = () => {
   return (
     <div className="home">
       <div className="home__hero padding">
-        <div className="hero-overlay"></div>
+        {/* <div className="hero-overlay"></div> */}
+        <Image
+          className="hero-overlay"
+          src={overlay}
+          alt="overlay"
+        />
         <div className="home__hero__content">
           <h2 className="display-2 highlight">Digitally Owned</h2>
           <TextTransition
