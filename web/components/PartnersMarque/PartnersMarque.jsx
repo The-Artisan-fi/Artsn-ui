@@ -38,7 +38,7 @@ const marqueeImages = [
 const PartnersMarque = () => {
     return (
         <section className="partners">
-            <h2 className="heading-secondary">Partners</h2>
+            {/* <h2 className="heading-secondary">Partners</h2> */}
             <div className="partners__marquee">
                 <Marquee autoFill={true}>
                     {marqueeImages.map((image) => (
