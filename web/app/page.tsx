@@ -1,197 +1,319 @@
-"use client"
-import { useState, useEffect } from "react";
-import "@/styles/Home.scss";
+'use client';
+import { useState, useEffect } from 'react';
+import '@/styles/Home.scss';
 
-import TextTransition, { presets } from "react-text-transition";
+import TextTransition, { presets } from 'react-text-transition';
 
-// horo section text animations
-const heroTexts = ["Watches", "Art", "Cars", "Wine", "Whisky", "Memorabilia"];
+// hero section text animations
+const heroTexts = ['Watches', 'Art', 'Cars', 'Wine', 'Whisky', 'Memorabilia'];
 
 // data for partners
-import PartnersMarque from "@/components/PartnersMarque/PartnersMarque";
+import PartnersMarque from '@/components/PartnersMarque/PartnersMarque';
 // import OpportunitiesSection from "@/components/OpportunitiesSection/OpportunitiesSection";
-import CTA1Card from "@/components/CtaCard1/CtaCard1";
-import CTA2Card from "@/components/CtaCard2/CtaCard2";
-import ProductsSectionDesktop from "@/components/ProductsSectionDesktop/ProductsSectionDesktop";
-import ProductsSectionMobile from "@/components/ProductsSectionMobile/ProductsSectionMobile";
+import CTA1Card from '@/components/CtaCards/CtaCard1';
+import CTA2Card from '@/components/CtaCards/CtaCard2';
+
+// Images
+import Image from 'next/image';
+import solanaSwissIcon from '../public/assets/home/solana-swiss-icons.webp';
+import aboutIllustration from '../public/assets/home/home-about-illustraiton.webp';
+
+import homeBriefIllustration from '../public/assets/home/home-brief-illustraiton.webp';
+
+import productImage from '../public/assets/dummy-product.png';
+
+const featuredProducts = [1, 2, 3];
+
+// how it works images
+import howWorks1 from '../public/assets/home/how-it-works-1.webp';
+import howWorks2 from '../public/assets/home/how-it-works-2.webp';
+import howWorks3 from '../public/assets/home/how-it-works-3.webp';
+import howWorks4 from '../public/assets/home/how-it-works-4.webp';
+import howWorks5 from '../public/assets/home/how-it-works-5.webp';
+
+const howItWorks = [
+  {
+    img: howWorks1,
+    title: 'We acquire Luxury Goods.',
+    description: 'We selectively choose potential value-appreciating items.',
+  },
+  {
+    img: howWorks2,
+    title: 'Certification of authenticity.',
+    description:
+      'A third-party will handle the creation of the necessary documents to ensure the value of the asset.',
+  },
+  {
+    img: howWorks3,
+    title: 'We securely store assets in a third-party vault..',
+    description:
+      'Our trusted partners will securely store the assets in a vault, which we will then share with our users.',
+  },
+  {
+    img: howWorks4,
+    title: 'We tokenize and generate digital twins of the goods.',
+    description:
+      'We utilize blockchain technology to create digital tokens that legally represent ownership of the assets.',
+  },
+  {
+    img: howWorks5,
+    title: 'Available for purchase online. Your chance to buy.',
+    description:
+      'You can purchase the tokens representing shares of the specific asset you desire.',
+  },
+];
+
 const Home = () => {
-    const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(0);
+  // const [isMobile, setIsMobile] = useState(true);
 
-    const [isMobile, setIsMobile] = useState(true);
+  // useEffect(() => {
+  //   if (window) {
+  //     const handleResize = () => {
+  //       if (window.innerWidth < 768) {
+  //         setIsMobile(true);
+  //       } else {
+  //         // setIsMobile(false);
+  //       }
+  //     };
 
-    useEffect(() => {
-        if(window){
-            const handleResize = () => {
-                if(window.innerWidth < 768){
-                    setIsMobile(true);
-                } else {
-                    // setIsMobile(false);
-                }
-            };
+  //     // Attach the event listener for window resize
+  //     window.addEventListener('resize', handleResize);
 
-            // Attach the event listener for window resize
-            window.addEventListener("resize", handleResize);
+  //     // Clean up the event listener on component unmount
+  //     return () => {
+  //       window.removeEventListener('resize', handleResize);
+  //     };
+  //   }
+  // }, []);
 
-            // Clean up the event listener on component unmount
-            return () => {
-                window.removeEventListener("resize", handleResize);
-            };
-        }
-    }, []);
-
-    useEffect(() => {
-        const intervalId = setInterval(
-            () => setIndex((index) => index + 1),
-            3000 // every 3 seconds
-        );
-        return () => clearTimeout(intervalId);
-    }, []);
-
-    return (
-        <div className="home">
-            {/* Header Section */}
-            <div className="home__header">
-                <div className="home__hero ">
-                    <div className="container">
-                        <h1 className="display-2  uppercase">
-                            <span className="highlight">Own Digitally</span>{" "}
-                            <TextTransition
-                                style={{ color: "#fff" }}
-                                springConfig={presets.gentle}
-                                direction="down"
-                            >
-                                {heroTexts[index % heroTexts.length]}
-                            </TextTransition>
-                        </h1>
-                        <h2 className="heading-1">
-                            Collect & Trade Luxury Goods
-                        </h2>
-                        <a href="https://tally.so/r/mYWaJz" className="btn btn-gold">
-                            JOIN THE WAITLIST
-                        </a>
-
-                        {/* <div
-                            src="/assets/home/home-hero-illustration-1.webp"
-                            alt=""
-                            className="home__hero__illustration"
-                        ></div> */}
-                        <img
-                            src="/assets/home/home-hero-illustration-1.webp"
-                            alt=""
-                            className="home__hero__illustration"
-                        />
-                    </div>
-                </div>
-            </div>
-
-            {/* partners section */}
-            <PartnersMarque />
-
-            {/* about section */}
-            <section className="home__about padding">
-                <div className="boxed">
-                    <div className="home__about__illustration">
-                        <img
-                            src="/assets/home/home-about-illustration-1.webp"
-                            alt=""
-                            className="home__about__illustration__img"
-                        />
-                    </div>
-                    <div className="home__about__content">
-                        <div className="home__about__content__col col-1">
-                            {/* item 1 */}
-                            <div className="home__about__content__col__item item-1">
-                                <h3 className="heading-4">
-                                    Collect Fractions of High-End Collectibles
-                                </h3>
-                                <p className="caption-2">
-                                    Own a percentage of a Certified Authentic
-                                    Luxury Good stored in secured vaults.
-                                </p>
-                            </div>
-
-                            {/* item 2 */}
-                            <div className="home__about__content__col__item item-2">
-                                <h3 className="heading-4">
-                                    Historical Returns
-                                </h3>
-                                <p className="caption-2">
-                                    In the past 7 years, both the Luxury Watch
-                                    Market and the Artprice100 index have
-                                    outperformed the S&P 500, respectively by
-                                    117% and 800%.
-                                </p>
-                            </div>
-
-                            {/* item 3 */}
-                            <div className="home__about__content__col__item item-3">
-                                <h3 className="heading-4">Real World Assets</h3>
-                                <p className="caption-2">
-                                    Top-tier goods are distinguished by limited
-                                    supply and high demand
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="home__about__content__col col-2">
-                            {/* item 4 */}
-                            <div className="home__about__content__col__item item-4">
-                                <h3 className="heading-4">
-                                    Trade Your Fractions 24/7
-                                </h3>
-                                <p className="caption-2">
-                                    Trade Fractions freely in the secondary
-                                    market.{" "}
-                                </p>
-                            </div>
-
-                            {/* item 5 */}
-                            <div className="home__about__content__col__item item-5">
-                                <h3 className="heading-4">
-                                    Get access to our DeFi Protocol
-                                </h3>
-                                <p className="caption-2">
-                                    Use your Real World Assets as a collateral
-                                    for loans and more.{" "}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Products section */}
-            {isMobile ? <ProductsSectionMobile /> : <ProductsSectionDesktop />}
-
-            {/* Opportunities sectin */}
-            {/*<OpportunitiesSection />*/}
-
-            {/* cta  */}
-            <section className="home__cta padding">
-                <div className="boxed">
-                    <img
-                        src="/assets/brand-vertical.webp"
-                        alt=""
-                        className="home__cta__brand"
-                    />
-                    <h3 className="caption-1">
-                        Register & Diversify your Portfolio
-                    </h3>
-                    <a href="https://tally.so/r/mYWaJz" className="btn btn-primary">
-                        JOIN THE WAITLIST                    
-                    </a>
-                </div>
-            </section>
-
-            {/* cta  part 2*/}
-            <div className="home__bottom-cta padding">
-                <div className="boxed">
-                    <CTA1Card />
-                    <CTA2Card />
-                </div>
-            </div>
-        </div>
+  useEffect(() => {
+    const intervalId = setInterval(
+      () => setIndex((index) => index + 1),
+      3000 // every 3 seconds
     );
+    return () => clearTimeout(intervalId);
+  }, []);
+
+  return (
+    <div className="home">
+      <div className="home__hero padding">
+        <div className="hero-overlay"></div>
+        <div className="home__hero__content">
+          <h2 className="display-2 highlight">Digitally Owned</h2>
+          <TextTransition
+            style={{ color: '#fff' }}
+            springConfig={presets.molasses}
+            direction="down"
+          >
+            <h2 className="transition-text">
+              {heroTexts[index % heroTexts.length]}
+            </h2>
+          </TextTransition>{' '}
+          <h3 className="heading-5">Collect & Trade Luxury Goods</h3>
+          <a href="https://tally.so/r/mYWaJz" className="btn btn-gold">
+            JOIN THE WAITLIST
+          </a>
+          <Image className="solana-swiss-icons" src={solanaSwissIcon} alt="" />
+        </div>
+      </div>
+
+      {/* partners section */}
+      <PartnersMarque />
+
+      <div className="home__about padding">
+        <div className="boxed">
+          <div className="home__about__illustration">
+            <Image
+              className="home__about__illustration__img"
+              src={aboutIllustration}
+              alt="about illustration"
+            />
+          </div>
+          <div className="home__about__content">
+            <p className="heading-6">
+              In the past decade, certain Luxury Assets have demonstrated
+              superior performance compared to the S&P 500.
+            </p>
+            <p className="heading-6">
+              Luxury Markets and Vintage collections tend to appreciate over
+              time, yet they often remain out of reach for the majority of
+              individuals.
+            </p>
+            <p className="heading-6">
+              {' '}
+              We offer the opportunity to access these markets through
+              digitization with a starting investment of just $100.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Briefing section */}
+      <section className="home__brief padding">
+        <div className="boxed">
+          {/* top */}
+          <div className="home__brief__top">
+            <div className="home__brief__top__content">
+              <h2 className="heading-2">
+                You collect shares of goods, we handle everything else.
+              </h2>
+              <p className="caption-1">
+                All Luxury Goods on our platform are authenticated, certified,
+                and securely stored in a third-party vault.
+              </p>
+              <p className="caption-1">
+                We carefully curate assets, selecting only those identified by
+                our expert team as having potential for value appreciation.
+              </p>
+              <div className="home__brief__cta">
+                <a href="#" className="home__brief__button">
+                  + certified & authentic goods
+                </a>
+                <a href="#" className="home__brief__button">
+                  + transparency
+                </a>
+              </div>
+            </div>
+
+            <div className="home__brief__top__illustration">
+              <Image
+                className="home__brief__top__illustration__img"
+                src={homeBriefIllustration}
+                alt="about illustration"
+              />
+            </div>
+          </div>
+
+          {/* bottom */}
+          <div className="home__brief__bottom">
+            {/* card light */}
+            <div className="home__brief__bottom__card-light">
+              <h2 className="heading-2">Designed for non-experts.</h2>
+              <h3 className="heading-5">(Enjoy a seamless Web3 experience)</h3>
+              <p className="caption-1">
+                Thanks to our Solana-based solution, you have the flexibility to
+                choose how to connect and pay on the platform, ensuring a
+                straightforward experience and the transparency of Web3
+                technology.
+              </p>
+
+              <div className="home__brief__cta">
+                <a href="#" className="home__brief__button">
+                  sign in with email or wallet
+                </a>
+                <a href="#" className="home__brief__button">
+                  pay with credit card or crypto
+                </a>
+              </div>
+            </div>
+
+            {/* card dark */}
+            <div className="home__brief__bottom__card-dark">
+              <h2 className="heading-2">
+                Collect and admire your curated collection.{' '}
+              </h2>
+            <p className="caption-1">
+                You will have the ability to trade your shares and redeem the
+                value you&apos;ve accrued over time with The Artisan.
+            </p>
+
+              <div className="home__brief__cta">
+                <a href="#" className="home__brief__button light-button">
+                  value appreciation &uarr;
+                </a>
+                <a href="#" className="home__brief__button light-button">
+                  metaverse ready
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* products section */}
+      <section className="home__featured padding">
+        <div className="boxed">
+          <h2 className="heading-1">
+            Explore the collections available on the platform.
+          </h2>
+
+          <div className="home__featured__items-cont">
+            {featuredProducts.map((product) => {
+              return (
+                <div key={product} className="home__featured__items-cont__item">
+                  <img
+                    src="/assets/product-border-bg.png"
+                    alt=""
+                    className="home__featured__items-cont__item__bg"
+                  />
+                  <div className="item-top">
+                    <Image
+                      src={productImage}
+                      alt="product-img"
+                      className="item-top-img"
+                    />
+                  </div>
+                  <div className="item-body">
+                    <h3 className="heading-6">
+                      Audemars Piguet Royal Oak Extra Thin, 2019
+                    </h3>
+
+                    <div className="item-body-details">
+                      <div className="item-body-details-set">
+                        <p className="label-5">RELEASE</p>
+                        <p className="label-3">TBA</p>
+                      </div>
+
+                      <div className="item-body-details-set">
+                        <p className="label-5">STARTING FROM</p>
+                        <p className="label-3">100$</p>
+                      </div>
+
+                      <div className="item-body-details-set">
+                        <p className="label-5">EARNING POTENTIAL</p>
+                        <p className="label-3 green">+8,1% y*</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <div className="home__bottom-cta padding">
+        {/* <div className="boxed"> */}
+        <CTA1Card />
+
+        {/* hwo it works section */}
+        <section className="home__working ">
+          <div className="boxed">
+            <h2 className="heading-1">How It Works</h2>
+            <div className="home__working__steps">
+              {howItWorks.map((step, index) => {
+                return (
+                  <div key={index} className="home__working__item">
+                    <Image
+                      src={step.img}
+                      alt="how it works"
+                      className="home__working__item__img"
+                    />
+                    <h3 className="heading-3">{step.title}</h3>
+                    <p className="caption-3">{step.description}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        <CTA2Card />
+        {/* </div> */}
+      </div>
+    </div>
+  );
 };
 
 export default Home;

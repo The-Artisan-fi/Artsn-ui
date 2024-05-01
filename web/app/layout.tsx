@@ -2,10 +2,37 @@ import './global.css';
 import { AppLayout } from '@/components/Ui/app-layout';
 import { ClusterProvider } from '@/components/Cluster/cluster-data-access';
 import { SolanaProvider } from '@/components/Solana/solana-provider';
+import { seoData } from '@/lib/seoData';
+import type { Metadata } from 'next';
 
-export const metadata = {
-  title: 'The Artisan',
-  description: 'A luxury watch digital boutique',
+export const metadata: Metadata = {
+  title: seoData.title,
+  authors: [
+    {
+      name: seoData.author,
+    },
+  ],
+  description: seoData.description,
+  keywords: seoData.keywords.join(','),
+  metadataBase: new URL(seoData.url),
+  alternates: {
+    canonical: seoData.url,
+  },
+  openGraph: {
+    type: 'website',
+    url: seoData.url,
+    title: seoData.title,
+    description: seoData.description,
+    images: seoData.image,
+    siteName: seoData.title,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: seoData.title,
+    description: seoData.description,
+    images: seoData.image,
+    site: seoData.url,
+  },
 };
 
 export default function RootLayout({
@@ -15,7 +42,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-        <head>
+      <head>
         <meta charSet="UTF-8" />
         <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />

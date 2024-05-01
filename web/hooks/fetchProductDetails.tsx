@@ -17,20 +17,40 @@ export const fetchProductDetails = async (accountPubkey: string) => {
 
     try {
         const account_info = await connection.getAccountInfo(new PublicKey(accountPubkey))
-        const product_details = program.coder.accounts.decode("Listing", account_info!.data);
-
-        const product = {
-            id: product_details.id,
-            mint: product_details.mint,
-            name: product_details.name,
-            image: product_details.img,
-            fractionsLeft: `${product_details.shareSold} / ${product_details.share}`,
-            startingPrice: `${product_details.price} USD`,
-            earningPotential: "TBD",
-        };
+        const listing = program.coder.accounts.decode("Listing", account_info!.data);
+        // console.log('product', product);
         
+        const watch_account_info = await connection.getAccountInfo(new PublicKey(listing.watch));
+        const watch = program.coder.accounts.decode("Watch", watch_account_info!.data);
+        console.log('watch', watch);
 
-        return product;
+        const listingInfo = {
+            id: listing.id.toNumber(),
+            share: listing.share,
+            shareSold: listing.shareSold,
+            startingPrice: listing.price.toNumber(),
+            watchKey: listing.watch.toBase58(),
+            reference: listing.reference,
+
+            // braceletMaterial: "Steel"
+            // brand: "Audemars Piguet"
+            // caseMaterial: "Steel"
+            // dialColor: "Blue"
+            // diamater: 39
+            // model: "Royal Oak Jumbo"
+            // movement: "Automatic"
+            // reference: "15202ST.OO.1240ST.01"
+            // yearOfProduction: 2020
+            braceletMaterial: watch.braceletMaterial,
+            brand: watch.brand,
+            caseMaterial: watch.caseMaterial,
+            dialColor: watch.dialColor,
+            diamater: watch.diamater,
+            model: watch.model,
+            movement: watch.movement,
+            yearOfProduction: watch.yearOfProduction,
+        };
+        return listingInfo;
     } catch (error) {
         console.error("Failed to fetch products:", error);
     }

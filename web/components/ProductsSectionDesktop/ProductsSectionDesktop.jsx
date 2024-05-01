@@ -1,5 +1,6 @@
 import "@/styles/ProductsSectionDesktop.scss";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { useRouter }from "next/navigation";
 // SwiperJs for Carousel
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -11,13 +12,15 @@ import "swiper/css/free-mode";
 // import required modules
 import { FreeMode, Mousewheel } from "swiper";
 import { fetchProducts } from "@/hooks/fetchProducts";
+// import products from "@/components/Utils/productData";
+import ProductBorder from "@/public/assets/product-border-bg.png";
+import Audemar from "@/public/assets/home/products/Audemars-piguet-Royaloak.webp";
 
 const ProductsSectionDesktop = () => {
     const [products, setProducts] = useState({ available: [], comingSoon: [] });
     const router = useRouter();
     useEffect(() => {
         fetchProducts().then((products) => {
-            console.log('listed products', products)
             setProducts(products);
         });
     }, []);
@@ -46,7 +49,14 @@ const ProductsSectionDesktop = () => {
                             },
                         }}
                     >
-                        <SwiperSlide>
+                        <SwiperSlide
+                            style={{
+                                height: "528px",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                            }}
+                        >
                             <div className="products__available__slider__item-1">
                                 <h2 className="display-3 uppercase">
                                     Currently Available
@@ -57,19 +67,21 @@ const ProductsSectionDesktop = () => {
                             return (
                                 <div
                                     key={item.id}
-                                    className="products__available__slider__item"
+                                    // className="products__available__slider__item"
+                                    style={{ cursor: "pointer", height: "528px" }}
                                     onClick={() => {
                                         router.push(`/product/${item.accountPubkey.toString()}`)
                                     }}
                                 >
-                                    <img
-                                        src="/assets/product-border-bg.png"
-                                        alt=""
+                                    <Image
+                                        src={ProductBorder}
+                                        alt="product border"
                                         className="products__available__slider__item__bg"
                                     />
                                     <div className="item-top">
-                                        <img
-                                            src={item.image}
+                                        <Image
+                                            // src={item.image}
+                                            src={Audemar}
                                             alt={item.name}
                                             className="item-top-img"
                                         />
@@ -148,13 +160,13 @@ const ProductsSectionDesktop = () => {
                                         key={item.id}
                                         className="products__coming__slider__item"
                                     >
-                                        <img
-                                            src="/assets/product-border-bg.png"
-                                            alt=""
+                                        <Image
+                                            src={ProductBorder}
+                                            alt="product border"
                                             className="products__coming__slider__item__bg"
                                         />
                                         <div className="item-top">
-                                            <img
+                                            <Image
                                                 src={item.image}
                                                 alt={item.name}
                                                 className="item-top-img"

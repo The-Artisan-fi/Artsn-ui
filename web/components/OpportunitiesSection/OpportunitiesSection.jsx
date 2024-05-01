@@ -1,23 +1,27 @@
 import "@/styles/OpportunitiesSection.scss";
-
+import Image from "next/image";
+import ArrowRight from "@/public/assets/home/arrow-right.svg";
+import MetaBoutique from "@/public/assets/home/meta.webp";
+import Collect from "@/public/assets/home/collect.webp";
+import Fi from "@/public/assets/home/fi.webp";
 // data for opportunities section
 const opportunities = [
     {
-        image: "/assets/home/meta.webp",
+        image: MetaBoutique,
         title: "The Meta Boutique",
         subtitle: "Try and Buy the Luxury Goods.",
         description: "Look around and enjoy our platform in Virtual Reality.",
-        url: "#",
+        url: "https://theboutique-vr.com/",
     },
     {
-        image: "/assets/home/collect.webp",
+        image: Collect,
         title: "Collect",
         subtitle: "Own and Trade Luxury Assets.",
         description: "Buy fractions of Luxury Assets. ",
-        url: "#",
+        url: "/collect-fraction",
     },
     {
-        image: "/assets/home/fi.webp",
+        image: Fi,
         title: "TheFi",
         subtitle: "Navigate Secondary Market",
         description: "Trade, Get Loans, Get Insurance.",
@@ -42,9 +46,9 @@ const OpportunitiesSection = () => {
                                 className="opportunities__cards__card"
                             >
                                 <div className="opportunities__cards__card__top">
-                                    <img
+                                    <Image
                                         src={opportunity.image}
-                                        alt=""
+                                        alt={opportunity.title}
                                         className="opportunities__cards__card__top__img"
                                     />
                                 </div>
@@ -60,9 +64,9 @@ const OpportunitiesSection = () => {
                                             {opportunity.description}
                                         </p>
                                         <a href={opportunity.url}>
-                                            <img
-                                                src="/assets/home/arrow-right.svg"
-                                                alt=""
+                                            <Image
+                                                src={ArrowRight}
+                                                alt="arrow pointing right"
                                                 className="icon"
                                             />
                                         </a>

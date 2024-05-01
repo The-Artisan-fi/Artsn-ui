@@ -28,18 +28,31 @@ export const fetchProducts = async () => {
 
         try {
             const size_filter: DataSizeFilter = {
-                dataSize: 68,
+                // dataSize: 68,
+                dataSize: 92
             };
             const get_accounts_config: GetProgramAccountsConfig = {
                 commitment: "confirmed",
                 filters: [size_filter]
             };
-            const all_program_accounts = await connection.getProgramAccounts(new PublicKey(PROGRAM_ID), get_accounts_config);
-            console.log('all_program_accounts', all_program_accounts)
+            const all_program_accounts = await connection.getProgramAccounts(new PublicKey(PROGRAM_ID),
+             get_accounts_config
+             );
+
+            //  console.log('all_program_accounts', all_program_accounts)
             const productList = all_program_accounts.map((account) => {
                 try {
                     const decode = program.coder.accounts.decode("Listing", account.account.data);
-                    console.log('decode', decode.id.toNumber());
+                    // console.log('decode', decode);
+                    // 
+                    // id: BN {negative: 0, words: Array(3), length: 1, red: null}
+                    // price: BN {negative: 0, words: Array(3), length: 1, red: null}
+                    // reference: "15202ST.OO.1240ST.01"
+                    // share: 100
+                    // shareSold: 0
+                    // startingTime: BN {negative: 0, words: Array(2), length: 2, red: null}
+                    // watch: PublicKey {_bn: BN}
+                    console.log('')
                     return {
                         accountPubkey: account.pubkey.toBase58(),
                         ...decode
@@ -59,9 +72,12 @@ export const fetchProducts = async () => {
                     accountPubkey: product.accountPubkey,
                     name: product.name,
                     image: product.img,
-                    fractionsLeft: `${product.shareSold} / ${product.share}`,
+                    // fractions left should display the remaining shares available / total shares
+                    fractionsLeft: `${product.share - product.shareSold} / ${product.share}`,
                     startingPrice: `${product.price} USD`,
                     earningPotential: "TBD",
+                    watch: product.watch.toBase58(),
+                    reference: product.reference,
                 })),
                 comingSoon: comingSoonProducts.map(product => ({
                     id: product.id,
@@ -71,9 +87,10 @@ export const fetchProducts = async () => {
                     releaseDate: formatDateToDddMmm(product.startingTime),
                     startingPrice: `${product.price} USD`,
                     earningPotential: "TBD",
+                    watch: product.watch.toBase58(),
+                    reference: product.reference,
                 })),
             };
-
             return products;
         } catch (error) {
             console.error("Failed to fetch products:", error);
