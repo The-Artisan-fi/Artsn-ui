@@ -1,3 +1,3 @@
 # artisan-ui
 
-beta branch
+beta branch - 1.5.24
