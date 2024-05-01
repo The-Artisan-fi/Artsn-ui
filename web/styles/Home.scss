@@ -14,12 +14,12 @@
     position: relative;
 
     background-image: linear-gradient(
-        to right,
-        rgba(24, 24, 28, 0.85) 38%,
+        to right bottom,
+        rgba(24, 24, 28, 0.85) 48%,
         rgba(24, 24, 28, 0) 68%,
         rgba(23, 23, 27, 1) 100%
       ),
-      url('../public/assets/home/home-hero-img.webp');
+      url('../public/assets/home/home-hero-img.png');
 
     background-position: auto, center;
     background-size: auto, cover;
@@ -29,15 +29,18 @@
       top: 0;
       left: 0;
       width: 100%;
-      height: 100%;
+      height: 150%;
 
       background-image: linear-gradient(
-        to bottom,
+        to right,
         rgba(23, 23, 27, 1) 0%,
         rgba(23, 23, 27, 0) 10%,
         rgba(23, 23, 27, 0) 90%,
         rgba(23, 23, 27, 1) 100%
-      );
+      ), url('../public/assets/home/overlay.png');
+      // background position should be at the absolute bottom of the div
+      background-position: auto, bottom;
+      background-size: auto, cover;
     }
 
     &__content {

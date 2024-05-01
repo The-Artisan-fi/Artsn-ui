@@ -164,7 +164,7 @@ const Home = () => {
     return (
         <div className="home">
           <div className="home__hero padding">
-            <div className="hero-overlay"></div>
+            {/* <div className="hero-overlay"></div> */}
             <div className="home__hero__content">
               <h2 className="display-2 highlight">Digitally Owned</h2>
               <TextTransition
