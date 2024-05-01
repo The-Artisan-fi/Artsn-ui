@@ -34,82 +34,82 @@ function Navbar() {
         setNavbar(!navbar);
     };
 
-  const navLinks = [
-    // {
-    //     to: "/market",
-    //     name: "The Market",
-    // },
-    // {
-    //     to: "/fi",
-    //     name: "TheFi",
-    // },
-    // {
-    //     to: "https://theboutique-vr.com/",
-    //     name: "The Boutique",
-    // },
-    // {
-    //     to: "/faq",
-    //     name: "FAQs",
-    // },
-    {
-      to: '/about',
-      name: 'About Us',
-    },
-  ];
-
-  const mobileNavLinks = [
-    {
-      to: '/market',
-      name: 'The Market',
-    },
-    {
-      to: '/fi',
-      name: 'TheFi',
-    },
-    {
-      to: 'https://theboutique-vr.com/',
-      name: 'The Boutique',
-    },
-    {
-      to: '/faq',
-      name: 'FAQs',
-    },
-    {
-      to: '/about',
-      name: 'About Us',
-    },
-  ];
-
-  async function checkBuyerProfile(key) {
-    try {
-      const response = await fetch('/api/getProfile', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+    const navLinks = [
+        // {
+        //     to: "/market",
+        //     name: "The Market",
+        // },
+        // {
+        //     to: "/fi",
+        //     name: "TheFi",
+        // },
+        // {
+        //     to: "https://theboutique-vr.com/",
+        //     name: "The Boutique",
+        // },
+        // {
+        //     to: "/faq",
+        //     name: "FAQs",
+        // },
+        {
+            to: "/about",
+            name: "About Us",
         },
-        body: JSON.stringify({
-          publicKey: key,
-        }),
-      });
-      const profile = await response.json();
-      setBuyerProfileExists(profile.profile);
-    } catch (error) {
-      console.error('Error sending transaction', error);
-    }
-  }
+    ];
 
-  useEffect(() => {
-    if (!publicKey && !web3AuthPublicKey) {
-      return;
+    const mobileNavLinks = [
+        {
+            to: "/market",
+            name: "The Market",
+        },
+        {
+            to: "/fi",
+            name: "TheFi",
+        },
+        {
+            to: "https://theboutique-vr.com/",
+            name: "The Boutique",
+        },
+        {
+            to: "/faq",
+            name: "FAQs",
+        },
+        {
+            to: "/about",
+            name: "About Us",
+        },
+    ];
+
+    async function checkBuyerProfile(key) {        
+        try {
+            const response = await fetch('/api/getProfile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    publicKey: key,
+                })
+            })
+            const profile = await response.json();
+            setBuyerProfileExists(profile.profile);
+        } catch (error) {
+            console.error('Error sending transaction', error);
+        }
     }
-    if (publicKey) {
-      console.log('CONNECTED: ', publicKey.toBase58());
-      checkBuyerProfile(publicKey.toBase58());
-    }
-    if (web3AuthPublicKey) {
-      checkBuyerProfile(web3AuthPublicKey);
-    }
-  }, [publicKey, displayProfileModal, web3AuthPublicKey]);
+
+    useEffect(() => {
+        if(!publicKey && !web3AuthPublicKey) {
+            return;
+        }
+        if(publicKey) {
+            console.log("CONNECTED: ", publicKey.toBase58());
+            checkBuyerProfile(publicKey.toBase58());
+        }
+        if(web3AuthPublicKey) {
+            checkBuyerProfile(web3AuthPublicKey);
+        }
+    }, [publicKey, displayProfileModal, web3AuthPublicKey]);
 
     useEffect(() => {
         if(web3AuthPublicKey == null) {
@@ -134,9 +134,9 @@ function Navbar() {
                         {/* <div className="header-left">
                             
                         </div> */}
-            <div className="header-right">
-              {navLinks.map((link) => {
-                const isActive = pathname === link.to;
+                        {/* <div className="header-right">
+                            {navLinks.map((link) => {
+                                const isActive = pathname === link.to;
 
                                 return (
                                     <Link
@@ -195,7 +195,7 @@ function Navbar() {
                                         }}
                                     />
                                 )}
-                        </div>
+                        </div> */}
                         
                         <div className="header-container-mob">
                             <div className="header-left-mob">
@@ -215,11 +215,11 @@ function Navbar() {
                                 </Link>
                             </div>
                             <div className="header-right-mob">
-                                <CgProfile className="profile-icon" 
+                                {/* <CgProfile className="profile-icon" 
                                     onClick={()=> {
                                         setDisplayLogin(!displayLogin)
                                     }}
-                                />
+                                /> */}
                             </div>
                         </div>
                         
@@ -250,108 +250,93 @@ function Navbar() {
                         {mobileNavLinks.map((link) => {
                             const isActive = pathname === link.href;
 
-              return (
-                <Link
-                  className={isActive ? 'active-link' : 'nav-link'}
-                  style={{
-                    fontFamily: 'Inter',
-                    fontSize: '20px',
-                    fontWeight: '500',
-                    letterSpacing: '0.1rem',
-                  }}
-                  href={link.to}
-                  key={link.name}
-                  onClick={() => setNavbar(false)}
-                >
-                  {link.name}
-                </Link>
-              );
-            })}
-            {!buyerProfileExists && (
-              <button
-                className="btn"
-                onClick={() => {
-                  if (!publicKey && !web3AuthPublicKey) {
-                    setDisplayLogin(!displayLogin);
-                    toggleNavbar();
-                  } else {
-                    setDisplayProfileModal(!displayProfileModal);
-                    toggleNavbar();
-                  }
-                }}
-              >
-                {!publicKey && !web3AuthPublicKey
-                  ? 'Login'
-                  : 'Start Collecting'}
-              </button>
-            )}
+                            return (
+                                <Link
+                                    className={
+                                        isActive ? "active-link" : "nav-link"
+                                    }
+                                    style={{
+                                        fontFamily: "Inter",
+                                        fontSize: "20px",
+                                        fontWeight: "500",
+                                        letterSpacing: "0.1rem",
+                                    }}
+                                    href={link.to}
+                                    key={link.name}
+                                    onClick={() => setNavbar(false)}
+                                >
+                                    {link.name}
+                                </Link>
+                            );
+                        })}
+                        {!buyerProfileExists && (
+                            <button
+                                className="btn"
+                                onClick={()=> {
+                                    if(!publicKey && !web3AuthPublicKey) {
+                                        setDisplayLogin(!displayLogin);
+                                        toggleNavbar();
+                                    } else {
+                                        setDisplayProfileModal(!displayProfileModal);
+                                        toggleNavbar();
+                                    }
+                                }}
+                            >
+                                {!publicKey && !web3AuthPublicKey ? 'Login' : 'Start Collecting'}  
+                            </button>
+                        )}
 
-            {publicKey | web3AuthPublicKey && buyerProfileExists && (
-              <CgProfile
-                className="profile-icon"
-                onClick={() => {
-                  setDisplayLogin(!displayLogin);
-                  toggleNavbar();
-                }}
-              />
-            )}
-          </div>
-        </div>
-      </div>
-      {displayLogin && (
-        <div className="login-container">
-          <div
-            className="backdrop"
-            onClick={() => {
-              setDisplayLogin(false);
-            }}
-          />
-          {/* <div className="close-login" onClick={()=> {setDisplayLogin(false)}}>
+                        {/* {publicKey | web3AuthPublicKey && buyerProfileExists && (
+                            <CgProfile className="profile-icon" 
+                                onClick={()=> {
+                                    setDisplayLogin(!displayLogin);
+                                    toggleNavbar();
+                                }}
+                            />
+                        )} */}
+                    </div>
+                </div>
+            </div>
+            {displayLogin && (
+                <div className="login-container">
+                    <div className="backdrop" onClick={()=> {setDisplayLogin(false)}} />
+                    {/* <div className="close-login" onClick={()=> {setDisplayLogin(false)}}>
                         <span className="material-symbols-outlined">
                             <IoClose className="close-icon" />
                         </span>
                     </div> */}
-          <Web3AuthLogin
-            showModal={displayLogin}
-            handleClose={() => {
-              setDisplayLogin(false);
-            }}
-          />
+                    <Web3AuthLogin 
+                        showModal={displayLogin}
+                        handleClose={() => {setDisplayLogin(false)}}
+                    />
+                </div>
+            )}
+            {displayProfileModal && (
+                <div className="login-container">
+                    <div className="backdrop" onClick={()=> {setDisplayProfileModal(false)}} />
+                    <ProfileModal 
+                        showModal={displayProfileModal}
+                        handleClose={() => {setDisplayProfileModal(false)}}
+                    />
+                </div>
+            )}
+            <ToastContainer
+                position="bottom-left"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+                // style={{
+                //     backgroundColor: "#aaaaaa"
+                // }}
+            />
         </div>
-      )}
-      {displayProfileModal && (
-        <div className="login-container">
-          <div
-            className="backdrop"
-            onClick={() => {
-              setDisplayProfileModal(false);
-            }}
-          />
-          <ProfileModal
-            showModal={displayProfileModal}
-            handleClose={() => {
-              setDisplayProfileModal(false);
-            }}
-          />
-        </div>
-      )}
-      <ToastContainer
-        position="bottom-left"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-        // style={{
-        //     backgroundColor: "#aaaaaa"
-        // }}
-      />
-    </div>
-  );
+    );
 }
 
 export default Navbar;

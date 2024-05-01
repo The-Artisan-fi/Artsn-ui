@@ -1,173 +1,77 @@
 .cta2-card {
-    background-image: url("/assets/home/cta-2-bg.webp");
+    background-image: url('/assets/home/cta-2-bg.webp');
     width: 1152px;
-    height: 406px;
+  
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
     position: relative;
-
+  
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-
-    // gap: 1.5rem;
-    padding-top: 51px;
-    padding-left: 37px;
-
+  
+    padding: 5rem;
+  
     border-radius: 25px;
     overflow: hidden;
-
+  
     &__text {
-
-        & > .top-text {
-            color: #FFF;
-            font-family: Inter;
-            font-size: 56px;
-            font-style: normal;
-            font-weight: 600;
-            line-height: 72px; /* 128.571% */
-            letter-spacing: -1.68px;
-        }
-
-        & > .bottom-text {
-            color: #F90;
-            font-family: Inter;
-            font-size: 32px;
-            font-style: normal;
-            font-weight: 600;
-            line-height: 40px;
-            margin-bottom: 1rem;
-        }
-
-        & > .sub-text {
-            color: #FFF;
-            font-family: Inter;
-            font-size: 24px;
-            font-style: normal;
-            font-weight: 400;
-            line-height: 22px; /* 91.667% */
-            letter-spacing: 0.36px;
-        }
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+  
+      & > .heading-5 {
+        color: #f90;
+      }
     }
-
-    & > * {
-        text-align: left !important;
+  
+    .btn {
+      align-self: center;
+      margin-top: 3rem;
     }
-
-    & > .heading-secondary {
-        text-transform: unset;
-    }
-
-    & > .btn {
-        margin-top: 1rem;
-        align-self: flex-start;
-    }
-
-    & > .btn-cta-2 {
-        display: none;
-    }
-
-    &__illustration {
-        position: absolute;
-        bottom: -1.5rem;
-        right: -1rem;
-        object-fit: contain;
-        width: 555px;
-        height: 253px;
-        flex-shrink: 0;
-    }
-
-    & > * {
-        z-index: 1;
-    }
-}
-
-// media queries for responsiveness below 768px
-@media only screen and (max-width: 1157px) {
+  }
+  
+  // media queries for the mobile responsiveness
+  // below 768px
+  
+  @media only screen and (max-width: 768px) {
     .cta2-card {
-        width: 100%;
-        height: fit-content;
-        padding: 3rem 4rem;
-        flex-shrink: 0;
-        border-radius: 25px;
-        background: url("/assets/home/cta-2-bg.webp"), lightgray 50% / cover no-repeat, #000;
-        align-items: flex-start;
+      width: 100%;
+  
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+  
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+  
+      padding: 4rem 3rem;
+  
+      border-radius: 25px;
+      overflow: hidden;
+  
+      &__text {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
         justify-content: center;
-        align-content: center;
-
-        &__text {
-            & > .top-text {
-                align-self: stretch;
-                font-size: 40px;
-                font-style: normal;
-                font-weight: 600;
-                line-height: 52px; /* 130% */
-            }
-    
-            & > .bottom-text {
-                font-size: 28px;
-                font-style: normal;
-                font-weight: 600;
-                line-height: 36px;
-            }
-    
-            & > .sub-text {
-                font-size: 18px;
-                font-style: normal;
-                font-weight: 400;
-                line-height: 22px; /* 122.222% */
-                letter-spacing: 0.27px;
-                align-self: stretch;
-                width: 307px;
-            }
+        text-align: center;
+  
+        & > .heading-5 {
+          color: #f90;
         }
-    
-        & > * {
-            text-align: left !important;
-        }
-    
-        & > .heading-secondary {
-            text-transform: unset;
-        }
-    
-        & > .btn-cta-2 {
-            display: flex;
-            color: #FFF;
-            text-shadow: 0px 0px 20.2px #000;
-            font-family: Inter;
-            font-size: 16px;
-            font-style: normal;
-            font-weight: 600;
-            line-height: 20px; /* 125% */
-            letter-spacing: -0.32px;
-            margin-top: 1.5rem;
-            width: 199px;
-            padding: 10px;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            border-radius: 7px;
-            border: 3px solid #F90;
-            background: rgba(255, 153, 0, 0.20);
-            box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-        }
-    
-        &__illustration {
-            width: 342px;
-            height: 156px;
-            flex-shrink: 0;
-            bottom: 2rem;
-            right: 2rem;
-            @media only screen and (max-width: 770px) {
-                display: none;
-            }
-        }
-
-        
-    
-        & > * {
-            z-index: 1;
-        }
+      }
+  
+      .btn {
+        align-self: center;
+        margin-top: 3rem;
+      }
     }
-}
+  }

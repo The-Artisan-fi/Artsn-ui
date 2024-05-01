@@ -14,7 +14,6 @@
   "private": true,
   "dependencies": {
     "@ant-design/plots": "^2.1.14",
-    "@ant-design/plots": "^2.1.14",
     "@apollo/client": "^3.9.5",
     "@aws-sdk/client-s3": "^3.515.0",
     "@aws-sdk/s3-request-presigner": "^3.515.0",
@@ -38,6 +37,7 @@
     "@web3auth/solana-provider": "^7.3.1",
     "antd": "^5.12.5",
     "antd-img-crop": "^4.21.0",
+    "aws-sdk": "^2.1606.0",
     "axios": "^1.6.7",
     "bs58": "5.0.0",
     "buffer": "6.0.3",
@@ -77,7 +77,6 @@
     "@swc/jest": "0.2.20",
     "@testing-library/react": "14.0.0",
     "@types/jest": "^29.4.0",
-    "@types/next": "^9.0.0",
     "@types/node": "18.16.9",
     "@types/react": "18.2.33",
     "@types/react-dom": "18.2.14",
