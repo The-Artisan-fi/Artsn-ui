@@ -1,6 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
 import '@/styles/Home.scss';
+'use client';
+import { useState, useEffect } from 'react';
+import '@/styles/Home.scss';
 
 import TextTransition, { presets } from 'react-text-transition';
 
@@ -21,8 +24,34 @@ import aboutIllustration from '../public/assets/home/home-about-illustraiton.web
 import homeBriefIllustration from '../public/assets/home/home-brief-illustraiton.webp';
 
 import productImage from '../public/assets/dummy-product.png';
+import Rolex from '@/public/assets/home/products/Rolex-Cosmograph-daytona.webp';
+import Audemar from '@/public/assets/home/products/Audemars-Piguet-Royaloak.webp';
+import Ferrai from '@/public/assets/home/products/ferrari512-testa-rossa.webp';
+import Picasso from '@/public/assets/home/products/Pablo-Picasso-les-femmes-d-alger.png';
 
-const featuredProducts = [1, 2, 3];
+const featuredProducts = [
+    {
+        name: 'Picasso, Les Femmes d\'Alger, 1955',
+        image: Picasso,
+        release: 'TBA',
+        startingFrom: '100$',
+        earningPotential: '+8,1% y*',
+    },
+    {
+        name: 'Audemars Piguet Royal Oak Extra Thin, 2019',
+        image: Audemar,
+        release: 'TBA',
+        startingFrom: '100$',
+        earningPotential: '+8,1% y*',
+    },
+    {
+        name: 'Ferrari 512 Testa Rossa',
+        image: Ferrai,
+        release: 'TBA',
+        startingFrom: '100$',
+        earningPotential: '+8,1% y*',
+    },
+]
 
 // how it works images
 import howWorks1 from '../public/assets/home/how-it-works-1.webp';
@@ -98,7 +127,7 @@ const Home = () => {
   return (
     <div className="home">
       <div className="home__hero padding">
-        <div className="hero-overlay"></div>
+        {/* <div className="hero-overlay"></div> */}
         <div className="home__hero__content">
           <h2 className="display-2 highlight">Digitally Owned</h2>
           <TextTransition
@@ -239,9 +268,9 @@ const Home = () => {
           </h2>
 
           <div className="home__featured__items-cont">
-            {featuredProducts.map((product) => {
+            {featuredProducts.map((product, index) => {
               return (
-                <div key={product} className="home__featured__items-cont__item">
+                <div key={index} className="home__featured__items-cont__item">
                   <img
                     src="/assets/product-border-bg.png"
                     alt=""
@@ -249,14 +278,14 @@ const Home = () => {
                   />
                   <div className="item-top">
                     <Image
-                      src={productImage}
+                      src={product.image}
                       alt="product-img"
                       className="item-top-img"
                     />
                   </div>
                   <div className="item-body">
                     <h3 className="heading-6">
-                      Audemars Piguet Royal Oak Extra Thin, 2019
+                        {product.name}
                     </h3>
 
                     <div className="item-body-details">
