@@ -52,9 +52,11 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
     const [variables, setVariables] = useState({
         associatedId: "",
       });
-    const [getDetails, { loading, error, data }] = useLazyQuery(listing, {
-        variables,
-    });
+    const [getDetails, { loading, error, data }] = useLazyQuery(
+        listing, {
+            variables,
+        }
+    );
     if(!loading && data != undefined && offChainData == undefined){
         console.log("data", data.listings[0]);
         setOffChainData(data.listings[0]);
