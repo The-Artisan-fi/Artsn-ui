@@ -19,6 +19,7 @@
     "@aws-sdk/s3-request-presigner": "^3.515.0",
     "@coral-xyz/anchor": "^0.29.0",
     "@mantine/dropzone": "^7.5.3",
+    "@netlify/plugin-nextjs": "^5.1.2",
     "@nivo/core": "^0.85.1",
     "@nivo/line": "^0.85.1",
     "@solana-developers/preset-next": "2.0.1",
