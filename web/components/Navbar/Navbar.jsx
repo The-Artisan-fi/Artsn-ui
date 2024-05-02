@@ -134,7 +134,7 @@ function Navbar() {
                         {/* <div className="header-left">
                             
                         </div> */}
-                        {/* <div className="header-right">
+                        <div className="header-right">
                             {navLinks.map((link) => {
                                 const isActive = pathname === link.to;
 
@@ -152,7 +152,7 @@ function Navbar() {
                                     </Link>
                                 );
                             })}
-                                {pathname != "/collect-fraction" && !pathname.includes("/product") &&(
+                                {/* {pathname != "/collect-fraction" && !pathname.includes("/product") &&(
                                     <Link href="/collect-fraction" className="btn">
                                         Start Collecting
                                     </Link>
@@ -194,8 +194,8 @@ function Navbar() {
                                             router.push("/dashboard")
                                         }}
                                     />
-                                )}
-                        </div> */}
+                                )} */}
+                        </div>
                         
                         <div className="header-container-mob">
                             <div className="header-left-mob">
@@ -220,6 +220,9 @@ function Navbar() {
                                         setDisplayLogin(!displayLogin)
                                     }}
                                 /> */}
+
+                                {/* PLACE HOLDER FOR PROFILE ICON */}
+                                <div style={{ width: "25px" }}></div>
                             </div>
                         </div>
                         
@@ -269,7 +272,7 @@ function Navbar() {
                                 </Link>
                             );
                         })}
-                        {!buyerProfileExists && (
+                        {/* {!buyerProfileExists && (
                             <button
                                 className="btn"
                                 onClick={()=> {
@@ -284,7 +287,7 @@ function Navbar() {
                             >
                                 {!publicKey && !web3AuthPublicKey ? 'Login' : 'Start Collecting'}  
                             </button>
-                        )}
+                        )} */}
 
                         {/* {publicKey | web3AuthPublicKey && buyerProfileExists && (
                             <CgProfile className="profile-icon" 

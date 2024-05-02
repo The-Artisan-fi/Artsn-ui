@@ -70,7 +70,7 @@ const howItWorks = [
   },
   {
     img: howWorks3,
-    title: 'We securely store assets in a third-party vault..',
+    title: 'We securely store assets in a third-party vault.',
     description:
       'Our trusted partners will securely store the assets in a vault, which we will then share with our users.',
   },
