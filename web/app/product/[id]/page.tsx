@@ -418,7 +418,8 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                         solanaUrl={solanaUrl}
                         refKey={refKey}
                         header={`${product?.name} | ${product?.model}`}
-                        message={`Scan the QR code to purchase ${product?.name} for ${product?.price} ${product?.currency}`}
+                        // message={`Scan the QR code to purchase ${product?.name} for ${product?.price} ${product?.currency}`}
+                        message={`Scan the QR code to purchase ${product?.name} for ${product?.price} USDC`}
                         handleClose={() => setDisplayQr(false)}
                     />
                 </div>

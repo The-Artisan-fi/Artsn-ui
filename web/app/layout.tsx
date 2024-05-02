@@ -4,6 +4,8 @@ import { ClusterProvider } from '@/components/Cluster/cluster-data-access';
 import { SolanaProvider } from '@/components/Solana/solana-provider';
 import { seoData } from '@/lib/seoData';
 import type { Metadata } from 'next';
+import {ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const metadata: Metadata = {
   title: seoData.title,
@@ -62,6 +64,21 @@ export default function RootLayout({
             </AppLayout>
           </SolanaProvider>
         </ClusterProvider>
+        <ToastContainer
+          position="bottom-left"
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+          // style={{
+          //     backgroundColor: "#aaaaaa"
+          // }}
+        />
       </body>
     </html>
   );

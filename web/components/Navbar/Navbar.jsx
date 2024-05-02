@@ -14,6 +14,7 @@ import Web3AuthLogin from "../Web3Auth/Web3Auth";
 import { checkLogin } from "@/components/Web3Auth/solanaRPC";
 import ProfileModal from "@/components/Profile/ProfileModal";
 import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 import NavBrand from "@/public/assets/navbrand-full.webp";
 import Logo from "@/public/assets/navbrand-logo-bw.png";
@@ -335,7 +336,7 @@ function Navbar() {
           />
         </div>
       )}
-      <ToastContainer
+      {/* <ToastContainer
         position="bottom-left"
         autoClose={2000}
         hideProgressBar={false}
@@ -349,7 +350,7 @@ function Navbar() {
         // style={{
         //     backgroundColor: "#aaaaaa"
         // }}
-      />
+      /> */}
     </div>
   );
 }

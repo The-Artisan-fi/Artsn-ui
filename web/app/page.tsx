@@ -4,7 +4,8 @@ import dynamic from 'next/dynamic';
 import "@/styles/Home.scss";
 import TextTransition, { presets } from 'react-text-transition';
 // import TextTransition, { presets } from "react-text-transition";
-
+import { toastSuccess } from "@/helpers/toast";
+import { useWallet } from "@solana/wallet-adapter-react";
 // hero section text animations
 const heroTexts = ["Watches", "Art", "Cars", "Wine", "Whisky", "Memorabilia"];
 
@@ -25,6 +26,7 @@ import howWorks2 from '@/public/assets/home/how-it-works-2.webp';
 import howWorks3 from '@/public/assets/home/how-it-works-3.webp';
 import howWorks4 from '@/public/assets/home/how-it-works-4.webp';
 import howWorks5 from '@/public/assets/home/how-it-works-5.webp';
+import { Overlay } from "antd/es/popconfirm/PurePanel";
 
 const PartnersMarque = dynamic(() => import("@/components/PartnersMarque/PartnersMarque"), {
     loading: () => <p>Loading...</p>,
@@ -84,6 +86,7 @@ const howItWorks = [
   ];
 
 const Home = () => {
+    const { publicKey } = useWallet();
     const [index, setIndex] = useState(0);
     const [opacity, setOpacity] = useState(0);
     const [isMobile, setIsMobile] = useState(true);
@@ -161,10 +164,21 @@ const Home = () => {
         return () => clearTimeout(intervalId);
     }, []);
 
+    useEffect(() => {
+      if(publicKey){
+        toastSuccess("Public key found");
+      }
+    }, [publicKey]);
+
     return (
         <div className="home">
           <div className="home__hero padding">
             {/* <div className="hero-overlay"></div> */}
+            <Image
+              className="hero-overlay"
+              src={overlay}
+              alt="overlay"
+            />
             <div className="home__hero__content">
               <h2 className="display-2 highlight">Digitally Owned</h2>
               <TextTransition
