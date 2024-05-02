@@ -141,7 +141,7 @@ const Home = () => {
             </h2>
           </TextTransition>{' '}
           <h3 className="heading-5">Collect & Trade Luxury Goods</h3>
-          <a href="https://tally.so/r/mYWaJz" className="btn btn-gold">
+          <a href="https://tally.so/r/mYWaJz" className="btn btn-gold" style={{ zIndex: "1"}}>
             JOIN THE WAITLIST
           </a>
           <Image className="solana-swiss-icons" src={solanaSwissIcon} alt="" />
