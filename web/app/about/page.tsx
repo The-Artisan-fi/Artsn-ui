@@ -12,7 +12,7 @@ const teamDataDesktop = [
     {
         name: "Renato Capizzi",
         title: "CEO & Founder",
-        img: "/assets/about/renato.webp",
+        img: "/assets/about/renato",
         about: [
             "The brain behind the idea",
             "8+ years of management experience.",
@@ -24,31 +24,89 @@ const teamDataDesktop = [
     {
         name: "Leonardo Donatacci",
         title: "CTO",
-        img: "/assets/about/leonardo.webp",
-        about: ["Solana Specialist", "Teacher at Web3 builder alliance"],
+        img: "/assets/about/leonardo",
+        about: [
+            "Solana Specialist",
+            "Senior Protocol & Smart Contract Developer", 
+            "Teacher & Educator at Web3 builder alliance"
+        ],
         linkedIn: "#", // Leonardo's LinkedIn link is missing
         twitter: "https://twitter.com/L0STE_", // Adding Leonardo's Twitter link
     },
     {
+        name: "Brian Frederiksen",
+        title: "COO",
+        img: "/assets/about/brian",
+        about: [
+            "Managing Partner - Monaco Foundry",
+            "CEO - WEOPTIT", 
+            "Senior Government Advisor - Finland", 
+            "Global Head of Business Development - IBM Watson", 
+            "Chief Strategy & Operating Officer - Merck & Co Healthcare Services",
+        ],
+        linkedIn: "https://www.linkedin.com/in/brianfrederiksen/",
+        twitter: "#", 
+    },
+    {
         name: "Paolo Piana",
-        title: "CFO ",
-        img: "/assets/about/paolo.webp",
+        title: "Lead UX/UI Designer ",
+        img: "/assets/about/paolo",
         about: [
             "Web3 Marketer & UX Designer",
-            "2y Web3 full time (SMEs and DFINITY Foundation)",
-            "Bachelor in BA and MSc in Management of Innovation & Entrepreneurship",
+            "Web3 full time (SMEs and DFINITY Foundation)",
         ],
         linkedIn: "https://www.linkedin.com/in/paolo-piana/",
         twitter: "https://twitter.com/pinoweb3",
     },
-
+    {
+        name: "Craig Pollock",
+        title: "F1 Ambassador",
+        img: "/assets/about/craig",
+        about: [
+            "Founding Partner - F1 - Formula Equal (F=)",
+            "Partner and Senior Advisor - Monaco Foundry",
+            "Founder & Chairman - Pure Corporation Sa - F1 Hybrid Power Unit Design And Development",
+            "Founder - PK Racing IndyCar",
+            "Co-Founder - Stellar Management Ltd. Managing Jacques Villeneuve, Ayrton Senna Foundation rights, Prost rights",
+        ],
+        linkedIn: "https://www.linkedin.com/in/craig-pollock-538a9412/",
+        twitter: "#",
+    },
+    {
+        name: "Macarena Segura",
+        title: "Regulatory & Strategy Lead",
+        img: "/assets/about/macarena",
+        about: [
+            "International Fintech Lawyer",
+            "Blockchain, RegTech, Cybersecurity, IDV, Crypto Assets, Web3",
+            "Regulatory Supervisor - Bank de España",
+            "Regulatory Advisory Fintech & Digital Assets - KPMG",
+            "Regulatory Advisory Fintech & Digital Assets - PwC"
+        ],
+        linkedIn: "https://www.linkedin.com/in/macarena-linaza-segura/",
+        twitter: "#", // Macarena's Twitter link is missing
+    },
+    // {
+    //     name: "Simone Leonardi",
+    //     title: "Tax & Fiscal Expert",
+    //     img: simone,
+    //     about: [
+    //         "National and Internationl Fiscal Expert",
+    //         "International Corporate Tax Senior Manager - KPMG",
+    //         "Director - Fiduciaria Antonini",
+    //         "Member - Fiscal Association",
+    //         "Member - Register of Accountant Trustees Ticino Canton", 
+    //     ],
+    //     linkedIn: "https://www.linkedin.com/in/simone-leonardi-a6a13a12/",
+    //     twitter: "#", // Macarena's Twitter link is missing
+    // },
     {
         name: "Domenico Fava",
-        title: "Legal Advisor & Data Protection Officer",
-        img: "/assets/about/domenico.webp",
+        title: "Identity Verification & Data Protection",
+        img: "/assets/about/domenico",
         about: [
-            "Legal expert for several entities;",
-            "Certified data protection officer, with consolidated experience;",
+            "Legal expert for several entities",
+            "Certified data protection officer",
             "Web 3 investor and advisor",
         ],
         linkedIn: "https://www.linkedin.com/in/domenico-fava-5bb17336/",
@@ -61,7 +119,7 @@ const teamDataMobile = [
     {
         name: "Renato Capizzi",
         title: "CEO & Founder",
-        img: "/assets/about/renato.webp",
+        img: "/assets/about/renato",
         about: [
             "The brain behind the idea",
             "8+ years of management experience.",
@@ -73,31 +131,89 @@ const teamDataMobile = [
     {
         name: "Leonardo Donatacci",
         title: "CTO",
-        img: "/assets/about/leonardo.webp",
-        about: ["Solana Specialist", "Teacher at Web3 builder alliance"],
+        img: "/assets/about/leonardo",
+        about: [
+            "Solana Specialist",
+            "Senior Protocol & Smart Contract Developer", 
+            "Teacher & Educator at Web3 builder alliance"
+        ],
         linkedIn: "#", // Leonardo's LinkedIn link is missing
         twitter: "https://twitter.com/L0STE_", // Adding Leonardo's Twitter link
     },
     {
+        name: "Brian Frederiksen",
+        title: "COO",
+        img: "/assets/about/brian",
+        about: [
+            "Managing Partner - Monaco Foundry",
+            "CEO - WEOPTIT", 
+            "Senior Government Advisor - Finland", 
+            "Global Head of Business Development - IBM Watson", 
+            "Chief Strategy & Operating Officer - Merck & Co Healthcare Services",
+        ],
+        linkedIn: "https://www.linkedin.com/in/brianfrederiksen/",
+        twitter: "#", 
+    },
+    {
         name: "Paolo Piana",
-        title: "CFO ",
-        img: "/assets/about/paolo.webp",
+        title: "Lead UX/UI Designer ",
+        img: "/assets/about/paolo",
         about: [
             "Web3 Marketer & UX Designer",
-            "2y Web3 full time (SMEs and DFINITY Foundation)",
-            "Bachelor in BA and MSc in Management of Innovation & Entrepreneurship",
+            "Web3 full time (SMEs and DFINITY Foundation)",
         ],
         linkedIn: "https://www.linkedin.com/in/paolo-piana/",
         twitter: "https://twitter.com/pinoweb3",
     },
-
+    {
+        name: "Craig Pollock",
+        title: "F1 Ambassador",
+        img: "/assets/about/craig",
+        about: [
+            "Founding Partner - F1 - Formula Equal (F=)",
+            "Partner and Senior Advisor - Monaco Foundry",
+            "Founder & Chairman - Pure Corporation Sa - F1 Hybrid Power Unit Design And Development",
+            "Founder - PK Racing IndyCar",
+            "Co-Founder - Stellar Management Ltd. Managing Jacques Villeneuve, Ayrton Senna Foundation rights, Prost rights",
+        ],
+        linkedIn: "https://www.linkedin.com/in/craig-pollock-538a9412/",
+        twitter: "#",
+    },
+    {
+        name: "Macarena Segura",
+        title: "Regulatory & Strategy Lead",
+        img: "/assets/about/macarena",
+        about: [
+            "International Fintech Lawyer",
+            "Blockchain, RegTech, Cybersecurity, IDV, Crypto Assets, Web3",
+            "Regulatory Supervisor - Bank de España",
+            "Regulatory Advisory Fintech & Digital Assets - KPMG",
+            "Regulatory Advisory Fintech & Digital Assets - PwC"
+        ],
+        linkedIn: "https://www.linkedin.com/in/macarena-linaza-segura/",
+        twitter: "#", // Macarena's Twitter link is missing
+    },
+    // {
+    //     name: "Simone Leonardi",
+    //     title: "Tax & Fiscal Expert",
+    //     img: simone,
+    //     about: [
+    //         "National and Internationl Fiscal Expert",
+    //         "International Corporate Tax Senior Manager - KPMG",
+    //         "Director - Fiduciaria Antonini",
+    //         "Member - Fiscal Association",
+    //         "Member - Register of Accountant Trustees Ticino Canton", 
+    //     ],
+    //     linkedIn: "https://www.linkedin.com/in/simone-leonardi-a6a13a12/",
+    //     twitter: "#", // Macarena's Twitter link is missing
+    // },
     {
         name: "Domenico Fava",
-        title: "Legal Advisor & Data Protection Officer",
-        img: "/assets/about/domenico.webp",
+        title: "Identity Verification & Data Protection",
+        img: "/assets/about/domenico",
         about: [
-            "Legal expert for several entities;",
-            "Certified data protection officer, with consolidated experience;",
+            "Legal expert for several entities",
+            "Certified data protection officer",
             "Web 3 investor and advisor",
         ],
         linkedIn: "https://www.linkedin.com/in/domenico-fava-5bb17336/",
