@@ -1,18 +1,25 @@
 "use client"
+import Image from "next/image";
 import type { NextPage } from "next";
-import { useState, useEffect } from "react";
 import "@/styles/About.scss";
-// import { Form, Input } from "antd";
 
 import { FaLinkedin, FaTwitter } from "react-icons/fa";
 
 import PartnersMarque from "@/components/PartnersMarque/PartnersMarque";
+import Renato from "@/public/assets/about/renato.webp";
+import Leonardo from "@/public/assets/about/leonardo.webp";
+import Brian from "@/public/assets/about/brian.webp";
+import Paolo from "@/public/assets/about/paolo.webp";
+import Craig from "@/public/assets/about/craig.jpg";
+import Macarena from "@/public/assets/about/macarena.webp";
+import Domenico from "@/public/assets/about/domenico.webp";
+import Matt from "@/public/assets/about/matt.jpeg";
 
 const teamDataDesktop = [
     {
         name: "Renato Capizzi",
         title: "CEO & Founder",
-        img: "/assets/about/renato",
+        img: Renato,
         about: [
             "The brain behind the idea",
             "8+ years of management experience.",
@@ -24,7 +31,7 @@ const teamDataDesktop = [
     {
         name: "Leonardo Donatacci",
         title: "CTO",
-        img: "/assets/about/leonardo",
+        img: Leonardo,
         about: [
             "Solana Specialist",
             "Senior Protocol & Smart Contract Developer", 
@@ -36,7 +43,7 @@ const teamDataDesktop = [
     {
         name: "Brian Frederiksen",
         title: "COO",
-        img: "/assets/about/brian",
+        img: Brian,
         about: [
             "Managing Partner - Monaco Foundry",
             "CEO - WEOPTIT", 
@@ -50,8 +57,8 @@ const teamDataDesktop = [
     {
         name: "Paolo Piana",
         title: "Lead UX/UI Designer ",
-        img: "/assets/about/paolo",
-        about: [
+        img: Paolo,
+        about: [    
             "Web3 Marketer & UX Designer",
             "Web3 full time (SMEs and DFINITY Foundation)",
         ],
@@ -61,7 +68,7 @@ const teamDataDesktop = [
     {
         name: "Craig Pollock",
         title: "F1 Ambassador",
-        img: "/assets/about/craig",
+        img: Craig,
         about: [
             "Founding Partner - F1 - Formula Equal (F=)",
             "Partner and Senior Advisor - Monaco Foundry",
@@ -75,7 +82,7 @@ const teamDataDesktop = [
     {
         name: "Macarena Segura",
         title: "Regulatory & Strategy Lead",
-        img: "/assets/about/macarena",
+        img: Macarena,
         about: [
             "International Fintech Lawyer",
             "Blockchain, RegTech, Cybersecurity, IDV, Crypto Assets, Web3",
@@ -103,7 +110,7 @@ const teamDataDesktop = [
     {
         name: "Domenico Fava",
         title: "Identity Verification & Data Protection",
-        img: "/assets/about/domenico",
+        img: Domenico,
         about: [
             "Legal expert for several entities",
             "Certified data protection officer",
@@ -112,145 +119,21 @@ const teamDataDesktop = [
         linkedIn: "https://www.linkedin.com/in/domenico-fava-5bb17336/",
         twitter: "#", // Domenico's Twitter link is missing
     },
-];
-
-// teamData array with the original order
-const teamDataMobile = [
     {
-        name: "Renato Capizzi",
-        title: "CEO & Founder",
-        img: "/assets/about/renato",
+        name: "Matt Weichel",
+        title: "Full Stack Developer",
+        img: Matt,
         about: [
-            "The brain behind the idea",
-            "8+ years of management experience.",
-            "Cryptocurrency trader",
+            "Full Stack Developer on Solana",
+            "Swiss Lacrosse U20 National Team Coach",
         ],
-        linkedIn: "https://www.linkedin.com/in/renatocapizzi/",
-        twitter: "https://twitter.com/Capiz92",
-    },
-    {
-        name: "Leonardo Donatacci",
-        title: "CTO",
-        img: "/assets/about/leonardo",
-        about: [
-            "Solana Specialist",
-            "Senior Protocol & Smart Contract Developer", 
-            "Teacher & Educator at Web3 builder alliance"
-        ],
-        linkedIn: "#", // Leonardo's LinkedIn link is missing
-        twitter: "https://twitter.com/L0STE_", // Adding Leonardo's Twitter link
-    },
-    {
-        name: "Brian Frederiksen",
-        title: "COO",
-        img: "/assets/about/brian",
-        about: [
-            "Managing Partner - Monaco Foundry",
-            "CEO - WEOPTIT", 
-            "Senior Government Advisor - Finland", 
-            "Global Head of Business Development - IBM Watson", 
-            "Chief Strategy & Operating Officer - Merck & Co Healthcare Services",
-        ],
-        linkedIn: "https://www.linkedin.com/in/brianfrederiksen/",
-        twitter: "#", 
-    },
-    {
-        name: "Paolo Piana",
-        title: "Lead UX/UI Designer ",
-        img: "/assets/about/paolo",
-        about: [
-            "Web3 Marketer & UX Designer",
-            "Web3 full time (SMEs and DFINITY Foundation)",
-        ],
-        linkedIn: "https://www.linkedin.com/in/paolo-piana/",
-        twitter: "https://twitter.com/pinoweb3",
-    },
-    {
-        name: "Craig Pollock",
-        title: "F1 Ambassador",
-        img: "/assets/about/craig",
-        about: [
-            "Founding Partner - F1 - Formula Equal (F=)",
-            "Partner and Senior Advisor - Monaco Foundry",
-            "Founder & Chairman - Pure Corporation Sa - F1 Hybrid Power Unit Design And Development",
-            "Founder - PK Racing IndyCar",
-            "Co-Founder - Stellar Management Ltd. Managing Jacques Villeneuve, Ayrton Senna Foundation rights, Prost rights",
-        ],
-        linkedIn: "https://www.linkedin.com/in/craig-pollock-538a9412/",
-        twitter: "#",
-    },
-    {
-        name: "Macarena Segura",
-        title: "Regulatory & Strategy Lead",
-        img: "/assets/about/macarena",
-        about: [
-            "International Fintech Lawyer",
-            "Blockchain, RegTech, Cybersecurity, IDV, Crypto Assets, Web3",
-            "Regulatory Supervisor - Bank de España",
-            "Regulatory Advisory Fintech & Digital Assets - KPMG",
-            "Regulatory Advisory Fintech & Digital Assets - PwC"
-        ],
-        linkedIn: "https://www.linkedin.com/in/macarena-linaza-segura/",
-        twitter: "#", // Macarena's Twitter link is missing
-    },
-    // {
-    //     name: "Simone Leonardi",
-    //     title: "Tax & Fiscal Expert",
-    //     img: simone,
-    //     about: [
-    //         "National and Internationl Fiscal Expert",
-    //         "International Corporate Tax Senior Manager - KPMG",
-    //         "Director - Fiduciaria Antonini",
-    //         "Member - Fiscal Association",
-    //         "Member - Register of Accountant Trustees Ticino Canton", 
-    //     ],
-    //     linkedIn: "https://www.linkedin.com/in/simone-leonardi-a6a13a12/",
-    //     twitter: "#", // Macarena's Twitter link is missing
-    // },
-    {
-        name: "Domenico Fava",
-        title: "Identity Verification & Data Protection",
-        img: "/assets/about/domenico",
-        about: [
-            "Legal expert for several entities",
-            "Certified data protection officer",
-            "Web 3 investor and advisor",
-        ],
-        linkedIn: "https://www.linkedin.com/in/domenico-fava-5bb17336/",
-        twitter: "#", // Domenico's Twitter link is missing
+        linkedIn: "https://www.linkedin.com/in/mattweichel/",
+        twitter: "https://twitter.com/_matt_xyz", // Domenico's Twitter link is missing
     },
 ];
 
 
 const About: NextPage = (props) => {
-    const [teamDataToDisplay, setTeamDataToDisplay] = useState(teamDataMobile);
-    // const onFinish = (values: unknown) => {
-    //     console.log("Received values:", values);
-    //     // You can handle form submission logic here
-    // };
-
-    useEffect(() => {
-        // Set the appropriate team data based on viewport size
-        if (window.innerWidth <= 768) {
-            setTeamDataToDisplay(teamDataMobile);
-        } else {
-            setTeamDataToDisplay(teamDataDesktop);
-        }
-
-        // Update the team data when the window is resized
-        window.addEventListener("resize", () => {
-            if (window.innerWidth <= 768) {
-                setTeamDataToDisplay(teamDataMobile);
-            } else {
-                setTeamDataToDisplay(teamDataDesktop);
-            }
-        });
-
-        // Clean up the event listener
-        return () => {
-            window.removeEventListener("resize", () => {});
-        };
-    }, []);
     return (
         <div className="about">
             <div className="about__header">
@@ -271,15 +154,15 @@ const About: NextPage = (props) => {
                 <div className="boxed">
                     <h2 className="heading-1">Meet The Team</h2>
                     <div className="about__team__members">
-                        {teamDataToDisplay.map((member, index) => {
+                        {teamDataDesktop.map((member, index) => {
                             return (
                                 <div
                                     key={index}
                                     className="about__team__members__member"
                                 >
-                                    <img
+                                    <Image
                                         src={member.img}
-                                        alt=""
+                                        alt={member.name}
                                         className="about__team__members__member__img"
                                     />
                                     <h2 className="heading-6">{member.name}</h2>
