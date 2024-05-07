@@ -13,7 +13,6 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import Web3AuthLogin from "../Web3Auth/Web3Auth";
 import { checkLogin } from "@/components/Web3Auth/solanaRPC";
 import ProfileModal from "@/components/Profile/ProfileModal";
-import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 import NavBrand from "@/public/assets/navbrand-full.webp";
@@ -112,144 +111,132 @@ function Navbar() {
     }
   }, [publicKey, displayProfileModal, web3AuthPublicKey]);
 
-    useEffect(() => {
-        if(web3AuthPublicKey == null) {
-            checkLogin().then((res) => {
-                if(res.connected){
-                    console.log("CONNECTED: ", res.account);
-                    setWeb3AuthPublicKey(res.account);
-                }
-            });
-        }
-    }, []);
+  useEffect(() => {
+      if(web3AuthPublicKey == null) {
+          checkLogin().then((res) => {
+              if(res.connected){
+                  console.log("CONNECTED: ", res.account);
+                  setWeb3AuthPublicKey(res.account);
+              }
+          });
+      }
+  }, []);
 
 
-    return (
-        <div className="navbar" >
-            <header className="">
-                <div className="boxed">
-                    <div className="header-content">
-                        <Link className="navbrand" href="/">
-                            <Image className="navbrand-img" src={NavBrand} alt="brand image" />{" "}
-                        </Link>
-                        {/* <div className="header-left">
-                            
-                        </div> */}
+  return (
+    <div className="navbar" >
+      <header className="">
+        <div className="boxed">
+          <div className="header-content">
+            <Link className="navbrand" href="/">
+                <Image className="navbrand-img" src={NavBrand} alt="brand image" />{" "}
+            </Link>
+            {/* <div className="header-left">
+                
+            </div> */}
             <div className="header-right">
               {navLinks.map((link) => {
                 const isActive = pathname === link.to;
-
-                                return (
-                                    <Link
-                                        href={link.to}
-                                        className={
-                                            isActive
-                                                ? "nav-link active-link"
-                                                : "nav-link"
-                                        }
-                                        key={link.name}
-                                    >
-                                        {link.name}
-                                    </Link>
-                                );
-                            })}
-                                {pathname != "/collect-fraction" && !pathname.includes("/product") &&(
-                                    <Link href="/collect-fraction" className="btn">
-                                        Start Collecting
-                                    </Link>
-                                )}
-                                {!buyerProfileExists && pathname != "/" && (
-                                    <button
-                                        className="btn"
-                                        onClick={()=> {
-                                            if(!publicKey && !web3AuthPublicKey) {
-                                                setDisplayLogin(!displayLogin)
-                                            } else{
-                                                setDisplayProfileModal(!displayProfileModal)
-                                            }
-                                        }}
-                                    >
-                                        {!publicKey && !web3AuthPublicKey ? 'Login' : 'Create Profile'}  
-                                    </button>
-                                )}
-                                {!publicKey && !web3AuthPublicKey && (
-                                    <button
-                                        className="btn"
-                                        onClick={()=> {
-                                            setDisplayLogin(!displayLogin)
-                                        }}
-                                    >
-                                        Login 
-                                    </button>
-                                )}
-                                {publicKey && !web3AuthPublicKey &&(
-                                    <CgProfile className="profile-icon" 
-                                        onClick={()=> {
-                                            router.push("/dashboard")
-                                        }}
-                                    />
-                                )}
-                                {web3AuthPublicKey && !publicKey &&( 
-                                    <CgProfile className="profile-icon" 
-                                        onClick={()=> {
-                                            router.push("/dashboard")
-                                        }}
-                                    />
-                                )}
-                        </div>
-                        
-                        <div className="header-container-mob">
-                            <div className="header-left-mob">
-                                <div className="open-header" onClick={toggleNavbar}>
-                                    <span className="material-symbols-outlined">
-                                        <IoMenu
-                                            className="icon-menu"
-                                            width={25}
-                                            height={25}
-                                        />
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="header-center-mob">
-                                <Link className="navbrand-mob" href="/">
-                                    <Image className="navbrand-img" src={Logo} alt="logo" />{" "}
-                                </Link>
-                            </div>
-                            <div className="header-right-mob">
-                                <CgProfile className="profile-icon" 
-                                    onClick={()=> {
-                                        setDisplayLogin(!displayLogin)
-                                    }}
-                                />
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
-            </header>
-            <div
-                className="header-mob padding"
-                style={{ display: navbar ? "block" : "none" }}
-            >
-                <div className="box">
-                    <div className="header-mob-head padding">
-                        <Link className="navbrand" href="/">
-                            <Image className="navbrand-img" src={NavBrand} alt="brand image" />{" "}
-                        </Link>
-                        <div className="header-mob-head-right">
-                            <div
-                                className="close-header"
-                                onClick={toggleNavbar}
-                            >
-                                <span className="material-symbols-outlined">
-                                    <IoClose className="close-icon" />
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="header-mob-body">
-                        {mobileNavLinks.map((link) => {
-                            const isActive = pathname === link.href;
+                return (
+                  <Link
+                      href={link.to}
+                      className={
+                          isActive
+                              ? "nav-link active-link"
+                              : "nav-link"
+                      }
+                      key={link.name}
+                  >
+                      {link.name}
+                  </Link>
+                );
+              })}
+              {pathname != "/collect-fraction" && !pathname.includes("/product") &&(
+                  <Link href="/collect-fraction" className="btn">
+                      Start Collecting
+                  </Link>
+              )}
+              {!buyerProfileExists && pathname != "/" && (
+                  <button
+                    className="btn"
+                    onClick={()=> {
+                      setDisplayProfileModal(!displayProfileModal)
+                    }}
+                  >
+                      Create Profile
+                  </button>
+              )}
+              {!publicKey && !web3AuthPublicKey && (
+                  <button
+                      className="btn"
+                      onClick={()=> {
+                          setDisplayLogin(!displayLogin)
+                      }}
+                  >
+                      Login 
+                  </button>
+              )}
+              {((publicKey && !web3AuthPublicKey) || (web3AuthPublicKey && !publicKey)) && (
+                  <CgProfile className="profile-icon" 
+                      onClick={()=> {
+                          router.push("/dashboard")
+                      }}
+                  />
+              )}
+            </div>
+                    
+            <div className="header-container-mob">
+              <div className="header-left-mob">
+                  <div className="open-header" onClick={toggleNavbar}>
+                      <span className="material-symbols-outlined">
+                          <IoMenu
+                              className="icon-menu"
+                              width={25}
+                              height={25}
+                          />
+                      </span>
+                  </div>
+              </div>
+              <div className="header-center-mob">
+                  <Link className="navbrand-mob" href="/">
+                      <Image className="navbrand-img" src={Logo} alt="logo" />{" "}
+                  </Link>
+              </div>
+              <div className="header-right-mob">
+                  <CgProfile className="profile-icon" 
+                      onClick={()=> {
+                          setDisplayLogin(!displayLogin)
+                      }}
+                  />
+              </div>
+            </div>
+                    
+          </div>
+        </div>
+      </header>
+      <div
+        className="header-mob padding"
+        style={{ display: navbar ? "block" : "none" }}
+      >
+        <div className="box">
+          <div className="header-mob-head padding">
+            <Link className="navbrand" href="/">
+                <Image className="navbrand-img" src={NavBrand} alt="brand image" />{" "}
+            </Link>
+            <div className="header-mob-head-right">
+              <div
+                className="close-header"
+                onClick={toggleNavbar}
+              >
+                <span className="material-symbols-outlined">
+                    <IoClose className="close-icon" />
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="header-mob-body">
+            {mobileNavLinks.map((link) => {
+              const isActive = pathname === link.href;
 
               return (
                 <Link
@@ -336,21 +323,6 @@ function Navbar() {
           />
         </div>
       )}
-      {/* <ToastContainer
-        position="bottom-left"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-        // style={{
-        //     backgroundColor: "#aaaaaa"
-        // }}
-      /> */}
     </div>
   );
 }
