@@ -390,7 +390,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                 <div className="product-details__about__calc__returns">
                                     <p>Expected Net Return</p>
                                     <p className="green">
-                                        {(sliderValue * Number(product!.expectedNetReturn)).toFixed(2)}{" "}{product!.currency}
+                                        {(sliderValue * Number(product!.expectedNetReturn) * 100).toFixed(2)}{" "}{product!.currency}
                                     </p>
                                 </div>
                             </div>

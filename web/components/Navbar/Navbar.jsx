@@ -112,7 +112,8 @@ function Navbar() {
   }, [publicKey, displayProfileModal, web3AuthPublicKey]);
 
   useEffect(() => {
-      if(web3AuthPublicKey == null) {
+      if(web3AuthPublicKey == null && !publicKey) {
+        console.log("CHECKING LOGIN");
           checkLogin().then((res) => {
               if(res.connected){
                   console.log("CONNECTED: ", res.account);
