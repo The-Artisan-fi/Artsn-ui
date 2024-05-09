@@ -39,7 +39,7 @@ export async function POST( request: Request ) {
         // const id = 10817;
         // VARIABLES
         const reference = req.reference;
-        
+        const amount = req.amount;
         const watch = PublicKey.findProgramAddressSync([Buffer.from('watch'),  Buffer.from(reference)], program.programId)[0];
         const listing = PublicKey.findProgramAddressSync([Buffer.from('listing'), watch.toBuffer(), new anchor.BN(id).toBuffer("le", 8)], program.programId)[0];
         const fraction = PublicKey.findProgramAddressSync([Buffer.from('fraction'), listing.toBuffer()], program.programId)[0];
@@ -114,8 +114,10 @@ export async function POST( request: Request ) {
             recentBlockhash: blockhash,
             feePayer: feePayer.publicKey,
         });
-        
-        transaction.add(buyShareIx);
+        for(let i = 0; i < amount ; i++) {
+            console.log('buying share', i);
+            transaction.add(buyShareIx);
+        }
         transaction.partialSign(feePayer);
         const serializedTransaction = transaction.serialize({
             requireAllSignatures: false,

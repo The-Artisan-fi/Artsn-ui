@@ -39,7 +39,7 @@ export async function initProfileTx(key: string) {
   }
 }
 
-export async function buyTx(id: number, reference: string, key: string) {
+export async function buyTx(id: number, reference: string, key: string, amount: number) {
   try{
     const response = await fetch('/api/buy', {
       method: 'POST',
@@ -50,6 +50,7 @@ export async function buyTx(id: number, reference: string, key: string) {
           id: id,
           reference: reference,
           publicKey: key,
+          amount: amount
       })
     })
     const txData = await response.json();

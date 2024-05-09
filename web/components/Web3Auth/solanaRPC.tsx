@@ -167,13 +167,55 @@ export const login = async () => {
 };
 
 export const logout = async () => {
-  if (!web3auth) {
-    uiConsole("web3auth not initialized yet");
-    return;
-  }
+  console.log('logging out')
+  try{
+  const chainConfig = {
+    chainNamespace: CHAIN_NAMESPACES.SOLANA,
+    chainId: "0x3", // Please use 0x1 for Mainnet, 0x2 for Testnet, 0x3 for Devnet
+    rpcTarget: "https://api.devnet.solana.com",
+    displayName: "Solana Devnet",
+    blockExplorer: "https://explorer.solana.com",
+    ticker: "SOL",
+    tickerName: "Solana Token",
+  };
+  const web3auth = new Web3AuthNoModal({
+    clientId,
+    chainConfig,
+    web3AuthNetwork: "sapphire_mainnet",
+  });
+
+
+  const privateKeyProvider = new SolanaPrivateKeyProvider({ config: { chainConfig } });
+
+  const openloginAdapter = new OpenloginAdapter({
+    privateKeyProvider,
+    adapterSettings: {
+      uxMode: "redirect",
+    }
+  });
+  web3auth.configureAdapter(openloginAdapter);
+
+  await web3auth.init();
+
+  const web3authProvider: IProvider | null = await web3auth.connectTo(
+    WALLET_ADAPTERS.OPENLOGIN,
+    {
+      loginProvider: "google",
+    },
+  );
+
+  // if(!web3authProvider) {
+  //   console.log('web3authProvider not initialized yet')
+  //   uiConsole("web3authProvider not initialized yet");
+  //   return;
+  // }
+
   await web3auth.logout();
   
   return true;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 export const loginWithEmail = async (email: string) => {

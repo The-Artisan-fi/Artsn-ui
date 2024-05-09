@@ -37,7 +37,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
         "confirmed"
     );
     const [isLoading, setIsLoading] = useState<boolean>(true);
-
+    const [amount, setAmount] = useState<number>(1);
     const [faqItems, setFaqItems] = useState<Array<FAQ>>();
     const [offChainData, setOffChainData] = useState<OffChainData | undefined>(undefined);
     const [product, setProduct] = useState<Product>();
@@ -69,12 +69,12 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
     async function buyListing() {        
         try {
             if(publicKey && product){
-               const tx = await buyTx(product.id, product.reference, publicKey.toBase58());
+               const tx = await buyTx(product.id, product.reference, publicKey.toBase58(), amount);
                 const signature = await sendTransaction(tx!, connection, {skipPreflight: true,});
                 await toastPromise(signature)
             } 
             if(web3AuthPublicKey !== null && !publicKey && product){
-                const tx = await buyTx(product.id, product.reference, web3AuthPublicKey);
+                const tx = await buyTx(product.id, product.reference, web3AuthPublicKey, amount);
                 const signature = await rpc!.sendTransaction(tx!);
                 await toastPromise(signature)
             }
@@ -319,8 +319,22 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                                 </p>
                                             </div>
                                         </div>
+                                        <div className="product-details__about__calc ">
+                                            <h3 className="heading-6">
+                                                Select the amount of fractions you want to buy
+                                            </h3>
+                                            <p className="body">1 = 100 USDC</p>
+                                            <Slider
+                                                className="product-details__about__calc__range"
+                                                defaultValue={1}
+                                                onChange={(value) => setAmount(value)}
+                                                max={21}
+                                            />
+                                        </div>   
                                     </div>
+                                    
                                     <div className="btn-container" style={{width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                                        
                                         <a 
                                             onClick={
                                             ()=>{
