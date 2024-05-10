@@ -1,16 +1,17 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import '@/styles/DashboardInventory.scss';
 import { FiArrowUpRight } from 'react-icons/fi';
 import dynamic from 'next/dynamic';
+import { decodeProfileData, getTokenAccounts } from '@/components/Protocol/functions';
 const Table  = dynamic(() => import('antd').then((mod) => mod.Table), { ssr: false });
 const Radio  = dynamic(() => import('antd').then((mod) => mod.Radio.Group), { ssr: false });
 const Line = dynamic(() => import('@ant-design/plots').then((mod) => mod.Line), {
   ssr: false,
 });
 import Audemars from "@/public/assets/home/products/Audemars-piguet-Royaloak.webp"
-// import { useWallet } from '@solana/wallet-adapter-react';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 // Graph configurations
 
@@ -192,21 +193,23 @@ const columns = [
 
 const Dashboard = () => {
   const [value4, setValue4] = useState('Weekly');
-  // const { publicKey } = useWallet();
+  const { publicKey } = useWallet();
 
   const onChange4 = ({ target: { value } }) => {
     console.log('radio4 checked', value);
     setValue4(value);
   };
 
-  // useEffect(() => {
-  //   if (publicKey) {
-  //     console.log('decoding profile data')
-  //     decodeProfileData(publicKey).then((data) => {
-  //       console.log('decoded profile data returned', data);
-  //     });
-  //   }
-  // }, [publicKey]);
+  useEffect(() => {
+    if (publicKey) {
+      // decodeProfileData(publicKey).then((data) => {
+      //   console.log('decoded profile data returned', data);
+      // });
+      getTokenAccounts(publicKey).then((data) => {
+        console.log('decoded token accounts returned', data);
+      });
+    }
+  }, [publicKey]);
 
   return (
     <div className="dashboard-inventory">
