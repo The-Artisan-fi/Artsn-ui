@@ -44,6 +44,7 @@ export const fetchProducts = async () => {
                 try {
                     const decode = program.coder.accounts.decode("Listing", account.account.data);
                     // console.log('decode', decode);
+                    console.log('decode', account.account.owner.toBase58());
                     // 
                     // id: BN {negative: 0, words: Array(3), length: 1, red: null}
                     // price: BN {negative: 0, words: Array(3), length: 1, red: null}

@@ -1,6 +1,7 @@
 //@ts-check
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
+const { hostname } = require('os');
 const { composePlugins, withNx } = require('./.nx-helpers/compiled.js');
 
 /**
@@ -27,4 +28,41 @@ const plugins = [
   withNx,
 ];
 
-module.exports = composePlugins(...plugins)(nextConfig);
+// module.exports = composePlugins(...plugins)(nextConfig);
+
+module.exports = {
+  images: {
+    formats: [
+      "image/avif", 
+      "image/webp",
+      "image/jpg",
+      "image/jpeg",
+      "image/png",
+    ],
+    domains: ['https://www.example.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'artisan-solana.s3.eu-central-1.amazonaws.com', //https://artisan-solana.s3.eu-central-1.amazonaws.com
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'example.com',
+        port: '',
+        pathname: '/',
+      },
+      
+      {
+        protocol: 'https',
+        hostname: 'arweave.net',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
+
+  composePlugins: composePlugins(...plugins),
+  ...nextConfig,
+}

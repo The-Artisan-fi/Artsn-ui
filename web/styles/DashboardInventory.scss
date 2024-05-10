@@ -134,6 +134,7 @@
             border-radius: 1rem;
             background-color: transparent;
             border: 1px solid white;
+            cursor: pointer;
           }
         }
       }
@@ -149,13 +150,13 @@
       color: white;
     }
 
-    .ant-table-cell-row-hover {
-      background-color: #18af2d;
-    }
-
-
     .ant-table-tbody > tr.ant-table-row:hover > td {
       background-color: white;
       color: #1e1e22;
+
+      .btn-table {
+        background-color: #1e1e22;
+        color: white;
+      }
     }
   }

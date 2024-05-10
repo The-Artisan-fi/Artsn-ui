@@ -1,3 +1,5 @@
+import { PublicKey, AccountInfo, ParsedAccountData } from "@solana/web3.js";
+
 export type ProductDetails = {
     id: number;
     mint: string;
@@ -83,3 +85,8 @@ export type Image = {
 export type StringKeyValueType = {
     [link: string]: string;
 };
+
+export type ParsedProgramAccounts = {
+    account: AccountInfo<Buffer | ParsedAccountData>;
+    pubkey: PublicKey;
+}

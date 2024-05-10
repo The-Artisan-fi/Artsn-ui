@@ -1,7 +1,8 @@
-import { clusterApiUrl, Connection, PublicKey, Keypair, Transaction, GetProgramAccountsFilter } from "@solana/web3.js";
+import { clusterApiUrl, Connection, PublicKey, Keypair, Transaction, GetProgramAccountsFilter, ParsedAccountData } from "@solana/web3.js";
 import { Program, AnchorProvider, setProvider } from "@coral-xyz/anchor";
 import { IDL, PROGRAM_ID } from "@/components/Utils/idl";
 import { TOKEN_2022_PROGRAM_ID,getTokenMetadata } from "@solana/spl-token";
+import { ParsedProgramAccounts} from "@/helpers/types";
 
 const connection = new Connection(clusterApiUrl("devnet"), {
     commitment: "confirmed",
@@ -116,57 +117,41 @@ export async function getTokenAccounts(key: PublicKey) {
     }
   ];
   const accounts = await connection.getParsedProgramAccounts(
-      TOKEN_2022_PROGRAM_ID, //new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA")
+      TOKEN_2022_PROGRAM_ID,
       {filters: filters}
   );
-  console.log(`Found ${accounts.length} token account(s) for wallet ${wallet}.`);
+  // console.log(`Found ${accounts.length} token account(s) for wallet ${wallet}.`);
   const tokenMetadata = async (mintAddress: string) => {
     const metadata = await getTokenMetadata(
       connection,
       new PublicKey(mintAddress),
       'confirmed'
     );
-    // console.log(`Metadata for token ${mintAddress}:`, metadata);
-
     return metadata;
   } 
-  //   accounts.forEach((account, i) => {
-  //   //Parse the account data
-  //   const parsedAccountInfo:any = account.account.data;
-  //   const mintAddress:string = parsedAccountInfo["parsed"]["info"]["mint"];
-  //   const tokenBalance: number = parsedAccountInfo["parsed"]["info"]["tokenAmount"]["uiAmount"];
-  //   //Log results
-  //   // console.log(`Token Account No. ${i + 1}: ${account.pubkey.toString()}`);
-  //   // console.log(`--Token Mint: ${mintAddress}`);
-  //   // console.log(`--Token Balance: ${tokenBalance}`);
 
-  //   const metadata = tokenMetadata(mintAddress);
+  
 
-  //   return {
-  //     account: account.pubkey,
-  //     mint: mintAddress,
-  //     balance: tokenBalance,
-  //     metadata: metadata
-  //   };
-  // });
-
-  async function details(accountList: any[]) {
+  async function details(accountList: ParsedProgramAccounts[]) {
     const accountDetail = [];
     for(let i = 0; i < accountList.length; i++){
-      const parsedAccountInfo:any = accountList[i].account.data;
+      const parsedAccountInfo = accountList[i].account.data as ParsedAccountData;
       const mintAddress:string = parsedAccountInfo["parsed"]["info"]["mint"];
       const tokenBalance: number = parsedAccountInfo["parsed"]["info"]["tokenAmount"]["uiAmount"];
       const metadata = await tokenMetadata(mintAddress);
-      console.log(`Token Account No. ${i + 1}: ${accounts[i].pubkey.toString()}`);
-      console.log(`--Token Mint: ${mintAddress}`);
-      console.log(`--Token Balance: ${tokenBalance}`);
-      console.log(`--Metadata: ${metadata}`);
 
       accountDetail.push({
-        account: accounts[i].pubkey,
+        account: accounts[i].pubkey.toBase58(),
         mint: mintAddress,
         balance: tokenBalance,
-        metadata: metadata
+        metadata: metadata,
+        key: i + 1,
+        no: i + 1,
+        item: `Item ${i + 1}`,
+        title: metadata?.name?.substring(0, 25) + '...' ?? '',
+        // value: 100 * tokenBalance, format to USD ex. 1,000,000
+        value: (tokenBalance * 100).toLocaleString(),
+        amount: tokenBalance,
       });
     }
 
@@ -177,6 +162,8 @@ export async function getTokenAccounts(key: PublicKey) {
     accounts.map((account) => account)
   );
 
-  console.log('details', accountDetails);
-  return ;
+  const filteredAccounts = accountDetails.filter((account) => account.metadata?.symbol == "ARTSN");
+
+  console.log('details', filteredAccounts);
+  return filteredAccounts;
 }

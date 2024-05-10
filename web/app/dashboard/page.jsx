@@ -1,6 +1,8 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import '@/styles/DashboardInventory.scss';
 import { FiArrowUpRight } from 'react-icons/fi';
 import dynamic from 'next/dynamic';
@@ -166,7 +168,7 @@ const columns = [
     dataIndex: 'value',
     key: 'value',
 
-    render: (text, record) => <p>{`${text}◎`}</p>,
+    render: (text, record) => <p>{`$${text}`}</p>,
   },
 
   {
@@ -183,7 +185,14 @@ const columns = [
 
     render: (text, record) => (
       <div className="dashboard-inventory__body__table__action">
-        <button className="btn-table">See</button>
+        <Link 
+          className="btn-table"
+          style={{ height: '27.5px', justifyContent: 'center', alignItems: 'center', display: 'flex'}}
+          href={`/product/${record.account.toString()}`}
+          target='_blank'
+        >
+          See
+        </Link>
         <button className="btn-table">Buy More</button>
         <button className="btn-table">Trade</button>
       </div>
@@ -193,8 +202,8 @@ const columns = [
 
 const Dashboard = () => {
   const [value4, setValue4] = useState('Weekly');
+  const [fractions, setFractions] = useState([]);
   const { publicKey } = useWallet();
-
   const onChange4 = ({ target: { value } }) => {
     console.log('radio4 checked', value);
     setValue4(value);
@@ -202,11 +211,9 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (publicKey) {
-      // decodeProfileData(publicKey).then((data) => {
-      //   console.log('decoded profile data returned', data);
-      // });
       getTokenAccounts(publicKey).then((data) => {
         console.log('decoded token accounts returned', data);
+        setFractions(data);
       });
     }
   }, [publicKey]);
@@ -282,7 +289,7 @@ const Dashboard = () => {
           size="medium"
           scroll={{ x: 'max-content' }}
           // bordered={true}
-          dataSource={dataSource}
+          dataSource={fractions}
           columns={columns}
           lazy={true}
         />
