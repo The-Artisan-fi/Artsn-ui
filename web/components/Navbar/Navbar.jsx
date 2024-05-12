@@ -103,7 +103,6 @@ function Navbar() {
       return;
     }
     if (publicKey) {
-      console.log('CONNECTED: ', publicKey.toBase58());
       checkBuyerProfile(publicKey.toBase58());
     }
     if (web3AuthPublicKey) {
@@ -113,10 +112,8 @@ function Navbar() {
 
   useEffect(() => {
       if(web3AuthPublicKey == null && !publicKey) {
-        console.log("CHECKING LOGIN");
           checkLogin().then((res) => {
               if(res.connected){
-                  console.log("CONNECTED: ", res.account);
                   setWeb3AuthPublicKey(res.account);
               }
           });

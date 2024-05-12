@@ -1,12 +1,11 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import '@/styles/DashboardInventory.scss';
 import { FiArrowUpRight } from 'react-icons/fi';
+import { fetchProductDetails } from "@/hooks/fetchProductDetails";
 import dynamic from 'next/dynamic';
-import { decodeProfileData, getTokenAccounts } from '@/components/Protocol/functions';
+import { getTokenAccounts } from '@/components/Protocol/functions';
 const Table  = dynamic(() => import('antd').then((mod) => mod.Table), { ssr: false });
 const Radio  = dynamic(() => import('antd').then((mod) => mod.Radio.Group), { ssr: false });
 const Line = dynamic(() => import('@ant-design/plots').then((mod) => mod.Line), {
@@ -14,6 +13,11 @@ const Line = dynamic(() => import('@ant-design/plots').then((mod) => mod.Line), 
 });
 import Audemars from "@/public/assets/home/products/Audemars-piguet-Royaloak.webp"
 import { useWallet } from '@solana/wallet-adapter-react';
+import { buyTx } from "@/components/Protocol/functions";
+import { getListingByMintAddress } from '@/lib/queries';
+import { useLazyQuery } from '@apollo/client';
+import { Connection } from '@solana/web3.js';
+import { toastError, toastPromise } from '@/helpers/toast';
 
 // Graph configurations
 
@@ -60,163 +64,142 @@ const config = {
   },
 };
 
-// table configurations and data
-const dataSource = [
-  {
-    key: 1,
-    no: 1,
-    item: 'Item 1',
-    title: 'Audemars Piguet Royal Oak Extra Thin, 2019',
-    value: 264,
-    amount: 7314,
-  },
-  {
-    key: 2,
-    no: 2,
-    item: 'Item 2',
-    title: 'Audemars Piguet Royal Oak Extra Thin, 2019',
-    value: 492,
-    amount: 2451,
-  },
-  {
-    key: 3,
-    no: 3,
-    item: 'Item 3',
-    title: 'Audemars Piguet Royal Oak Extra Thin, 2019',
-    value: 716,
-    amount: 5963,
-  },
-  {
-    key: 4,
-    no: 4,
-    item: 'Item 4',
-    title: 'Audemars Piguet Royal Oak Extra Thin, 2019',
-    value: 275,
-    amount: 8532,
-  },
-  {
-    key: 5,
-    no: 5,
-    item: 'Item 5',
-    title: 'Audemars Piguet Royal Oak Extra Thin, 2019',
-    value: 809,
-    amount: 4144,
-  },
-  {
-    key: 6,
-    no: 6,
-    item: 'Item 6',
-    title: 'Audemars Piguet Royal Oak Extra Thin, 2019',
-    value: 188,
-    amount: 1360,
-  },
-  {
-    key: 7,
-    no: 7,
-    item: 'Item 7',
-    title: 'Audemars Piguet Royal Oak Extra Thin, 2019',
-    value: 460,
-    amount: 1878,
-  },
-  {
-    key: 8,
-    no: 8,
-    item: 'Item 8',
-    title: 'Audemars Piguet Royal Oak Extra Thin, 2019',
-    value: 892,
-    amount: 8100,
-  },
-  {
-    key: 9,
-    no: 9,
-    item: 'Item 9',
-    title: 'Audemars Piguet Royal Oak Extra Thin, 2019',
-    value: 935,
-    amount: 6213,
-  }
-];
-
-const columns = [
-  {
-    title: '',
-    dataIndex: 'no',
-    key: 'no',
-
-    width: 10,
-  },
-  {
-    title: 'Item',
-    dataIndex: 'item',
-    key: 'item',
-
-    render: (text, record) => (
-      <Image
-        width={40}
-        height={50}
-        src={Audemars}
-        alt="Audemars Piguet Royal Oak Extra Thin, 2019"
-      />
-    ),
-  },
-  {
-    title: 'Title',
-    dataIndex: 'title',
-    key: 'title',
-  },
-  {
-    title: 'Value',
-    dataIndex: 'value',
-    key: 'value',
-
-    render: (text, record) => <p>{`$${text}`}</p>,
-  },
-
-  {
-    title: 'Amount',
-    dataIndex: 'amount',
-    key: 'amount',
-
-    sorter: (a, b) => a.amount - b.amount,
-  },
-  {
-    title: 'Action',
-    dataIndex: 'action',
-    key: 'action',
-
-    render: (text, record) => (
-      <div className="dashboard-inventory__body__table__action">
-        <Link 
-          className="btn-table"
-          style={{ height: '27.5px', justifyContent: 'center', alignItems: 'center', display: 'flex'}}
-          href={`/product/${record.account.toString()}`}
-          target='_blank'
-        >
-          See
-        </Link>
-        <button className="btn-table">Buy More</button>
-        <button className="btn-table">Trade</button>
-      </div>
-    ),
-  },
-];
-
 const Dashboard = () => {
   const [value4, setValue4] = useState('Weekly');
-  const [fractions, setFractions] = useState([]);
-  const { publicKey } = useWallet();
+  const [fractions] = useState([]);
+  const [tokenAccounts, setTokenAccounts] = useState([]);
+  const { publicKey, sendTransaction } = useWallet();
+  const [variables, setVariables] = useState({ mintAddress: '' });
+  const [queryItem, setQueryItem] = useState('');
+  const [listingAddress, setListingAddress] = useState('');
   const onChange4 = ({ target: { value } }) => {
     console.log('radio4 checked', value);
     setValue4(value);
   };
 
-  useEffect(() => {
-    if (publicKey) {
-      getTokenAccounts(publicKey).then((data) => {
-        console.log('decoded token accounts returned', data);
-        setFractions(data);
+  const [getListing, { loading, error, data }] = useLazyQuery(getListingByMintAddress , {variables});
+  if(!loading && data != undefined && listingAddress == ''){
+    if(data.listings.length > 0 && fractions.filter((item) => item.associatedId == data.listings[0].associatedId).length == 0){
+      fractions.push({
+        ...queryItem,
+        associatedId: data.listings[0].associatedId
       });
+      // console.log('pushing fraction data', fractions);
+      setListingAddress(data.listings[0].associatedId);
     }
-  }, [publicKey]);
+  }
+  if(!loading && error != undefined){
+      console.log("error", error);
+  }
+
+  async function getListingAddress(data){
+    setVariables({mintAddress: data.mint});
+    await getListing();
+    return;
+  }
+
+  const columns = [
+    {
+      title: '',
+      dataIndex: 'no',
+      key: 'no',
+  
+      width: 10,
+    },
+    {
+      title: 'Item',
+      dataIndex: 'item',
+      key: 'item',
+  
+      render: (text, record) => (
+        <Image
+          width={40}
+          height={50}
+          src={Audemars}
+          alt="Audemars Piguet Royal Oak Extra Thin, 2019"
+        />
+      ),
+    },
+    {
+      title: 'Title',
+      dataIndex: 'title',
+      key: 'title',
+    },
+    {
+      title: 'Value',
+      dataIndex: 'value',
+      key: 'value',
+  
+      render: (text, record) => <p>{`$${text}`}</p>,
+    },
+  
+    {
+      title: 'Amount',
+      dataIndex: 'amount',
+      key: 'amount',
+  
+      sorter: (a, b) => a.amount - b.amount,
+    },
+    {
+      title: 'Action',
+      dataIndex: 'action',
+      key: 'action',
+  
+      render: (text, record) => (
+        <div className="dashboard-inventory__body__table__action">
+          <button
+            className="btn-table"
+            onClick={async () => {
+              // console.log('record', record);
+              window.location.href = `/product/${record.associatedId}`;
+            }}
+          >
+            See
+          </button>
+          <button className="btn-table"
+            onClick={async () => {
+              buyMore(record);
+            }}
+          >Buy More</button>
+          <button className="btn-table" disabled={true}>Trade</button>
+        </div>
+      ),
+    },
+  ];
+
+  async function buyMore(product) {
+    try{
+        const data = await fetchProductDetails(product.associatedId);
+        // console.log('data', data)
+        const connection = new Connection(process.env.NEXT_PUBLIC_HELIUS_DEVNET, 'confirmed');
+        if(publicKey && data){
+          const tx = await buyTx(data.id, data.reference, publicKey.toBase58(), 1);
+           const signature = await sendTransaction(tx, connection, {skipPreflight: true,});
+           await toastPromise(signature)
+       } 
+    } catch (error) {
+        toastError(`Error: ${error.message}`);
+    };
+  };
+  const getTokens = async () => {
+    // only execute if tokenAccounts is empty
+    if (tokenAccounts.length == 0) {
+      const data = await getTokenAccounts(publicKey);
+      // console.log('data', data)
+      setTokenAccounts(data);
+      for(let i = 0; i < data.length; i++){
+        setQueryItem(data[i]);
+        await getListingAddress(data[i]);
+        setListingAddress('');
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (publicKey && tokenAccounts.length == 0) {
+      getTokens();
+    }
+  }, [publicKey, tokenAccounts]);
 
   return (
     <div className="dashboard-inventory">
@@ -278,22 +261,24 @@ const Dashboard = () => {
           </p>
         </div>
       </div>
-      <div className="dashboard-inventory__body">
-        <Table
-          style={{
-            border: '1px solid #3d3d3d',
-            borderRadius: '10px',
-            overflow: 'hidden',
-            backgroundColor: '#1e1e22',
-          }}
-          size="medium"
-          scroll={{ x: 'max-content' }}
-          // bordered={true}
-          dataSource={fractions}
-          columns={columns}
-          lazy={true}
-        />
-      </div>
+      {fractions.length > 0 && (
+        <div className="dashboard-inventory__body">
+          <Table
+            style={{
+              border: '1px solid #3d3d3d',
+              borderRadius: '10px',
+              overflow: 'hidden',
+              backgroundColor: '#1e1e22',
+            }}
+            size="medium"
+            scroll={{ x: 'max-content' }}
+            // bordered={true}
+            dataSource={fractions}
+            columns={columns}
+            lazy={true}
+          />
+        </div>
+      )}
     </div>
   );
 };

@@ -53,9 +53,11 @@ export const fetchProducts = async () => {
                     // shareSold: 0
                     // startingTime: BN {negative: 0, words: Array(2), length: 2, red: null}
                     // watch: PublicKey {_bn: BN}
-                    console.log('')
+                    const fraction = PublicKey.findProgramAddressSync([Buffer.from('fraction'), account.pubkey.toBuffer()], program.programId)[0];
+                    console.log('mintAddress', fraction.toString());
                     return {
                         accountPubkey: account.pubkey.toBase58(),
+                        mintAddress: fraction.toBase58(),
                         ...decode
                     };
                 } catch (error) {

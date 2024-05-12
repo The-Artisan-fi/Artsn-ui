@@ -44,8 +44,8 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
     const [images, setImages] = useState<Array<Image>>();
     const [isMobile, setIsMobile] = useState(true);
     const [solanaUrl, setSolanaUrl] = useState<URL>();
-    const [refKey, setRefKey] = useState<string>();
     const [displayQr, setDisplayQr] = useState<boolean>(false);
+    const [refKey, setRefKey] = useState<string | null>(null);
     const [displayLoginModal, setDisplayLoginModal] = useState<boolean>(false);
     const [sliderValue, setSliderValue] = useState<number>(30);
     // const [displayProfileModal, setDisplayProfileModal] = useState<boolean>(false);

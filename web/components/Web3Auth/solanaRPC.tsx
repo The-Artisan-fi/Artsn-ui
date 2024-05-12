@@ -100,7 +100,6 @@ export const checkLogin = async () => {
     await web3auth.init();
   
   if (web3auth.connected) {
-    console.log('web3auth connected')
     const rpc = new SolanaRpc(web3auth.provider!);
     const account = await rpc.getAccounts();
     return {
@@ -109,7 +108,6 @@ export const checkLogin = async () => {
       rpc: rpc,
     };
   } else {
-    console.log('web3auth not connected', web3auth)
     return {
       connected: false,
       rpc: null,

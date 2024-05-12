@@ -89,16 +89,12 @@ export async function fetchBuyerProfile(key: PublicKey) {
 
 export async function decodeProfileData(key: PublicKey) {
     try {
-        console.log('key', key.toBase58());
         const profile = await fetchBuyerProfile(key);
-        console.log('profile returned', profile);
-        console.log('profile data', profile);
         const decodedProfile = program.coder.accounts.decode(
             "Profile",
             profile.data
         );
-        console.log('profile', decodedProfile);
-        return profile;
+        return decodedProfile;
     } catch (error) {
       console.error('Error decoding data', error);
     }
@@ -139,7 +135,7 @@ export async function getTokenAccounts(key: PublicKey) {
       const mintAddress:string = parsedAccountInfo["parsed"]["info"]["mint"];
       const tokenBalance: number = parsedAccountInfo["parsed"]["info"]["tokenAmount"]["uiAmount"];
       const metadata = await tokenMetadata(mintAddress);
-
+      
       accountDetail.push({
         account: accounts[i].pubkey.toBase58(),
         mint: mintAddress,
@@ -164,6 +160,5 @@ export async function getTokenAccounts(key: PublicKey) {
 
   const filteredAccounts = accountDetails.filter((account) => account.metadata?.symbol == "ARTSN");
 
-  console.log('details', filteredAccounts);
   return filteredAccounts;
 }
