@@ -261,7 +261,7 @@ const Dashboard = () => {
           </p>
         </div>
       </div>
-      {fractions.length > 0 && (
+      {fractions.length > 0 ? (
         <div className="dashboard-inventory__body">
           <Table
             style={{
@@ -277,6 +277,29 @@ const Dashboard = () => {
             columns={columns}
             lazy={true}
           />
+        </div>
+      ) : (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            gap: '2rem',
+            marginTop: '5rem',
+          }}
+        >
+          <p className="caption-1">No fractions found</p>
+            <button
+                className="btn"
+                onClick={() => {
+                  window.location.href = '/collect-fraction';
+                }
+              }
+            >
+              Start Collecting
+            </button>
         </div>
       )}
     </div>
