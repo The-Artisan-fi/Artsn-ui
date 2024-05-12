@@ -16,7 +16,8 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { buyTx } from "@/components/Protocol/functions";
 import { getListingByMintAddress } from '@/lib/queries';
 import { useLazyQuery } from '@apollo/client';
-import { Connection } from '@solana/web3.js';
+import { Connection, PublicKey } from '@solana/web3.js';
+import { checkLogin } from "@/components/Web3Auth/solanaRPC";
 import { toastError, toastPromise } from '@/helpers/toast';
 
 // Graph configurations
@@ -69,6 +70,8 @@ const Dashboard = () => {
   const [fractions] = useState([]);
   const [tokenAccounts, setTokenAccounts] = useState([]);
   const { publicKey, sendTransaction } = useWallet();
+  const [web3AuthPublicKey, setWeb3AuthPublicKey] = useState(null);
+  const [rpc, setRpc] = useState(null);
   const [variables, setVariables] = useState({ mintAddress: '' });
   const [queryItem, setQueryItem] = useState('');
   const [listingAddress, setListingAddress] = useState('');
@@ -176,15 +179,19 @@ const Dashboard = () => {
           const tx = await buyTx(data.id, data.reference, publicKey.toBase58(), 1);
            const signature = await sendTransaction(tx, connection, {skipPreflight: true,});
            await toastPromise(signature)
-       } 
+        } else if(web3AuthPublicKey && data){ 
+          const tx = await buyTx(data.id, data.reference, web3AuthPublicKey, 1);
+          const signature = await rpc.sendTransaction(tx); 
+          await toastPromise(signature)
+        }
     } catch (error) {
         toastError(`Error: ${error.message}`);
     };
   };
-  const getTokens = async () => {
+  const getTokens = async (key) => {
     // only execute if tokenAccounts is empty
     if (tokenAccounts.length == 0) {
-      const data = await getTokenAccounts(publicKey);
+      const data = await getTokenAccounts(key);
       // console.log('data', data)
       setTokenAccounts(data);
       for(let i = 0; i < data.length; i++){
@@ -200,6 +207,24 @@ const Dashboard = () => {
       getTokens();
     }
   }, [publicKey, tokenAccounts]);
+
+  useEffect(() => {
+    if (publicKey && tokenAccounts.length == 0) {
+      getTokens();
+    } else {
+        checkLogin().then((res) => {
+          if(res){
+              if(res.account){
+                  setWeb3AuthPublicKey(new PublicKey(res.account));
+              }
+              if(res.rpc !== null){
+                  setRpc(res.rpc);
+              }
+          }
+      });
+    }
+  }, []);
+
 
   return (
     <div className="dashboard-inventory">

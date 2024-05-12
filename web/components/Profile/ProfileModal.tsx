@@ -126,37 +126,37 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose }) =
     }
 
     async function createProfile(key: string) {
-        // if(fileList.length < 1){
-        //     return;
-        // }
-        // // convert newFileList to a Blob
-        // const fileListBlob = fileList.map((file: { originFileObj: Blob; type: string; }) => {
-        //     return new Blob([file.originFileObj], { type: file.type });
-        // });
-        // await trigger({ files: fileListBlob });
+        if(fileList.length < 1){
+            return;
+        }
+        // convert newFileList to a Blob
+        const fileListBlob = fileList.map((file: { originFileObj: Blob; type: string; }) => {
+            return new Blob([file.originFileObj], { type: file.type });
+        });
+        await trigger({ files: fileListBlob });
 
         initProfile(key);
 
-        // addUser({
-        //     variables: {
-        //         fullName: profile.fullName,
-        //         userName: profile.userName,
-        //         email: profile.email,
-        //         wallet: publicKey ? publicKey.toBase58() : web3AuthPublicKey,
-        //         currencyPreference: '$USD',
-        //         // @ts-expect-error - fileList is not empty
-        //         profileImg: `https://artisan-solana.s3.eu-central-1.amazonaws.com/${publicKey ? publicKey.toBase58() : web3AuthPublicKey}.${fileList.length > 0 ? fileList[0].name.split('.').pop() : ''}`
-        //     }
-        // });
-        // {!loading && !error && data && (
-        //     console.log('Submission success!', data)
-        // )}
-        // {error && (
-        //     console.log('Error submitting', error)
-        // )}
-        // {loading && (
-        //     console.log('Submitting...')
-        // )}
+        addUser({
+            variables: {
+                fullName: profile.fullName,
+                userName: profile.userName,
+                email: profile.email,
+                wallet: publicKey ? publicKey.toBase58() : web3AuthPublicKey,
+                currencyPreference: '$USD',
+                // @ts-expect-error - fileList is not empty
+                profileImg: `https://artisan-solana.s3.eu-central-1.amazonaws.com/${publicKey ? publicKey.toBase58() : web3AuthPublicKey}.${fileList.length > 0 ? fileList[0].name.split('.').pop() : ''}`
+            }
+        });
+        {!loading && !error && data && (
+            console.log('Submission success!', data)
+        )}
+        {error && (
+            console.log('Error submitting', error)
+        )}
+        {loading && (
+            console.log('Submitting...')
+        )}
     }
 
     useEffect(() => {
@@ -199,7 +199,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose }) =
                             </p>
                         </div>
                     </div>
-                    {/* <div className="profile">
+                    <div className="profile">
                         <div className="profile__image-upload">
                             <ImgCrop rotationSlider>
                                 <Upload
@@ -249,7 +249,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose }) =
                                 />
                             </div>
                         </div>
-                    </div> */}
+                    </div> 
                     <div className="login-container">
                         <button className="btn-primary" onClick={() => createProfile(publicKey ? publicKey!.toBase58() : web3AuthPublicKey!)}>
                             Create Profile

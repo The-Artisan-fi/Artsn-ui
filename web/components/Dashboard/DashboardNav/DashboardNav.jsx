@@ -10,7 +10,7 @@ import { LuBell } from 'react-icons/lu';
 import { LuBellDot } from 'react-icons/lu';
 import { useLazyQuery } from "@apollo/client";
 import { userProfileBasic } from "@/lib/queries";
-
+import { checkLogin } from "@/components/Web3Auth/solanaRPC";
 const DashboardNav = () => {
   const [open, setOpen] = useState(false);
   const { publicKey } = useWallet();
@@ -49,11 +49,20 @@ const DashboardNav = () => {
   );
 
   useEffect(() => {
-    if(publicKey) {
+    if(publicKey){
       setVariables({wallet: publicKey.toBase58()});
       getDetails();
+    } else {
+        checkLogin().then((res) => {
+          if(res){
+            if(res.account){
+              setVariables({wallet: res.account});
+              getDetails();
+            }
+          }
+      });
     }
-  }, [publicKey]);
+  }, []);
 
   return (
     <div className="dashboard-nav">

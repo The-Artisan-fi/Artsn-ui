@@ -108,6 +108,12 @@ function Navbar() {
     if (web3AuthPublicKey) {
       checkBuyerProfile(web3AuthPublicKey);
     }
+    if(!displayProfileModal && publicKey){
+      checkBuyerProfile(publicKey.toBase58());
+    }
+    if(!displayProfileModal && web3AuthPublicKey){
+      checkBuyerProfile(web3AuthPublicKey);
+    }
   }, [publicKey, displayProfileModal, web3AuthPublicKey]);
 
   useEffect(() => {
@@ -317,6 +323,7 @@ function Navbar() {
             showModal={displayProfileModal}
             handleClose={() => {
               setDisplayProfileModal(false);
+
             }}
           />
         </div>
