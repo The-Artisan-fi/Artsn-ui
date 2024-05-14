@@ -145,30 +145,26 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
             expectedNetReturn: offChainData!.expectedNetReturn,
             offerViews: parseInt(offChainData!.offerViews),
             investUrl: "#",
-            description: offChainData!.description,
             gallery: offChainData!.images,
+            about: offChainData!.about,
         }
 
         const faq_items = [
             {
                 key: "1",
-                question: "Basic Info",
-                answer: offChainData!.basicInfo,
+                question: "About this model",
+                answer: offChainData!.about,
             },
             {
                 key: "2",
-                question: "Product Description",
-                answer: offChainData!.description,
+                question: "Certificate of Authenticity",
+                answer: "",
             },
             {
                 key: "3",
-                question: "Certificate of Authenticity",
-                answer: "Contrary to popular belief, Lorem Ipsum is not simply random text.",
-            },
-            {
-                key: "4",
                 question: "Asset Details",
-                answer: offChainData!.assetDetails,
+                // format asset details so that it is readable, breaking at /n
+                answer: offChainData!.assetDetails.replace(/\n/g, "<br />"),
             },
         ]
         
@@ -252,6 +248,50 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                         showBullets={true}
                                         items={images!}
                                     />
+
+                                    <div style={{display: 'flex', flexDirection:'column', 
+                                        justifyContent: 'center', alignItems: 'center', 
+                                        width: '100%', marginTop: '1rem'
+                                    }}>
+                                        Select Amount
+                                        <div style={{display: 'flex', flexDirection:'row'}}>
+                                            <button
+                                                className="btn"
+                                                onClick={() => {
+                                                    if(amount > 1){
+                                                        setAmount(amount - 1);
+                                                    }
+                                                }}
+                                            >
+                                                -
+                                            </button>
+                                            <input
+                                                type="string" 
+                                                // do not allow user to input amount or use arrows
+                                                value={amount} 
+                                                style={{
+                                                    width: 'auto',
+                                                    textAlign: 'center',
+                                                    backgroundColor: 'transparent',
+                                                    border: 'none',
+                                                    // borderBottom: '1px solid #fff',
+                                                    color: '#fff',
+                                                    fontSize: '1.5rem',
+                                                    fontWeight: 700
+                                                }}
+                                            />
+                                            <button
+                                                className="btn"
+                                                onClick={() => {
+                                                    if(amount < product!.fractionLeft){
+                                                        setAmount(amount + 1);
+                                                    }
+                                                }}
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div className="product-details__hero__info">
@@ -280,9 +320,9 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                                 </p>
                                             </div>
                                             <div className="fraction-left">
-                                                <p className="body">Market Value</p>
+                                                <p className="body">Price</p>
                                                 <p className="heading-2 w-700">
-                                                    {product!.marketValue} €
+                                                    {product!.price} €
                                                 </p>
                                             </div>
                                         </div>
@@ -320,16 +360,17 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                             </div>
                                         </div>
                                         <div className="product-details__about__calc ">
-                                            <h3 className="heading-6">
-                                                Select the amount of fractions you want to buy
-                                            </h3>
-                                            <p className="body">1 = 100 USDC</p>
-                                            <Slider
+                                            {/* <h3 className="heading-6">
+                                                Based on past performance, you will earn {amount * product!.price * Number (product!.pastReturns)}
+                                            </h3> */}
+                                            <p className="body">Based on past performance, you will earn ${amount * product!.price * Number (product!.pastReturns)}</p>
+                                            {/* <p className="body">Amount: </p> */}
+                                            {/* <Slider
                                                 className="product-details__about__calc__range"
                                                 defaultValue={1}
                                                 onChange={(value) => setAmount(value)}
                                                 max={21}
-                                            />
+                                            /> */}
                                         </div>   
                                     </div>
                                     
@@ -384,13 +425,27 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                             key={item.key}
                                             header={item.question}
                                         >
-                                            <p className="body white">{item.answer}</p>
+                                            <p className="body white" style={{
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                
+                                                alignContent: "center",
+                                            }}>
+                                                <span
+                                                    style={{
+                                                        lineBreak: "anywhere",
+                                                    }}
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: item.answer,
+                                                    }}
+                                                />
+                                            </p>
                                         </Panel>
                                     ))}
                                 </Collapse>
                             </div>
 
-                            {/* net return calculations */}
+                            {/* net return calculations
                             <div className="product-details__about__calc ">
                                 <h3 className="heading-6">
                                     Calculate your Earning Potential
@@ -407,7 +462,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                         {(sliderValue * Number(product!.expectedNetReturn) * 100).toFixed(2)}{" "}{product!.currency}
                                     </p>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
 

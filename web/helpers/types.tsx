@@ -19,13 +19,12 @@ export type OffChainData = {
     pastReturns: string;
     earningPotential: string;
     earningPotentialDuration: string;
-    basicInfo: string;
     currency: string;
-    description: string;
     model: string;
     offerViews: string;
     sold: string;
     total: string;
+    about: string;
 }
 
 export type OnChainData = {
@@ -66,8 +65,8 @@ export type Product = {
     expectedNetReturn: string;
     offerViews: number;
     investUrl: string;
-    description: string;
     gallery: string[];
+    about: string;
 }
 
 export type FAQ = {

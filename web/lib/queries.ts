@@ -15,14 +15,13 @@ export const listing = gql`
             images
             marketValue
             pastReturns
-            basicInfo
             currency
-            description
             model
             offerViews
             sold
             total
             mintAddress
+            about
         }
     }
     `;
