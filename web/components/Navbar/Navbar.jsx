@@ -52,6 +52,10 @@ function Navbar() {
     //     name: "FAQs",
     // },
     {
+      to: '/collect-fraction',
+      name: 'Fragment'
+    },
+    {
       to: '/about',
       name: 'About Us',
     },
@@ -75,6 +79,10 @@ function Navbar() {
       name: 'FAQs',
     },
     {
+      to: '/collect-fraction',
+      name: 'Fragment'
+    },
+    {
       to: '/about',
       name: 'About Us',
     },
@@ -92,7 +100,12 @@ function Navbar() {
         }),
       });
       const profile = await response.json();
-      setBuyerProfileExists(profile.profile);
+      console.log('profile***', profile.profile)
+      if(profile.profile != false) {
+        setBuyerProfileExists(profile.profile);
+      } else {
+        setDisplayProfileModal(true);
+      }
     } catch (error) {
       console.error('Error sending transaction', error);
     }
@@ -108,13 +121,13 @@ function Navbar() {
     if (web3AuthPublicKey) {
       checkBuyerProfile(web3AuthPublicKey);
     }
-    if(!displayProfileModal && publicKey){
-      checkBuyerProfile(publicKey.toBase58());
-    }
-    if(!displayProfileModal && web3AuthPublicKey){
-      checkBuyerProfile(web3AuthPublicKey);
-    }
-  }, [publicKey, displayProfileModal, web3AuthPublicKey]);
+    // if(!displayProfileModal && publicKey){
+    //   checkBuyerProfile(publicKey.toBase58());
+    // }
+    // if(!displayProfileModal && web3AuthPublicKey){
+    //   checkBuyerProfile(web3AuthPublicKey);
+    // }
+  }, [publicKey, web3AuthPublicKey]);
 
   useEffect(() => {
       if(web3AuthPublicKey == null && !publicKey) {
@@ -155,12 +168,9 @@ function Navbar() {
                   </Link>
                 );
               })}
-              {pathname != "/collect-fraction" && !pathname.includes("/product") &&(
-                  <Link href="/collect-fraction" className="btn">
-                      Start Collecting
-                  </Link>
-              )}
-              {!buyerProfileExists && pathname != "/" && (
+              {(!buyerProfileExists && publicKey && pathname != "/") || 
+                (!buyerProfileExists && web3AuthPublicKey && pathname != "/") && 
+                (
                   <button
                     className="btn"
                     onClick={()=> {
@@ -183,7 +193,11 @@ function Navbar() {
               {((publicKey && !web3AuthPublicKey) || (web3AuthPublicKey && !publicKey)) && (
                   <CgProfile className="profile-icon" 
                       onClick={()=> {
+                        if(buyerProfileExists){
                           router.push("/dashboard")
+                        } else {
+                          setDisplayProfileModal(true)
+                        }
                       }}
                   />
               )}
@@ -323,7 +337,14 @@ function Navbar() {
             showModal={displayProfileModal}
             handleClose={() => {
               setDisplayProfileModal(false);
-
+            }}
+            handleCloseThenCheck={() => {
+              setDisplayProfileModal(false);
+              if(publicKey){
+                checkBuyerProfile(publicKey.toBase58());
+              } else if(web3AuthPublicKey){
+                checkBuyerProfile(web3AuthPublicKey);
+              }
             }}
           />
         </div>
