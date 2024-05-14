@@ -1,18 +1,25 @@
 "use client"
+import Image from "next/image";
 import type { NextPage } from "next";
-import { useState, useEffect } from "react";
 import "@/styles/About.scss";
-// import { Form, Input } from "antd";
 
 import { FaLinkedin, FaTwitter } from "react-icons/fa";
 
 import PartnersMarque from "@/components/PartnersMarque/PartnersMarque";
+import Renato from "@/public/assets/about/renato.webp";
+import Leonardo from "@/public/assets/about/leonardo.webp";
+import Brian from "@/public/assets/about/brian.png";
+import Paolo from "@/public/assets/about/paolo.webp";
+import Craig from "@/public/assets/about/craig.jpg";
+import Macarena from "@/public/assets/about/macarena.webp";
+import Domenico from "@/public/assets/about/domenico.webp";
+import Matt from "@/public/assets/about/matt.jpeg";
 
 const teamDataDesktop = [
     {
         name: "Renato Capizzi",
         title: "CEO & Founder",
-        img: "/assets/about/renato.webp",
+        img: Renato,
         about: [
             "The brain behind the idea",
             "8+ years of management experience.",
@@ -24,117 +31,109 @@ const teamDataDesktop = [
     {
         name: "Leonardo Donatacci",
         title: "CTO",
-        img: "/assets/about/leonardo.webp",
-        about: ["Solana Specialist", "Teacher at Web3 builder alliance"],
+        img: Leonardo,
+        about: [
+            "Solana Specialist",
+            "Senior Protocol & Smart Contract Developer", 
+            "Teacher & Educator at Web3 builder alliance"
+        ],
         linkedIn: "#", // Leonardo's LinkedIn link is missing
         twitter: "https://twitter.com/L0STE_", // Adding Leonardo's Twitter link
     },
     {
-        name: "Paolo Piana",
-        title: "CFO ",
-        img: "/assets/about/paolo.webp",
+        name: "Brian Frederiksen",
+        title: "COO",
+        img: Brian,
         about: [
+            "Managing Partner - Monaco Foundry",
+            "CEO - WEOPTIT", 
+            "Senior Government Advisor - Finland", 
+            "Global Head of Business Development - IBM Watson", 
+            "Chief Strategy & Operating Officer - Merck & Co Healthcare Services",
+        ],
+        linkedIn: "https://www.linkedin.com/in/brianfrederiksen/",
+        twitter: "#", 
+    },
+    {
+        name: "Paolo Piana",
+        title: "Lead UX/UI Designer ",
+        img: Paolo,
+        about: [    
             "Web3 Marketer & UX Designer",
-            "2y Web3 full time (SMEs and DFINITY Foundation)",
-            "Bachelor in BA and MSc in Management of Innovation & Entrepreneurship",
+            "Web3 full time (SMEs and DFINITY Foundation)",
         ],
         linkedIn: "https://www.linkedin.com/in/paolo-piana/",
         twitter: "https://twitter.com/pinoweb3",
     },
-
+    {
+        name: "Craig Pollock",
+        title: "F1 Ambassador",
+        img: Craig,
+        about: [
+            "Founding Partner - F1 - Formula Equal (F=)",
+            "Partner and Senior Advisor - Monaco Foundry",
+            "Founder & Chairman - Pure Corporation Sa - F1 Hybrid Power Unit Design And Development",
+            "Founder - PK Racing IndyCar",
+            "Co-Founder - Stellar Management Ltd. Managing Jacques Villeneuve, Ayrton Senna Foundation rights, Prost rights",
+        ],
+        linkedIn: "https://www.linkedin.com/in/craig-pollock-538a9412/",
+        twitter: "#",
+    },
+    {
+        name: "Macarena Segura",
+        title: "Regulatory & Strategy Lead",
+        img: Macarena,
+        about: [
+            "International Fintech Lawyer",
+            "Blockchain, RegTech, Cybersecurity, IDV, Crypto Assets, Web3",
+            "Regulatory Supervisor - Bank de España",
+            "Regulatory Advisory Fintech & Digital Assets - KPMG",
+            "Regulatory Advisory Fintech & Digital Assets - PwC"
+        ],
+        linkedIn: "https://www.linkedin.com/in/macarena-linaza-segura/",
+        twitter: "#", // Macarena's Twitter link is missing
+    },
+    // {
+    //     name: "Simone Leonardi",
+    //     title: "Tax & Fiscal Expert",
+    //     img: simone,
+    //     about: [
+    //         "National and Internationl Fiscal Expert",
+    //         "International Corporate Tax Senior Manager - KPMG",
+    //         "Director - Fiduciaria Antonini",
+    //         "Member - Fiscal Association",
+    //         "Member - Register of Accountant Trustees Ticino Canton", 
+    //     ],
+    //     linkedIn: "https://www.linkedin.com/in/simone-leonardi-a6a13a12/",
+    //     twitter: "#", // Macarena's Twitter link is missing
+    // },
     {
         name: "Domenico Fava",
-        title: "Legal Advisor & Data Protection Officer",
-        img: "/assets/about/domenico.webp",
+        title: "Identity Verification & Data Protection",
+        img: Domenico,
         about: [
-            "Legal expert for several entities;",
-            "Certified data protection officer, with consolidated experience;",
+            "Legal expert for several entities",
+            "Certified data protection officer",
             "Web 3 investor and advisor",
         ],
         linkedIn: "https://www.linkedin.com/in/domenico-fava-5bb17336/",
         twitter: "#", // Domenico's Twitter link is missing
     },
-];
-
-// teamData array with the original order
-const teamDataMobile = [
     {
-        name: "Renato Capizzi",
-        title: "CEO & Founder",
-        img: "/assets/about/renato.webp",
+        name: "Matt Weichel",
+        title: "Full Stack Developer",
+        img: Matt,
         about: [
-            "The brain behind the idea",
-            "8+ years of management experience.",
-            "Cryptocurrency trader",
+            "Full Stack Developer on Solana",
+            "Swiss Lacrosse U20 National Team Coach",
         ],
-        linkedIn: "https://www.linkedin.com/in/renatocapizzi/",
-        twitter: "https://twitter.com/Capiz92",
-    },
-    {
-        name: "Leonardo Donatacci",
-        title: "CTO",
-        img: "/assets/about/leonardo.webp",
-        about: ["Solana Specialist", "Teacher at Web3 builder alliance"],
-        linkedIn: "#", // Leonardo's LinkedIn link is missing
-        twitter: "https://twitter.com/L0STE_", // Adding Leonardo's Twitter link
-    },
-    {
-        name: "Paolo Piana",
-        title: "CFO ",
-        img: "/assets/about/paolo.webp",
-        about: [
-            "Web3 Marketer & UX Designer",
-            "2y Web3 full time (SMEs and DFINITY Foundation)",
-            "Bachelor in BA and MSc in Management of Innovation & Entrepreneurship",
-        ],
-        linkedIn: "https://www.linkedin.com/in/paolo-piana/",
-        twitter: "https://twitter.com/pinoweb3",
-    },
-
-    {
-        name: "Domenico Fava",
-        title: "Legal Advisor & Data Protection Officer",
-        img: "/assets/about/domenico.webp",
-        about: [
-            "Legal expert for several entities;",
-            "Certified data protection officer, with consolidated experience;",
-            "Web 3 investor and advisor",
-        ],
-        linkedIn: "https://www.linkedin.com/in/domenico-fava-5bb17336/",
-        twitter: "#", // Domenico's Twitter link is missing
+        linkedIn: "https://www.linkedin.com/in/mattweichel/",
+        twitter: "https://twitter.com/_matt_xyz", // Domenico's Twitter link is missing
     },
 ];
 
 
 const About: NextPage = (props) => {
-    const [teamDataToDisplay, setTeamDataToDisplay] = useState(teamDataMobile);
-    // const onFinish = (values: unknown) => {
-    //     console.log("Received values:", values);
-    //     // You can handle form submission logic here
-    // };
-
-    useEffect(() => {
-        // Set the appropriate team data based on viewport size
-        if (window.innerWidth <= 768) {
-            setTeamDataToDisplay(teamDataMobile);
-        } else {
-            setTeamDataToDisplay(teamDataDesktop);
-        }
-
-        // Update the team data when the window is resized
-        window.addEventListener("resize", () => {
-            if (window.innerWidth <= 768) {
-                setTeamDataToDisplay(teamDataMobile);
-            } else {
-                setTeamDataToDisplay(teamDataDesktop);
-            }
-        });
-
-        // Clean up the event listener
-        return () => {
-            window.removeEventListener("resize", () => {});
-        };
-    }, []);
     return (
         <div className="about">
             <div className="about__header">
@@ -155,15 +154,15 @@ const About: NextPage = (props) => {
                 <div className="boxed">
                     <h2 className="heading-1">Meet The Team</h2>
                     <div className="about__team__members">
-                        {teamDataToDisplay.map((member, index) => {
+                        {teamDataDesktop.map((member, index) => {
                             return (
                                 <div
                                     key={index}
                                     className="about__team__members__member"
                                 >
-                                    <img
+                                    <Image
                                         src={member.img}
-                                        alt=""
+                                        alt={member.name}
                                         className="about__team__members__member__img"
                                     />
                                     <h2 className="heading-6">{member.name}</h2>
@@ -182,20 +181,24 @@ const About: NextPage = (props) => {
                                     </ul>
 
                                     <div className="about__team__members__member__socials">
-                                        <a
-                                            href={member.linkedIn}
-                                            target="blank"
-                                            className="about__team__members__member__socials__link"
-                                        >
-                                            <FaLinkedin />
-                                        </a>
-                                        <a
-                                            href={member.twitter}
-                                            target="blank"
-                                            className="about__team__members__member__socials__link"
-                                        >
-                                            <FaTwitter />
-                                        </a>
+                                        {member.linkedIn !== "#" && (
+                                            <a
+                                                href={member.linkedIn}
+                                                target="blank"
+                                                className="about__team__members__member__socials__link"
+                                            >
+                                                <FaLinkedin />
+                                            </a>
+                                        )}
+                                        {member.twitter !== "#" && (
+                                            <a
+                                                href={member.twitter}
+                                                target="blank"
+                                                className="about__team__members__member__socials__link"
+                                            >
+                                                <FaTwitter />
+                                            </a>
+                                        )}
                                     </div>
                                 </div>
                             );

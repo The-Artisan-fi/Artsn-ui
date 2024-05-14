@@ -96,7 +96,7 @@ const Footer = () => {
               />
             </a>
             <a
-              href="https://twitter.com/The_Artisan_NFT"
+              href="https://twitter.com/ArtsnFi"
               className="footer__bottom__socials__item"
             >
               <Image
