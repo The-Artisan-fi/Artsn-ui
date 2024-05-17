@@ -1,19 +1,21 @@
 "use client"
 import { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { 
+    usePathname, 
+    // useRouter 
+} from "next/navigation";
 import "@/styles/Navbar.scss";
 // import { Link, useLocation } from "react-router-dom";
 import Link from "next/link";
 import Image from "next/image";
 
 // import navbrand from "../../assets/navbrand-full.webp";
-import { CgProfile } from "react-icons/cg";
+// import { CgProfile } from "react-icons/cg";
 import { IoMenu, IoClose } from "react-icons/io5";
 import { useWallet } from "@solana/wallet-adapter-react";
 import Web3AuthLogin from "../Web3Auth/Web3Auth";
 import { checkLogin } from "@/components/Web3Auth/solanaRPC";
 import ProfileModal from "@/components/Profile/ProfileModal";
-import { ToastContainer } from "react-toastify";
 
 import NavBrand from "@/public/assets/navbrand-full.webp";
 import Logo from "@/public/assets/navbrand-logo-bw.png";
@@ -26,7 +28,7 @@ function Navbar() {
     const [displayProfileModal, setDisplayProfileModal] = useState(false);
     const [buyerProfileExists, setBuyerProfileExists] = useState(false);
     const pathname = usePathname()
-    const router = useRouter();
+    // const router = useRouter();
     // get current path
     const { publicKey } = useWallet();
     // navbar toggle
@@ -323,21 +325,6 @@ function Navbar() {
                     />
                 </div>
             )}
-            <ToastContainer
-                position="bottom-left"
-                autoClose={2000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="colored"
-                // style={{
-                //     backgroundColor: "#aaaaaa"
-                // }}
-            />
         </div>
     );
 }

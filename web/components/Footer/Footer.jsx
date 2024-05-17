@@ -1,8 +1,13 @@
 import '@/styles/Footer.scss';
 
 import Link from 'next/link';
-
+import { toastSuccess } from '@/helpers/toast';
 const Footer = () => {
+  const handleCopy = (e) => {
+    console.log(e);
+    navigator.clipboard.writeText(e);
+    toastSuccess('Copied email to clipboard');
+  };
   return (
     <div className="footer padding">
       <div className="boxed">
@@ -71,6 +76,7 @@ const Footer = () => {
             <a
               href="https://www.linkedin.com/company/the-artisan-nft/?viewAsMember=true"
               className="footer__bottom__socials__item"
+              target='_blank'
             >
               <img
                 src="/assets/social-icons/icon1.svg"
@@ -81,6 +87,7 @@ const Footer = () => {
             <a
               href="https://twitter.com/ArtsnFi"
               className="footer__bottom__socials__item"
+              target='_blank'
             >
               <img
                 src="/assets/social-icons/icon2.svg"
@@ -88,16 +95,19 @@ const Footer = () => {
                 className="footer__bottom__socials__item__icon"
               />
             </a>
-            <a href="#" className="footer__bottom__socials__item">
+            <button onClick={() => {
+              handleCopy('renato@artsn.fi');
+            }} className="footer__bottom__socials__item__btn">
               <img
                 src="/assets/social-icons/icon4.svg"
                 alt=""
                 className="footer__bottom__socials__item__icon"
               />
-            </a>
+            </button>
             <a
               href="https://t.me/rcapizz"
               className="footer__bottom__socials__item"
+              target='_blank'
             >
               <img
                 src="/assets/social-icons/icon6.svg"
@@ -108,6 +118,7 @@ const Footer = () => {
             <a
               href="https://discord.gg/DZHY6B7Q46"
               className="footer__bottom__socials__item"
+              target='_blank'
             >
               <img
                 src="/assets/social-icons/icon3.svg"
@@ -118,6 +129,7 @@ const Footer = () => {
             <a
               href="https://www.instagram.com/theartisan_nft/"
               className="footer__bottom__socials__item"
+              target='_blank'
             >
               <img
                 src="/assets/social-icons/icon5.svg"

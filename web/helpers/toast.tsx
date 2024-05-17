@@ -11,6 +11,7 @@ export const toastError = (message: string) => {
 };
 
 export const toastSuccess = (message: string) => {
+    console.log('toastSuccess', message)
     toast.success(message);
 };
 
