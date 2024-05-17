@@ -142,7 +142,7 @@ const About: NextPage = (props) => {
                         <h1 className="heading-1">
                             Democratizing Luxury Good Investments
                         </h1>
-                        <p className="caption-1">
+                        <p className="caption-6">
                             We empower users to delve into the world of watches, art pieces, cars, and beyond at prices within reach. These assets have showcased remarkable growth in valuation over the years, igniting excitement and opportunity for all.
                         </p>
                     </div>

@@ -306,6 +306,23 @@ a {
   letter-spacing: 0.24px;
 }
 
+.caption-6 {
+  color: #fff;
+
+  /* Caption/1 X Large */
+  font-family: Inter;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px; /* 91.667% */
+  letter-spacing: 0.36px;
+
+  @media only screen and (max-width: 769px) {
+    font-size: 18px;
+    letter-spacing: 0.27px;
+  }
+}
+
 .body-regular {
   color: #d3d3d3;
 
