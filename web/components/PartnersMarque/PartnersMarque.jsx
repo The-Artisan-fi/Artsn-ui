@@ -7,6 +7,7 @@ import Jigen from "@/public/assets/home/jigen.webp";
 import NodeGate from "@/public/assets/home/node-gate.webp";
 import SwissDao from "@/public/assets/home/swissdao.webp";
 import XReal from "@/public/assets/home/x-real.webp";
+import Vitale from "@/public/assets/home/vitale.webp";
 
 const marqueeImages = [
     {
@@ -33,6 +34,11 @@ const marqueeImages = [
         src: XReal,
         alt: "x real",
     },
+    {
+        src: Vitale,
+        alt: "Vitale",
+    }
+
 ];
 
 const PartnersMarque = () => {
@@ -41,7 +47,7 @@ const PartnersMarque = () => {
             {/* <h2 className="heading-secondary">Partners</h2> */}
             <div className="partners__marquee">
                 <Marquee autoFill={true}>
-                    {marqueeImages.map((image) => (
+                    {marqueeImages.slice(3).map((image) => (
                         <Image
                             key={image.alt}
                             src={image.src}
