@@ -56,7 +56,7 @@ const teamDataDesktop = [
     },
     {
         name: "Paolo Piana",
-        title: "CGO",
+        title: "Lead UX/UI Designer ",
         img: Paolo,
         about: [    
             "Web3 Marketer & UX Designer",
@@ -181,20 +181,24 @@ const About: NextPage = (props) => {
                                     </ul>
 
                                     <div className="about__team__members__member__socials">
-                                        <a
-                                            href={member.linkedIn}
-                                            target="blank"
-                                            className="about__team__members__member__socials__link"
-                                        >
-                                            <FaLinkedin />
-                                        </a>
-                                        <a
-                                            href={member.twitter}
-                                            target="blank"
-                                            className="about__team__members__member__socials__link"
-                                        >
-                                            <FaTwitter />
-                                        </a>
+                                        {member.linkedIn !== "#" && (
+                                            <a
+                                                href={member.linkedIn}
+                                                target="blank"
+                                                className="about__team__members__member__socials__link"
+                                            >
+                                                <FaLinkedin />
+                                            </a>
+                                        )}
+                                        {member.twitter !== "#" && (
+                                            <a
+                                                href={member.twitter}
+                                                target="blank"
+                                                className="about__team__members__member__socials__link"
+                                            >
+                                                <FaTwitter />
+                                            </a>
+                                        )}
                                     </div>
                                 </div>
                             );
