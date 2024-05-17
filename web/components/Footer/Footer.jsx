@@ -7,10 +7,10 @@ import Icon3 from "@/public/assets/social-icons/icon3.svg";
 import Icon4 from "@/public/assets/social-icons/icon4.svg";
 import Icon5 from "@/public/assets/social-icons/icon5.svg";
 import Icon6 from "@/public/assets/social-icons/icon6.svg";
-import FooterLogo1 from "@/public/assets/footer-logo1.png";
-import FooterLogo2 from "@/public/assets/footer-logo2.png";
-import SolanaIcon from "@/public/assets/solana-icon.webp";
-import SwissIcon from "@/public/assets/swiss-icon.webp";
+// import FooterLogo1 from "@/public/assets/footer-logo1.png";
+// import FooterLogo2 from "@/public/assets/footer-logo2.png";
+// import SolanaIcon from "@/public/assets/solana-icon.webp";
+// import SwissIcon from "@/public/assets/swiss-icon.webp";
 import { usePathname } from "next/navigation";
 
 const Footer = () => {

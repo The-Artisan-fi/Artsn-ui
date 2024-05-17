@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 const Progress = Dynamic(() => import("antd").then((mod) => mod.Progress), { ssr: false });
 const Collapse = Dynamic(() => import("antd").then((mod) => mod.Collapse), { ssr: false });
 const Panel = Dynamic(() => import("antd").then((mod) => mod.Collapse.Panel), { ssr: false });
-const Slider = Dynamic(() => import("antd").then((mod) => mod.Slider), { ssr: false });
+// const Slider = Dynamic(() => import("antd").then((mod) => mod.Slider), { ssr: false });
 import { fetchProductDetails } from "@/hooks/fetchProductDetails";
 const ProductsSectionDesktop = Dynamic(() => import("@/components/ProductsSectionDesktop/ProductsSectionDesktop"), { ssr: false });
 const ProductsSectionMobile = Dynamic(() => import("@/components/ProductsSectionMobile/ProductsSectionMobile"), { ssr: false });
@@ -47,7 +47,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
     const [displayQr, setDisplayQr] = useState<boolean>(false);
     const [refKey, setRefKey] = useState<string | null>(null);
     const [displayLoginModal, setDisplayLoginModal] = useState<boolean>(false);
-    const [sliderValue, setSliderValue] = useState<number>(30);
+    // const [sliderValue, setSliderValue] = useState<number>(30);
     // const [displayProfileModal, setDisplayProfileModal] = useState<boolean>(false);
     const [variables, setVariables] = useState({
         associatedId: "",
