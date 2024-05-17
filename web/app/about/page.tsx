@@ -56,7 +56,7 @@ const teamDataDesktop = [
     },
     {
         name: "Paolo Piana",
-        title: "Lead UX/UI Designer ",
+        title: "CGO",
         img: Paolo,
         about: [    
             "Web3 Marketer & UX Designer",
