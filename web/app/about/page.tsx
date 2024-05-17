@@ -8,7 +8,7 @@ import { FaLinkedin, FaTwitter } from "react-icons/fa";
 import PartnersMarque from "@/components/PartnersMarque/PartnersMarque";
 import Renato from "@/public/assets/about/renato.webp";
 import Leonardo from "@/public/assets/about/leonardo.webp";
-import Brian from "@/public/assets/about/brian.webp";
+import Brian from "@/public/assets/about/brian.png";
 import Paolo from "@/public/assets/about/paolo.webp";
 import Craig from "@/public/assets/about/craig.jpg";
 import Macarena from "@/public/assets/about/macarena.webp";
