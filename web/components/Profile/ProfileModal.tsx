@@ -16,6 +16,8 @@ import useSWRMutation from "swr/mutation";
 import LoginHeader from '@/public/assets/login/login_header.svg';
 import Logo from '@/public/assets/login/logo_bw.svg';
 
+import { OnfidoWrapper } from './Onfido/OnfidoWrapper';
+
 const Upload = Dynamic(() => import('antd').then((mod) => mod.Upload), { ssr: false });
 const Input = Dynamic(() => import('antd').then((mod) => mod.Input), { ssr: false });
 
@@ -272,6 +274,8 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose, han
                             Create Profile
                         </button>
                     </div>
+
+                    <OnfidoWrapper />
                 </div>
             )}
         </>
