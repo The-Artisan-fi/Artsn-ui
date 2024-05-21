@@ -21,7 +21,7 @@ export async function POST( request: Request ) {
     const provider = new anchor.AnchorProvider(connection, wallet, {});
     const programId = new PublicKey(PROGRAM_ID);
     const program = new anchor.Program<Fragment>(IDL, programId, provider);
-
+    const uri = 'www.example.com'
     try {
         const req = await request.json();
         const buyer_publicKey = new PublicKey(req.publicKey);

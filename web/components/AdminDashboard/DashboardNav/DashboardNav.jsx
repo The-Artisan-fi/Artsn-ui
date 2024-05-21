@@ -34,19 +34,6 @@ const DashboardNav = () => {
     setOpen(newOpen);
   };
 
-  // Dummy notification data
-  const notificationsData = [
-    { id: 1, text: 'You have a new message.' },
-    { id: 2, text: 'You have a new friend request.' },
-    { id: 3, text: 'Someone liked your post.' },
-  ];
-
-  const notifications = (
-    <List
-      dataSource={notificationsData}
-      renderItem={(item) => <List.Item key={item.id}>{item.text}</List.Item>}
-    />
-  );
 
   // useEffect(() => {
   //   if(publicKey){

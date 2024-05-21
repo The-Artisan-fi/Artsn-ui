@@ -1,120 +1,244 @@
 'use client'
-import '@/styles/DashboardWallet.scss';
+import '@/styles/DashboardInventory.scss';
 import { useEffect, useState } from 'react';
-import Dynamic from 'next/dynamic';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
-const RiMoneyDollarCircleFill = Dynamic(() => import('react-icons/ri').then((mod) => mod.RiMoneyDollarCircleFill), { ssr: false });
-// const SiSolana = Dynamic(() => import('react-icons/si').then((mod) => mod.SiSolana), { ssr: false });
-import { useWallet } from "@solana/wallet-adapter-react";
-import { checkLogin } from "@/components/Web3Auth/solanaRPC";
-import { Connection, PublicKey } from "@solana/web3.js";
-import { getAssociatedTokenAddress, getAccount } from '@solana/spl-token';
-import ArtisanIcon from "@/public/assets/artisan-icon.png"
+const Table  = dynamic(() => import('antd').then((mod) => mod.Table), { ssr: false });
+import KycModal from '@/components/AdminDashboard/Modal/KycModal';
+import ApplicantModal from '@/components/AdminDashboard/Modal/ApplicantModal';
 
+import { retrieveAllApplicants, retrieveAllWorkflowRuns, retrieveWorkflowRun } from './functions';
 
-const WalletPage = () => {
-  const [solBalance, setSolBalance] = useState<number | null>(null);
-  const [usdcBalance, setUsdcBalance] = useState<number | null>(null);
-  const { publicKey } = useWallet();
-  const [web3AuthPublicKey, setWeb3AuthPublicKey] = useState<PublicKey | null>(null);
-  // Get details about the USDC token - Mainnet
-  // const usdcAddress = new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v');
-  
-  // Get details about the USDC token - Devnet
-  const usdcAddress= new PublicKey('Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr')
-  const connection = new Connection(
-    process.env.NEXT_PUBLIC_HELIUS_DEVNET!,
-    "confirmed"
-);
-  // function to slice the public key and display only the first 5 characters
-  const sliceKey = (key: string) => {
-    return `${key.slice(0, 5)}...${key.slice(-5)}`
+const KycPage = () => {
+  const [applicant, setApplicant] = useState({} as any);
+  const [showKycModal, setShowKycModal] = useState(false);
+  const [showApplicantModal, setShowApplicantModal] = useState(false);
+  const [allWorkflowRuns, setAllWorkflowRuns] = useState([]);
+  const [allApplicants, setAllApplicants] = useState([] as any[]);
+  const [displayAllApplicants, setDisplayAllApplicants] = useState(false);
+
+  const handleKycModalClose = () => {
+    setShowKycModal(false);
+    setApplicant({});
   }
-  async function getBalance(publicKey: PublicKey) {
-    // get the balance of the public key
-    const sol = await connection.getBalance(publicKey);
-    setSolBalance(sol / 10 ** 9);
-    const ata = await getAssociatedTokenAddress(usdcAddress, publicKey);
-    const accountData = await getAccount(connection, ata, "confirmed");
-    console.log(Number(accountData.amount));
-    // divide by 10^6 to get the actual balance
 
-    setUsdcBalance(Number(accountData.amount) / 10 ** 6);
+  const handleApplicantModalClose = () => {
+    setShowApplicantModal(false);
+    setApplicant({});
+  }
+
+  const worfklow_runs_columns = [
+    {
+      title: '',
+      dataIndex: 'no',
+      key: 'no',
+  
+      width: 10,
+    },
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+  
+      render: (text, record) => (
+        <p>{`${record.output.first_name} ${record.output.last_name}`}</p>
+      ),
+    },
+    {
+      title: 'Workflow Run ID',
+      dataIndex: 'workflow_run_id',
+      key: 'workflow_run_id',
+
+      render: (text, record) => (
+        <p> 
+          {`${record.id.substring(0, 5)}...${record.id.substring(record.id.length - 5)}`}
+        </p>
+      ),
+    },
+    {
+      title: 'Created At',
+      dataIndex: 'created_at',
+      key: 'created_at',
+  
+      render: (text, record) => {
+        return(
+          <p>
+            {`${new Date(record.created_at).toLocaleDateString()}`}
+          </p>
+        )
+      },
+    },
+  
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+  
+      render: (text, record) => {
+        return (
+          <p>
+            {record.status === 'approved' ? '✅' : record.status === 'processing' ? '💬' : '❌' }  
+          </p>
+        );
+      },
+    },
+    {
+      title: 'View',
+      dataIndex: 'view',
+      key: 'view',
+  
+      render: (text, record) => {
+        return (
+          <button 
+            onClick={() =>{
+            //  getWorkRunData(record.workflow_run_id)
+            console.log('record', record)
+            setApplicant(record);
+            setShowKycModal(true);
+            }}
+            className='btn-primary'
+          >
+            View
+          </button>
+        );
+      },
+    },
+  ];
+  const all_applicant_columns = [
+    {
+      title: '',
+      dataIndex: 'no',
+      key: 'no',
+  
+      width: 10,
+    },
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+  
+      render: (text, record) => (
+        <p>{`${record.first_name} ${record.last_name}`}</p>
+      ),
+    },
+    {
+      title: 'Applicant ID',
+      dataIndex: 'applicant_id',
+      key: 'applicant_id',
+
+      render: (text, record) => (
+        <p> 
+          {`${record.id.substring(0, 5)}...${record.id.substring(record.id.length - 5)}`}
+        </p>
+      ),
+    },
+    {
+      title: 'Created At',
+      dataIndex: 'created_at',
+      key: 'created_at',
+  
+      render: (text, record) => {
+        return(
+          <p>
+            {`${new Date(record.created_at).toLocaleDateString()}`}
+          </p>
+        )
+      },
+    },
+    {
+      title: 'View',
+      dataIndex: 'view',
+      key: 'view',
+  
+      render: (text, record) => {
+        return (
+          <button 
+            onClick={() =>{
+              console.log('record', record)
+              setApplicant(record);
+              setShowApplicantModal(true);
+            }}
+            className='btn-primary'
+          >
+            View
+          </button>
+        );
+      },
+    },
+  ];
+
+  async function getWorkRunData() {
+    const data = await retrieveAllWorkflowRuns();
+    setAllWorkflowRuns(data);
+    return data;
+  }
+
+  async function getAllApplicants() {
+    const data = await retrieveAllApplicants();
+    console.log('all applicant data', data)
+    setAllApplicants(data.applicants);
+    return data;
   }
 
   useEffect(() => {
-    if (publicKey) {
-      getBalance(publicKey);
-    } else if(web3AuthPublicKey == null && !publicKey) {
-      checkLogin().then((res) => {
-          if(res.connected && res.account){
-            setWeb3AuthPublicKey(new PublicKey(res.account));
-            getBalance(new PublicKey(res.account));
-          }
-      });
+    retrieveWorkflowRun('6e8466ca-b875-4dc6-b534-42c639800dd5').then((data) => {
+      console.log('sample data', data)
+    });
+    if(!displayAllApplicants) {
+      getWorkRunData()
+    } else if (displayAllApplicants){
+      getAllApplicants();
     }
-  }, []);
+  }, [displayAllApplicants]);
 
   return (
     <div className="wallet">
-      <div className="wallet__item item-1">
-        <Image
-          src={ArtisanIcon}
-          alt="Artisan Icon"
-          className="wallet__item__img"
-        />
-        <div className="wallet__item__details">
-          <p className="p-2">THEARTISAN WALLET</p>
-          <p className="p-2 dimmed">{publicKey ? sliceKey(publicKey.toBase58()) : 'Connect Wallet'}</p>
+      <div className="dashboard-inventory__body">
+        <div
+          style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: '10px', marginBottom: '20px'}}
+        >
+          <button
+            className='btn-primary'
+            onClick={()=> setDisplayAllApplicants(false)}
+          >
+            All Workflow Runs
+          </button>
+          <button
+            className='btn-primary'
+            onClick={()=> setDisplayAllApplicants(true)}
+          >
+            All Applicants
+          </button>
         </div>
-
-        <div className="wallet__item__action">
-          <span className="p-5" style={{ color: 'white'}}>EST. BALANCE</span>
-          <span className="h-6" style={{ color: 'white'}}>
-            {/* {
-              solBalance ? solBalance.toFixed(4) : '0.00'
-            } */}
-            {usdcBalance ? usdcBalance.toFixed(2) : '0.00'}
-          </span>
+          <Table
+            style={{
+              border: '1px solid #3d3d3d',
+              borderRadius: '10px',
+              overflow: 'hidden',
+              backgroundColor: '#1e1e22',
+            }}
+            // size="medium"
+            scroll={{ x: 'max-content' }}
+            // bordered={true}
+            dataSource={!displayAllApplicants ? allWorkflowRuns : allApplicants}
+            columns={!displayAllApplicants ? worfklow_runs_columns : all_applicant_columns}
+            // lazy={true}
+          />
+          {showKycModal && applicant && (
+            <KycModal
+              applicant={applicant}
+              onClose={handleKycModalClose}
+            />
+          )}
+          {showApplicantModal && applicant && (
+            <ApplicantModal
+              applicant={applicant}
+              onClose={handleApplicantModalClose}
+            />     
+          )}
         </div>
-      </div>
-
-      {/* item 2 */}
-      <div className="wallet__item">
-        <RiMoneyDollarCircleFill className="wallet__item__icon" style={{ color: 'white'}}/>
-        <div className="wallet__item__details">
-          <p className="p-4 dimmed">USDC</p>
-          <p className="p-2 dimmed">
-            {usdcBalance ? usdcBalance.toFixed(2) : '0.00'}
-          </p>
-        </div>
-        <div className="wallet__item__action__container">
-          <div className="wallet__item__action__container__btn">
-            <span className="p-3">DEPOSIT USDC </span>
-          </div>
-          <div className="wallet__item__action__container__btn">
-            <span className="p-3">DEPOSIT SOL</span>
-          </div>
-        </div>
-      </div>
-
-      {/* item 3 */}
-
-      {/* <div className="wallet__item">
-        <SiSolana className="wallet__item__icon" />
-        <div className="wallet__item__details">
-          <p className="p-4 dimmed">SOLANA</p>
-          <p className="p-2 dimmed">
-            {solBalance ? solBalance.toFixed(4) : '0.00'}
-          </p>
-        </div>
-
-        <div className="wallet__item__action">
-          <span className="p-3">DEPOSIT SOL</span>
-        </div>
-      </div> */}
     </div>
   );
 };
 
-export default WalletPage;
+export default KycPage;

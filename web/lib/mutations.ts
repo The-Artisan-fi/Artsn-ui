@@ -80,3 +80,16 @@ export const ADD_USER = gql`
     }
   }
 `;
+
+export const UPDATE_USER_ONFIDO = gql`
+  mutation($wallet: String!, $onfidoWorkflowRunId: String!) {
+    updateOneUser(
+      query: { wallet: $wallet }
+      set: { onfidoWorkflowRunId: $onfidoWorkflowRunId }
+    ) {
+      _id
+      wallet
+      onfidoWorkflowRunId
+    }
+  }
+`;

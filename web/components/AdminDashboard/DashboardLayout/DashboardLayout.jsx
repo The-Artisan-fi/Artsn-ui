@@ -48,10 +48,10 @@ const DashboardLayout = ({ children }) => {
         url = '/admin/admin';
         break;
       case '3':
-        url = '/admin/kyc';
+        url = '/admin/token';
         break;
       case '4':
-        url = '/admin/token';
+        url = '/admin/kyc';
         break;
       default:
         url = '/';
@@ -62,6 +62,7 @@ const DashboardLayout = ({ children }) => {
   };
 
   useEffect(() => {
+    console.log('currentPath', currentPath);
     if (currentPath === '/admin') {
       setSelectedKeys(['1']);
       setActiveTabTitle('Profile');
@@ -71,7 +72,7 @@ const DashboardLayout = ({ children }) => {
     } else if (currentPath === '/admin/token') {
       setSelectedKeys(['3']);
       setActiveTabTitle('Create Token');
-    } else if (currentPath === '/dashboard/kyc') {
+    } else if (currentPath === '/admin/kyc') {
       setSelectedKeys(['4']);
       setActiveTabTitle('KYC');
     }

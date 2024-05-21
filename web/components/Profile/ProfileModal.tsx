@@ -15,9 +15,8 @@ import { ADD_USER } from "@/lib/mutations";
 import useSWRMutation from "swr/mutation";
 import LoginHeader from '@/public/assets/login/login_header.svg';
 import Logo from '@/public/assets/login/logo_bw.svg';
-
-import { OnfidoWrapper } from './Onfido/OnfidoWrapper';
-
+import OnfidoWrapper from '@/components/Profile/Onfido/OnfidoWrapper';
+import { set } from '@coral-xyz/anchor/dist/cjs/utils/features';
 const Upload = Dynamic(() => import('antd').then((mod) => mod.Upload), { ssr: false });
 const Input = Dynamic(() => import('antd').then((mod) => mod.Input), { ssr: false });
 
@@ -31,6 +30,8 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose, han
     const { publicKey, sendTransaction } = useWallet();
     const [isOpen, setIsOpen] = useState(showModal);
     const [web3AuthPublicKey, setWeb3AuthPublicKey] = useState<string | null>(null);
+    const [verificationPending, setVerificationPending] = useState<boolean>(false);
+    const [verificationNeeded, setVerificationNeeded] = useState<boolean>(false);
     const [rpc, setRpc] = useState<RPC | null>(null);
     const [addUser, { loading, error, data }] = useMutation(ADD_USER);
     const [fileList, setFileList] = useState([]);
@@ -114,7 +115,8 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose, han
 
                 await toastPromise(signature);
                 
-                handleCloseThenCheck();
+                // handleCloseThenCheck();
+                setVerificationNeeded(true);
             }
 
             if(web3AuthPublicKey !== null && !publicKey){
@@ -125,7 +127,8 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose, han
                     `Transaction sent: https://explorer.solana.com/tx/${signature}?cluster=devnet`
                 );
                 await toastPromise(signature);
-                handleCloseThenCheck();            
+                // handleCloseThenCheck();   
+                setVerificationNeeded(true);         
             }
         } catch (error) {
             console.error('Error sending transaction', error);
@@ -134,16 +137,16 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose, han
     }
 
     async function createProfile(key: string) {
-        if(fileList.length < 1){
-            return;
-        }
-        // convert newFileList to a Blob
-        const fileListBlob = fileList.map((file: { originFileObj: Blob; type: string; }) => {
-            return new Blob([file.originFileObj], { type: file.type });
-        });
-        await trigger({ files: fileListBlob });
+        // if(fileList.length < 1){
+        //     return;
+        // }
+        // // convert newFileList to a Blob
+        // const fileListBlob = fileList.map((file: { originFileObj: Blob; type: string; }) => {
+        //     return new Blob([file.originFileObj], { type: file.type });
+        // });
+        // await trigger({ files: fileListBlob });
 
-        initProfile(key);
+        // initProfile(key);
 
         addUser({
             variables: {
@@ -157,7 +160,8 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose, han
             }
         });
         {!loading && !error && data && (
-           console.log('Profile created', data)
+        //    console.log('Profile created', data)
+           setVerificationNeeded(true)
         )}
         {error && (
             console.log('Error submitting', error)
@@ -269,13 +273,30 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose, han
                             </div>
                         </div>
                     </div> 
-                    <div className="login-container">
-                        <button className="btn-primary" onClick={() => createProfile(publicKey ? publicKey!.toBase58() : web3AuthPublicKey!)}>
-                            Create Profile
-                        </button>
-                    </div>
 
-                    <OnfidoWrapper />
+                    
+                    
+                    {verificationPending && (
+                        <div className="verification-pending">
+                            <p className="caption-3">Verification Pending</p>
+                            <p className="caption-3">You will be notified when your verification is complete</p>
+                        </div>
+                    )}
+
+                    {verificationNeeded && !verificationPending &&(
+                        <OnfidoWrapper publicKey={publicKey ? publicKey.toString() : web3AuthPublicKey!} handleSuccessPending={()=> setVerificationPending(true)}/>
+                    )}
+                    {!verificationNeeded && (
+                        <div className="login-container">
+                            <button className="btn-primary" onClick={() => createProfile(publicKey ? publicKey!.toBase58() : web3AuthPublicKey!)}>
+                                Create Profile
+                            </button>
+                        </div>
+                    )}
+         
+                    
+                    
+                    
                 </div>
             )}
         </>
