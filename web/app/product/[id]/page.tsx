@@ -269,6 +269,8 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                                 type="string" 
                                                 // do not allow user to input amount or use arrows
                                                 value={amount} 
+                                                onChange={(e) => setAmount(Number(e.target.value))}
+                                                defaultValue={1}
                                                 style={{
                                                     width: 'auto',
                                                     textAlign: 'center',

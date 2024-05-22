@@ -101,6 +101,7 @@ export async function decodeProfileData(key: PublicKey) {
 }
 
 export async function getTokenAccounts(key: PublicKey) {
+  console.log('fetching token accounts for key:', key.toBase58());
   const filters:GetProgramAccountsFilter[] = [
     {
       dataSize: 175,    //size of account (bytes)
@@ -116,7 +117,7 @@ export async function getTokenAccounts(key: PublicKey) {
       TOKEN_2022_PROGRAM_ID,
       {filters: filters}
   );
-  // console.log(`Found ${accounts.length} token account(s) for wallet ${wallet}.`);
+  console.log(`Found ${accounts.length} token account(s) for wallet ${wallet}.`);
   const tokenMetadata = async (mintAddress: string) => {
     const metadata = await getTokenMetadata(
       connection,

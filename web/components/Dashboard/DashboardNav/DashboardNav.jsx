@@ -18,7 +18,8 @@ const DashboardNav = () => {
   const [profileImg, setProfileImg] = useState('');
   const [userName, setUserName] = useState('');
   const [getDetails, { loading, error, data }] = useLazyQuery(userProfileBasic , {variables});
-  if(!loading && data != undefined && profileImg == ''){
+  if(!loading && data && data.users.length > 0 && profileImg == ''){
+    console.log("data", data.users.length);
     setProfileImg(data.users[0].profileImg);
     setUserName(data.users[0].userName);
   }
@@ -51,6 +52,7 @@ const DashboardNav = () => {
   useEffect(() => {
     if(publicKey){
       setVariables({wallet: publicKey.toBase58()});
+      console.log("publicKey", publicKey.toBase58());
       getDetails();
     } else {
         checkLogin().then((res) => {
@@ -62,7 +64,7 @@ const DashboardNav = () => {
           }
       });
     }
-  }, []);
+  }, [publicKey]);
 
   return (
     <div className="dashboard-nav">
@@ -73,7 +75,7 @@ const DashboardNav = () => {
         />{' '}
       </Link>
       <div className="dashboard-nav__right">
-        <Popover
+        {/* <Popover
           content={notifications}
           title="Notifications"
           trigger="click"
@@ -90,7 +92,7 @@ const DashboardNav = () => {
             icon={notificationsData.length > 0 ? <LuBellDot /> : <LuBell />}
             type="circle"
           ></Button>
-        </Popover>
+        </Popover> */}
         <Avatar
           src={profileImg}
         />

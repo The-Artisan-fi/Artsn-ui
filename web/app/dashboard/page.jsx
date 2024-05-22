@@ -75,6 +75,7 @@ const Dashboard = () => {
   const [variables, setVariables] = useState({ mintAddress: '' });
   const [queryItem, setQueryItem] = useState('');
   const [listingAddress, setListingAddress] = useState('');
+  const [tokensLoading, setTokensLoading] = useState(false);
   const onChange4 = ({ target: { value } }) => {
     console.log('radio4 checked', value);
     setValue4(value);
@@ -189,6 +190,8 @@ const Dashboard = () => {
     };
   };
   const getTokens = async (key) => {
+    setTokensLoading(true);
+    console.log('getting tokens for key', key)
     // only execute if tokenAccounts is empty
     if (tokenAccounts.length == 0) {
       const data = await getTokenAccounts(key);
@@ -200,22 +203,19 @@ const Dashboard = () => {
         setListingAddress('');
       }
     }
+    setTokensLoading(false);
   }
 
-  useEffect(() => {
-    if (publicKey && tokenAccounts.length == 0) {
-      getTokens();
-    }
-  }, [publicKey, tokenAccounts]);
 
   useEffect(() => {
-    if (publicKey && tokenAccounts.length == 0) {
-      getTokens();
-    } else {
+    if (publicKey && !tokensLoading) {
+      getTokens(publicKey);
+    } else if (!publicKey && !web3AuthPublicKey && !tokensLoading){
         checkLogin().then((res) => {
           if(res){
               if(res.account){
                   setWeb3AuthPublicKey(new PublicKey(res.account));
+                  getTokens(new PublicKey(res.account));
               }
               if(res.rpc !== null){
                   setRpc(res.rpc);
@@ -223,7 +223,11 @@ const Dashboard = () => {
           }
       });
     }
-  }, []);
+  }, [
+    publicKey,
+    tokenAccounts,
+    web3AuthPublicKey,
+  ]);
 
 
   return (
