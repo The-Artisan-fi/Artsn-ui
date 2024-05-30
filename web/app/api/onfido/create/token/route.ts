@@ -23,7 +23,7 @@ export async function POST( request: Request ) {
             },
             body: JSON.stringify({
                 applicant_id: applicant_id,
-                // referrer: "https://*.localhost:3000/*",
+                referrer: "https://*.feat-kyc--artsnfi.netlify.app/*",
             }),
         });
 
