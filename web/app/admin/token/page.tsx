@@ -6,19 +6,32 @@ import { useRouter } from 'next/navigation';
 const Button = Dynamic(() => import('antd').then((mod) => mod.Button), { ssr: false });
 const Input = Dynamic(() => import('antd').then((mod) => mod.Input), { ssr: false });
 const Select = Dynamic(() => import('antd').then((mod) => mod.Select), { ssr: false });
+import { FaLock } from 'react-icons/fa';
 // const message = Dynamic(() => import('antd').then((mod) => mod.message), { ssr: false });
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { HiOutlineLogout } from 'react-icons/hi';
 import { useLazyQuery } from "@apollo/client";
 import { userCurrencyPref } from "@/lib/queries";
 import { useWallet } from '@solana/wallet-adapter-react';
+import { auth } from '@/lib/constants';
+import { checkLogin } from '@/components/Web3Auth/checkLogin';
 
 const SettingsPage = () => {
   const { publicKey, disconnect } = useWallet();
-  const router = useRouter();
+  const [connectedWallet, setConnectedWallet] = useState('');
   const [currencyPref, setCurrencyPref] = useState('');
   const [variables, setVariables] = useState({ wallet: '' });
+  const randomNo = Math.floor(Math.random() * 1000000);
+  const tokenObj = useMemo(() => {
+    return {
+      id: randomNo,
+      share: 0,
+      price: 0,
+      startingTime: 0,
+      uri: ''
+    }
+  }, []);
 
   const [getDetails, { loading, error, data }] = useLazyQuery(userCurrencyPref , {variables});
   if(!loading && data != undefined && currencyPref == '' ){
@@ -31,105 +44,143 @@ const SettingsPage = () => {
 
   useEffect(() => {
     if (publicKey) {
-      setVariables({ wallet: publicKey.toBase58() });
-      getDetails();
+      setConnectedWallet(publicKey.toBase58());
+    } else {
+      checkLogin().then((res) => {
+        if (res && res.account) {
+          setConnectedWallet(res.account);
+        }
+      });
     }
   }, [publicKey]);
 
-  return (
-    <div className="settings">
-      <div className="settings__row">
-        <div className="settings__col">
-          <p className="caption-3">CURRENCY PREFERENCE</p>
-          <Select
-            size="large"
-            showSearch
-            style={{
-              width: '100%',
-            }}
-            placeholder={currencyPref ? currencyPref : 'Select Currency'}
-            optionFilterProp="children"
-            filterOption={(input, option) =>
-              (option?.label ?? '').includes(input)
-            }
-            filterSort={(optionA, optionB) =>
-              (optionA?.label ?? '')
-                .toLowerCase()
-                .localeCompare((optionB?.label ?? '').toLowerCase())
-            }
-            options={[
-              {
-                value: '1',
-                label: '$USD', // United States Dollar
-              },
-              {
-                value: '2',
-                label: '€EUR', // Euro
-              },
-              {
-                value: '3',
-                label: '¥JPY', // Japanese Yen
-              },
-              {
-                value: '4',
-                label: '£GBP', // British Pound Sterling
-              },
-              {
-                value: '5',
-                label: '$AUD', // Australian Dollar
-              },
-              {
-                value: '6',
-                label: '₽RUB', // Russian Ruble
-              },
-            ]}
-          />
-        </div>
-        <div className="settings__col">
-          <p className="caption-3">WALLET (ACCOUNT)</p>
-          <Input
-            suffix={
-              <Button
-                onClick={() => {
-                  // message.success('Gonna Delete This!');
-                }}
-                danger
-                size="small"
-                type="primary"
-              >
-                Delete
-              </Button>
-            }
-            value={'0x473895634895hjfgd7834sdgyerterhgr'}
-            size="large"
-            placeholder="Enter Your"
-            disabled={true}
-            style={{ color: 'white'}}
-          />
-        </div>
-      </div>
+  useEffect(() => {
+    if(connectedWallet) {
+      setVariables({ wallet: connectedWallet });
+      getDetails();
+    }
+  }, [connectedWallet]);
 
-      <div className="settings__row-half ">
-        <div className="empty-placeholder"></div>
-        <Button
-          type="default"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '1rem',
-          }}
-          size="large"
-          onClick={() => {
-            disconnect();
-            router.push('/');
-          }}
-        >
-          LOG OUT
-          <HiOutlineLogout style={{ fontSize: '2rem' }} />
-        </Button>
-      </div>
-    </div>
+  return (
+    // {
+    //   "name": "id",
+    //   "type": "u64"
+    // },
+    // {
+    //   "name": "share",
+    //   "type": "u16"
+    // },
+    // {
+    //   "name": "price",
+    //   "type": "u64"
+    // },
+    // {
+    //   "name": "startingTime",
+    //   "type": "i64"
+    // },
+    // {
+    //   "name": "uri",
+    //   "type": "string"
+    // }
+    <>
+      {publicKey && publicKey.toString() === auth ? (
+        <div className="settings">
+          <p className="caption-3">CREATE A TOKEN</p>
+          <div className="profile__input-row">
+            <div className="profile__input-col">
+              <p className="caption-3">ID</p>
+              <Input
+                suffix={<FaLock />}
+                size="large"
+                placeholder="Token ID"
+                value={
+                  tokenObj.id
+                }
+                type="id"
+                disabled={true}
+                style={{ color: 'white', backgroundColor: 'transparent'}}
+              />
+            </div>
+            <div className="profile__input-col">
+              <p className="caption-3">Total Shares</p>
+              <Input
+                value={
+                  tokenObj.share
+                }
+                size="large"
+                placeholder="Enter the total shares"
+                onChange={(e) => {
+                  tokenObj.share = parseInt(e.target.value);
+                }}
+                disabled={false}
+                style={{ color: 'white', backgroundColor: 'transparent'}}
+              />
+            </div>
+            <div className="profile__input-col">
+              <p className="caption-3">Price</p>
+              <Input
+                value={
+                  tokenObj.price
+                }
+                size="large"
+                placeholder="Enter the price"
+                onChange={(e) => {
+                  tokenObj.price = parseInt(e.target.value);
+                }}
+                disabled={false}
+                style={{ color: 'white', backgroundColor: 'transparent'}}
+              />
+            </div>
+            <div className="profile__input-col">
+              <p className="caption-3">Starting Time</p>
+              <Input
+                value={
+                  tokenObj.startingTime
+                }
+                size="large"
+                placeholder="Enter the starting time"
+                onChange={(e) => {
+                  tokenObj.startingTime = parseInt(e.target.value);
+                }}
+                disabled={false}
+                style={{ color: 'white', backgroundColor: 'transparent'}}
+              />
+            </div>
+            <div className="profile__input-col">
+              <p className="caption-3">URI</p>
+              <Input
+                value={
+                  tokenObj.uri
+                }
+                size="large"
+                placeholder="Enter the URI"
+                onChange={(e) => {
+                  tokenObj.uri = e.target.value;
+                }}
+                disabled={false}
+                style={{ color: 'white', backgroundColor: 'transparent'}}
+              />
+            </div>
+          </div>
+
+          <button
+            className="btn-primary"
+            onClick={()=> {console.log("tokenObj", tokenObj)}}
+          >
+            Create Token
+          </button>
+        </div>
+      ) : (
+        <div className="wallet">
+          <div className="wallet__content">
+            <div className="wallet__content__header">
+              <h1>Unauthorized</h1>
+              <p>You are not authorized to view this page</p>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

@@ -65,7 +65,7 @@ const DashboardLayout = ({ children }) => {
     console.log('currentPath', currentPath);
     if (currentPath === '/admin') {
       setSelectedKeys(['1']);
-      setActiveTabTitle('Profile');
+      setActiveTabTitle('Dashboard');
     } else if (currentPath === '/admin/create') {
       setSelectedKeys(['2']);
       setActiveTabTitle('Create Admin');
@@ -97,8 +97,8 @@ const DashboardLayout = ({ children }) => {
             {
               key: '1',
               icon: selectedKeys.includes('1') ? <IoGrid /> : <IoGridOutline />,
-              label: 'Profile',
-              title: 'Profile',
+              label: 'Dashboard',
+              title: 'Dashboard',
             },
             {
               key: '2',

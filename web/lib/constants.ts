@@ -1,0 +1,1 @@
+export const auth = '7wK3jPMYjpZHZAghjersW6hBNMgi9VAGr75AhYRqR2n';

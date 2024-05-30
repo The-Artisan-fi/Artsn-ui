@@ -6,10 +6,12 @@ import Image from 'next/image';
 const Table  = dynamic(() => import('antd').then((mod) => mod.Table), { ssr: false });
 import KycModal from '@/components/AdminDashboard/Modal/KycModal';
 import ApplicantModal from '@/components/AdminDashboard/Modal/ApplicantModal';
-
+import { auth } from '@/lib/constants';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { retrieveAllApplicants, retrieveAllWorkflowRuns, retrieveWorkflowRun } from './functions';
 
 const KycPage = () => {
+  const { publicKey } = useWallet();
   const [applicant, setApplicant] = useState({} as any);
   const [showKycModal, setShowKycModal] = useState(false);
   const [showApplicantModal, setShowApplicantModal] = useState(false);
@@ -216,53 +218,66 @@ const KycPage = () => {
   }, [displayAllApplicants]);
 
   return (
-    <div className="wallet">
-      <div className="dashboard-inventory__body">
-        <div
-          style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: '10px', marginBottom: '20px'}}
-        >
-          <button
-            className='btn-primary'
-            onClick={()=> setDisplayAllApplicants(false)}
-          >
-            All Workflow Runs
-          </button>
-          <button
-            className='btn-primary'
-            onClick={()=> setDisplayAllApplicants(true)}
-          >
-            All Applicants
-          </button>
+    <>
+      {publicKey && publicKey.toString() === auth ? (
+        <div className="wallet">
+          <div className="dashboard-inventory__body">
+            <div
+              style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: '10px', marginBottom: '20px'}}
+            >
+              <button
+                className='btn-primary'
+                onClick={()=> setDisplayAllApplicants(false)}
+              >
+                All Workflow Runs
+              </button>
+              <button
+                className='btn-primary'
+                onClick={()=> setDisplayAllApplicants(true)}
+              >
+                All Applicants
+              </button>
+            </div>
+              <Table
+                style={{
+                  border: '1px solid #3d3d3d',
+                  borderRadius: '10px',
+                  overflow: 'hidden',
+                  backgroundColor: '#1e1e22',
+                }}
+                // size="medium"
+                scroll={{ x: 'max-content' }}
+                // bordered={true}
+                dataSource={!displayAllApplicants ? allWorkflowRuns : allApplicants}
+                // @ts-expect-error - antd table types are incorrect
+                columns={!displayAllApplicants ? worfklow_runs_columns : all_applicant_columns}
+                // lazy={true}
+              />
+              {showKycModal && applicant && (
+                <KycModal
+                  applicant={applicant}
+                  onClose={handleKycModalClose}
+                />
+              )}
+              {showApplicantModal && applicant && (
+                <ApplicantModal
+                  applicant={applicant}
+                  onClose={handleApplicantModalClose}
+                />     
+              )}
+            </div>
         </div>
-          <Table
-            style={{
-              border: '1px solid #3d3d3d',
-              borderRadius: '10px',
-              overflow: 'hidden',
-              backgroundColor: '#1e1e22',
-            }}
-            // size="medium"
-            scroll={{ x: 'max-content' }}
-            // bordered={true}
-            dataSource={!displayAllApplicants ? allWorkflowRuns : allApplicants}
-            // @ts-expect-error - antd table types are incorrect
-            columns={!displayAllApplicants ? worfklow_runs_columns : all_applicant_columns}
-            // lazy={true}
-          />
-          {showKycModal && applicant && (
-            <KycModal
-              applicant={applicant}
-              onClose={handleKycModalClose}
-            />
-          )}
-          {showApplicantModal && applicant && (
-            <ApplicantModal
-              applicant={applicant}
-              onClose={handleApplicantModalClose}
-            />     
-          )}
+      ) : (
+        <div className="wallet">
+          <div className="wallet__content">
+            <div className="wallet__content__header">
+              <h1>Unauthorized</h1>
+              <p>You are not authorized to view this page</p>
+            </div>
+          </div>
         </div>
-    </div>
+      )}
+    </>
   );
 };
 
