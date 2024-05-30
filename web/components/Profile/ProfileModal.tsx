@@ -523,21 +523,6 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
         )
     }
 
-    // useEffect(() => {
-    //     if(
-    //         profile!.fullName !== '' &&
-    //         profile!.dob !== '' &&
-    //         profile!.address.building_number !== '' &&
-    //         profile!.address.street !== '' &&
-    //         profile!.address.town !== '' &&
-    //         profile!.address.postcode !== '' &&
-    //         profile!.address.country !== ''
-    //     ) {
-    //         setDisplayOnfido(true);
-    //     }
-    // }, [profile]);
-    
-
     useEffect(() => {
         if(publicKey){
             return;
