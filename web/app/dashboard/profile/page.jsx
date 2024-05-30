@@ -2,6 +2,7 @@
 import '@/styles/DashboardProfile.scss';
 import { useEffect, useState } from 'react';
 import Dynamic from 'next/dynamic';
+import ProfileModal from "@/components/Profile/ProfileModal";
 const Upload = Dynamic(() => import('antd').then((mod) => mod.Upload), { ssr: false });
 const Input = Dynamic(() => import('antd').then((mod) => mod.Input), { ssr: false });
 const message = Dynamic(() => import('antd').then((mod) => mod.message), { ssr: false });
@@ -22,6 +23,7 @@ const Profile = () => {
   const [web3AuthPublicKey, setWeb3AuthPublicKey] = useState('');
   const [connectedWallet, setConnectedWallet] = useState('');
   const [offChainData, setOffChainData] = useState(undefined);
+  const [displayVerifiModal, setDisplayVerifiModal] = useState(false);
   const [fileList, setFileList] = useState([]);
   const onChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
@@ -150,6 +152,46 @@ const Profile = () => {
           />
         </div>
       </div>
+
+      <div className="profile__input-row">
+          <div>
+            {offChainData && offChainData.onfidoKyc ? (
+              <p  className="caption-3">
+                Verified
+              </p>
+            ) : (
+              <div>
+                <p
+                  className="caption-3"
+                >
+                  Your profile is currently unverified, please click here to complete:
+                </p>
+                <button
+                  className="btn-primary"
+                  onClick={() => {
+                    setDisplayVerifiModal(true)
+                  }}
+                >
+                  Verify Profile
+                </button>
+              </div>
+            )}
+          </div>
+      </div>
+      {displayVerifiModal && (
+        <ProfileModal
+          showModal={displayVerifiModal}
+          handleClose={() => {
+            setDisplayVerifiModal(false);
+          }}
+          page={2}
+          offChainProfile={
+            {
+              fullName: offChainData.fullName
+            }
+          }
+        />
+      )}
     </div>
   );
 };

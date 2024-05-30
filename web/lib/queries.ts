@@ -69,6 +69,8 @@ export const user = gql`
             wallet
             currencyPreference
             profileImg
+            onfidoWorkflowRunId
+            onfidoKyc
         }
     }
 `;
@@ -78,6 +80,7 @@ export const userProfileBasic = gql`
         users(query: { wallet: $wallet }) {
             profileImg
             userName
+            onfidoKyc
         }
     }
 `;

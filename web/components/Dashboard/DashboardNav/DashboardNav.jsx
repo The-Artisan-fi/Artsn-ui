@@ -17,10 +17,12 @@ const DashboardNav = () => {
   const [variables, setVariables] = useState({ wallet: ''});
   const [profileImg, setProfileImg] = useState('');
   const [userName, setUserName] = useState('');
+  const [verified, setVerified] = useState(false);
   const [getDetails, { loading, error, data }] = useLazyQuery(userProfileBasic , {variables});
   if(!loading && data != undefined && profileImg == ''){
     setProfileImg(data.users[0].profileImg);
     setUserName(data.users[0].userName);
+    setVerified(data.users[0].onfidoKyc == true ? true : false)
   }
   if(!loading && error != undefined){
       console.log("error", error);
@@ -73,7 +75,7 @@ const DashboardNav = () => {
         />{' '}
       </Link>
       <div className="dashboard-nav__right">
-        <Popover
+        {/* <Popover
           content={notifications}
           title="Notifications"
           trigger="click"
@@ -90,7 +92,16 @@ const DashboardNav = () => {
             icon={notificationsData.length > 0 ? <LuBellDot /> : <LuBell />}
             type="circle"
           ></Button>
-        </Popover>
+        </Popover> */}
+        {verified ? (
+          <div className="dashboard-nav__verified">
+            <p className="caption-3" style={{ color: "green"}}>Verified</p>
+          </div>
+        ) : (
+          <div className="dashboard-nav__verified">
+            <p className="caption-3" style={{ color: "red"}}>Unverified</p>
+          </div>
+        )}
         <Avatar
           src={profileImg}
         />

@@ -192,8 +192,11 @@ const Dashboard = () => {
     // only execute if tokenAccounts is empty
     if (tokenAccounts.length == 0) {
       const data = await getTokenAccounts(key);
-      // console.log('data', data)
+      console.log('data', data)
       setTokenAccounts(data);
+      if(!data){
+        return;
+      }
       for(let i = 0; i < data.length; i++){
         setQueryItem(data[i]);
         await getListingAddress(data[i]);
@@ -203,7 +206,7 @@ const Dashboard = () => {
   }
 
   useEffect(() => {
-    if (publicKey && tokenAccounts.length == 0) {
+    if (publicKey && tokenAccounts?.length == 0) {
       getTokens();
     }
   }, [publicKey, tokenAccounts]);

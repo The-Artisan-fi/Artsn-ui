@@ -101,6 +101,10 @@ export async function decodeProfileData(key: PublicKey) {
 }
 
 export async function getTokenAccounts(key: PublicKey) {
+  if(!key){
+    return;
+  }
+  console.log('key', key.toBase58());
   const filters:GetProgramAccountsFilter[] = [
     {
       dataSize: 175,    //size of account (bytes)

@@ -10,8 +10,10 @@
 // }
 
 export async function POST( request: Request ) {
-    console.log('onfido route pinged')
+    
     const { applicant_id } = await request.json();
+    console.log('onfido route pinged CREATE TOKEN', applicant_id)
+    if(applicant_id == undefined) return new Response('Applicant ID is required', { status: 400 }); 
     try {
         const response = await fetch('https://api.eu.onfido.com/v3.6/sdk_token/', {
             method: 'POST',
@@ -26,7 +28,7 @@ export async function POST( request: Request ) {
         });
 
         const data = await response.json();
-        console.log('onfido response', data);
+        console.log('response data from creating token', data);
         return new Response(JSON.stringify(data), {
             headers: {
                 'content-type': 'application/json',
