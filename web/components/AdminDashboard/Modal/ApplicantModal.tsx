@@ -1,5 +1,3 @@
-import { useState, uesEffect } from "react";
-
 type ApplicantModalProps = {
   onClose: () => void;
   applicant: any;

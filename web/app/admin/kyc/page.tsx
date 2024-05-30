@@ -39,8 +39,8 @@ const KycPage = () => {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
-  
-      render: (text, record) => (
+      
+      render: (text: any, record: { output: { first_name: any; last_name: any; }; }) => (
         <p>{`${record.output.first_name} ${record.output.last_name}`}</p>
       ),
     },
@@ -49,7 +49,10 @@ const KycPage = () => {
       dataIndex: 'workflow_run_id',
       key: 'workflow_run_id',
 
-      render: (text, record) => (
+      render: (
+        text: string,
+        record: { id: string; }
+      ) => (
         <p> 
           {`${record.id.substring(0, 5)}...${record.id.substring(record.id.length - 5)}`}
         </p>
@@ -60,7 +63,10 @@ const KycPage = () => {
       dataIndex: 'created_at',
       key: 'created_at',
   
-      render: (text, record) => {
+      render: (
+        text: string,
+        record: { created_at: string; }
+      ) => {
         return(
           <p>
             {`${new Date(record.created_at).toLocaleDateString()}`}
@@ -74,7 +80,10 @@ const KycPage = () => {
       dataIndex: 'status',
       key: 'status',
   
-      render: (text, record) => {
+      render: (
+        text: string,
+        record: { status: string; }
+      ) => {
         return (
           <p>
             {record.status === 'approved' ? '✅' : record.status === 'processing' ? '💬' : '❌' }  
@@ -87,7 +96,10 @@ const KycPage = () => {
       dataIndex: 'view',
       key: 'view',
   
-      render: (text, record) => {
+      render: (
+        text: string,
+        record: { workflow_run_id: string; }
+      ) => {
         return (
           <button 
             onClick={() =>{
@@ -117,7 +129,10 @@ const KycPage = () => {
       dataIndex: 'name',
       key: 'name',
   
-      render: (text, record) => (
+      render: (
+        text: string,
+        record: { first_name: string; last_name: string; }
+      ) => (
         <p>{`${record.first_name} ${record.last_name}`}</p>
       ),
     },
@@ -126,7 +141,10 @@ const KycPage = () => {
       dataIndex: 'applicant_id',
       key: 'applicant_id',
 
-      render: (text, record) => (
+      render: (
+        text: string,
+        record: { id: string; }
+      ) => (
         <p> 
           {`${record.id.substring(0, 5)}...${record.id.substring(record.id.length - 5)}`}
         </p>
@@ -137,7 +155,10 @@ const KycPage = () => {
       dataIndex: 'created_at',
       key: 'created_at',
   
-      render: (text, record) => {
+      render: (
+        text: string,
+        record: { created_at: string; }
+      ) => {
         return(
           <p>
             {`${new Date(record.created_at).toLocaleDateString()}`}
@@ -150,7 +171,10 @@ const KycPage = () => {
       dataIndex: 'view',
       key: 'view',
   
-      render: (text, record) => {
+      render: (
+        text: string,
+        record: { id: string; }
+      ) => {
         return (
           <button 
             onClick={() =>{
@@ -221,6 +245,7 @@ const KycPage = () => {
             scroll={{ x: 'max-content' }}
             // bordered={true}
             dataSource={!displayAllApplicants ? allWorkflowRuns : allApplicants}
+            // @ts-expect-error - antd table types are incorrect
             columns={!displayAllApplicants ? worfklow_runs_columns : all_applicant_columns}
             // lazy={true}
           />

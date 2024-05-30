@@ -1,4 +1,3 @@
-import { useState, uesEffect } from "react";
 
 type KycModalProps = {
   onClose: () => void;

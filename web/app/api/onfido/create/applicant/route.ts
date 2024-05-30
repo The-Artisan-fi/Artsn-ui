@@ -61,9 +61,5 @@ export async function POST( request: Request ) {
         });
     } catch (e) {
         console.log(e);
-        return new Response(e, {
-            status: 500,
-            statusText: 'Internal Server Error',
-        });
     }
 }
