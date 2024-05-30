@@ -34,6 +34,7 @@ export default function OnfidoWrapper({ publicKey, fullName, dob, address, handl
   const [renderOnfido, setRenderOnfido] = useState<boolean>(false);
   const [onfidoSuccess, setOnfidoSuccess] = useState<boolean>(false);
   const getApplicantId = async () => {
+    try {
         const response = await fetch('/api/onfido/create/applicant', {
             method: 'POST',
             headers: {
@@ -65,8 +66,16 @@ export default function OnfidoWrapper({ publicKey, fullName, dob, address, handl
         });
         const data = await response.json();
         console.log('applicant id', data.id)
-        // setApplicantId(data.id);
-        return data.id;
+        if(data.id){
+          // setApplicantId(data.id);
+          return data.id;
+        } else {
+          throw new Error('Error getting applicant id');
+        }
+      } catch (error) {
+        console.log('error', error);
+        setError(true);
+      }
     };
 
     const getWorkflowId = async (applicant: string) => {
@@ -89,6 +98,7 @@ export default function OnfidoWrapper({ publicKey, fullName, dob, address, handl
       if(applicantLoading) return;
       console.log('getting applicant token')
       const applicantId = await getApplicantId();
+      if(applicantId == undefined) return;
       await getWorkflowId(applicantId);
       console.log('getting applicant token for :', applicantId)
       try{
