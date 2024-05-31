@@ -90,7 +90,7 @@ function Navbar() {
 
   async function checkBuyerProfile(key) {
     try {
-      const response = await fetch('/api/getProfile', {
+      const response = await fetch('/api/protocol/profile/get', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

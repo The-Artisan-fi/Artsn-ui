@@ -1,25 +1,17 @@
 'use client';
 import '@/styles/DashboardSettings.scss';
 import { useEffect, useMemo, useState } from 'react';
-import { auth } from '@/lib/constants';
+import { Connection } from "@solana/web3.js";
 import Dynamic from 'next/dynamic';
-const Upload = Dynamic(() => import('antd').then((mod) => mod.Upload), { ssr: false });
 const Input = Dynamic(() => import('antd').then((mod) => mod.Input), { ssr: false });
-const message = Dynamic(() => import('antd').then((mod) => mod.message), { ssr: false });
 
-// import { Upload, Input, message } from 'antd';
-import ImgCrop from 'antd-img-crop';
-
-import { MdOutlineFileUpload } from 'react-icons/md';
-import { FaLock } from 'react-icons/fa';
-import { FaCopy } from 'react-icons/fa';
-import { useLazyQuery } from "@apollo/client";
-import { user } from "@/lib/queries";
 import { useWallet } from '@solana/wallet-adapter-react';
 import { checkLogin } from "@/components/Web3Auth/solanaRPC";
+import { initAdminTx } from "@/components/Protocol/functions";
+import { toastPromise, toastError } from '@/helpers/toast';
 
 const Profile = () => {
-  const { publicKey } = useWallet();
+  const { publicKey, sendTransaction } = useWallet();
   const [web3AuthPublicKey, setWeb3AuthPublicKey] = useState('');
   const newAdmin = useMemo(() => {
     return {
@@ -28,36 +20,18 @@ const Profile = () => {
     }
   }, []);
   const [connectedWallet, setConnectedWallet] = useState('');
-  const [offChainData, setOffChainData] = useState(undefined);
-  const [fileList, setFileList] = useState([]);
-  const onChange = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
-  };
-  const [variables, setVariables] = useState({
-    wallet: "",
-  });
-  const [getDetails, { loading, error, data }] = useLazyQuery(user , {variables});
-  if(!loading && data != undefined && offChainData == undefined){
-    console.log("data", data);
-    setOffChainData(data.users[0]);
+
+  const connection = new Connection(
+    process.env.NEXT_PUBLIC_HELIUS_DEVNET,
+    "confirmed"
+  );
+  
+
+  async function handleCreateAdmin(){
+    const tx = await initAdminTx(newAdmin.wallet, newAdmin.username, publicKey.toBase58());
+    const signature = await sendTransaction(tx, connection, {skipPreflight: true,});
+    await toastPromise(signature)
   }
-  if(!loading && error != undefined){
-      console.log("error", error);
-  }
-  const onPreview = async (file) => {
-    let src = file.url;
-    if (!src) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj);
-        reader.onload = () => resolve(reader.result);
-      });
-    }
-    const image = new Image();
-    image.src = src;
-    const imgWindow = window.open(src);
-    imgWindow?.document.write(image.outerHTML);
-  };
 
   useEffect(() => {
     if (publicKey) {
@@ -120,7 +94,9 @@ const Profile = () => {
 
         <button
           className="btn-primary"
-          onClick={()=> {console.log("Create Admin: ", newAdmin)}}
+          onClick={()=> {
+            handleCreateAdmin();
+          }}
         >
           Create Admin
         </button>

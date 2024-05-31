@@ -12,6 +12,9 @@ import { MdOutlineFileUpload } from 'react-icons/md';
 import ImgCrop from 'antd-img-crop';
 const Upload = Dynamic(() => import('antd').then((mod) => mod.Upload), { ssr: false });
 // const message = Dynamic(() => import('antd').then((mod) => mod.message), { ssr: false });
+import { Connection } from "@solana/web3.js";
+import { initTokenTx } from "@/components/Protocol/functions";
+import { toastPromise, toastError, toastSuccess } from '@/helpers/toast';
 
 import { useEffect, useState, useMemo } from 'react';
 import { HiOutlineLogout } from 'react-icons/hi';
@@ -23,7 +26,7 @@ import { checkLogin } from '@/components/Web3Auth/checkLogin';
 import { useMutation } from "@apollo/client";
 import { ADD_LISTING } from "@/lib/mutations";
 const SettingsPage = () => {
-  const { publicKey, disconnect } = useWallet();
+  const { publicKey, sendTransaction } = useWallet();
   const [connectedWallet, setConnectedWallet] = useState('');
   const [currencyPref, setCurrencyPref] = useState('');
   const [fileList, setFileList] = useState([]);
@@ -31,12 +34,18 @@ const SettingsPage = () => {
   const tokenObj = useMemo(() => {
     return {
       id: randomNo,
+      reference: '',
       share: 0,
       price: 0,
       startingTime: 0,
       uri: ''
     }
   }, []);
+
+  const connection = new Connection(
+    process.env.NEXT_PUBLIC_HELIUS_DEVNET!,
+    "confirmed"
+  );
 
   // DATABASE MUTATION****************************************************
   const variables = useMemo(() => (
@@ -52,6 +61,21 @@ const SettingsPage = () => {
     }
   ), []);
   const [addListing, { loading, error, data }] = useMutation(ADD_LISTING);
+
+  // Create Token IX
+  async function handleCreateToken() {
+    try {
+      const tx = await initTokenTx(tokenObj.id, tokenObj.reference, tokenObj.share, tokenObj.price, tokenObj.startingTime, tokenObj.uri, connectedWallet);
+      if(tx){
+        variables.associatedId = tx.associatedId;
+        const signature = await sendTransaction(tx.tx, connection, {skipPreflight: true,});
+          await toastPromise(signature)
+      }
+    } catch (error) {
+      console.error('Error creating token', error);
+      toastError('Error creating token');
+    }
+  }
 
   // S3 IMAGE UPLOAD AND FETCH****************************************************
   async function uploadDocuments(
@@ -96,16 +120,25 @@ const SettingsPage = () => {
     };
 
   async function initToken() {
-    const res = null; //await program response from adding token, this will be the listing address
-    variables.associatedId = res!;
-    // convert newFileList to a Blob
+    try{
+
+      // Add token to Protocol
+      await handleCreateToken();
+
+      // Add Images to Bucket
       const fileListBlob = fileList.map((file: { originFileObj: Blob; type: string; }) => {
         return new Blob([file.originFileObj], { type: file.type });
-    });
-    await trigger({ files: fileListBlob });
-    await addListing({ variables });
-    
-    return console.log('Token added successfully');
+      });
+      await trigger({ files: fileListBlob });
+
+      // Add off-chain data to Mongo
+      await addListing({ variables });
+      
+      toastSuccess('Token created successfully');
+    } catch (error) {
+      console.error('Error initializing token', error);
+      toastError('Error initializing token');
+    }
   };
 
   useEffect(() => {
@@ -155,6 +188,21 @@ const SettingsPage = () => {
                 }
                 type="id"
                 disabled={true}
+                style={{ color: 'white', backgroundColor: 'transparent'}}
+              />
+            </div>
+            <div className="profile__input-col">
+              <p className="caption-3">Reference</p>
+              <Input
+                value={
+                  tokenObj.reference
+                }
+                size="large"
+                placeholder="Watch Reference"
+                onChange={(e) => {
+                  tokenObj.reference = e.target.value;
+                }}
+                disabled={false}
                 style={{ color: 'white', backgroundColor: 'transparent'}}
               />
             </div>

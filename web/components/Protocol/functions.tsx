@@ -17,7 +17,7 @@ const program = new Program(IDL, PROGRAM_ID);
 
 export async function initProfileTx(key: string) {
   try{
-    const response = await fetch('/api/initProfile', {
+    const response = await fetch('/api/protocol/profile/init', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
@@ -43,7 +43,7 @@ export async function initProfileTx(key: string) {
 
 export async function buyTx(id: number, reference: string, key: string, amount: number) {
   try{
-    const response = await fetch('/api/buy', {
+    const response = await fetch('/api/protocol/buy', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
@@ -71,7 +71,7 @@ export async function buyTx(id: number, reference: string, key: string, amount: 
 
 export async function fetchBuyerProfile(key: PublicKey) {
     try {
-      const response = await fetch('/api/getProfile', {
+      const response = await fetch('/api/protocol/profile/get', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -165,4 +165,67 @@ export async function getTokenAccounts(key: PublicKey) {
   const filteredAccounts = accountDetails.filter((account) => account.metadata?.symbol == "ARTSN");
 
   return filteredAccounts;
+}
+
+export async function initAdminTx(username: string, newAdmin: string, signer: string) {
+  try{
+    const response = await fetch('/api/protocol/admin/init', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: username,
+        newAdmin: newAdmin,
+        signer: signer
+      })
+    })
+
+    const txData = await response.json();
+    const tx = Transaction.from(Buffer.from(txData.transaction, "base64"));
+    if(!tx){
+      console.log('no transaction');
+      return;
+    }
+
+    return tx;
+  }
+  catch (error) {
+    console.error('Error sending transaction', error);
+  }
+}
+
+export async function initTokenTx(id: number, reference: string, share: number, price: number, starting_time: number, uri: string, signer: string) {
+  try{
+    const response = await fetch('/api/protocol/token/init', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: id,
+        reference: reference,
+        share: share,
+        price: price,
+        starting_time: starting_time,
+        uri: uri,
+        signer: signer
+      })
+    })
+
+    const txData = await response.json();
+    const tx = Transaction.from(Buffer.from(txData.transaction, "base64"));
+    if(!tx){
+      console.log('no transaction');
+      return;
+    }
+
+    return {
+      tx: tx,
+      associatedId: txData.associatedId
+    }
+  }
+  catch (error) {
+    console.error('Error sending transaction', error);
+  }
 }
