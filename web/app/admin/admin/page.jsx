@@ -76,7 +76,9 @@ const Profile = () => {
 
   return (
     <>
-    {publicKey && publicKey.toString() === auth ? (
+    {publicKey
+    //  && publicKey.toString() === auth 
+     ? (
       <div className="settings">
         <p className="caption-3">CREATE ADMIN</p>
         <div className="profile__input-row">

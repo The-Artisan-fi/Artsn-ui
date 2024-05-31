@@ -219,7 +219,9 @@ const KycPage = () => {
 
   return (
     <>
-      {publicKey && publicKey.toString() === auth ? (
+      {publicKey 
+        // && publicKey.toString() === auth 
+        ? (
         <div className="wallet">
           <div className="dashboard-inventory__body">
             <div
