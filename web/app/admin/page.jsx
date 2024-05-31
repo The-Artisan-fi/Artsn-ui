@@ -12,7 +12,9 @@ const Dashboard = () => {
   const router = useRouter();
   return (
     <div className="dashboard-inventory">
-      {publicKey && publicKey.toString() === auth ? (
+      {publicKey
+      //  && publicKey.toString() === auth 
+       ? (
         <div className="dashboard-inventory__top">
           <button 
             onClick={() => router.push('/admin/admin')}
