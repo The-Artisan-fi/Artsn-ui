@@ -334,12 +334,12 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                         </button>
                     </div>
                 )}
-
+{/* 
                 <button
                     onClick={()=> handlePageChange(2)}
                 >
                     change page
-                </button>
+                </button> */}
             </>
         )
     }
@@ -435,34 +435,33 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                             
                             <p className="caption-3">Building Number</p>
                             <Input 
-                                size="large" 
+                                size="large"
+                                placeholder='Building Number'
                                 style={{ backgroundColor: '#1e1e22', color: 'white'}}
                                 onChange={(e) => {setProfile({ ...profile, address: { ...profile!.address, building_number: e.target.value } });}}
                             />
                             <p className="caption-3">Street</p>
                             <Input 
                                 size="large" 
+                                placeholder='Street Name'
                                 style={{ backgroundColor: '#1e1e22', color: 'white'}}
                                 onChange={(e) => {setProfile({ ...profile, address: { ...profile!.address, street: e.target.value } });}}
                             />
                             <p className="caption-3">Town</p>
                             <Input 
                                 size="large" 
+                                placeholder='Town'
                                 style={{ backgroundColor: '#1e1e22', color: 'white'}}
                                 onChange={(e) => {setProfile({ ...profile, address: { ...profile!.address, town: e.target.value } });}}
                             />
                             <p className="caption-3">Postcode</p>
                             <Input 
                                 size="large" 
+                                placeholder='Postcode'
                                 style={{ backgroundColor: '#1e1e22', color: 'white'}}
                                 onChange={(e) => {setProfile({ ...profile, address: { ...profile!.address, postcode: e.target.value } });}}
                             />
                             <p className="caption-3">Country</p>
-                            {/* <Input 
-                                size="large" 
-                                style={{ backgroundColor: '#1e1e22', color: 'white'}}
-                                onChange={(e) => {setProfile({ ...profile, address: { ...profile.address, country: e.target.value } });}}
-                            /> */}
                             <Select
                                 defaultValue="CH"
                                 style={{ width: 260 }}
@@ -480,6 +479,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                     </button> */}
                 </div> 
                 {
+                    !displayOnfido &&
                     profile!.fullName !== '' && profile!.fullName !== undefined &&
                     profile!.dob !== '' && profile!.dob !== undefined &&
                     profile!.address.building_number !== '' && profile!.address.building_number !== undefined &&
