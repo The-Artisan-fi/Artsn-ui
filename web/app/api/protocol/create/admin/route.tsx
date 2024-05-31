@@ -35,7 +35,7 @@ export async function POST( request: Request ) {
             .initializeAdminAccount(username)
             .accounts({
                 admin: signer,
-                adminState: signerState,
+                adminState: null,
                 newAdmin: newAdmin,
                 newAdminState: newAdminState,
                 systemProgram: SystemProgram.programId,
