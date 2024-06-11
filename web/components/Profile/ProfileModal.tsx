@@ -387,10 +387,10 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                         className="logo"
                     />
                     <div className="header-text-container">
-                        <p className="header-text">
+                        <p className="header-text" style={{color: 'white'}}>
                             Verify Your Identity
                         </p>
-                        <p className="header-subtext">
+                        <p className="header-subtext" style={{color: 'white'}}>
                             To open an account with us, we need to verify your identity. This should only take a few minutes.
                         </p>
                     </div>
@@ -478,7 +478,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                         Go Back
                     </button> */}
                 </div> 
-                {
+                {/* {
                     !displayOnfido &&
                     profile!.fullName !== '' && profile!.fullName !== undefined &&
                     profile!.dob !== '' && profile!.dob !== undefined &&
@@ -497,7 +497,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                             </button>
                         </div>
                     )
-                }
+                } */}
                 
                 {
 
@@ -532,7 +532,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                             }}
                         />
            
-                }
+                    }
                 </>
         )
     }

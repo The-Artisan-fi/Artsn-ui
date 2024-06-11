@@ -22,7 +22,7 @@ const DashboardNav = () => {
   if(!loading && data != undefined && profileImg == ''){
     setProfileImg(data.users[0].profileImg);
     setUserName(data.users[0].userName);
-    setVerified(data.users[0].onfidoKyc == true ? true : false)
+    setVerified(data.users[0].idvStatus == true ? true : false)
   }
   if(!loading && error != undefined){
       console.log("error", error);

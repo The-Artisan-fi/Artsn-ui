@@ -71,6 +71,8 @@ export const user = gql`
             profileImg
             onfidoWorkflowRunId
             onfidoKyc
+            idvId
+            idvStatus
         }
     }
 `;

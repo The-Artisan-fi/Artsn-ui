@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { UPDATE_USER_IDV_ID} from "@/lib/mutations";
 import { useMutation } from "@apollo/client";
 
-
 type OnfidoProps = {
   publicKey: string;
   fullName: string;
@@ -23,6 +22,7 @@ export default function OndatoWrapper({ publicKey, fullName, dob, address, handl
   const [updateUserIdvId, { loading, error, data }] = useMutation(UPDATE_USER_IDV_ID);
   if(!loading && !error && data) {
     console.log('data', data);
+    handleSuccessPending();
   }
   if(loading) {
     console.log('loading', loading);
@@ -33,13 +33,13 @@ export default function OndatoWrapper({ publicKey, fullName, dob, address, handl
 
     const getIdvId = async () => {
 
-      const firstName = 'Jane';
-      const lastName = 'Doe';
+      const firstName = fullName.split(' ')[0];
+      const lastName = fullName.split(' ')[1];
       const middleName = '';
       const personalCode = '1234567890';
       const phoneNumber = '1234567890';
-      const countryCode = 'GBR';
-      const email = 'johndoe@gmail.com';
+      const countryCode = address.country;
+      const email = '';
       console.log('pinging idv api')
       try{
           const response = await fetch('/api/ondato/idv/create', {

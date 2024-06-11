@@ -69,6 +69,8 @@ export const ADD_USER = gql`
         currencyPreference: $currencyPreference
         profileImg: $profileImg
         onfidoKyc: false
+        idvId: ""
+        idvStatus: ""
       }
     ) {
       _id
@@ -79,6 +81,8 @@ export const ADD_USER = gql`
       currencyPreference
       profileImg
       onfidoKyc
+      idvId
+      idvStatus
     }
   }
 `;
