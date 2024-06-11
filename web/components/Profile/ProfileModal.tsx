@@ -17,6 +17,7 @@ import useSWRMutation from "swr/mutation";
 import LoginHeader from '@/public/assets/login/login_header.svg';
 import Logo from '@/public/assets/login/logo_bw.svg';
 import OnfidoWrapper from '@/components/Profile/Onfido/OnfidoWrapper';
+import OndatoWrapper from '@/components/Profile/Ondato/OndatoWrapper';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import { countries } from '@/lib/countries';
@@ -198,9 +199,9 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
     }
 
     async function createProfile(key: string) {
-        if(fileList.length < 1){
-            return;
-        }
+        // if(fileList.length < 1){
+        //     return;
+        // }
         // convert newFileList to a Blob
         const fileListBlob = fileList.map((file: { originFileObj: Blob; type: string; }) => {
             return new Blob([file.originFileObj], { type: file.type });
@@ -208,7 +209,6 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
         await trigger({ files: fileListBlob });
 
         await initProfile(key);
-
         addUser({
             variables: {
                 fullName: profile!.fullName,
@@ -500,9 +500,23 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                 }
                 
                 {
-                    displayOnfido &&
-                    (
-                        <OnfidoWrapper 
+
+                        // <OnfidoWrapper 
+                        //     publicKey={publicKey ? publicKey.toString() : web3AuthPublicKey!} 
+                        //     handleSuccessPending={()=> setVerificationPending(true)}
+                        //     handleRetry={()=> retry()}
+                        //     fullName={profile!.fullName || ''}
+                        //     dob={profile!.dob || ''}
+                        //     address={{
+                        //         ...profile!.address,
+                        //         building_number: profile!.address.building_number || '',
+                        //         street: profile!.address.street || '',
+                        //         town: profile!.address.town || '',
+                        //         postcode: profile!.address.postcode || '',
+                        //         country: profile!.address.country || ''
+                        //     }}
+                        // />
+                        <OndatoWrapper
                             publicKey={publicKey ? publicKey.toString() : web3AuthPublicKey!} 
                             handleSuccessPending={()=> setVerificationPending(true)}
                             handleRetry={()=> retry()}
@@ -517,7 +531,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                                 country: profile!.address.country || ''
                             }}
                         />
-                    )
+           
                 }
                 </>
         )
