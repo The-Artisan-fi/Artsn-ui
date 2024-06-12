@@ -82,12 +82,14 @@ const Dashboard = () => {
 
   const [getListing, { loading, error, data }] = useLazyQuery(getListingByMintAddress , {variables});
   if(!loading && data != undefined && listingAddress == ''){
+    console.log('data', data);
     if(data.listings.length > 0 && fractions.filter((item) => item.associatedId == data.listings[0].associatedId).length == 0){
+
       fractions.push({
         ...queryItem,
         associatedId: data.listings[0].associatedId
       });
-      // console.log('pushing fraction data', fractions);
+      console.log('pushing fraction data', fractions);
       setListingAddress(data.listings[0].associatedId);
     }
   }
@@ -191,6 +193,7 @@ const Dashboard = () => {
   const getTokens = async (key) => {
     // only execute if tokenAccounts is empty
     if (tokenAccounts.length == 0) {
+      console.log('key', key)
       const data = await getTokenAccounts(key);
       console.log('data', data)
       setTokenAccounts(data);
@@ -207,13 +210,13 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (publicKey && tokenAccounts?.length == 0) {
-      getTokens();
+      getTokens(publicKey);
     }
   }, [publicKey, tokenAccounts]);
 
   useEffect(() => {
     if (publicKey && tokenAccounts.length == 0) {
-      getTokens();
+      getTokens(publicKey);
     } else {
         checkLogin().then((res) => {
           if(res){
