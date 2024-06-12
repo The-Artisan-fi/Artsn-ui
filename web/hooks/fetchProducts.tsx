@@ -43,8 +43,7 @@ export const fetchProducts = async () => {
             const productList = all_program_accounts.map((account) => {
                 try {
                     const decode = program.coder.accounts.decode("Listing", account.account.data);
-                    // console.log('decode', decode);
-                    console.log('decode', account.account.owner.toBase58());
+
                     // 
                     // id: BN {negative: 0, words: Array(3), length: 1, red: null}
                     // price: BN {negative: 0, words: Array(3), length: 1, red: null}
@@ -54,7 +53,6 @@ export const fetchProducts = async () => {
                     // startingTime: BN {negative: 0, words: Array(2), length: 2, red: null}
                     // watch: PublicKey {_bn: BN}
                     const fraction = PublicKey.findProgramAddressSync([Buffer.from('fraction'), account.pubkey.toBuffer()], program.programId)[0];
-                    console.log('mintAddress', fraction.toString());
                     return {
                         accountPubkey: account.pubkey.toBase58(),
                         mintAddress: fraction.toBase58(),

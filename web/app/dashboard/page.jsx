@@ -89,7 +89,7 @@ const Dashboard = () => {
         ...queryItem,
         associatedId: data.listings[0].associatedId
       });
-      console.log('pushing fraction data', fractions);
+
       setListingAddress(data.listings[0].associatedId);
     }
   }

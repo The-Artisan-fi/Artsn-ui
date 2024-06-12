@@ -11,7 +11,6 @@ import { SolanaWallet } from "@web3auth/solana-provider";
 import { SolanaPrivateKeyProvider } from "@web3auth/solana-provider";
 
 const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
-console.log('client id', clientId)
 const chainConfig = {
   chainNamespace: CHAIN_NAMESPACES.SOLANA,
   chainId: "0x3", // Please use 0x1 for Mainnet, 0x2 for Testnet, 0x3 for Devnet

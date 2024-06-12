@@ -3,9 +3,11 @@ import '@/styles/DashboardSettings.scss';
 import Dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 // import { message } from 'antd';
+import { Input } from 'antd';
 const Button = Dynamic(() => import('antd').then((mod) => mod.Button), { ssr: false });
-const Input = Dynamic(() => import('antd').then((mod) => mod.Input), { ssr: false });
+// const Input = Dynamic(() => import('antd').then((mod) => mod.Input), { ssr: false });
 const Select = Dynamic(() => import('antd').then((mod) => mod.Select), { ssr: false });
+const Option = Dynamic(() => import('antd').then((mod) => mod.Select), { ssr: false });
 import useSWRMutation from "swr/mutation";
 import { FaLock } from 'react-icons/fa';
 import { MdOutlineFileUpload } from 'react-icons/md';
@@ -26,6 +28,7 @@ import { checkLogin } from '@/components/Web3Auth/checkLogin';
 import { useMutation } from "@apollo/client";
 import { ADD_LISTING } from "@/lib/mutations";
 const SettingsPage = () => {
+  const { TextArea } = Input;
   const { publicKey, sendTransaction } = useWallet();
   const [connectedWallet, setConnectedWallet] = useState('');
   const [currencyPref, setCurrencyPref] = useState('');
@@ -38,7 +41,7 @@ const SettingsPage = () => {
       share: 0,
       price: 0,
       startingTime: 0,
-      uri: ''
+      uri: '',
     }
   }, []);
 
@@ -57,7 +60,15 @@ const SettingsPage = () => {
       expectedNetReturn: "",
       images: [],
       marketValue: "",
-      pastReturns: ""
+      pastReturns: "",
+      currency: "USDC",
+      description: "",
+      model: "",
+      offerViews: 0,
+      sold: 0,
+      total: 0,
+      mintAddress: "",
+      about: "",
     }
   ), []);
   const [addListing, { loading, error, data }] = useMutation(ADD_LISTING);
@@ -158,9 +169,19 @@ const SettingsPage = () => {
       {publicKey 
         // && publicKey.toString() === auth 
       ? (
+        // TOP HALF
         <div className="settings">
           <p className="caption-3">CREATE A TOKEN</p>
-          <div className="profile__input-row">
+          <div 
+            className="profile__input-row"
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignContent: 'center',
+              justifyContent: 'center',
+
+            }}
+          >
             <div className="profile__top-row__image-upload">
               <ImgCrop rotationSlider>
                   <Upload
@@ -177,97 +198,273 @@ const SettingsPage = () => {
               </ImgCrop>
               {fileList.length < 1 && <p className="p-4">Upload Item Images</p>}
             </div>
-            <div className="profile__input-col">
-              <p className="caption-3">ID</p>
-              <Input
-                suffix={<FaLock />}
-                size="large"
-                placeholder="Token ID"
-                value={
-                  tokenObj.id
-                }
-                type="id"
-                disabled={true}
-                style={{ color: 'white', backgroundColor: 'transparent'}}
-              />
-            </div>
-            <div className="profile__input-col">
-              <p className="caption-3">Reference</p>
-              <Input
-                value={
-                  tokenObj.reference
-                }
-                size="large"
-                placeholder="Watch Reference"
-                onChange={(e) => {
-                  tokenObj.reference = e.target.value;
-                }}
-                disabled={false}
-                style={{ color: 'white', backgroundColor: 'transparent'}}
-              />
-            </div>
-            <div className="profile__input-col">
-              <p className="caption-3">Total Shares</p>
-              <Input
-                value={
-                  tokenObj.share
-                }
-                size="large"
-                placeholder="Enter the total shares"
-                onChange={(e) => {
-                  tokenObj.share = parseInt(e.target.value);
-                }}
-                disabled={false}
-                style={{ color: 'white', backgroundColor: 'transparent'}}
-              />
-            </div>
-            <div className="profile__input-col">
-              <p className="caption-3">Price</p>
-              <Input
-                value={
-                  tokenObj.price
-                }
-                size="large"
-                placeholder="Enter the price"
-                onChange={(e) => {
-                  tokenObj.price = parseInt(e.target.value);
-                }}
-                disabled={false}
-                style={{ color: 'white', backgroundColor: 'transparent'}}
-              />
-            </div>
-            <div className="profile__input-col">
-              <p className="caption-3">Starting Time</p>
-              <Input
-                value={
-                  tokenObj.startingTime
-                }
-                size="large"
-                placeholder="Enter the starting time"
-                onChange={(e) => {
-                  tokenObj.startingTime = parseInt(e.target.value);
-                }}
-                disabled={false}
-                style={{ color: 'white', backgroundColor: 'transparent'}}
-              />
-            </div>
-            <div className="profile__input-col">
-              <p className="caption-3">URI</p>
-              <Input
-                value={
-                  tokenObj.uri
-                }
-                size="large"
-                placeholder="Enter the URI"
-                onChange={(e) => {
-                  tokenObj.uri = e.target.value;
-                }}
-                disabled={false}
-                style={{ color: 'white', backgroundColor: 'transparent'}}
-              />
+            <div 
+              className="profile__input-col"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: '40%',
+              }}
+            >
+              <div className="profile__input-col-sm">
+                <p className="caption-3">ID</p>
+                <Input
+                  suffix={<FaLock />}
+                  size="large"
+                  placeholder="Token ID"
+                  value={
+                    tokenObj.id
+                  }
+                  type="id"
+                  disabled={true}
+                  style={{ color: 'white', backgroundColor: 'transparent'}}
+                />
+              </div>
+              <div className="profile__input-col-sm">
+                <p className="caption-3">Reference</p>
+                <Input
+                  size="large"
+                  placeholder="Watch Reference"
+                  onChange={(e) => {
+                    tokenObj.reference = e.target.value;
+                  }}
+                  disabled={false}
+                  style={{ color: 'white', backgroundColor: 'transparent'}}
+                />
+              </div>
+              <div className="profile__input-col-sm">
+                <p className="caption-3">Total Shares</p>
+                <Input
+                  size="large"
+                  placeholder="Enter the total shares"
+                  onChange={(e) => {
+                    tokenObj.share = parseInt(e.target.value);
+                  }}
+                  disabled={false}
+                  style={{ color: 'white', backgroundColor: 'transparent'}}
+                />
+              </div>
+              <div className="profile__input-col-sm">
+                <p className="caption-3">Price</p>
+                <Input
+                  size="large"
+                  placeholder="Enter the price"
+                  onChange={(e) => {
+                    tokenObj.price = parseInt(e.target.value);
+                  }}
+                  disabled={false}
+                  style={{ color: 'white', backgroundColor: 'transparent'}}
+                />
+              </div>
             </div>
           </div>
 
+
+          {/* BOTTOM HALF */}
+
+          <div className="profile__input-col">
+
+            
+            <div 
+              className="profile__input-row"
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignContent: 'center',
+                justifyContent: 'space-evenly',
+              }}
+            >
+              <div 
+                className="profile__input-col"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  width: '40%',
+                }}
+              >
+                <div className="profile__input-col">
+                  <p className="caption-3">Starting Time</p>
+                  <Input
+                    size="large"
+                    placeholder="Enter the starting time"
+                    onChange={(e) => {
+                      tokenObj.startingTime = parseInt(e.target.value);
+                    }}
+                    disabled={false}
+                    style={{ color: 'white', backgroundColor: 'transparent',
+
+                      // placeholder color should be white
+                      textDecorationColor: 'white',
+                    }}
+                  />
+                </div>
+                <div className="profile__input-col">
+                  <p className="caption-3">Total</p>
+                  <Input
+                    size="large"
+                    placeholder="Enter the total"
+                    onChange={(e) => {
+                      variables.total = parseInt(e.target.value);
+                    }}
+                    disabled={false}
+                    style={{ color: 'white', backgroundColor: 'transparent'}}
+                  />
+                </div>
+                <div className="profile__input-col">
+                  <p className="caption-3">Market Value</p>
+                  <Input
+                    size="large"
+                    placeholder="Enter the market value"
+                    onChange={(e) => {
+                      variables.marketValue = e.target.value;
+                    }}
+                    disabled={false}
+                    style={{ color: 'white', backgroundColor: 'transparent'}}
+                  />
+                </div>
+                <div className="profile__input-col">
+                  <p className="caption-3">Earning Potential</p>
+                  <Input
+                    size="large"
+                    placeholder="Enter the earning potential"
+                    onChange={(e) => {
+                      variables.earningPotential = e.target.value;
+                    }}
+                    disabled={false}
+                    style={{ color: 'white', backgroundColor: 'transparent'}}
+                  />
+                </div>
+                <div className="profile__input-col">
+                  <p className="caption-3">Earning Potential Duration</p>
+                  <Input
+                    size="large"
+                    placeholder="Enter the earning potential duration"
+                    onChange={(e) => {
+                      variables.earningPotentialDuration = e.target.value;
+                    }}
+                    disabled={false}
+                    style={{ color: 'white', backgroundColor: 'transparent'}}
+                  />
+                </div>
+                
+                </div>
+                <div 
+                  className="profile__input-col"
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    width: '40%',
+                  }}
+                >
+                <div className="profile__input-col">
+                  <p className="caption-3">URI</p>
+                  <Input
+                    size="large"
+                    placeholder="Enter the URI"
+                    onChange={(e) => {
+                      tokenObj.uri = e.target.value;
+                    }}
+                    disabled={false}
+                    style={{ color: 'white', backgroundColor: 'transparent'}}
+                  />
+                </div>
+                <div className="profile__input-col">
+                  <p className="caption-3">Expected Net Return</p>
+                  <Input
+                    size="large"
+                    placeholder="Enter the expected net return"
+                    onChange={(e) => {
+                      variables.expectedNetReturn = e.target.value;
+                    }}
+                    disabled={false}
+                    style={{ color: 'white', backgroundColor: 'transparent'}}
+                  />
+                </div>
+                <div className="profile__input-col">
+                  <p className="caption-3">Past Returns</p>
+                  <Input
+                    size="large"
+                    placeholder="Enter the past returns"
+                    onChange={(e) => {
+                      variables.pastReturns = e.target.value;
+                    }}
+                    disabled={false}
+                    style={{ color: 'white', backgroundColor: 'transparent'}}
+                  />
+                </div>
+                <div className="profile__input-col">
+                  <p className="caption-3">Currency</p>
+                  <Select
+                    size="large"
+                    placeholder="Select Currency"
+                    onChange={(value) => {
+                      setCurrencyPref(value as string);
+                      variables.currency = value;
+                    }}
+                    style={{ color: 'white', backgroundColor: 'transparent'}}
+                  >
+                    <Option value="USDC">USDC</Option>
+                    <Option value="SOL">SOL</Option>
+                  </Select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div className="profile__input-col">
+              <p className="caption-3">Asset Details</p>
+              <TextArea
+                autoSize={{ minRows: 3, maxRows: 5 }}
+                placeholder="Enter the asset details"
+                onChange={(e) => {
+                  variables.assetDetails = e.target.value;
+                }}
+                disabled={false}
+                style={{ color: 'white', backgroundColor: 'transparent', height: '100px'}}
+              />
+            </div>
+            <div className="profile__input-col">
+              <p className="caption-3">Description</p>
+              <TextArea
+                autoSize={{ minRows: 3, maxRows: 5 }}
+                placeholder="Enter the description"
+                onChange={(e) => {
+                  variables.description = e.target.value;
+                }}
+                disabled={false}
+                style={{ color: 'white', backgroundColor: 'transparent', height: '100px'}}
+              />
+            </div>
+            <div className="profile__input-col">
+              <p className="caption-3">Model</p>
+              <TextArea
+                autoSize={{ minRows: 3, maxRows: 5 }}
+                placeholder="Enter the model"
+                onChange={(e) => {
+                  variables.model = e.target.value;
+                }}
+                disabled={false}
+                style={{ color: 'white', backgroundColor: 'transparent', height: '100px'}}
+              />
+            </div>
+            <div className="profile__input-col">
+              <p className="caption-3">About</p>
+              <TextArea
+                placeholder="Enter the about"
+                onChange={(e) => {
+                  variables.about = e.target.value;
+                }}
+                disabled={false}
+                style={{ color: 'white', backgroundColor: 'transparent'}}
+                autoSize={{ minRows: 3, maxRows: 5 }}
+              />
+            </div>
+          </div>
           <button
             className="btn-primary"
             onClick={()=> {

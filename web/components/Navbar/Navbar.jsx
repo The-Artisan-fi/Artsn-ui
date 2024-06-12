@@ -100,7 +100,7 @@ function Navbar() {
         }),
       });
       const profile = await response.json();
-      console.log('profile***', profile.profile)
+
       if(profile.profile != false) {
         setBuyerProfileExists(profile.profile);
       } else {
