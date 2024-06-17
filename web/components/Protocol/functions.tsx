@@ -167,16 +167,16 @@ export async function getTokenAccounts(key: PublicKey) {
   return filteredAccounts;
 }
 
-export async function initAdminTx(username: string, newAdmin: string, signer: string) {
+export async function initAdminTx(newAdmin: string, username: string, signer: string) {
   try{
-    const response = await fetch('/api/protocol/admin/init', {
+    const response = await fetch('/api/protocol/create/admin', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        username: username,
         newAdmin: newAdmin,
+        username: username,
         signer: signer
       })
     })
@@ -197,14 +197,14 @@ export async function initAdminTx(username: string, newAdmin: string, signer: st
 
 export async function initTokenTx(id: number, reference: string, share: number, price: number, starting_time: number, uri: string, signer: string) {
   try{
-    const response = await fetch('/api/protocol/token/init', {
+    const response = await fetch('/api/protocol/create/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         id: id,
-        reference: reference,
+        reference: "15202ST.OO.1240ST.01", //reference,
         share: share,
         price: price,
         starting_time: starting_time,

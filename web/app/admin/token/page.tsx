@@ -61,7 +61,7 @@ const SettingsPage = () => {
       images: [],
       marketValue: "",
       pastReturns: "",
-      currency: "USDC",
+      currency: "",
       description: "",
       model: "",
       offerViews: 0,
@@ -404,7 +404,7 @@ const SettingsPage = () => {
                     placeholder="Select Currency"
                     onChange={(value) => {
                       setCurrencyPref(value as string);
-                      variables.currency = value;
+                      variables.currency = value as string;
                     }}
                     style={{ color: 'white', backgroundColor: 'transparent'}}
                   >

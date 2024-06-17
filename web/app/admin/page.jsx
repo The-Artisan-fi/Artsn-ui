@@ -30,13 +30,13 @@ const Dashboard = () => {
           >
             <p className="caption-1">Create Token</p>
           </button>
-          <button 
+          {/* <button 
             onClick={() => router.push('/admin/kyc')}
             className="dashboard-inventory__top__gainer item-card"
             style={{ cursor: 'pointer' }}
           >
             <p className="caption-1">KYC</p>
-          </button>
+          </button> */}
         </div>
         ) : (
           <div className="dashboard-inventory__top__gainer item-card">

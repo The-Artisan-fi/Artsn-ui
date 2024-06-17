@@ -9,16 +9,12 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { checkLogin } from "@/components/Web3Auth/solanaRPC";
 import { initAdminTx } from "@/components/Protocol/functions";
 import { toastPromise, toastError } from '@/helpers/toast';
+import { set } from '@coral-xyz/anchor/dist/cjs/utils/features';
 
 const Profile = () => {
   const { publicKey, sendTransaction } = useWallet();
   const [web3AuthPublicKey, setWeb3AuthPublicKey] = useState('');
-  const newAdmin = useMemo(() => {
-    return {
-      wallet: '',
-      username: ''
-    }
-  }, []);
+  const [newAdmin, setNewAdmin] = useState({wallet: '', username: ''});
   const [connectedWallet, setConnectedWallet] = useState('');
 
   const connection = new Connection(
@@ -28,8 +24,10 @@ const Profile = () => {
   
 
   async function handleCreateAdmin(){
+    console.log(newAdmin);
     const tx = await initAdminTx(newAdmin.wallet, newAdmin.username, publicKey.toBase58());
     const signature = await sendTransaction(tx, connection, {skipPreflight: true,});
+    console.log('signature', signature);
     await toastPromise(signature)
   }
 
@@ -61,11 +59,8 @@ const Profile = () => {
             <Input
               size="large"
               placeholder="Enter wallet address of new admin"
-              value={
-                newAdmin.wallet
-              }
               onChange={(e) => {
-                newAdmin.wallet = e.target.value;
+                setNewAdmin({...newAdmin, wallet: e.target.value});
               }}
               type="string"
               disabled={false}
@@ -78,11 +73,9 @@ const Profile = () => {
             <Input
               size="large"
               placeholder="Enter wallet address of new admin"
-              value={
-                newAdmin.username
-              }
+
               onChange={(e) => {
-                newAdmin.username = e.target.value;
+                setNewAdmin({...newAdmin, username: e.target.value});
               }}
               type="string"
               disabled={false}

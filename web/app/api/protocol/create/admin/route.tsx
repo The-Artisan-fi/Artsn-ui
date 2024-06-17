@@ -25,16 +25,18 @@ export async function POST( request: Request ) {
     try {
         const req = await request.json();
         const username = req.username;
+        console.log('req.newAdmin', req.newAdmin.toString())
+
         const newAdmin = new PublicKey(req.newAdmin);
+         console.log('newAdmin', newAdmin.toString());
         const signer = new PublicKey(req.signer);
-
-        const signerState = PublicKey.findProgramAddressSync([Buffer.from('admin_state'), signer.toBuffer()], program.programId)[0];
+        console.log('signer', signer.toString());
         const newAdminState = PublicKey.findProgramAddressSync([Buffer.from('admin_state'), newAdmin.toBuffer()], program.programId)[0];
-
+        const adminKey = new PublicKey("2uqpz6ZbWQKrYAjNRtU933VRa9TzRVoREEsaH9wDkzKs");
         const profileInitIx = await program.methods
             .initializeAdminAccount(username)
             .accounts({
-                admin: signer,
+                admin: newAdmin,
                 adminState: null,
                 newAdmin: newAdmin,
                 newAdminState: newAdminState,

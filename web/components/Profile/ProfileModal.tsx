@@ -50,7 +50,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
     const { publicKey, sendTransaction } = useWallet();
     const { token } = theme.useToken();
     const [isOpen, setIsOpen] = useState(showModal);
-    const [activePage, setActivePage] = useState(page ? page : 2);
+    const [activePage, setActivePage] = useState(page ? page : 1);
     const [web3AuthPublicKey, setWeb3AuthPublicKey] = useState<string | null>(null);
     const [verificationPending, setVerificationPending] = useState<boolean>(false);
     const [verificationNeeded, setVerificationNeeded] = useState<boolean>(false);
@@ -297,12 +297,15 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                             <Input 
                                 className="profile__input-col__input"
                                 size="large" 
+                                value={profile!.fullName}
                                 style={{ backgroundColor: '#1e1e22', color: 'white'}}
                                 onChange={(e) => {setProfile({ ...profile!, fullName: e.target.value });}}
                             />
                             <p className="caption-3">USERNAME</p>
                             <Input 
                                 size="large" 
+                                placeholder="Enter Your Username"
+                                value={profile!.userName}
                                 style={{ backgroundColor: '#1e1e22', color: 'white'}}
                                 onChange={(e) => {setProfile({ ...profile!, userName: e.target.value });}}
                             />
@@ -311,6 +314,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                                 size="large"
                                 placeholder="Enter Your Email"
                                 type="email"
+                                value={profile!.email}
                                 style={{ backgroundColor: '#1e1e22', color: 'white'}}
                                 onChange={(e) => {setProfile({ ...profile!, email: e.target.value });}}
                             />
@@ -334,12 +338,6 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                         </button>
                     </div>
                 )}
-{/* 
-                <button
-                    onClick={()=> handlePageChange(2)}
-                >
-                    change page
-                </button> */}
             </>
         )
     }
@@ -390,8 +388,16 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                         <p className="header-text" style={{color: 'white'}}>
                             Verify Your Identity
                         </p>
-                        <p className="header-subtext" style={{color: 'white'}}>
-                            To open an account with us, we need to verify your identity. This should only take a few minutes.
+                        <p className="header-subtext" style={{color: 'white', display: 'flex', flexDirection: 'column', justifyContent: 'center',
+                            alignContent: 'center',
+                            alignItems: 'center',
+                            // center the text
+                            textAlign: 'center',
+                            lineHeight: '2rem',
+                            height: 'fit-content',
+                        }}>
+                            To open an account with us, we need to verify your identity. <br />
+                            This should only take a few minutes.
                         </p>
                     </div>
                 </div>
@@ -436,6 +442,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                             <p className="caption-3">Building Number</p>
                             <Input 
                                 size="large"
+                                value={profile!.address.building_number}
                                 placeholder='Building Number'
                                 style={{ backgroundColor: '#1e1e22', color: 'white'}}
                                 onChange={(e) => {setProfile({ ...profile, address: { ...profile!.address, building_number: e.target.value } });}}
@@ -443,6 +450,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                             <p className="caption-3">Street</p>
                             <Input 
                                 size="large" 
+                                value={profile!.address.street}
                                 placeholder='Street Name'
                                 style={{ backgroundColor: '#1e1e22', color: 'white'}}
                                 onChange={(e) => {setProfile({ ...profile, address: { ...profile!.address, street: e.target.value } });}}
@@ -450,6 +458,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                             <p className="caption-3">Town</p>
                             <Input 
                                 size="large" 
+                                value={profile!.address.town}
                                 placeholder='Town'
                                 style={{ backgroundColor: '#1e1e22', color: 'white'}}
                                 onChange={(e) => {setProfile({ ...profile, address: { ...profile!.address, town: e.target.value } });}}
@@ -457,6 +466,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                             <p className="caption-3">Postcode</p>
                             <Input 
                                 size="large" 
+                                value={profile!.address.postcode}
                                 placeholder='Postcode'
                                 style={{ backgroundColor: '#1e1e22', color: 'white'}}
                                 onChange={(e) => {setProfile({ ...profile, address: { ...profile!.address, postcode: e.target.value } });}}
@@ -558,6 +568,11 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
             {isOpen && (
                 <div className="modal-container">
                     {activePage !== 2 ? page1() : page2()}
+                    {/* <button
+                        onClick={()=> handlePageChange(2)}
+                    >
+                        change page
+                    </button> */}
                 </div>
             )}
         </>
