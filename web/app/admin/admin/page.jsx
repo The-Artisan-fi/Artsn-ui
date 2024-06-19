@@ -9,7 +9,6 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { checkLogin } from "@/components/Web3Auth/solanaRPC";
 import { initAdminTx } from "@/components/Protocol/functions";
 import { toastPromise, toastError } from '@/helpers/toast';
-import { set } from '@coral-xyz/anchor/dist/cjs/utils/features';
 
 const Profile = () => {
   const { publicKey, sendTransaction } = useWallet();
