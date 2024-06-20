@@ -32,7 +32,6 @@ export async function POST( request: Request ) {
         const signer = new PublicKey(req.signer);
         console.log('signer', signer.toString());
         const newAdminState = PublicKey.findProgramAddressSync([Buffer.from('admin_state'), newAdmin.toBuffer()], program.programId)[0];
-        const adminKey = new PublicKey("2uqpz6ZbWQKrYAjNRtU933VRa9TzRVoREEsaH9wDkzKs");
         const profileInitIx = await program.methods
             .initializeAdminAccount(username)
             .accounts({

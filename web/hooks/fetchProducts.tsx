@@ -1,6 +1,6 @@
 import { clusterApiUrl, Connection, PublicKey, Keypair, DataSizeFilter, GetProgramAccountsConfig } from "@solana/web3.js";
 import { Program, AnchorProvider, setProvider } from "@coral-xyz/anchor";
-import { IDL, PROGRAM_ID } from "@/components/Utils/idl";
+import { IDL, PROGRAM_ID, LISTING_GROUP, WATCH_GROUP } from "@/components/Utils/idl";
 
 export const fetchProducts = async () => {
         const connection = new Connection(clusterApiUrl("devnet"), {
@@ -27,31 +27,24 @@ export const fetchProducts = async () => {
         };
 
         try {
-            const size_filter: DataSizeFilter = {
-                // dataSize: 68,
-                dataSize: 92
-            };
             const get_accounts_config: GetProgramAccountsConfig = {
                 commitment: "confirmed",
-                filters: [size_filter]
+                filters: [{
+                    memcmp: {
+                        offset: 8,
+                        bytes: LISTING_GROUP,
+                    }
+                }]
             };
             const all_program_accounts = await connection.getProgramAccounts(new PublicKey(PROGRAM_ID),
-             get_accounts_config
-             );
+                get_accounts_config
+            );
 
             //  console.log('all_program_accounts', all_program_accounts)
             const productList = all_program_accounts.map((account) => {
                 try {
                     const decode = program.coder.accounts.decode("Listing", account.account.data);
 
-                    // 
-                    // id: BN {negative: 0, words: Array(3), length: 1, red: null}
-                    // price: BN {negative: 0, words: Array(3), length: 1, red: null}
-                    // reference: "15202ST.OO.1240ST.01"
-                    // share: 100
-                    // shareSold: 0
-                    // startingTime: BN {negative: 0, words: Array(2), length: 2, red: null}
-                    // watch: PublicKey {_bn: BN}
                     const fraction = PublicKey.findProgramAddressSync([Buffer.from('fraction'), account.pubkey.toBuffer()], program.programId)[0];
                     return {
                         accountPubkey: account.pubkey.toBase58(),

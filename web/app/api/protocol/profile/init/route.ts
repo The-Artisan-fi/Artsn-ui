@@ -6,7 +6,7 @@ import {
     Keypair,
     Transaction,
     Connection,
-    // sendAndConfirmTransaction,
+    sendAndConfirmTransaction,
   } from "@solana/web3.js";
 import * as b58 from "bs58";
   
@@ -49,12 +49,9 @@ export async function POST( request: Request ) {
         transaction.add(profileInitIx);
         transaction.partialSign(feePayer);
         
-        const serializedTransaction = transaction.serialize({
-            requireAllSignatures: false,
-          });
-        const base64 = serializedTransaction.toString("base64");
+        const signature = await sendAndConfirmTransaction(connection, transaction, [feePayer]);
 
-        return new Response(JSON.stringify({transaction: base64 }), {
+        return new Response(JSON.stringify({signature: signature }), {
             headers: {
                 'content-type': 'application/json',
             },

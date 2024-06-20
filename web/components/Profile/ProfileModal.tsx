@@ -169,8 +169,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                 return;
             }
             if(publicKey){
-                const tx = await initProfileTx(publicKey.toBase58());
-                const signature = await sendTransaction(tx!, connection);
+                const signature = await initProfileTx(publicKey.toBase58());
                 console.log(
                     `Transaction sent: https://explorer.solana.com/tx/${signature}?cluster=devnet`
                 );
@@ -182,8 +181,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
             }
 
             if(web3AuthPublicKey !== null && !publicKey){
-                const tx = await initProfileTx(web3AuthPublicKey);
-                const signature = await rpc!.sendTransaction(tx!);
+                const signature = await initProfileTx(web3AuthPublicKey);
                
                 console.log(
                     `Transaction sent: https://explorer.solana.com/tx/${signature}?cluster=devnet`

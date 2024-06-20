@@ -1,5 +1,5 @@
 import * as anchor from "@coral-xyz/anchor";
-import { IDL, Fragment, PROGRAM_ID} from "@/components/Utils/idl";
+import { IDL, Fragment, PROGRAM_ID, LISTING_GROUP} from "@/components/Utils/idl";
 import {
     PublicKey,
     SystemProgram,
@@ -36,6 +36,8 @@ export async function POST( request: Request ) {
         const buyer_publicKey = new PublicKey(req.publicKey);
         console.log('buyer_publicKey', buyer_publicKey.toBase58());
         const id = req.id;
+        const stripe: boolean = req.stripe || false;
+        const stripeUrl: string = req.stripeUrl || null;
         // const id = 10817;
         // VARIABLES
         const reference = req.reference;
@@ -75,7 +77,10 @@ export async function POST( request: Request ) {
         const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
 
         const buyShareIx = await program.methods
-            .buyListing()
+            .buyListing(
+                stripe,
+                stripeUrl,
+            )
             .accounts({
                 // buyer: buyer_publicKey,
                 // payer: feePayer.publicKey,

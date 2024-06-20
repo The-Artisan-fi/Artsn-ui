@@ -1,5 +1,5 @@
 import * as anchor from "@coral-xyz/anchor";
-import { IDL, Fragment, PROGRAM_ID} from "@/components/Utils/idl";
+import { IDL, Fragment, PROGRAM_ID, LISTING_GROUP, WATCH_GROUP} from "@/components/Utils/idl";
 import {
     PublicKey,
     SystemProgram,
@@ -54,6 +54,7 @@ export async function POST( request: Request ) {
         const adminState = PublicKey.findProgramAddressSync([Buffer.from('admin_state'), adminKey.toBuffer()], program.programId)[0];
         const profileInitIx = await program.methods
             .createListing(
+                new PublicKey(LISTING_GROUP),
                 new anchor.BN(id),
                 share,
                 new anchor.BN(price),

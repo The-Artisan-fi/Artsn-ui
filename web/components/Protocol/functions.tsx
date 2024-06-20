@@ -28,13 +28,13 @@ export async function initProfileTx(key: string) {
     })
 
     const txData = await response.json();
-    const tx = Transaction.from(Buffer.from(txData.transaction, "base64"));
-    if(!tx){
+    const signature = txData.signature;
+    if(!signature){
       console.log('no transaction');
       return;
     }
 
-    return tx;
+    return signature
   }
   catch (error) {
     console.error('Error sending transaction', error);

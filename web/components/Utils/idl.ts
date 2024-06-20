@@ -90,7 +90,7 @@ export type Fragment = {
         {
           "name": "user",
           "isMut": true,
-          "isSigner": true
+          "isSigner": false
         },
         {
           "name": "payer",
@@ -205,213 +205,236 @@ export type Fragment = {
           "isMut": false,
           "isSigner": false
         },
-        {"name": "watch",
-        "isMut": true,
-        "isSigner": false
-      },
-      {
-        "name": "systemProgram",
-        "isMut": false,
-        "isSigner": false
-      }
-    ],
-    "args": [
-      {
-        "name": "brand",
-        "type": "string"
-      },
-      {
-        "name": "model",
-        "type": "string"
-      },
-      {
-        "name": "reference",
-        "type": "string"
-      },
-      {
-        "name": "diamater",
-        "type": "u8"
-      },
-      {
-        "name": "movement",
-        "type": "string"
-      },
-      {
-        "name": "dialColor",
-        "type": "string"
-      },
-      {
-        "name": "caseMaterial",
-        "type": "string"
-      },
-      {
-        "name": "braceletMaterial",
-        "type": "string"
-      },
-      {
-        "name": "yearOfProduction",
-        "type": "u16"
-      }
-    ]
-  },
-  {
-    "name": "createListing",
-    "accounts": [
-      {
-        "name": "admin",
-        "isMut": true,
-        "isSigner": true
-      },
-      {
-        "name": "adminState",
-        "isMut": false,
-        "isSigner": false
-      },
-      {
-        "name": "watch",
-        "isMut": false,
-        "isSigner": false
-      },
-      {
-        "name": "listing",
-        "isMut": true,
-        "isSigner": false
-      },
-      {
-        "name": "fraction",
-        "isMut": true,
-        "isSigner": false
-      },
-      {
-        "name": "auth",
-        "isMut": false,
-        "isSigner": false
-      },
-      {
-        "name": "rent",
-        "isMut": false,
-        "isSigner": false
-      },
-      {
-        "name": "token2022Program",
-        "isMut": false,
-        "isSigner": false
-      },
-      {
-        "name": "systemProgram",
-        "isMut": false,
-        "isSigner": false
-      }
-    ],
-    "args": [
-      {
-        "name": "id",
-        "type": "u64"
-      },
-      {
-        "name": "share",
-        "type": "u16"
-      },
-      {
-        "name": "price",
-        "type": "u64"
-      },
-      {
-        "name": "startingTime",
-        "type": "i64"
-      },
-      {
-        "name": "uri",
-        "type": "string"
-      }
-    ]
-  },
-  {
-    "name": "buyListing",
-    "accounts": [
-      {
-        "name": "payer",
-        "isMut": true,
-        "isSigner": true
-      },
-      {
-        "name": "buyer",
-        "isMut": true,
-        "isSigner": true
-      },
-      {
-        "name": "fraction",
-        "isMut": true,
-        "isSigner": false
-      },
-      {
-        "name": "currency",
-        "isMut": false,
-        "isSigner": false
-      },
-      {
-        "name": "buyerCurrencyAta",
-        "isMut": true,
-        "isSigner": false
-      },
-      {
-        "name": "listingCurrencyAta",
-        "isMut": true,
-        "isSigner": false
-      },
-      {
-        "name": "buyerFractionAta",
-        "isMut": true,
-        "isSigner": false
-      },
-      {
-        "name": "buyerProfile",
-        "isMut": true,
-        "isSigner": false
-      },
-      {
-        "name": "listing",
-        "isMut": true,
-        "isSigner": false
-      },
-      {
-        "name": "auth",
-        "isMut": false,
-        "isSigner": false
-      },
-      {
-        "name": "associatedTokenProgram",
-        "isMut": false,
-        "isSigner": false
-      },
-      {
-        "name": "tokenProgram",
-        "isMut": false,
-        "isSigner": false
-      },
-      {
-        "name": "token2022Program",
-        "isMut": false,
-        "isSigner": false
-      },
-      {
-        "name": "systemProgram",
-        "isMut": false,
-        "isSigner": false
-      }
-    ],
-    "args": []
-  }
-],
-"accounts": [
-  {
-    "name": "Protocol",
-    "type": {
-      "kind": "struct",
-      "fields": [
         {
-          "name":
-          "locked",
+          "name": "watch",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "group",
+          "type": "publicKey"
+        },
+        {
+          "name": "brand",
+          "type": "string"
+        },
+        {
+          "name": "model",
+          "type": "string"
+        },
+        {
+          "name": "reference",
+          "type": "string"
+        },
+        {
+          "name": "diamater",
+          "type": "u8"
+        },
+        {
+          "name": "movement",
+          "type": "string"
+        },
+        {
+          "name": "dialColor",
+          "type": "string"
+        },
+        {
+          "name": "caseMaterial",
+          "type": "string"
+        },
+        {
+          "name": "braceletMaterial",
+          "type": "string"
+        },
+        {
+          "name": "yearOfProduction",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "createListing",
+      "accounts": [
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "adminState",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "watch",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "listing",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "fraction",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "auth",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token2022Program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "group",
+          "type": "publicKey"
+        },
+        {
+          "name": "id",
+          "type": "u64"
+        },
+        {
+          "name": "share",
+          "type": "u16"
+        },
+        {
+          "name": "price",
+          "type": "u64"
+        },
+        {
+          "name": "startingTime",
+          "type": "i64"
+        },
+        {
+          "name": "uri",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "buyListing",
+      "accounts": [
+        {
+          "name": "buyer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "buyerProfile",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "buyerCurrencyAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "buyerFractionAta",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "listing",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "listingCurrencyAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "fraction",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "currency",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "auth",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token2022Program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "stripe",
+          "type": "bool"
+        },
+        {
+          "name": "stripeUrl",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Protocol",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "locked",
             "type": "bool"
           }
         ]
@@ -465,6 +488,10 @@ export type Fragment = {
         "kind": "struct",
         "fields": [
           {
+            "name": "group",
+            "type": "publicKey"
+          },
+          {
             "name": "brand",
             "type": "string"
           },
@@ -508,6 +535,10 @@ export type Fragment = {
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "group",
+            "type": "publicKey"
+          },
           {
             "name": "id",
             "type": "u64"
@@ -563,6 +594,18 @@ export type Fragment = {
           {
             "name": "price",
             "type": "u64"
+          },
+          {
+            "name": "stripe",
+            "type": {
+              "option": "bool"
+            }
+          },
+          {
+            "name": "stripeUrl",
+            "type": {
+              "option": "string"
+            }
           }
         ]
       }
@@ -579,6 +622,9 @@ export type Fragment = {
           },
           {
             "name": "NotTimeYet"
+          },
+          {
+            "name": "MissingStripeUrl"
           }
         ]
       }
@@ -715,7 +761,7 @@ export const IDL: Fragment = {
         {
           "name": "user",
           "isMut": true,
-          "isSigner": true
+          "isSigner": false
         },
         {
           "name": "payer",
@@ -830,213 +876,236 @@ export const IDL: Fragment = {
           "isMut": false,
           "isSigner": false
         },
-        {"name": "watch",
-        "isMut": true,
-        "isSigner": false
-      },
-      {
-        "name": "systemProgram",
-        "isMut": false,
-        "isSigner": false
-      }
-    ],
-    "args": [
-      {
-        "name": "brand",
-        "type": "string"
-      },
-      {
-        "name": "model",
-        "type": "string"
-      },
-      {
-        "name": "reference",
-        "type": "string"
-      },
-      {
-        "name": "diamater",
-        "type": "u8"
-      },
-      {
-        "name": "movement",
-        "type": "string"
-      },
-      {
-        "name": "dialColor",
-        "type": "string"
-      },
-      {
-        "name": "caseMaterial",
-        "type": "string"
-      },
-      {
-        "name": "braceletMaterial",
-        "type": "string"
-      },
-      {
-        "name": "yearOfProduction",
-        "type": "u16"
-      }
-    ]
-  },
-  {
-    "name": "createListing",
-    "accounts": [
-      {
-        "name": "admin",
-        "isMut": true,
-        "isSigner": true
-      },
-      {
-        "name": "adminState",
-        "isMut": false,
-        "isSigner": false
-      },
-      {
-        "name": "watch",
-        "isMut": false,
-        "isSigner": false
-      },
-      {
-        "name": "listing",
-        "isMut": true,
-        "isSigner": false
-      },
-      {
-        "name": "fraction",
-        "isMut": true,
-        "isSigner": false
-      },
-      {
-        "name": "auth",
-        "isMut": false,
-        "isSigner": false
-      },
-      {
-        "name": "rent",
-        "isMut": false,
-        "isSigner": false
-      },
-      {
-        "name": "token2022Program",
-        "isMut": false,
-        "isSigner": false
-      },
-      {
-        "name": "systemProgram",
-        "isMut": false,
-        "isSigner": false
-      }
-    ],
-    "args": [
-      {
-        "name": "id",
-        "type": "u64"
-      },
-      {
-        "name": "share",
-        "type": "u16"
-      },
-      {
-        "name": "price",
-        "type": "u64"
-      },
-      {
-        "name": "startingTime",
-        "type": "i64"
-      },
-      {
-        "name": "uri",
-        "type": "string"
-      }
-    ]
-  },
-  {
-    "name": "buyListing",
-    "accounts": [
-      {
-        "name": "payer",
-        "isMut": true,
-        "isSigner": true
-      },
-      {
-        "name": "buyer",
-        "isMut": true,
-        "isSigner": true
-      },
-      {
-        "name": "fraction",
-        "isMut": true,
-        "isSigner": false
-      },
-      {
-        "name": "currency",
-        "isMut": false,
-        "isSigner": false
-      },
-      {
-        "name": "buyerCurrencyAta",
-        "isMut": true,
-        "isSigner": false
-      },
-      {
-        "name": "listingCurrencyAta",
-        "isMut": true,
-        "isSigner": false
-      },
-      {
-        "name": "buyerFractionAta",
-        "isMut": true,
-        "isSigner": false
-      },
-      {
-        "name": "buyerProfile",
-        "isMut": true,
-        "isSigner": false
-      },
-      {
-        "name": "listing",
-        "isMut": true,
-        "isSigner": false
-      },
-      {
-        "name": "auth",
-        "isMut": false,
-        "isSigner": false
-      },
-      {
-        "name": "associatedTokenProgram",
-        "isMut": false,
-        "isSigner": false
-      },
-      {
-        "name": "tokenProgram",
-        "isMut": false,
-        "isSigner": false
-      },
-      {
-        "name": "token2022Program",
-        "isMut": false,
-        "isSigner": false
-      },
-      {
-        "name": "systemProgram",
-        "isMut": false,
-        "isSigner": false
-      }
-    ],
-    "args": []
-  }
-],
-"accounts": [
-  {
-    "name": "Protocol",
-    "type": {
-      "kind": "struct",
-      "fields": [
         {
-          "name":
-          "locked",
+          "name": "watch",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "group",
+          "type": "publicKey"
+        },
+        {
+          "name": "brand",
+          "type": "string"
+        },
+        {
+          "name": "model",
+          "type": "string"
+        },
+        {
+          "name": "reference",
+          "type": "string"
+        },
+        {
+          "name": "diamater",
+          "type": "u8"
+        },
+        {
+          "name": "movement",
+          "type": "string"
+        },
+        {
+          "name": "dialColor",
+          "type": "string"
+        },
+        {
+          "name": "caseMaterial",
+          "type": "string"
+        },
+        {
+          "name": "braceletMaterial",
+          "type": "string"
+        },
+        {
+          "name": "yearOfProduction",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "createListing",
+      "accounts": [
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "adminState",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "watch",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "listing",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "fraction",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "auth",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token2022Program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "group",
+          "type": "publicKey"
+        },
+        {
+          "name": "id",
+          "type": "u64"
+        },
+        {
+          "name": "share",
+          "type": "u16"
+        },
+        {
+          "name": "price",
+          "type": "u64"
+        },
+        {
+          "name": "startingTime",
+          "type": "i64"
+        },
+        {
+          "name": "uri",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "buyListing",
+      "accounts": [
+        {
+          "name": "buyer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "buyerProfile",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "buyerCurrencyAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "buyerFractionAta",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "listing",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "listingCurrencyAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "fraction",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "currency",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "auth",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "token2022Program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "stripe",
+          "type": "bool"
+        },
+        {
+          "name": "stripeUrl",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Protocol",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "locked",
             "type": "bool"
           }
         ]
@@ -1090,6 +1159,10 @@ export const IDL: Fragment = {
         "kind": "struct",
         "fields": [
           {
+            "name": "group",
+            "type": "publicKey"
+          },
+          {
             "name": "brand",
             "type": "string"
           },
@@ -1133,6 +1206,10 @@ export const IDL: Fragment = {
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "group",
+            "type": "publicKey"
+          },
           {
             "name": "id",
             "type": "u64"
@@ -1188,6 +1265,18 @@ export const IDL: Fragment = {
           {
             "name": "price",
             "type": "u64"
+          },
+          {
+            "name": "stripe",
+            "type": {
+              "option": "bool"
+            }
+          },
+          {
+            "name": "stripeUrl",
+            "type": {
+              "option": "string"
+            }
           }
         ]
       }
@@ -1204,6 +1293,9 @@ export const IDL: Fragment = {
           },
           {
             "name": "NotTimeYet"
+          },
+          {
+            "name": "MissingStripeUrl"
           }
         ]
       }
@@ -1252,4 +1344,8 @@ export const IDL: Fragment = {
 
 
 
-export const PROGRAM_ID = "9HcuZx4btJbDTanozQ81T4mK4KFscSaJtanVY7uXVtAB" as Address
+export const PROGRAM_ID = "G7sssTza53ikeSudvNS6Au6d78HVaWGVrpnU1KJWjXm4" as Address
+
+export const LISTING_GROUP = 'LSTBuqygb7CMQryt45BC1fh5PPjuJKtoffDyASchWi2' as string;
+
+export const WATCH_GROUP = 'WaTL5TmFvfKeuFESWL1yp7tCg1feH55jxxhfcMHYR8g' as string;
