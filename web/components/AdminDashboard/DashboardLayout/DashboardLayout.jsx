@@ -117,16 +117,16 @@ const DashboardLayout = ({ children }) => {
               label: 'Create Token',
               title: 'Create Token',
             },
-            {
-              key: '4',
-              icon: selectedKeys.includes('4') ? (
-                <IoPerson />
-              ) : (
-                <IoPersonOutline />
-              ),
-              label: 'KYC',
-              title: 'KYC',
-            },
+            // {
+            //   key: '4',
+            //   icon: selectedKeys.includes('4') ? (
+            //     <IoPerson />
+            //   ) : (
+            //     <IoPersonOutline />
+            //   ),
+            //   label: 'KYC',
+            //   title: 'KYC',
+            // },
           ]}
         />
       </Sider>

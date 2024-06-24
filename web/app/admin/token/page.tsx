@@ -76,7 +76,14 @@ const SettingsPage = () => {
   // Create Token IX
   async function handleCreateToken() {
     try {
-      const tx = await initTokenTx(tokenObj.id, tokenObj.reference, tokenObj.share, tokenObj.price, tokenObj.startingTime, tokenObj.uri, connectedWallet);
+      const tx = await initTokenTx(
+        tokenObj.id, 
+        tokenObj.reference, 
+        tokenObj.share, 
+        tokenObj.price, 
+        tokenObj.startingTime, 
+        tokenObj.uri, connectedWallet
+      );
       if(tx){
         variables.associatedId = tx.associatedId;
         const signature = await sendTransaction(tx.tx, connection, {skipPreflight: true,});

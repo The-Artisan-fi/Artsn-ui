@@ -27,7 +27,7 @@ export async function POST( request: Request ) {
     try {
         const req = await request.json();
         const id = req.id;
-        const reference = req.reference;
+        // const reference = req.reference;
         const share = req.share;
         const price = req.price;
         const starting_time = req.starting_time;
@@ -36,24 +36,24 @@ export async function POST( request: Request ) {
         const modifyComputeUnitIx = ComputeBudgetProgram.setComputeUnitLimit({ units: 300_000 });
 
         console.log('id:', id)
-        console.log('reference:', reference)
+        // console.log('reference:', reference)
         console.log('share:', share)
         console.log('price:', price)
         console.log('starting_time:', starting_time)
         console.log('uri:', uri)
         console.log('signer:', signer.toBase58())
-
+        
 
         const sigAuthority = process.env.SIGNING_AUTHORITY
         const sigKeypair = Keypair.fromSecretKey(b58.decode(sigAuthority!));
-
+        const reference = "15202ST.OO.1240ST.01";
         const watch = PublicKey.findProgramAddressSync([Buffer.from('watch'), Buffer.from(reference)], program.programId)[0];
         const listing = PublicKey.findProgramAddressSync([Buffer.from('listing'), watch.toBuffer(), new anchor.BN(id).toBuffer("le", 8)], program.programId)[0];
         const fraction = PublicKey.findProgramAddressSync([Buffer.from('fraction'), listing.toBuffer()], program.programId)[0];
         
         const auth = PublicKey.findProgramAddressSync([Buffer.from('auth')], program.programId)[0];
-        const adminState = PublicKey.findProgramAddressSync([Buffer.from('admin_state'), sigKeypair.publicKey.toBuffer()], program.programId)[0];
-        const profileInitIx = await program.methods
+        const adminState = PublicKey.findProgramAddressSync([Buffer.from('admin_state'), signer.toBuffer()], program.programId)[0];
+        const ix = await program.methods
             .createListing(
                 new anchor.BN(id),
                 share,
@@ -62,7 +62,7 @@ export async function POST( request: Request ) {
                 uri,
             )
             .accounts({
-                admin: sigKeypair.publicKey,
+                admin: signer,
                 adminState: adminState,   
                 watch,
                 listing,
@@ -80,7 +80,7 @@ export async function POST( request: Request ) {
             feePayer: signer,
         });
         
-        transaction.add(profileInitIx);
+        transaction.add(ix).add(modifyComputeUnitIx);
         
         const serializedTransaction = transaction.serialize({
             requireAllSignatures: false,

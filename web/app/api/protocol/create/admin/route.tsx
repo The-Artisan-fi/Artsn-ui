@@ -35,7 +35,7 @@ export async function POST( request: Request ) {
         const profileInitIx = await program.methods
             .initializeAdminAccount(username)
             .accounts({
-                admin: newAdmin,
+                admin: signer,
                 adminState: null,
                 newAdmin: newAdmin,
                 newAdminState: newAdminState,
