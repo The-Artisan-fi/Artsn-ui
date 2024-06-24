@@ -27,24 +27,29 @@ export const fetchProducts = async () => {
         };
 
         try {
+            const size_filter: DataSizeFilter = {
+                dataSize: 92,
+            };
             const get_accounts_config: GetProgramAccountsConfig = {
                 commitment: "confirmed",
-                filters: [{
-                    memcmp: {
-                        offset: 8,
-                        bytes: LISTING_GROUP,
-                    }
-                }]
+                // filters: [{
+                //     memcmp: {
+                //         offset: 8,
+                //         bytes: LISTING_GROUP,
+                //     }
+                // }]
+                filters: [size_filter]
             };
             const all_program_accounts = await connection.getProgramAccounts(new PublicKey(PROGRAM_ID),
                 get_accounts_config
             );
 
-            //  console.log('all_program_accounts', all_program_accounts)
+             console.log('all_program_accounts', all_program_accounts)
             const productList = all_program_accounts.map((account) => {
                 try {
                     const decode = program.coder.accounts.decode("Listing", account.account.data);
-
+                    console.log('decode', decode)
+                    if(!decode) return;
                     const fraction = PublicKey.findProgramAddressSync([Buffer.from('fraction'), account.pubkey.toBuffer()], program.programId)[0];
                     return {
                         accountPubkey: account.pubkey.toBase58(),
@@ -85,6 +90,9 @@ export const fetchProducts = async () => {
                     reference: product.reference,
                 })),
             };
+
+            console.log('products available: ', products.available);
+            console.log('products coming soon: ', products.comingSoon);
             return products;
         } catch (error) {
             console.error("Failed to fetch products:", error);

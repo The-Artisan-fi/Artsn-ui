@@ -50,7 +50,7 @@ export async function POST( request: Request ) {
         transaction.partialSign(feePayer);
         
         const signature = await sendAndConfirmTransaction(connection, transaction, [feePayer]);
-
+        console.log('Signature from buyer init:', signature);
         return new Response(JSON.stringify({signature: signature }), {
             headers: {
                 'content-type': 'application/json',

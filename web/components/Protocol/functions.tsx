@@ -204,7 +204,7 @@ export async function initTokenTx(id: number, reference: string, share: number, 
       },
       body: JSON.stringify({
         id: id,
-        reference: "15202ST.OO.1240ST.01", //reference,
+        reference: "1520", //reference,
         share: share,
         price: price,
         starting_time: starting_time,

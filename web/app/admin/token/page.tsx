@@ -80,8 +80,8 @@ const SettingsPage = () => {
       if(tx){
         variables.associatedId = tx.associatedId;
         const signature = await sendTransaction(tx.tx, connection, {skipPreflight: true,});
-          await toastPromise(signature)
-      }
+        await toastPromise(signature)
+      } 
     } catch (error) {
       console.error('Error creating token', error);
       toastError('Error creating token');
@@ -137,13 +137,14 @@ const SettingsPage = () => {
       await handleCreateToken();
 
       // Add Images to Bucket
-      const fileListBlob = fileList.map((file: { originFileObj: Blob; type: string; }) => {
-        return new Blob([file.originFileObj], { type: file.type });
-      });
-      await trigger({ files: fileListBlob });
+      
+      // const fileListBlob = fileList.map((file: { originFileObj: Blob; type: string; }) => {
+      //   return new Blob([file.originFileObj], { type: file.type });
+      // });
+      // await trigger({ files: fileListBlob });
 
-      // Add off-chain data to Mongo
-      await addListing({ variables });
+      // // Add off-chain data to Mongo
+      // await addListing({ variables });
       
       toastSuccess('Token created successfully');
     } catch (error) {

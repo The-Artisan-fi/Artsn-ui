@@ -44,17 +44,17 @@ export async function POST( request: Request ) {
         console.log('signer:', signer.toBase58())
 
 
+        const sigAuthority = process.env.SIGNING_AUTHORITY
+        const sigKeypair = Keypair.fromSecretKey(b58.decode(sigAuthority!));
+
         const watch = PublicKey.findProgramAddressSync([Buffer.from('watch'), Buffer.from(reference)], program.programId)[0];
         const listing = PublicKey.findProgramAddressSync([Buffer.from('listing'), watch.toBuffer(), new anchor.BN(id).toBuffer("le", 8)], program.programId)[0];
         const fraction = PublicKey.findProgramAddressSync([Buffer.from('fraction'), listing.toBuffer()], program.programId)[0];
         
         const auth = PublicKey.findProgramAddressSync([Buffer.from('auth')], program.programId)[0];
-        const signerState = PublicKey.findProgramAddressSync([Buffer.from('admin_state'), signer.toBuffer()], program.programId)[0];
-        const adminKey = new PublicKey("2uqpz6ZbWQKrYAjNRtU933VRa9TzRVoREEsaH9wDkzKs");
-        const adminState = PublicKey.findProgramAddressSync([Buffer.from('admin_state'), adminKey.toBuffer()], program.programId)[0];
+        const adminState = PublicKey.findProgramAddressSync([Buffer.from('admin_state'), sigKeypair.publicKey.toBuffer()], program.programId)[0];
         const profileInitIx = await program.methods
             .createListing(
-                new PublicKey(LISTING_GROUP),
                 new anchor.BN(id),
                 share,
                 new anchor.BN(price),
@@ -62,7 +62,7 @@ export async function POST( request: Request ) {
                 uri,
             )
             .accounts({
-                admin: adminKey,
+                admin: sigKeypair.publicKey,
                 adminState: adminState,   
                 watch,
                 listing,

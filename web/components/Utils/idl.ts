@@ -218,10 +218,6 @@ export type Fragment = {
       ],
       "args": [
         {
-          "name": "group",
-          "type": "publicKey"
-        },
-        {
           "name": "brand",
           "type": "string"
         },
@@ -309,10 +305,6 @@ export type Fragment = {
         }
       ],
       "args": [
-        {
-          "name": "group",
-          "type": "publicKey"
-        },
         {
           "name": "id",
           "type": "u64"
@@ -413,18 +405,14 @@ export type Fragment = {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "stripe",
-          "type": "bool"
         },
         {
-          "name": "stripeUrl",
-          "type": "string"
+          "name": "instructions",
+          "isMut": false,
+          "isSigner": false
         }
-      ]
+      ],
+      "args": []
     }
   ],
   "accounts": [
@@ -488,10 +476,6 @@ export type Fragment = {
         "kind": "struct",
         "fields": [
           {
-            "name": "group",
-            "type": "publicKey"
-          },
-          {
             "name": "brand",
             "type": "string"
           },
@@ -535,10 +519,6 @@ export type Fragment = {
       "type": {
         "kind": "struct",
         "fields": [
-          {
-            "name": "group",
-            "type": "publicKey"
-          },
           {
             "name": "id",
             "type": "u64"
@@ -594,18 +574,6 @@ export type Fragment = {
           {
             "name": "price",
             "type": "u64"
-          },
-          {
-            "name": "stripe",
-            "type": {
-              "option": "bool"
-            }
-          },
-          {
-            "name": "stripeUrl",
-            "type": {
-              "option": "string"
-            }
           }
         ]
       }
@@ -624,7 +592,10 @@ export type Fragment = {
             "name": "NotTimeYet"
           },
           {
-            "name": "MissingStripeUrl"
+            "name": "PriceMismatch"
+          },
+          {
+            "name": "SignatureAuthorityMismatch"
           }
         ]
       }
@@ -889,10 +860,6 @@ export const IDL: Fragment = {
       ],
       "args": [
         {
-          "name": "group",
-          "type": "publicKey"
-        },
-        {
           "name": "brand",
           "type": "string"
         },
@@ -980,10 +947,6 @@ export const IDL: Fragment = {
         }
       ],
       "args": [
-        {
-          "name": "group",
-          "type": "publicKey"
-        },
         {
           "name": "id",
           "type": "u64"
@@ -1084,18 +1047,14 @@ export const IDL: Fragment = {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "stripe",
-          "type": "bool"
         },
         {
-          "name": "stripeUrl",
-          "type": "string"
+          "name": "instructions",
+          "isMut": false,
+          "isSigner": false
         }
-      ]
+      ],
+      "args": []
     }
   ],
   "accounts": [
@@ -1159,10 +1118,6 @@ export const IDL: Fragment = {
         "kind": "struct",
         "fields": [
           {
-            "name": "group",
-            "type": "publicKey"
-          },
-          {
             "name": "brand",
             "type": "string"
           },
@@ -1206,10 +1161,6 @@ export const IDL: Fragment = {
       "type": {
         "kind": "struct",
         "fields": [
-          {
-            "name": "group",
-            "type": "publicKey"
-          },
           {
             "name": "id",
             "type": "u64"
@@ -1265,18 +1216,6 @@ export const IDL: Fragment = {
           {
             "name": "price",
             "type": "u64"
-          },
-          {
-            "name": "stripe",
-            "type": {
-              "option": "bool"
-            }
-          },
-          {
-            "name": "stripeUrl",
-            "type": {
-              "option": "string"
-            }
           }
         ]
       }
@@ -1295,7 +1234,10 @@ export const IDL: Fragment = {
             "name": "NotTimeYet"
           },
           {
-            "name": "MissingStripeUrl"
+            "name": "PriceMismatch"
+          },
+          {
+            "name": "SignatureAuthorityMismatch"
           }
         ]
       }
@@ -1344,7 +1286,7 @@ export const IDL: Fragment = {
 
 
 
-export const PROGRAM_ID = "G7sssTza53ikeSudvNS6Au6d78HVaWGVrpnU1KJWjXm4" as Address
+export const PROGRAM_ID = "H4mPoAL8Zk3GcrMuBtMAyr1SWzNrGTnRq8fhoGwXdYcD" as Address
 
 export const LISTING_GROUP = 'LSTBuqygb7CMQryt45BC1fh5PPjuJKtoffDyASchWi2' as string;
 
