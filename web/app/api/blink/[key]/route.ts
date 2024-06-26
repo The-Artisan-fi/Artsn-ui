@@ -95,14 +95,15 @@ export async function POST(_: Request, { params }: { params: { key : number } })
         //     ASSOCIATED_TOKEN_PROGRAM_ID,
         // );
 
-        // const profileInitIx = await await program.methods
-        //     .initializeProfileAccount()
-        //     .accounts({
-        //         user: buyer_publicKey,
-        //         profile: buyerProfile,
-        //         systemProgram: SystemProgram.programId,
-        //     })
-        //     .instruction();
+        const profileInitIx = await await program.methods
+            .initializeProfileAccount()
+            .accounts({
+                user: buyer_publicKey,
+                profile: buyerProfile,
+                systemProgram: SystemProgram.programId,
+            })
+            .instruction();
+
         const feeKey = process.env.PRIVATE_KEY!;
         const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
 
@@ -160,7 +161,7 @@ export async function POST(_: Request, { params }: { params: { key : number } })
         //   });
         // const base64 = serializedTransaction.toString("base64");
 
-        const total_instructions = [];
+        const total_instructions = [profileInitIx];
         // run a for loop to add a set of instructions to the total_instructions array for the amount of shares to buy
         for(let i = 0; i < amount ; i++) {
             total_instructions.push(buyShareIx);
