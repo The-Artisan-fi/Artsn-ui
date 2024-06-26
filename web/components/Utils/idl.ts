@@ -218,6 +218,10 @@ export type Fragment = {
       ],
       "args": [
         {
+          "name": "group",
+          "type": "publicKey"
+        },
+        {
           "name": "brand",
           "type": "string"
         },
@@ -308,6 +312,10 @@ export type Fragment = {
         {
           "name": "id",
           "type": "u64"
+        },
+        {
+          "name": "group",
+          "type": "publicKey"
         },
         {
           "name": "share",
@@ -476,6 +484,10 @@ export type Fragment = {
         "kind": "struct",
         "fields": [
           {
+            "name": "group",
+            "type": "publicKey"
+          },
+          {
             "name": "brand",
             "type": "string"
           },
@@ -522,6 +534,10 @@ export type Fragment = {
           {
             "name": "id",
             "type": "u64"
+          },
+          {
+            "name": "group",
+            "type": "publicKey"
           },
           {
             "name": "watch",
@@ -860,6 +876,10 @@ export const IDL: Fragment = {
       ],
       "args": [
         {
+          "name": "group",
+          "type": "publicKey"
+        },
+        {
           "name": "brand",
           "type": "string"
         },
@@ -950,6 +970,10 @@ export const IDL: Fragment = {
         {
           "name": "id",
           "type": "u64"
+        },
+        {
+          "name": "group",
+          "type": "publicKey"
         },
         {
           "name": "share",
@@ -1118,6 +1142,10 @@ export const IDL: Fragment = {
         "kind": "struct",
         "fields": [
           {
+            "name": "group",
+            "type": "publicKey"
+          },
+          {
             "name": "brand",
             "type": "string"
           },
@@ -1164,6 +1192,10 @@ export const IDL: Fragment = {
           {
             "name": "id",
             "type": "u64"
+          },
+          {
+            "name": "group",
+            "type": "publicKey"
           },
           {
             "name": "watch",
@@ -1286,7 +1318,7 @@ export const IDL: Fragment = {
 
 
 
-export const PROGRAM_ID = "H4mPoAL8Zk3GcrMuBtMAyr1SWzNrGTnRq8fhoGwXdYcD" as Address
+export const PROGRAM_ID = "ZdEaZktnMxDnBPBdLh5vbiGrvn1U49qsKQgXVurBCNj" as Address
 
 export const LISTING_GROUP = 'LSTBuqygb7CMQryt45BC1fh5PPjuJKtoffDyASchWi2' as string;
 

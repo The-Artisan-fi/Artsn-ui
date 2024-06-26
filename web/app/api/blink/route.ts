@@ -1,3 +1,4 @@
+import { prepareTransaction } from '../../../helpers/transaction-utils';
 import * as anchor from "@coral-xyz/anchor";
 import { IDL, Fragment, PROGRAM_ID, LISTING_GROUP} from "@/components/Utils/idl";
 import {
@@ -6,9 +7,15 @@ import {
     SystemProgram,
     Keypair,
     Transaction,
-    Connection
-  } from "@solana/web3.js";
-  
+    Connection,
+    VersionedTransaction,
+    LAMPORTS_PER_SOL
+} from "@solana/web3.js";
+import {
+    ActionsSpecGetResponse,
+    ActionsSpecPostRequestBody,
+    ActionsSpecPostResponse,
+} from '../../../helpers/spec/actions-spec';
   import { 
     ASSOCIATED_TOKEN_PROGRAM_ID, 
     TOKEN_2022_PROGRAM_ID, 
@@ -16,9 +23,10 @@ import {
     getAssociatedTokenAddressSync, 
  } from "@solana/spl-token";
 import * as b58 from "bs58";
-
-//https://spl-token-faucet.com/?token-name=USDC-Dev
-const USDC_DEV = new PublicKey("Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr");
+  const DONATION_DESTINATION_WALLET =
+    '7wK3jPMYjpZHZAghjersW6hBNMgi9VAGr75AhYRqR2n';
+  const DONATION_AMOUNT_SOL_OPTIONS = [1, 5, 10];
+  const DEFAULT_DONATION_AMOUNT_SOL = 1;
 
 export async function POST( request: Request ) {
     console.log('route pinged')
@@ -33,12 +41,17 @@ export async function POST( request: Request ) {
     const program = new anchor.Program<Fragment>(IDL, programId, provider);
 
     try {
-        const req = await request.json();
-        console.log('req', req)
+        // const req = await request.json();
+        const req = {
+            id: 51129,
+            reference: '15202ST.OO.1240ST.01',
+            publicKey: '6KuX26FZqzqpsHDLfkXoBXbQRPEDEbstqNiPBKHNJQ9e',
+            amount: 1
+          }
         const buyer_publicKey = new PublicKey(req.publicKey);
         console.log('buyer_publicKey', buyer_publicKey.toBase58());
         const id = req.id;
-
+        const USDC_DEV = new PublicKey("Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr");
         // const id = 10817;
         // VARIABLES
         const reference = req.reference;
@@ -56,6 +69,22 @@ export async function POST( request: Request ) {
       
         const listingCurrencyAta = getAssociatedTokenAddressSync(USDC_DEV, listing, true)
         const buyerCurrencyAta = getAssociatedTokenAddressSync(USDC_DEV, buyer_publicKey)
+
+        async function prepareDonateTransaction(
+            sender: PublicKey,
+            recipient: PublicKey,
+            lamports: number,
+          ): Promise<VersionedTransaction> {
+            const payer = new PublicKey(sender);
+            const instructions = [
+              SystemProgram.transfer({
+                fromPubkey: payer,
+                toPubkey: new PublicKey(recipient),
+                lamports: lamports,
+              }),
+            ];
+            return prepareTransaction(instructions, payer);
+          }
 
         // const createAtaIx = createAssociatedTokenAccountIdempotentInstruction(
         //     buyer_publicKey,
@@ -114,28 +143,110 @@ export async function POST( request: Request ) {
 
         const { blockhash } = await connection.getLatestBlockhash("finalized");
 
-        const transaction = new Transaction({
-            recentBlockhash: blockhash,
-            feePayer: feePayer.publicKey,
-        });
-        for(let i = 0; i < amount ; i++) {
-            console.log('buying share', i);
-            transaction.add(buyShareIx);
-        }
-        transaction.partialSign(feePayer);
-        const serializedTransaction = transaction.serialize({
-            requireAllSignatures: false,
-          });
-        const base64 = serializedTransaction.toString("base64");
+        // const transaction = new Transaction({
+        //     recentBlockhash: blockhash,
+        //     feePayer: feePayer.publicKey,
+        // });
 
-        return new Response(JSON.stringify({transaction: base64 }), {
+        // for(let i = 0; i < amount ; i++) {
+        //     console.log('buying share', i);
+        //     transaction.add(buyShareIx);
+        // }
+        
+
+        // const serializedTransaction = transaction.serialize({
+        //     requireAllSignatures: false,
+        //   });
+        // const base64 = serializedTransaction.toString("base64");
+
+        
+        const instructions = [buyShareIx];
+        const transaction = await prepareTransaction(instructions, feePayer.publicKey);
+        transaction.sign([feePayer])
+        const base64 = Buffer.from(transaction.serialize()).toString('base64');
+        const response: ActionsSpecPostResponse = {
+            transaction: base64,
+        };
+        return new Response(JSON.stringify(response), {
+            status: 200,
             headers: {
-                'content-type': 'application/json',
-            },
+                'access-control-allow-origin': '*',
+                'content-type': 'application/json; charset=UTF-8'
+            }
         });
 
     } catch (e) {
         console.log(e);
         throw e;
     }
+};
+
+
+export async function GET( request: Request ) {
+    try {
+        console.log('route pinged')
+        function getDonateInfo(): Pick<
+            ActionsSpecGetResponse,
+            'icon' | 'title' | 'description'
+        > {
+            const icon =
+            'https://artsn.fi/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FAudemars-piguet-Royaloak.b2100923.webp&w=1080&q=75';
+            const title = 'Audemar Piguet Royal Oak';
+            const description =
+            'Buy a share of this Audemar Piguet Royal Oak watch for 1 USDC-DEV. You will receive a fraction of the watch in return.';
+            return { icon, title, description };
+        }
+        
+        const { icon, title, description } = getDonateInfo();
+        const amountParameterName = 'amount';
+        const response: ActionsSpecGetResponse = {
+            icon,
+            label: `${DEFAULT_DONATION_AMOUNT_SOL} USDC-DEV`,
+            title,
+            description,
+            links: {
+            actions: [
+                ...DONATION_AMOUNT_SOL_OPTIONS.map((amount) => ({
+                label: `${amount} USDC-DEV`,
+                href: `/api/blink/${amount}`,
+                })),
+                // {
+                // href: `/api/blink/{${amountParameterName}}`,
+                // label: 'Buy',
+                // parameters: [
+                //     {
+                //     name: amountParameterName,
+                //     label: 'Enter a custom SOL amount',
+                //     },
+                // ],
+                // },
+            ],
+            },
+        };
+
+        console.log('response', response);
+        const res = new Response(
+            JSON.stringify(response), {
+                status: 200,
+                headers: {
+                    'access-control-allow-origin': '*',
+                    'content-type': 'application/json; charset=UTF-8'
+                }
+            }
+        );
+        console.log('res', res);
+        return res
+    } catch (e) {
+        console.log(e);
+        throw e;
+    }
+}
+
+export async function OPTIONS( request: Request ) {
+    return new Response(null, {
+        headers: {
+            'access-control-allow-origin': '*',
+            'content-type': 'application/json; charset=UTF-8'
+        }
+    });
 };

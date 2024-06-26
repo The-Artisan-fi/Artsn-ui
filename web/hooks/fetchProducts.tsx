@@ -32,13 +32,13 @@ export const fetchProducts = async () => {
             };
             const get_accounts_config: GetProgramAccountsConfig = {
                 commitment: "confirmed",
-                // filters: [{
-                //     memcmp: {
-                //         offset: 8,
-                //         bytes: LISTING_GROUP,
-                //     }
-                // }]
-                filters: [size_filter]
+                filters: [{
+                    memcmp: {
+                        offset: 16,
+                        bytes: LISTING_GROUP,
+                    }
+                }]
+                // filters: [size_filter]
             };
             const all_program_accounts = await connection.getProgramAccounts(new PublicKey(PROGRAM_ID),
                 get_accounts_config
@@ -49,6 +49,7 @@ export const fetchProducts = async () => {
                 try {
                     const decode = program.coder.accounts.decode("Listing", account.account.data);
                     console.log('decode', decode)
+                    console.log('account', account.pubkey.toBase58());
                     if(!decode) return;
                     const fraction = PublicKey.findProgramAddressSync([Buffer.from('fraction'), account.pubkey.toBuffer()], program.programId)[0];
                     return {
