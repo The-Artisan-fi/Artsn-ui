@@ -103,10 +103,7 @@ export async function POST( request: Request) {
         
 
         const buyShareIx = await program.methods
-            .buyListing(
-                false,
-                '',
-            )
+            .buyListing()
             .accounts({
                 payer: feePayer.publicKey,
                 buyer: buyer_publicKey,
