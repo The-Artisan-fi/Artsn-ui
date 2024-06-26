@@ -27,6 +27,8 @@ export async function POST( request: Request ) {
     try {
         const req = await request.json();
         const id = req.id;
+        // GROUPS FOR FINDING
+        const listingGroup = new PublicKey('LSTBuqygb7CMQryt45BC1fh5PPjuJKtoffDyASchWi2');
         // const reference = req.reference;
         const share = req.share;
         const price = req.price;
@@ -56,6 +58,7 @@ export async function POST( request: Request ) {
         const ix = await program.methods
             .createListing(
                 new anchor.BN(id),
+                listingGroup,
                 share,
                 new anchor.BN(price),
                 new anchor.BN(starting_time),

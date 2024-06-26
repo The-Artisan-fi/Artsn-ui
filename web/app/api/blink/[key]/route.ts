@@ -161,7 +161,16 @@ export async function POST(_: Request, { params }: { params: { key : number } })
         //   });
         // const base64 = serializedTransaction.toString("base64");
 
-        const total_instructions = [profileInitIx];
+
+        // check buyerProfile account for lamports, if none, add the prfileInitIx instruction
+
+        const total_instructions = [];
+
+        const buyerProfileAccount = await connection.getAccountInfo(buyerProfile);
+        const lamports = buyerProfileAccount?.lamports;
+        if( lamports == 0) {
+            total_instructions.push(profileInitIx);
+        }
         // run a for loop to add a set of instructions to the total_instructions array for the amount of shares to buy
         for(let i = 0; i < amount ; i++) {
             total_instructions.push(buyShareIx);
