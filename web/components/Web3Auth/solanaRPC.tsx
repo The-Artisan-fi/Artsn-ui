@@ -216,10 +216,34 @@ export const logout = async () => {
 };
 
 export const loginWithEmail = async (email: string) => {
-  if (!web3auth) {
-    uiConsole("web3auth not initialized yet");
-    return;
-  }
+  const chainConfig = {
+      chainNamespace: CHAIN_NAMESPACES.SOLANA,
+      chainId: "0x3", // Please use 0x1 for Mainnet, 0x2 for Testnet, 0x3 for Devnet
+      rpcTarget: "https://api.devnet.solana.com",
+      displayName: "Solana Devnet",
+      blockExplorer: "https://explorer.solana.com",
+      ticker: "SOL",
+      tickerName: "Solana Token",
+    };
+    const web3auth = new Web3AuthNoModal({
+      clientId,
+      chainConfig,
+      web3AuthNetwork: "sapphire_mainnet",
+    });
+
+
+    const privateKeyProvider = new SolanaPrivateKeyProvider({ config: { chainConfig } });
+
+    const openloginAdapter = new OpenloginAdapter({
+      privateKeyProvider,
+      adapterSettings: {
+        uxMode: "redirect",
+      }
+    });
+    web3auth.configureAdapter(openloginAdapter);
+
+    await web3auth.init();
+  console.log('email', email)
   const web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
     loginProvider: "email_passwordless",
     extraLoginOptions: {

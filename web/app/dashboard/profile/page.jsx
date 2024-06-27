@@ -9,7 +9,7 @@ const message = Dynamic(() => import('antd').then((mod) => mod.message), { ssr: 
 
 // import { Upload, Input, message } from 'antd';
 import ImgCrop from 'antd-img-crop';
-
+import { toastSuccess } from '@/helpers/toast';
 import { MdOutlineFileUpload } from 'react-icons/md';
 import { FaLock } from 'react-icons/fa';
 import { FaCopy } from 'react-icons/fa';
@@ -138,8 +138,8 @@ const Profile = () => {
             suffix={
               <FaCopy
                 onClick={() => {
-                  navigator.clipboard.writeText(publicKey.toBase58());
-                  message.success('Copied!');
+                  publicKey ? navigator.clipboard.writeText(publicKey.toBase58()) : navigator.clipboard.writeText(web3AuthPublicKey);
+                  toastSuccess('Copied!');
                 }}
                 style={{ cursor: 'pointer', color: 'white' }}
               />
