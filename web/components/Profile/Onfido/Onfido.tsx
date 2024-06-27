@@ -137,13 +137,13 @@ export default function OnfidoModal({ publicKey, applicantId, applicantToken, wo
             //     'face',
             //     'complete'
             // ],
-          onComplete: function (data) {
+          onComplete: function (data: any) {
             console.log("everything is complete", data);
             const userData = JSON.stringify(data);
             console.log('userData', userData);
             handleSuccess();
           },
-          onError: function (error) {
+          onError: function (error: any) {
             console.log("something went wrong", error);
             // handleCloseRetry();
             handleClose();

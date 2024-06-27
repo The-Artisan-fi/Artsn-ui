@@ -56,6 +56,15 @@ export const getListingByMintAddress = gql`
     }
 `;
 
+export const getListingImageByAssociatedId = gql`
+    query($associatedId: String!) {
+        listings(query: { associatedId: $associatedId }) {
+            _id
+            images
+        }
+    }
+`;
+
 
 ////////////////USER QUERIES////////////////////
 

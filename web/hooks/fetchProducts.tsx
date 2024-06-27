@@ -62,8 +62,8 @@ export const fetchProducts = async () => {
                 }
             });
             const currentTime = Math.floor(Date.now() / 1000);
-            
             const availableProducts = productList.filter(product => product.startingTime < currentTime);
+            console.log('availableProducts', availableProducts)
             const comingSoonProducts = productList.filter(product => product.startingTime >= currentTime);
 
             const products = {
@@ -71,7 +71,7 @@ export const fetchProducts = async () => {
                     id: product.id,
                     accountPubkey: product.accountPubkey,
                     name: product.name,
-                    image: product.img,
+                    image: `https://artisan-solana.s3.eu-central-1.amazonaws.com/${product.accountPubkey}-0.jpg`,
                     // fractions left should display the remaining shares available / total shares
                     fractionsLeft: `${product.share - product.shareSold} / ${product.share}`,
                     startingPrice: `${product.price} USD`,

@@ -20,6 +20,13 @@ const nextConfig = {
     // See: https://github.com/gregberge/svgr
     svgr: false,
   },
+  images: {
+    remotePatterns: [{
+      protocol: 'https',
+      hostname: 'artisan-solana.s3.eu-central-1.amazonaws.com', 
+      pathname: '/**',
+    }],
+  },
 };
 
 const plugins = [

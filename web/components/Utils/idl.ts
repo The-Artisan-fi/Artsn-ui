@@ -1318,7 +1318,7 @@ export const IDL: Fragment = {
 
 
 
-export const PROGRAM_ID = "ZdEaZktnMxDnBPBdLh5vbiGrvn1U49qsKQgXVurBCNj" as Address
+export const PROGRAM_ID = "65kSjHszLGNYKN3YjKXqY6t8yjkxA9gpsxnfVb93DApH" as Address
 
 export const LISTING_GROUP = 'LSTBuqygb7CMQryt45BC1fh5PPjuJKtoffDyASchWi2' as string;
 
