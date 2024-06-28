@@ -20,11 +20,11 @@ export async function POST( request: Request ) {
     const provider = new anchor.AnchorProvider(connection, wallet, {});
     const programId = new PublicKey(PROGRAM_ID);
     const program = new anchor.Program<Fragment>(IDL, programId, provider);
-    const uri = 'www.example.com'
+    
     try {
         const req = await request.json();
         const buyer_publicKey = new PublicKey(req.publicKey);
-
+        console.log('buyer_publicKey', buyer_publicKey.toBase58());
         // VARIABLES
         const buyerProfile = PublicKey.findProgramAddressSync([Buffer.from('profile'), buyer_publicKey.toBuffer()], program.programId)[0];
         const feeKey = process.env.PRIVATE_KEY!;

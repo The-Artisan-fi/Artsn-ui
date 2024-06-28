@@ -1,15 +1,28 @@
 import { UPDATE_USER_IDV} from "@/lib/mutations";
 import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 import * as Realm from 'realm-web';
+import * as anchor from "@coral-xyz/anchor";
+import { IDL, Fragment, PROGRAM_ID} from "@/components/Utils/idl";
+import {
+    PublicKey,
+    SystemProgram,
+    Keypair,
+    Transaction,
+    Connection,
+    sendAndConfirmTransaction,
+  } from "@solana/web3.js";
+import * as b58 from "bs58";
 
 export async function POST( request: Request ) {
+    
     try {
         const auth_header = request.headers.get('Authorization');
         const encodedCreds = auth_header!.split(' ')[1]
         const plainCreds = encodedCreds.toString().split(':')
         const username = plainCreds[0]
         const password = plainCreds[1]
-
+        
+        
         // `
         //  curl -H 'Content-Type: application/json' \
         //     -H 'Authorization : Basic ondato:ARTiXFSdAqtvh3MQi8GaxVa8dULaz67pwe77pGdyvkDp' \
@@ -188,7 +201,7 @@ export async function POST( request: Request ) {
             cache: new InMemoryCache(),
         });
 
-        const _data = await client.mutate({
+        const { data }: any = await client.mutate({
             mutation: UPDATE_USER_IDV,
             variables: {
                 idvId: idvId,
@@ -198,11 +211,61 @@ export async function POST( request: Request ) {
 
 
         // TODO UPDATE SOLANA PROGRAM -- BUYERPROFILE VERIFY
+        // send a ping to `/api/protocol/profile/verify` with the wallet from _data.wallet
+        // const response = await fetch('/api/protocol/profile/verify', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify({
+        //         publicKey: _data.wallet,
+        //     }),
+        // });
         
 
-        console.log('__data,', _data)
+        console.log('__data,', data )
+        console.log('id from data', data.updateOneUser._id)
+        console.log('idvStatus from data', data.updateOneUser.idvStatus)
+        console.log('wallet from data', data.updateOneUser.wallet)
+
+        // const wallet = Keypair.generate();
+        // const connection = new Connection(
+        //     process.env.NEXT_PUBLIC_HELIUS_DEVNET!,
+        //     "confirmed"
+        // );
+        // // @ts-expect-error - wallet is dummy variable, signing is not needed
+        // const provider = new anchor.AnchorProvider(connection, wallet, {});
+        // const programId = new PublicKey(PROGRAM_ID);
+        // const program = new anchor.Program<Fragment>(IDL, programId, provider);
+        // const feeKey = process.env.PRIVATE_KEY!;
+        // const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
+
+        // const buyer_publicKey = new PublicKey(data.updateOneUser.wallet);
+        // const buyerProfile = PublicKey.findProgramAddressSync([Buffer.from('profile'), buyer_publicKey.toBuffer()], program.programId)[0];
+        // const profileVerifyIx = await program.methods
+        //     .verifyProfile()
+        //     .accounts({
+        //         user: buyer_publicKey,
+        //         profile: buyerProfile,
+        //         admin: feePayer.publicKey,
+        //         systemProgram: SystemProgram.programId,
+        //     })
+        //     .instruction()
+
+        // const { blockhash } = await connection.getLatestBlockhash("finalized");
+        // const transaction = new Transaction({
+        //     recentBlockhash: blockhash,
+        //     feePayer: feePayer.publicKey,
+        // });
         
-        if( _data) {
+        // transaction.add(profileVerifyIx);
+        // transaction.partialSign(feePayer);
+
+        // console.log('transaction', transaction);
+        
+        // const signature = await sendAndConfirmTransaction(connection, transaction, [feePayer]);
+        // console.log('Signature from buyer init:', signature);
+        if( data) {
             return new Response(
                 JSON.stringify({
                     message: 'success',
