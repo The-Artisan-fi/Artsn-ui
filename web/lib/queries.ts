@@ -78,8 +78,18 @@ export const user = gql`
             wallet
             currencyPreference
             profileImg
-            onfidoWorkflowRunId
-            onfidoKyc
+            idvId
+            idvStatus
+        }
+    }
+`;
+
+export const user_by_idvId = gql`
+    query($idvId: String!) {
+        users(query: { idvId: $idvId }) {
+            _id
+            email
+            wallet
             idvId
             idvStatus
         }

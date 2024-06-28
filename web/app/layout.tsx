@@ -1,4 +1,5 @@
 import './global.css';
+import { ApolloWrapper } from "./ApolloWrapper";
 import { AppLayout } from '@/components/Ui/app-layout';
 import { ClusterProvider } from '@/components/Cluster/cluster-data-access';
 import { SolanaProvider } from '@/components/Solana/solana-provider';
@@ -57,11 +58,14 @@ export default function RootLayout({
         <title>The Artisan</title>
       </head>
       <body>
+        
         <ClusterProvider>
           <SolanaProvider>
-            <AppLayout>
-              {children}
-            </AppLayout>
+            <ApolloWrapper>
+              <AppLayout>
+                {children}
+              </AppLayout>
+            </ApolloWrapper>
           </SolanaProvider>
         </ClusterProvider>
         <ToastContainer
