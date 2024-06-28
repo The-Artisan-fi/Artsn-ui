@@ -11,7 +11,7 @@
     border:none;
     border-radius: 45px;
     z-index: 90;
-    min-width: 55vw;
+    min-width: fit-content;
     // min-height: 90vh;
     height: fit-content;
     padding-bottom: 5rem;
@@ -21,6 +21,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+    height: fit-content;
 }
 
 .login-header {
@@ -49,7 +50,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
+    gap: 2px;
     padding: 0rem 3rem 0rem 3rem;
 }
 
@@ -64,10 +65,10 @@
 
 .header-subtext {
     font-family: Inter;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: 400;
-    line-height: 16px;
-    letter-spacing: 0.02em;
+    line-height: 24px;
+    letter-spacing: 0em;
     text-align: left;
 }
 

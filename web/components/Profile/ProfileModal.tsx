@@ -16,7 +16,6 @@ import { ADD_USER } from "@/lib/mutations";
 import useSWRMutation from "swr/mutation";
 import LoginHeader from '@/public/assets/login/login_header.svg';
 import Logo from '@/public/assets/login/logo_bw.svg';
-import OnfidoWrapper from '@/components/Profile/Onfido/OnfidoWrapper';
 import OndatoWrapper from '@/components/Profile/Ondato/OndatoWrapper';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
@@ -73,7 +72,6 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
             country: '',
         }
     });
-    const [displayOnfido, setDisplayOnfido] = useState<boolean>(false);
     const connection = new Connection(
         process.env.NEXT_PUBLIC_HELIUS_DEVNET!,
         "confirmed"
@@ -232,7 +230,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
     const page1 = () => {
 
         return(
-            <>
+            <div style={{ width: 'fit-content'}}>
                 <div className="modal-header">
                     {/* create an X to 'handleCloseModal' in the top right corner of the div and give it a z index so it stays on top of other ojects */}
                     <button 
@@ -336,7 +334,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                         </button>
                     </div>
                 )}
-            </>
+            </div>
         )
     }
 
@@ -347,8 +345,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
             borderRadius: token.borderRadiusLG,
           };
         const retry = () => {
-            // setDisplayOnfido(false);
-            // setDisplayOnfido(true);
+            
             console.log('retry')
         }
         return (
@@ -384,7 +381,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                     />
                     <div className="header-text-container">
                         <p className="header-text" style={{color: 'white'}}>
-                            Verify Your Identity
+                            Verify your identity to invest
                         </p>
                         <p className="header-subtext" style={{color: 'white', display: 'flex', flexDirection: 'column', justifyContent: 'center',
                             alignContent: 'center',
@@ -393,9 +390,105 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                             textAlign: 'center',
                             lineHeight: '2rem',
                             height: 'fit-content',
+                            fontSize: '1.5rem',
                         }}>
-                            To open an account with us, we need to verify your identity. <br />
-                            This should only take a few minutes.
+                            Every investor needs to fulfil KYC verification, this step is required to ensure compliance with financial regulations.
+                        </p>
+                        <br />
+                        <p className="header-subtext" style={{color: 'white', display: 'flex', flexDirection: 'column', justifyContent: 'center',
+                            alignContent: 'center',
+                            alignItems: 'center',
+                            // center the text
+                            textAlign: 'center',
+                            lineHeight: '2rem',
+                            height: 'fit-content',
+                            fontSize: '1.5rem',
+                            fontWeight: 'bold',
+                            backgroundColor: '#325252',
+                            padding: '1rem',
+                            borderRadius: '10px',
+                        }}>
+                            Before starting: <br />
+                            <span style={{fontSize: '1.25rem', fontWeight: 'normal'}}>
+                                • Prepare Passport or ID card <br />
+                                • Be in private room with a good lighting <br />
+                            </span>
+
+                            
+                            <a href="https://ondato.com"><img src="https://ondato.com/logos/KYC-Compliance-Standard/OndatoKYCComplianceStandard_DarkBG.png" alt="Powered by Ondato" /></a>
+                            
+                        </p>
+                    </div>
+                </div>
+            
+                <button
+                    className="btn-primary"
+                    onClick={()=> handlePageChange(3)}
+                >
+                    Start Verification
+                </button> 
+                    
+                <p className="header-subtext" style={{marginTop: '2rem', color: 'white', display: 'flex', flexDirection: 'column', justifyContent: 'center',
+                    alignContent: 'center',
+                    alignItems: 'center',
+                    // center the text
+                    textAlign: 'center',
+                    lineHeight: '2rem',
+                    height: 'fit-content',
+                    fontSize: '.8rem',
+                    fontWeight: 'bold'
+                }}>
+                    Personal information will be safely encrypted and only will be used for identity verification.
+                </p>
+                
+            </>
+        )
+    }
+
+    const page3 = () => {
+        const wrapperStyle = {
+            width: 300,
+            border: `1px solid ${token.colorBorderSecondary}`,
+            borderRadius: token.borderRadiusLG,
+          };
+        const retry = () => {
+            
+            console.log('retry')
+        }
+        return (
+            <>
+                <div className="modal-header">
+                    {/* create an X to 'handleCloseModal' in the top right corner of the div and give it a z index so it stays on top of other ojects */}
+                    <button 
+                        onClick={handleCloseModal}
+                        style={{
+                            position: 'absolute',
+                            top: '2rem',
+                            right: '2.5rem',
+                            zIndex: 100,
+                            backgroundColor: 'transparent',
+                            color: 'white',
+                            border: 'none',                               
+                            fontSize: '2.5rem',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        x
+                    </button>
+                    {/* <Image
+                        src={LoginHeader}
+                        alt="login header"
+                        className="login-header"
+                    /> */}
+                    <div className="login-header" />
+                    <Image
+                        src={Logo}
+                        alt="logo"
+                        className="logo"
+                    />
+                    <div className="header-text-container">
+                        <p className="header-text" style={{color: 'white'}}>
+                            Verify your identity to invest
                         </p>
                     </div>
                 </div>
@@ -485,6 +578,21 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                     >
                         Go Back
                     </button> */}
+                    <OndatoWrapper
+                            publicKey={publicKey ? publicKey.toString() : web3AuthPublicKey!} 
+                            handleSuccessPending={()=> setVerificationPending(true)}
+                            handleRetry={()=> retry()}
+                            fullName={profile!.fullName || ''}
+                            dob={profile!.dob || ''}
+                            address={{
+                                ...profile!.address,
+                                building_number: profile!.address.building_number || '',
+                                street: profile!.address.street || '',
+                                town: profile!.address.town || '',
+                                postcode: profile!.address.postcode || '',
+                                country: profile!.address.country || ''
+                            }}
+                        />
                 </div> 
                 {/* {
                     !displayOnfido &&
@@ -507,7 +615,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                     )
                 } */}
                 
-                {
+                        {
 
                         // <OnfidoWrapper 
                         //     publicKey={publicKey ? publicKey.toString() : web3AuthPublicKey!} 
@@ -524,26 +632,26 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                         //         country: profile!.address.country || ''
                         //     }}
                         // />
-                        <OndatoWrapper
-                            publicKey={publicKey ? publicKey.toString() : web3AuthPublicKey!} 
-                            handleSuccessPending={()=> setVerificationPending(true)}
-                            handleRetry={()=> retry()}
-                            fullName={profile!.fullName || ''}
-                            dob={profile!.dob || ''}
-                            address={{
-                                ...profile!.address,
-                                building_number: profile!.address.building_number || '',
-                                street: profile!.address.street || '',
-                                town: profile!.address.town || '',
-                                postcode: profile!.address.postcode || '',
-                                country: profile!.address.country || ''
-                            }}
-                        />
+                        
            
                     }
                 </>
         )
     }
+
+    // switch case for activePage
+    const renderPage = (page: number) => {
+        switch(page){
+            case 1:
+                return page1();
+            case 2:
+                return page2();
+            case 3:
+                return page3();
+            default:
+                return page1();
+        }
+    };
 
     useEffect(() => {
         if(publicKey){
@@ -565,12 +673,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
         <>
             {isOpen && (
                 <div className="modal-container">
-                    {activePage !== 2 ? page1() : page2()}
-                    {/* <button
-                        onClick={()=> handlePageChange(2)}
-                    >
-                        change page
-                    </button> */}
+                    {renderPage(activePage)}
                 </div>
             )}
         </>

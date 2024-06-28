@@ -18,7 +18,7 @@ import { Connection } from "@solana/web3.js";
 import { initTokenTx } from "@/components/Protocol/functions";
 import { toastPromise, toastError, toastSuccess } from '@/helpers/toast';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, use } from 'react';
 import { HiOutlineLogout } from 'react-icons/hi';
 import { useLazyQuery } from "@apollo/client";
 import { userCurrencyPref } from "@/lib/queries";
@@ -27,12 +27,14 @@ import { auth } from '@/lib/constants';
 import { checkLogin } from '@/components/Web3Auth/checkLogin';
 import { useMutation } from "@apollo/client";
 import { ADD_LISTING } from "@/lib/mutations";
+import { fetchWatches } from '@/hooks/fetchProducts';
 const SettingsPage = () => {
   const { TextArea } = Input;
   const { publicKey, sendTransaction } = useWallet();
   const [connectedWallet, setConnectedWallet] = useState('');
   const [currencyPref, setCurrencyPref] = useState('');
   const [fileList, setFileList] = useState([]);
+  const [watches, setWatches] = useState<any[]>([]);
   const randomNo = Math.floor(Math.random() * 1000000);
   const tokenObj = useMemo(() => {
     return {
@@ -170,7 +172,18 @@ const SettingsPage = () => {
         }
       });
     }
+    
   }, [publicKey]);
+
+  useEffect(() => {
+    if(connectedWallet){
+      fetchWatches().then((res) => {
+        if(res){
+          setWatches(res);
+        }
+      });
+    }
+  }, [connectedWallet]);
 
   return (
     <>
@@ -190,6 +203,54 @@ const SettingsPage = () => {
 
             }}
           >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                width: '100%',
+              }}
+            >
+              <p className="caption-3">Available Watches</p>
+              {watches.map((watch, index) => (
+                <div key={index}>
+                  <img src={`https://artisan-solana.s3.eu-central-1.amazonaws.com/${watch.accountPubkey}`} alt={watch.reference} />
+                  <p>{watch.model}</p>
+                  <p>{watch.brand}</p>
+                  <p>{watch.reference}</p>
+                </div>
+                // braceletMaterial
+                // : 
+                // "Steel"
+                // brand
+                // : 
+                // "Patek Philippe"
+                // caseMaterial
+                // : 
+                // "Steel"
+                // dialColor
+                // : 
+                // "Blue"
+                // diamater
+                // : 
+                // 40
+                // group
+                // : 
+                // PublicKey {_bn: BN}
+                // model
+                // : 
+                // "Nautilus"
+                // movement
+                // : 
+                // "Automatic"
+                // reference
+                // : 
+                // "15202ST.OO.1240ST.02"
+                // yearOfProduction
+                // : 
+                // 2023
+              ))}
+            </div>
             <div className="profile__top-row__image-upload">
               <ImgCrop rotationSlider>
                   <Upload

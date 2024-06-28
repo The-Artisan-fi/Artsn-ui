@@ -68,7 +68,6 @@ export const ADD_USER = gql`
         wallet: $wallet
         currencyPreference: $currencyPreference
         profileImg: $profileImg
-        onfidoKyc: false
         idvId: ""
         idvStatus: ""
       }
@@ -80,7 +79,6 @@ export const ADD_USER = gql`
       wallet
       currencyPreference
       profileImg
-      onfidoKyc
       idvId
       idvStatus
     }
@@ -109,29 +107,6 @@ export const UPDATE_USER_IDV_ID = gql`
       _id
       wallet
       idvId
-    }
-  }
-`;
-
-export const UPDATE_USER_ONFIDO = gql`
-  mutation($wallet: String!, $onfidoWorkflowRunId: String!) {
-    updateOneUser(
-      query: { wallet: $wallet }
-      set: { onfidoWorkflowRunId: $onfidoWorkflowRunId }
-    ) {
-      _id
-      wallet
-      onfidoWorkflowRunId
-    }
-  }
-`;
-
-export const UPDATE_USER_KYC = gql`
-  mutation($wallet: String!) {
-    updateOneUser(query: { wallet: $wallet }, set: { onfidoKyc : true }) {
-      _id
-      wallet
-      onfidoKyc
     }
   }
 `;

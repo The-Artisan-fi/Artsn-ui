@@ -5,77 +5,7 @@ type KycModalProps = {
 };
 
 export default function KycModal({ onClose, applicant }: KycModalProps) {
-    // this will be a modal that will show the applicant's information
-
-// applicant_id
-// : 
-// "b08c3b32-35a7-4da8-80ed-3c176efe364c"
-// created_at
-// : 
-// "2024-05-20T23:46:52Z"
-// dashboard_url
-// : 
-// "https://dashboard.onfido.com/results/a1c30fa5-6466-47e8-8876-62a834723b28"
-// error
-// : 
-// null
-// id
-// : 
-// "a1c30fa5-6466-47e8-8876-62a834723b28"
-// link
-// : 
-// {completed_redirect_url: null, expired_redirect_url: null, expires_at: null, language: null, url: 'https://eu.onfido.app/l/a1c30fa5-6466-47e8-8876-62a834723b28'}
-// output
-// : 
-// date_of_birth
-// : 
-// "1990-01-01"
-// document_issuing_country
-// : 
-// "GBR"
-// document_media_ids
-// : 
-// (2) [{…}, {…}]
-// document_number
-// : 
-// "999999999"
-// document_type
-// : 
-// "passport"
-// first_name
-// : 
-// "Jane"
-// last_name
-// : 
-// "Doe"
-// selfie_media_ids
-// : 
-// [{…}]
-// [[Prototype]]
-// : 
-// Object
-// reasons
-// : 
-// []
-// sdk_token
-// : 
-// null
-// status
-// : 
-// "approved"
-// tags
-// : 
-// []
-// updated_at
-// : 
-// "2024-05-20T23:57:28Z"
-// workflow_id
-// : 
-// "ceec3f2d-ad33-4797-bd45-c3cb8c721c02"
-// workflow_version_id
-// : 
-// 1
-
+   
     return (
         <div
             // this will be the overlay div that the modal will be rendered on

@@ -32,7 +32,19 @@ export default function OndatoWrapper({ publicKey, fullName, dob, address, handl
   }
 
     const getIdvId = async () => {
-
+      // check local storage for idv_id
+      const artisan_idv_id = localStorage.getItem('artisan_idv_id'); // [idv_id, timestamp]
+      // if it exists, and the timestamp is less than 24 hours old, return it
+      if (artisan_idv_id) {
+        const idv_id = artisan_idv_id.split(',')[0];
+        const timestamp = parseInt(artisan_idv_id.split(',')[1]);
+        const now = Date.now();
+        if (now - timestamp < 86400000) {
+          console.log('returning idv_id from local storage');
+          setIdvId(idv_id);
+          return idv_id;
+        }
+      }
       const firstName = fullName.split(' ')[0];
       const lastName = fullName.split(' ')[1];
       const middleName = '';
@@ -40,7 +52,7 @@ export default function OndatoWrapper({ publicKey, fullName, dob, address, handl
       const phoneNumber = '1234567890';
       const countryCode = address.country;
       const email = '';
-      console.log('pinging idv api')
+      console.log('pinging idv api for new idv_id')
       try{
           const response = await fetch('/api/ondato/idv/create', {
             method: 'POST',
@@ -61,6 +73,8 @@ export default function OndatoWrapper({ publicKey, fullName, dob, address, handl
           const data = await response.json();
          
           console.log('idv data', data);
+          // set the data.idv_id to a localStorage item named artisan_idv_id as [data.idv_id, timestamp]
+          localStorage.setItem('artisan_idv_id', `[${data.idv_id}, ${Date.now()}]`);
           setIdvId(data.idv_id);
 
           return data.idv_id;

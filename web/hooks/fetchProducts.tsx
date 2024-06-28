@@ -99,3 +99,66 @@ export const fetchProducts = async () => {
             console.error("Failed to fetch products:", error);
         }
     };
+
+    export const fetchWatches = async () => {
+        const connection = new Connection(clusterApiUrl("devnet"), {
+                commitment: "confirmed",
+            });
+
+        const wallet = Keypair.generate();
+
+        // @ts-expect-error - wallet is dummy variable, signing is not needed
+        const provider = new AnchorProvider(connection, wallet, {});
+        setProvider(provider);
+
+        const program = new Program(IDL, PROGRAM_ID);
+
+        const formatDateToDddMmm = (timestamp: number) => {
+            const date = new Date(timestamp * 1000);
+            const day = date.getDate();
+            const minute = date.getMinutes();
+        
+            const paddedDay = day.toString().padStart(2, '0');
+            const paddedMinute = minute.toString().padStart(2, '0');
+            
+            return `${paddedDay}::${paddedMinute}`;
+        };
+
+        try {
+            const size_filter: DataSizeFilter = {
+                dataSize: 92,
+            };
+            const get_accounts_config: GetProgramAccountsConfig = {
+                commitment: "confirmed",
+                filters: [{
+                    memcmp: {
+                        offset: 8,
+                        bytes: WATCH_GROUP,
+                    }
+                }]
+                // filters: [size_filter]
+            };
+            const all_program_accounts = await connection.getProgramAccounts(new PublicKey(PROGRAM_ID),
+                get_accounts_config
+            );
+
+             console.log('all_program_accounts', all_program_accounts)
+            const watchList = all_program_accounts.map((account) => {
+                try {
+                    const decode = program.coder.accounts.decode("Watch", account.account.data);
+                    console.log('decode', decode)
+                    console.log('account', account.pubkey.toBase58());
+                    if(!decode) return;
+                    return {
+                        accountPubkey: account.pubkey.toBase58(),
+                        ...decode
+                    };
+                } catch (error) {
+                   console.log('error decoding account', account, error)
+                }
+            });
+            return watchList;
+        } catch (error) {
+            console.error("Failed to fetch products:", error);
+        }
+    };
