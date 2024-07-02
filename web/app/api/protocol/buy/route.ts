@@ -80,20 +80,6 @@ export async function POST( request: Request ) {
         const buyShareIx = await program.methods
             .buyListing()
             .accounts({
-                // buyer: buyer_publicKey,
-                // payer: feePayer.publicKey,
-                // buyerProfile,
-                // buyerCurrencyAta,
-                // buyerFractionAta,
-                // listing,
-                // listingCurrencyAta,
-                // fraction,
-                // currency: USDC_DEV,
-                // auth,
-                // associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-                // tokenProgram: TOKEN_PROGRAM_ID,
-                // token2022Program: TOKEN_2022_PROGRAM_ID,
-                // systemProgram: SystemProgram.programId,
                 payer: feePayer.publicKey,
                 buyer: buyer_publicKey,
                 buyerProfile,

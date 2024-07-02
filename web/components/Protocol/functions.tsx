@@ -7,13 +7,15 @@ import { ParsedProgramAccounts} from "@/helpers/types";
 const connection = new Connection(clusterApiUrl("devnet"), {
     commitment: "confirmed",
 });
-
+// const connection = new Connection("http://localhost:8899", {
+//   commitment: "confirmed",
+// })
 const wallet = Keypair.generate();
 
 // @ts-expect-error - wallet is dummy variable, signing is not needed
 const provider = new AnchorProvider(connection, wallet, {});
 setProvider(provider);
-const program = new Program(IDL, PROGRAM_ID);
+
 
 export async function initProfileTx(key: string) {
   try{
@@ -90,11 +92,11 @@ export async function fetchBuyerProfile(key: PublicKey) {
 export async function decodeProfileData(key: PublicKey) {
     try {
         const profile = await fetchBuyerProfile(key);
-        const decodedProfile = program.coder.accounts.decode(
-            "Profile",
-            profile.data
-        );
-        return decodedProfile;
+        // const decodedProfile = program.coder.accounts.decode(
+        //     "Profile",
+        //     profile.data
+        // );
+        // return decodedProfile;
     } catch (error) {
       console.error('Error decoding data', error);
     }

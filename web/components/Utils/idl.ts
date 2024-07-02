@@ -116,7 +116,7 @@ export type Fragment = {
         {
           "name": "user",
           "isMut": true,
-          "isSigner": true
+          "isSigner": false
         },
         {
           "name": "profile",
@@ -124,14 +124,9 @@ export type Fragment = {
           "isSigner": false
         },
         {
-          "name": "gatewayToken",
+          "name": "admin",
           "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "gatekeeperNetwork",
-          "isMut": false,
-          "isSigner": false
+          "isSigner": true
         },
         {
           "name": "systemProgram",
@@ -774,7 +769,7 @@ export const IDL: Fragment = {
         {
           "name": "user",
           "isMut": true,
-          "isSigner": true
+          "isSigner": false
         },
         {
           "name": "profile",
@@ -782,14 +777,9 @@ export const IDL: Fragment = {
           "isSigner": false
         },
         {
-          "name": "gatewayToken",
+          "name": "admin",
           "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "gatekeeperNetwork",
-          "isMut": false,
-          "isSigner": false
+          "isSigner": true
         },
         {
           "name": "systemProgram",

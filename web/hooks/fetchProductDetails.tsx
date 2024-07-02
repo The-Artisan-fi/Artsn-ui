@@ -6,7 +6,9 @@ export const fetchProductDetails = async (accountPubkey: string) => {
     const connection = new Connection(clusterApiUrl("devnet"), {
             commitment: "confirmed",
         });
-
+    // const connection = new Connection("http://localhost:8899", {
+    //     commitment: "confirmed",
+    // })
     const wallet = Keypair.generate();
 
     // @ts-expect-error - wallet is dummy variable, signing is not needed
