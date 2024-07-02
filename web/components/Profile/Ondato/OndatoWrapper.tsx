@@ -35,16 +35,16 @@ export default function OndatoWrapper({ publicKey, fullName, dob, address, handl
       // check local storage for idv_id
       const artisan_idv_id = localStorage.getItem('artisan_idv_id'); // [idv_id, timestamp]
       // if it exists, and the timestamp is less than 24 hours old, return it
-      if (artisan_idv_id) {
-        const idv_id = artisan_idv_id.split(',')[0];
-        const timestamp = parseInt(artisan_idv_id.split(',')[1]);
-        const now = Date.now();
-        if (now - timestamp < 86400000) {
-          console.log('returning idv_id from local storage');
-          setIdvId(idv_id);
-          return idv_id;
-        }
-      }
+      // if (artisan_idv_id) {
+      //   const idv_id = artisan_idv_id.split(',')[0];
+      //   const timestamp = parseInt(artisan_idv_id.split(',')[1]);
+      //   const now = Date.now();
+      //   if (now - timestamp < 86400000) {
+      //     console.log('returning idv_id from local storage');
+      //     setIdvId(idv_id);
+      //     return idv_id;
+      //   }
+      // }
       const firstName = fullName.split(' ')[0];
       const lastName = fullName.split(' ')[1];
       const middleName = '';
