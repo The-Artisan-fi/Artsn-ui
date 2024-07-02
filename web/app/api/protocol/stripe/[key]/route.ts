@@ -18,6 +18,7 @@ import {
     getAssociatedTokenAddressSync, 
  } from "@solana/spl-token";
 import * as b58 from "bs58";
+import { publicKey } from "@coral-xyz/anchor/dist/cjs/utils";
 
 // URL: /api/protocol/buy/stripe/[key]
 // Endpoint: POST /api/protocol/buy/stripe/[key]
@@ -30,7 +31,7 @@ import * as b58 from "bs58";
 //   -X POST \
 //   http://localhost:3000/api/stripe/123
 
-export async function POST(_: Request, { params }: { params: { key : number } }) {
+export async function POST(_: Request, { params }: { params: { key : string } }) {
     console.log('post pinged')
     const auth_header = _.headers.get('Authorization');
     const encodedCreds = auth_header!.split(' ')[1]
@@ -47,10 +48,12 @@ export async function POST(_: Request, { params }: { params: { key : number } })
         });
     }
 
+    const _req = await _.json();
+    const { publicKey, secretKey, listingId, reference, amount } = _req;
 
     const ed25519Ix = Ed25519Program.createInstructionWithPrivateKey({
-        privateKey: params.secretKey,
-        message: params.publicKey,
+        privateKey: secretKey,
+        message: publicKey,
       });
 
     const wallet = Keypair.generate();
@@ -65,10 +68,8 @@ export async function POST(_: Request, { params }: { params: { key : number } })
 
     try {
         // VARIABLES
-        const reference = params.reference;
-        const amount = params.amount;
-        const buyer_publicKey = new PublicKey(params.publicKey);
-        const id = params.listingId;
+        const buyer_publicKey = new PublicKey(publicKey);
+        const id = listingId;
 
         const USDC_DEV = new PublicKey("Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr");
 
@@ -163,7 +164,7 @@ export async function POST(_: Request, { params }: { params: { key : number } })
 };
 
 
-export async function GET(_: Request, { params }: { params: { key : number } }) {
+export async function GET(_: Request, { params }: { params: { key : string } }) {
     // route to get the listing
     // /api/protocol/buy/stripe/[key]
     // example curl
@@ -176,7 +177,7 @@ export async function GET(_: Request, { params }: { params: { key : number } }) 
     
     try {
         console.log('get route pinged', params)
-        console.log('key', params.key)
+        console.log('key', params.key) //key=123&amount=1
         const res = new Response(
             JSON.stringify(params), {
                 status: 200,
