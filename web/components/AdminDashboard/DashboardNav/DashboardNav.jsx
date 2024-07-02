@@ -19,8 +19,8 @@ const DashboardNav = () => {
   const [userName, setUserName] = useState('');
   const [getDetails, { loading, error, data }] = useLazyQuery(userProfileBasic , {variables});
   if(!loading && data != undefined && profileImg == ''){
-    setProfileImg(data.users[0].profileImg);
-    setUserName(data.users[0].userName);
+    // setProfileImg(data.users[0].profileImg);
+    // setUserName(data.users[0].userName);
   }
   if(!loading && error != undefined){
       console.log("error", error);

@@ -27,9 +27,9 @@ import { publicKey } from "@coral-xyz/anchor/dist/cjs/utils";
 // Example :
 //  curl -H 'Content-Type: application/json' \
 //     -H 'Authorization : Basic stripe:password' \
-//   -d '{"publicKey": "123", "secretKey": "123", "listingId": 123, "reference":"123", amount: 1}' \
+//   -d '{"secretKey": "123", "listingId": 123, "reference":"123", amount: 1}' \
 //   -X POST \
-//   http://localhost:3000/api/stripe/123
+//   http://localhost:3000/api/protocol/stripe/PUBLIC_KEY.TO_BASE58()/
 
 export async function POST(_: Request, { params }: { params: { key : string } }) {
     console.log('post pinged')
