@@ -3,6 +3,7 @@ import {
   PublicKey,
   Transaction,
   TransactionInstruction,
+  VersionedTransaction,
 } from "@solana/web3.js";
 import { CHAIN_NAMESPACES, WALLET_ADAPTERS, IProvider, CustomChainConfig } from "@web3auth/base";
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
@@ -301,7 +302,7 @@ export default class SolanaRpc {
     }
   };
 
-  sendTransaction = async (tx: Transaction): Promise<string> => {
+  sendTransaction = async (tx: Transaction | VersionedTransaction): Promise<string> => {
     try {
       const solanaWallet = new SolanaWallet(this.provider);
 

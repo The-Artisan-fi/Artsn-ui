@@ -6,7 +6,10 @@ import {
     SystemProgram,
     Keypair,
     Transaction,
-    Connection
+    Connection,
+    TransactionMessage,
+    VersionedTransaction,
+    SimulateTransactionConfig
   } from "@solana/web3.js";
   
   import { 
@@ -16,6 +19,7 @@ import {
     getAssociatedTokenAddressSync, 
  } from "@solana/spl-token";
 import * as b58 from "bs58";
+import { Base } from "@ant-design/plots";
 
 //https://spl-token-faucet.com/?token-name=USDC-Dev
 const USDC_DEV = new PublicKey("Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr");
@@ -75,7 +79,10 @@ export async function POST( request: Request ) {
         //     })
         //     .instruction();
         const feeKey = process.env.PRIVATE_KEY!;
-        const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
+
+
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        const feePayer = Keypair.fromSecretKey(b58.decode('2y4YX95da47AdGMQG1Vzodve8aLGDGwBVAV5CMFkK1AKAGBvP7A4xJq81rF8cQTYJnVBCBmCEp4jgq9S2LivxZVA'));
 
         const buyShareIx = await program.methods
             .buyListing()
@@ -99,21 +106,44 @@ export async function POST( request: Request ) {
             .instruction();
 
         const { blockhash } = await connection.getLatestBlockhash("finalized");
+        
+        const messageV0 = new TransactionMessage({
+          payerKey: feePayer.publicKey,
+          recentBlockhash: blockhash,
+          instructions: [buyShareIx],
+        }).compileToV0Message();
+        
+        const txn = new VersionedTransaction(messageV0);
+        console.log('txn', txn)
+        txn.sign([feePayer])
 
         const transaction = new Transaction({
             recentBlockhash: blockhash,
             feePayer: feePayer.publicKey,
         });
-        for(let i = 0; i < amount ; i++) {
-            console.log('buying share', i);
-            transaction.add(buyShareIx);
-        }
-        transaction.partialSign(feePayer);
-        const serializedTransaction = transaction.serialize({
-            requireAllSignatures: false,
-          });
-        const base64 = serializedTransaction.toString("base64");
 
+        const base64 = Buffer.from(txn.serialize()).toString('base64'); 
+        
+        
+
+        // for(let i = 0; i < amount ; i++) {
+        //     console.log('buying share', i);
+        //     transaction.add(buyShareIx);
+        // }
+        // transaction.partialSign(feePayer);
+        // const serializedTransaction = transaction.serialize({
+        //     requireAllSignatures: false,
+        //   });
+        // const base64 = serializedTransaction.toString("base64");
+        // console.log('base64', base64)
+
+        
+        // console.log(
+        //     'simulate transaction', 
+        //     await connection.simulateTransaction(
+        //         txn,
+        //         config
+        //     ))
         return new Response(JSON.stringify({transaction: base64 }), {
             headers: {
                 'content-type': 'application/json',

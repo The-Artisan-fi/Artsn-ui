@@ -1,4 +1,4 @@
-import { clusterApiUrl, Connection, PublicKey, Keypair, Transaction, GetProgramAccountsFilter, ParsedAccountData } from "@solana/web3.js";
+import { clusterApiUrl, Connection, PublicKey, Keypair, Transaction, GetProgramAccountsFilter, ParsedAccountData, VersionedMessage, VersionedTransaction, SimulateTransactionConfig } from "@solana/web3.js";
 import { Program, AnchorProvider, setProvider } from "@coral-xyz/anchor";
 import { IDL, PROGRAM_ID } from "@/components/Utils/idl";
 import { TOKEN_2022_PROGRAM_ID,getTokenMetadata } from "@solana/spl-token";
@@ -57,14 +57,12 @@ export async function buyTx(id: number, reference: string, key: string, amount: 
           amount: amount
       })
     })
-    const txData = await response.json();
-    const tx = Transaction.from(Buffer.from(txData.transaction, "base64"));
-
+    const { transaction } = await response.json(); //VersionedTransaction
+    const tx = VersionedTransaction.deserialize(Buffer.from(transaction, "base64"));
     if(!tx){
       console.log('no transaction');
       return;
     }
-
     return tx;
   } catch (error) {
     console.error('Error sending transaction', error);

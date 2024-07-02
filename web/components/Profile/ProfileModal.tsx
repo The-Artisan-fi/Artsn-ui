@@ -199,23 +199,23 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
         //     return;
         // }
         // convert newFileList to a Blob
-        const fileListBlob = fileList.map((file: { originFileObj: Blob; type: string; }) => {
-            return new Blob([file.originFileObj], { type: file.type });
-        });
-        await trigger({ files: fileListBlob });
+        // const fileListBlob = fileList.map((file: { originFileObj: Blob; type: string; }) => {
+        //     return new Blob([file.originFileObj], { type: file.type });
+        // });
+        // await trigger({ files: fileListBlob });
 
         await initProfile(key);
-        addUser({
-            variables: {
-                fullName: profile!.fullName,
-                userName: profile!.userName,
-                email: profile!.email,
-                wallet: publicKey ? publicKey.toBase58() : web3AuthPublicKey,
-                currencyPreference: '$USD',
-                // @ts-expect-error - fileList is not empty
-                profileImg: `https://artisan-solana.s3.eu-central-1.amazonaws.com/${publicKey ? publicKey.toBase58() : web3AuthPublicKey}.${fileList.length > 0 ? fileList[0].name.split('.').pop() : ''}`
-            }
-        });
+        // addUser({
+        //     variables: {
+        //         fullName: profile!.fullName,
+        //         userName: profile!.userName,
+        //         email: profile!.email,
+        //         wallet: publicKey ? publicKey.toBase58() : web3AuthPublicKey,
+        //         currencyPreference: '$USD',
+        //         // @ts-expect-error - fileList is not empty
+        //         profileImg: `https://artisan-solana.s3.eu-central-1.amazonaws.com/${publicKey ? publicKey.toBase58() : web3AuthPublicKey}.${fileList.length > 0 ? fileList[0].name.split('.').pop() : ''}`
+        //     }
+        // });
         {!loading && !error && data && (
             handlePageChange(2)
         )}

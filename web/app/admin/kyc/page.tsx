@@ -8,7 +8,7 @@ import KycModal from '@/components/AdminDashboard/Modal/KycModal';
 import ApplicantModal from '@/components/AdminDashboard/Modal/ApplicantModal';
 import { auth } from '@/lib/constants';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { retrieveAllApplicants, retrieveAllWorkflowRuns, retrieveWorkflowRun } from './functions';
+import { retrieveAllApplicants } from './functions';
 
 const KycPage = () => {
   const { publicKey } = useWallet();
@@ -193,11 +193,11 @@ const KycPage = () => {
     },
   ];
 
-  async function getWorkRunData() {
-    const data = await retrieveAllWorkflowRuns();
-    setAllWorkflowRuns(data);
-    return data;
-  }
+  // async function getWorkRunData() {
+  //   const data = await retrieveAllWorkflowRuns();
+  //   setAllWorkflowRuns(data);
+  //   return data;
+  // }
 
   async function getAllApplicants() {
     const data = await retrieveAllApplicants();
@@ -206,16 +206,16 @@ const KycPage = () => {
     return data;
   }
 
-  useEffect(() => {
-    retrieveWorkflowRun('6e8466ca-b875-4dc6-b534-42c639800dd5').then((data) => {
-      console.log('sample data', data)
-    });
-    if(!displayAllApplicants) {
-      getWorkRunData()
-    } else if (displayAllApplicants){
-      getAllApplicants();
-    }
-  }, [displayAllApplicants]);
+  // useEffect(() => {
+  //   retrieveWorkflowRun('6e8466ca-b875-4dc6-b534-42c639800dd5').then((data) => {
+  //     console.log('sample data', data)
+  //   });
+  //   if(!displayAllApplicants) {
+  //     getWorkRunData()
+  //   } else if (displayAllApplicants){
+  //     getAllApplicants();
+  //   }
+  // }, [displayAllApplicants]);
 
   return (
     <>

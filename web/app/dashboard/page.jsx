@@ -176,10 +176,23 @@ const Dashboard = () => {
     try{
         const data = await fetchProductDetails(product.associatedId);
         // console.log('data', data)
-        const connection = new Connection(process.env.NEXT_PUBLIC_HELIUS_DEVNET, 'confirmed');
+        const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
         if(publicKey && data){
           const tx = await buyTx(data.id, data.reference, publicKey.toBase58(), 1);
-           const signature = await sendTransaction(tx, connection, {skipPreflight: true,});
+          const getProvider = () => {
+            if ('phantom' in window) {
+              const provider = window.phantom?.solana;
+          
+              if (provider?.isPhantom) {
+                return provider;
+              }
+            }
+          
+            window.open('https://phantom.app/', '_blank');
+          };
+          const provider = getProvider();
+           const signature = await provider.signAndSendTransaction(tx)
+           console.log('signature from buy', signature);
            await toastPromise(signature)
         } else if(web3AuthPublicKey && data){ 
           const tx = await buyTx(data.id, data.reference, web3AuthPublicKey, 1);
