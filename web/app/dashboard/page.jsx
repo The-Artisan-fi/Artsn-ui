@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { LoadingSpinner } from '@/components/Loading/Loading';
 import '@/styles/DashboardInventory.scss';
 import { FiArrowUpRight } from 'react-icons/fi';
 import { fetchProductDetails } from "@/hooks/fetchProductDetails";
@@ -75,20 +76,24 @@ const Dashboard = () => {
   const [variables, setVariables] = useState({ mintAddress: '' });
   const [queryItem, setQueryItem] = useState('');
   const [listingAddress, setListingAddress] = useState('');
-  const [tokensLoading, setTokensLoading] = useState(false);
+  const [loadingFn, setLoadingFn] = useState(true);
   const onChange4 = ({ target: { value } }) => {
     console.log('radio4 checked', value);
     setValue4(value);
   };
 
-  const [getListing, { loading, error, data }] = useLazyQuery(getListingByMintAddress , {variables});
+  const [getListing, { loading, error, data }] = useLazyQuery(getListingByMintAddress, {
+    variables: variables,
+  });
   if(!loading && data != undefined && listingAddress == ''){
+    console.log('data****', data);
     if(data.listings.length > 0 && fractions.filter((item) => item.associatedId == data.listings[0].associatedId).length == 0){
+      console.log('data.listings[0].associatedId', data.listings[0].associatedId);
       fractions.push({
         ...queryItem,
         associatedId: data.listings[0].associatedId
       });
-      // console.log('pushing fraction data', fractions);
+
       setListingAddress(data.listings[0].associatedId);
     }
   }
@@ -98,6 +103,11 @@ const Dashboard = () => {
 
   async function getListingAddress(data){
     setVariables({mintAddress: data.mint});
+    setTimeout(() => {
+      console.log('waiting one second');
+    }, 3000);
+    console.log('getting listing for variable', variables);
+    console.log('fractions', fractions);
     await getListing();
     return;
   }
@@ -175,10 +185,23 @@ const Dashboard = () => {
     try{
         const data = await fetchProductDetails(product.associatedId);
         // console.log('data', data)
-        const connection = new Connection(process.env.NEXT_PUBLIC_HELIUS_DEVNET, 'confirmed');
+        const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
         if(publicKey && data){
           const tx = await buyTx(data.id, data.reference, publicKey.toBase58(), 1);
-           const signature = await sendTransaction(tx, connection, {skipPreflight: true,});
+          const getProvider = () => {
+            if ('phantom' in window) {
+              const provider = window.phantom?.solana;
+          
+              if (provider?.isPhantom) {
+                return provider;
+              }
+            }
+          
+            window.open('https://phantom.app/', '_blank');
+          };
+          const provider = getProvider();
+           const signature = await provider.signAndSendTransaction(tx)
+           console.log('signature from buy', signature);
            await toastPromise(signature)
         } else if(web3AuthPublicKey && data){ 
           const tx = await buyTx(data.id, data.reference, web3AuthPublicKey, 1);
@@ -190,32 +213,38 @@ const Dashboard = () => {
     };
   };
   const getTokens = async (key) => {
-    setTokensLoading(true);
-    console.log('getting tokens for key', key)
     // only execute if tokenAccounts is empty
     if (tokenAccounts.length == 0) {
+      console.log('key', key)
       const data = await getTokenAccounts(key);
-      // console.log('data', data)
+      console.log('data', data)
       setTokenAccounts(data);
+      if(!data){
+        return;
+      }
       for(let i = 0; i < data.length; i++){
         setQueryItem(data[i]);
         await getListingAddress(data[i]);
         setListingAddress('');
       }
+      setLoadingFn(false);
     }
-    // setTokensLoading(false);
   }
 
+  useEffect(() => {
+    if (publicKey && tokenAccounts?.length == 0) {
+      getTokens(publicKey);
+    }
+  }, [publicKey, tokenAccounts]);
 
   useEffect(() => {
-    if (publicKey && !tokensLoading) {
+    if (publicKey && tokenAccounts.length == 0) {
       getTokens(publicKey);
-    } else if (!publicKey && !web3AuthPublicKey && !tokensLoading){
+    } else {
         checkLogin().then((res) => {
           if(res){
               if(res.account){
                   setWeb3AuthPublicKey(new PublicKey(res.account));
-                  getTokens(new PublicKey(res.account));
               }
               if(res.rpc !== null){
                   setRpc(res.rpc);
@@ -223,11 +252,7 @@ const Dashboard = () => {
           }
       });
     }
-  }, [
-    publicKey,
-    tokenAccounts,
-    web3AuthPublicKey,
-  ]);
+  }, []);
 
 
   return (
@@ -290,6 +315,10 @@ const Dashboard = () => {
           </p>
         </div>
       </div>
+      {loadingFn ? (
+        <LoadingSpinner />
+      ) : (
+        <>
       {fractions.length > 0 ? (
         <div className="dashboard-inventory__body">
           <Table
@@ -331,6 +360,8 @@ const Dashboard = () => {
             </button>
         </div>
       )}
+      </>
+    )}
     </div>
   );
 };

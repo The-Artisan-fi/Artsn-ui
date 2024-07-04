@@ -20,11 +20,9 @@ export const fetchProductDetails = async (accountPubkey: string) => {
     try {
         const account_info = await connection.getAccountInfo(new PublicKey(accountPubkey))
         const listing = program.coder.accounts.decode("Listing", account_info!.data);
-        // console.log('product', product);
         
         const watch_account_info = await connection.getAccountInfo(new PublicKey(listing.watch));
         const watch = program.coder.accounts.decode("Watch", watch_account_info!.data);
-        console.log('watch', watch);
 
         const listingInfo = {
             id: listing.id.toNumber(),

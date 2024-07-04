@@ -115,7 +115,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
     // **************************Data Functions***********************************
     async function fetchData(accountPubkey: string) {
         const on_chain_data: OnChainData | undefined = await fetchProductDetails(accountPubkey);
-        console.log('on chain data', on_chain_data)
+        console.log(`on chain data for pubkey: ${accountPubkey}`, on_chain_data)
         console.log('off chain data', offChainData)
         const product_images = offChainData!.images.map((image: string) => {
             return {
