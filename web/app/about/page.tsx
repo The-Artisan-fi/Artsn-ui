@@ -83,9 +83,6 @@ const teamDataDesktop = [
         name: "Craig Pollock",
         title: "F1 Ambassador",
         img: Craig,
-        name: "Craig Pollock",
-        title: "F1 Ambassador",
-        img: Craig,
         about: [
             "Founding Partner - F1 - Formula Equal (F=)",
             "Partner and Senior Advisor - Monaco Foundry",
