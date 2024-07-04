@@ -15,9 +15,12 @@ import { FaCopy } from 'react-icons/fa';
 import { useLazyQuery } from "@apollo/client";
 import { user } from "@/lib/queries";
 import { useWallet } from '@solana/wallet-adapter-react';
+import { checkLogin } from "@/components/Web3Auth/solanaRPC";
 
 const Profile = () => {
   const { publicKey } = useWallet();
+  const [web3AuthPublicKey, setWeb3AuthPublicKey] = useState('');
+  const [connectedWallet, setConnectedWallet] = useState('');
   const [offChainData, setOffChainData] = useState(undefined);
   const [fileList, setFileList] = useState([]);
   const onChange = ({ fileList: newFileList }) => {
@@ -51,8 +54,21 @@ const Profile = () => {
 
   useEffect(() => {
     if (publicKey) {
+      setConnectedWallet(publicKey.toBase58());
       setVariables({ wallet: publicKey.toBase58() });
       getDetails();
+    } else if (!web3AuthPublicKey && !publicKey) {
+      checkLogin().then((res) => {
+        if (res) {
+          if (res.account) {
+            setConnectedWallet(res.account);
+            setWeb3AuthPublicKey(res.account);
+            setVariables({ wallet: res.account });
+            getDetails();
+            
+          }
+        }
+      });
     }
   }, [publicKey]);
 
@@ -126,7 +142,7 @@ const Profile = () => {
                 style={{ cursor: 'pointer', color: 'white' }}
               />
             }
-            value={publicKey ? publicKey.toBase58() : 'Connect Wallet'}
+            value={connectedWallet !== '' ? connectedWallet : 'Connect Wallet'}
             size="large"
             placeholder="Enter Your"
             disabled={true}

@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 const Progress = Dynamic(() => import("antd").then((mod) => mod.Progress), { ssr: false });
 const Collapse = Dynamic(() => import("antd").then((mod) => mod.Collapse), { ssr: false });
 const Panel = Dynamic(() => import("antd").then((mod) => mod.Collapse.Panel), { ssr: false });
-const Slider = Dynamic(() => import("antd").then((mod) => mod.Slider), { ssr: false });
+// const Slider = Dynamic(() => import("antd").then((mod) => mod.Slider), { ssr: false });
 import { fetchProductDetails } from "@/hooks/fetchProductDetails";
 const ProductsSectionDesktop = Dynamic(() => import("@/components/ProductsSectionDesktop/ProductsSectionDesktop"), { ssr: false });
 const ProductsSectionMobile = Dynamic(() => import("@/components/ProductsSectionMobile/ProductsSectionMobile"), { ssr: false });
@@ -37,24 +37,26 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
         "confirmed"
     );
     const [isLoading, setIsLoading] = useState<boolean>(true);
-
+    const [amount, setAmount] = useState<number>(1);
     const [faqItems, setFaqItems] = useState<Array<FAQ>>();
     const [offChainData, setOffChainData] = useState<OffChainData | undefined>(undefined);
     const [product, setProduct] = useState<Product>();
     const [images, setImages] = useState<Array<Image>>();
     const [isMobile, setIsMobile] = useState(true);
     const [solanaUrl, setSolanaUrl] = useState<URL>();
-    const [refKey, setRefKey] = useState<string>();
     const [displayQr, setDisplayQr] = useState<boolean>(false);
+    const [refKey, setRefKey] = useState<string | null>(null);
     const [displayLoginModal, setDisplayLoginModal] = useState<boolean>(false);
-    const [sliderValue, setSliderValue] = useState<number>(30);
+    // const [sliderValue, setSliderValue] = useState<number>(30);
     // const [displayProfileModal, setDisplayProfileModal] = useState<boolean>(false);
     const [variables, setVariables] = useState({
         associatedId: "",
       });
-    const [getDetails, { loading, error, data }] = useLazyQuery(listing, {
-        variables,
-    });
+    const [getDetails, { loading, error, data }] = useLazyQuery(
+        listing, {
+            variables,
+        }
+    );
     if(!loading && data != undefined && offChainData == undefined){
         console.log("data", data.listings[0]);
         setOffChainData(data.listings[0]);
@@ -67,12 +69,12 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
     async function buyListing() {        
         try {
             if(publicKey && product){
-               const tx = await buyTx(product.id, product.reference, publicKey.toBase58());
+               const tx = await buyTx(product.id, product.reference, publicKey.toBase58(), amount);
                 const signature = await sendTransaction(tx!, connection, {skipPreflight: true,});
                 await toastPromise(signature)
             } 
             if(web3AuthPublicKey !== null && !publicKey && product){
-                const tx = await buyTx(product.id, product.reference, web3AuthPublicKey);
+                const tx = await buyTx(product.id, product.reference, web3AuthPublicKey, amount);
                 const signature = await rpc!.sendTransaction(tx!);
                 await toastPromise(signature)
             }
@@ -143,30 +145,26 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
             expectedNetReturn: offChainData!.expectedNetReturn,
             offerViews: parseInt(offChainData!.offerViews),
             investUrl: "#",
-            description: offChainData!.description,
             gallery: offChainData!.images,
+            about: offChainData!.about,
         }
 
         const faq_items = [
             {
                 key: "1",
-                question: "Basic Info",
-                answer: offChainData!.basicInfo,
+                question: "About this model",
+                answer: offChainData!.about,
             },
             {
                 key: "2",
-                question: "Product Description",
-                answer: offChainData!.description,
+                question: "Certificate of Authenticity",
+                answer: "",
             },
             {
                 key: "3",
-                question: "Certificate of Authenticity",
-                answer: "Contrary to popular belief, Lorem Ipsum is not simply random text.",
-            },
-            {
-                key: "4",
                 question: "Asset Details",
-                answer: offChainData!.assetDetails,
+                // format asset details so that it is readable, breaking at /n
+                answer: offChainData!.assetDetails.replace(/\n/g, "<br />"),
             },
         ]
         
@@ -250,6 +248,52 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                         showBullets={true}
                                         items={images!}
                                     />
+
+                                    <div style={{display: 'flex', flexDirection:'column', 
+                                        justifyContent: 'center', alignItems: 'center', 
+                                        width: '100%', marginTop: '1rem'
+                                    }}>
+                                        Select Amount
+                                        <div style={{display: 'flex', flexDirection:'row'}}>
+                                            <button
+                                                className="btn"
+                                                onClick={() => {
+                                                    if(amount > 1){
+                                                        setAmount(amount - 1);
+                                                    }
+                                                }}
+                                            >
+                                                -
+                                            </button>
+                                            <input
+                                                type="string" 
+                                                // do not allow user to input amount or use arrows
+                                                value={amount} 
+                                                onChange={(e) => setAmount(Number(e.target.value))}
+                                                defaultValue={1}
+                                                style={{
+                                                    width: 'auto',
+                                                    textAlign: 'center',
+                                                    backgroundColor: 'transparent',
+                                                    border: 'none',
+                                                    // borderBottom: '1px solid #fff',
+                                                    color: '#fff',
+                                                    fontSize: '1.5rem',
+                                                    fontWeight: 700
+                                                }}
+                                            />
+                                            <button
+                                                className="btn"
+                                                onClick={() => {
+                                                    if(amount < product!.fractionLeft){
+                                                        setAmount(amount + 1);
+                                                    }
+                                                }}
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div className="product-details__hero__info">
@@ -278,9 +322,9 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                                 </p>
                                             </div>
                                             <div className="fraction-left">
-                                                <p className="body">Market Value</p>
+                                                <p className="body">Price</p>
                                                 <p className="heading-2 w-700">
-                                                    {product!.marketValue} €
+                                                    {product!.price} €
                                                 </p>
                                             </div>
                                         </div>
@@ -317,8 +361,23 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                                 </p>
                                             </div>
                                         </div>
+                                        <div className="product-details__about__calc ">
+                                            {/* <h3 className="heading-6">
+                                                Based on past performance, you will earn {amount * product!.price * Number (product!.pastReturns)}
+                                            </h3> */}
+                                            <p className="body">Based on past performance, you will earn ${amount * product!.price * Number (product!.pastReturns)}</p>
+                                            {/* <p className="body">Amount: </p> */}
+                                            {/* <Slider
+                                                className="product-details__about__calc__range"
+                                                defaultValue={1}
+                                                onChange={(value) => setAmount(value)}
+                                                max={21}
+                                            /> */}
+                                        </div>   
                                     </div>
+                                    
                                     <div className="btn-container" style={{width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                                        
                                         <a 
                                             onClick={
                                             ()=>{
@@ -368,13 +427,27 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                             key={item.key}
                                             header={item.question}
                                         >
-                                            <p className="body white">{item.answer}</p>
+                                            <p className="body white" style={{
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                
+                                                alignContent: "center",
+                                            }}>
+                                                <span
+                                                    style={{
+                                                        lineBreak: "anywhere",
+                                                    }}
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: item.answer,
+                                                    }}
+                                                />
+                                            </p>
                                         </Panel>
                                     ))}
                                 </Collapse>
                             </div>
 
-                            {/* net return calculations */}
+                            {/* net return calculations
                             <div className="product-details__about__calc ">
                                 <h3 className="heading-6">
                                     Calculate your Earning Potential
@@ -388,10 +461,10 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                 <div className="product-details__about__calc__returns">
                                     <p>Expected Net Return</p>
                                     <p className="green">
-                                        {(sliderValue * Number(product!.expectedNetReturn)).toFixed(2)}{" "}{product!.currency}
+                                        {(sliderValue * Number(product!.expectedNetReturn) * 100).toFixed(2)}{" "}{product!.currency}
                                     </p>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
 
@@ -416,7 +489,8 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                         solanaUrl={solanaUrl}
                         refKey={refKey}
                         header={`${product?.name} | ${product?.model}`}
-                        message={`Scan the QR code to purchase ${product?.name} for ${product?.price} ${product?.currency}`}
+                        // message={`Scan the QR code to purchase ${product?.name} for ${product?.price} ${product?.currency}`}
+                        message={`Scan the QR code to purchase ${product?.name} for ${product?.price} USDC`}
                         handleClose={() => setDisplayQr(false)}
                     />
                 </div>

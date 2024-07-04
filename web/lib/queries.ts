@@ -1,6 +1,8 @@
 
 import { gql } from "@apollo/client";
 
+////////////////LISTING QUERIES////////////////////
+
 export const listing = gql`
     query($associatedId: String!) {
         listings(query: { associatedId: $associatedId}) {
@@ -13,6 +15,13 @@ export const listing = gql`
             images
             marketValue
             pastReturns
+            currency
+            model
+            offerViews
+            sold
+            total
+            mintAddress
+            about
         }
     }
     `;
@@ -29,9 +38,26 @@ export const allListings = gql`
             images
             marketValue
             pastReturns
+            currency
+            sold
+            total
+            mintAddress
         }
     }
 `;
+
+export const getListingByMintAddress = gql`
+    query($mintAddress: String!) {
+        listings(query: { mintAddress: $mintAddress }) {
+            _id
+            associatedId
+            mintAddress
+        }
+    }
+`;
+
+
+////////////////USER QUERIES////////////////////
 
 export const user = gql`
     query($wallet: String!) {

@@ -1,4 +1,4 @@
-import '@/styles/CtaCard2.scss';
+import "@/styles/CtaCard2.scss";
 
 const CTA2Card = () => {
   return (

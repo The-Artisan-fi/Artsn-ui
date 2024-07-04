@@ -23,7 +23,6 @@ const ProductsSectionMobile = () => {
         <section className="products ">
             {/* available */}
             <div className="products__available ">
-                <h2 className="display">Currently available</h2>
                 {productsLoading ? (
                     <div>Loading...</div>
                 ) : (
@@ -99,7 +98,7 @@ const ProductsSectionMobile = () => {
                 )}
             </div>
 
-            <div className="products__coming ">
+            {/* <div className="products__coming ">
                 <h2 className="display">Coming soon</h2>
                 {productsLoading ? (
                     <div>Loading...</div>
@@ -161,7 +160,7 @@ const ProductsSectionMobile = () => {
                         })}
                     </div>
                 )}
-            </div>
+            </div> */}
         </section>
     );
 };

@@ -1,60 +1,51 @@
-'use client';
-import { useState, useEffect } from 'react';
-import '@/styles/Home.scss';
+"use client"
+import { useState, useEffect } from "react";
+import dynamic from 'next/dynamic';
+import "@/styles/Home.scss";
 import TextTransition, { presets } from 'react-text-transition';
-
+// import TextTransition, { presets } from "react-text-transition";
 // hero section text animations
-const heroTexts = ['Watches', 'Art', 'Cars', 'Wine', 'Whisky', 'Memorabilia'];
-
-// data for partners
-import PartnersMarque from '@/components/PartnersMarque/PartnersMarque';
-// import OpportunitiesSection from "@/components/OpportunitiesSection/OpportunitiesSection";
-import CTA1Card from '@/components/CtaCards/CtaCard1';
-import CTA2Card from '@/components/CtaCards/CtaCard2';
+const heroTexts = ["Watches", "Art", "Cars", "Wine", "Whisky", "Memorabilia"];
 
 // Images
-import Image from 'next/image';
-import solanaSwissIcon from '../public/assets/home/solana-swiss-icons.webp';
-import aboutIllustration from '../public/assets/home/home-about-illustraiton.webp';
+import Image from "next/image";
+import solanaSwissIcon from '@/public/assets/home/solana-swiss-icons.webp';
+import aboutIllustration from '@/public/assets/home/home-about-illustraiton.webp';
 
-import homeBriefIllustration from '../public/assets/home/home-brief-illustraiton.webp';
-import overlay from '@/public/assets/home/overlay.png';
-import productImage from '../public/assets/dummy-product.png';
-import Rolex from '@/public/assets/home/products/Rolex-Cosmograph-daytona.webp';
-import Audemar from '@/public/assets/home/products/Audemars-piguet-Royaloak.webp';
-import Ferrai from '@/public/assets/home/products/ferrari512-testa-rossa.webp';
-import Picasso from '@/public/assets/home/products/Pablo-Picasso-les-femmes-d-alger.png';
+import homeBriefIllustration from '@/public/assets/home/home-brief-illustraiton.webp';
 
-const featuredProducts = [
-    {
-        name: 'Picasso, Les Femmes d\'Alger, 1955',
-        image: Picasso,
-        release: 'TBA',
-        startingFrom: '100$',
-        earningPotential: '+8,1% y*',
-    },
-    {
-        name: 'Audemars Piguet Royal Oak Extra Thin, 2019',
-        image: Audemar,
-        release: 'TBA',
-        startingFrom: '100$',
-        earningPotential: '+8,1% y*',
-    },
-    {
-        name: 'Ferrari 512 Testa Rossa',
-        image: Ferrai,
-        release: 'TBA',
-        startingFrom: '100$',
-        earningPotential: '+8,1% y*',
-    },
-]
-
+import overlay from "@/public/assets/home/overlay.svg"
 // how it works images
-import howWorks1 from '../public/assets/home/how-it-works-1.webp';
-import howWorks2 from '../public/assets/home/how-it-works-2.webp';
-import howWorks3 from '../public/assets/home/how-it-works-3.webp';
-import howWorks4 from '../public/assets/home/how-it-works-4.webp';
-import howWorks5 from '../public/assets/home/how-it-works-5.webp';
+import howWorks1 from '@/public/assets/home/how-it-works-1.webp';
+import howWorks2 from '@/public/assets/home/how-it-works-2.webp';
+import howWorks3 from '@/public/assets/home/how-it-works-3.webp';
+import howWorks4 from '@/public/assets/home/how-it-works-4.webp';
+import howWorks5 from '@/public/assets/home/how-it-works-5.webp';
+
+const PartnersMarque = dynamic(() => import("@/components/PartnersMarque/PartnersMarque"), {
+    loading: () => <p>Loading...</p>,
+    ssr: false,
+});
+const CTA1Card = dynamic(() => import("@/components/CtaCards/CtaCard1"), {
+    loading: () => <p>Loading...</p>,
+    ssr: false,
+});
+const CTA2Card = dynamic(() => import("@/components/CtaCards/CtaCard2"), {
+    loading: () => <p>Loading...</p>,
+    ssr: false,
+});
+const ProductsSectionDesktop = dynamic(() => import("@/components/ProductsSectionDesktop/ProductsSectionDesktop"), {
+    loading: () => <p>Loading...</p>,
+    ssr: false,
+});
+const ProductsSectionMobile = dynamic(() => import("@/components/ProductsSectionMobile/ProductsSectionMobile"), {
+    loading: () => <p>Loading...</p>,
+    ssr: false,
+});
+// const OpportunitiesSection = dynamic(() => import("@/components/OpportunitiesSection/OpportunitiesSection"), {
+//     loading: () => <p>Loading...</p>,
+//     ssr: false,
+// });
 
 const howItWorks = [
   {
@@ -89,36 +80,57 @@ const howItWorks = [
 ];
 
 const Home = () => {
-  const [index, setIndex] = useState(0);
-  // const [isMobile, setIsMobile] = useState(true);
+    const [index, setIndex] = useState(0);
+    const [opacity, setOpacity] = useState(0);
+    const [isMobile, setIsMobile] = useState(true);
 
-  // useEffect(() => {
-  //   if (window) {
-  //     const handleResize = () => {
-  //       if (window.innerWidth < 768) {
-  //         setIsMobile(true);
-  //       } else {
-  //         // setIsMobile(false);
-  //       }
-  //     };
+    // create a function that increases the opacity state by 0.1 every 150ms, when it reaches 1 start to decrease it by 0.1 every 150ms
+    function increaseOpacity() {
+        if (opacity < 1) {
+            setOpacity((prev) => prev + 0.1);
+            setTimeout(increaseOpacity, 150);
+        } else {
+            decreaseOpacity();
+        }
+    }
 
-  //     // Attach the event listener for window resize
-  //     window.addEventListener('resize', handleResize);
+    function decreaseOpacity() {
+        if (opacity > 0) {
+            setOpacity((prev) => prev - 0.1);
+            setTimeout(decreaseOpacity, 150);
+        } else {
+            increaseOpacity();
+        }
+    }
 
-  //     // Clean up the event listener on component unmount
-  //     return () => {
-  //       window.removeEventListener('resize', handleResize);
-  //     };
-  //   }
-  // }, []);
+    
+    useEffect(() => {
+        if(window){
+            const handleResize = () => {
+                if(window.innerWidth < 768){
+                    setIsMobile(true);
+                } else {
+                    // setIsMobile(false);
+                }
+            };
 
-  useEffect(() => {
-    const intervalId = setInterval(
-      () => setIndex((index) => index + 1),
-      3000 // every 3 seconds
-    );
-    return () => clearTimeout(intervalId);
-  }, []);
+            // Attach the event listener for window resize
+            window.addEventListener("resize", handleResize);
+
+            // Clean up the event listener on component unmount
+            return () => {
+                window.removeEventListener("resize", handleResize);
+            };
+        }
+    }, []);
+    
+    useEffect(() => {
+        const intervalId = setInterval(
+          () => setIndex((index) => index + 1),
+          3000 // every 3 seconds
+        );
+        return () => clearTimeout(intervalId);
+    }, []);
 
   return (
     <div className="home">

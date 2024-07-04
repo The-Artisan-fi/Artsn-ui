@@ -1,7 +1,18 @@
-import '@/styles/Footer.scss';
+import "@/styles/Footer.scss";
+import Link from "next/link";
+import Image from "next/image";
+import Icon1 from "@/public/assets/social-icons/icon1.svg";
+import Icon2 from "@/public/assets/social-icons/icon2.svg";
+import Icon3 from "@/public/assets/social-icons/icon3.svg";
+import Icon4 from "@/public/assets/social-icons/icon4.svg";
+import Icon5 from "@/public/assets/social-icons/icon5.svg";
+import Icon6 from "@/public/assets/social-icons/icon6.svg";
+// import FooterLogo1 from "@/public/assets/footer-logo1.png";
+// import FooterLogo2 from "@/public/assets/footer-logo2.png";
+// import SolanaIcon from "@/public/assets/solana-icon.webp";
+// import SwissIcon from "@/public/assets/swiss-icon.webp";
+import { usePathname } from "next/navigation";
 
-import Link from 'next/link';
-import { toastSuccess } from '@/helpers/toast';
 const Footer = () => {
   const handleCopy = (e) => {
     console.log(e);
@@ -78,9 +89,9 @@ const Footer = () => {
               className="footer__bottom__socials__item"
               target='_blank'
             >
-              <img
-                src="/assets/social-icons/icon1.svg"
-                alt=""
+              <Image
+                src={Icon1}
+                alt="linked in icon"
                 className="footer__bottom__socials__item__icon"
               />
             </a>
@@ -89,9 +100,9 @@ const Footer = () => {
               className="footer__bottom__socials__item"
               target='_blank'
             >
-              <img
-                src="/assets/social-icons/icon2.svg"
-                alt=""
+              <Image
+                src={Icon2}
+                alt="twitter icon"
                 className="footer__bottom__socials__item__icon"
               />
             </a>
@@ -109,9 +120,9 @@ const Footer = () => {
               className="footer__bottom__socials__item"
               target='_blank'
             >
-              <img
-                src="/assets/social-icons/icon6.svg"
-                alt=""
+              <Image
+                src={Icon6}
+                alt="telegram icon"
                 className="footer__bottom__socials__item__icon"
               />
             </a>
@@ -120,9 +131,9 @@ const Footer = () => {
               className="footer__bottom__socials__item"
               target='_blank'
             >
-              <img
-                src="/assets/social-icons/icon3.svg"
-                alt=""
+              <Image
+                src={Icon3}
+                alt="discord icon"
                 className="footer__bottom__socials__item__icon"
               />
             </a>
@@ -131,9 +142,9 @@ const Footer = () => {
               className="footer__bottom__socials__item"
               target='_blank'
             >
-              <img
-                src="/assets/social-icons/icon5.svg"
-                alt=""
+              <Image
+                src={Icon5}
+                alt="instagram icon"
                 className="footer__bottom__socials__item__icon"
               />
             </a>

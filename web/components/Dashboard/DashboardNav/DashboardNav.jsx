@@ -10,7 +10,7 @@ import { LuBell } from 'react-icons/lu';
 import { LuBellDot } from 'react-icons/lu';
 import { useLazyQuery } from "@apollo/client";
 import { userProfileBasic } from "@/lib/queries";
-
+import { checkLogin } from "@/components/Web3Auth/solanaRPC";
 const DashboardNav = () => {
   const [open, setOpen] = useState(false);
   const { publicKey } = useWallet();
@@ -18,8 +18,8 @@ const DashboardNav = () => {
   const [profileImg, setProfileImg] = useState('');
   const [userName, setUserName] = useState('');
   const [getDetails, { loading, error, data }] = useLazyQuery(userProfileBasic , {variables});
-  if(!loading && data != undefined && profileImg == ''){
-    console.log("data", data);
+  if(!loading && data && data.users.length > 0 && profileImg == ''){
+    console.log("data", data.users.length);
     setProfileImg(data.users[0].profileImg);
     setUserName(data.users[0].userName);
   }
@@ -50,9 +50,19 @@ const DashboardNav = () => {
   );
 
   useEffect(() => {
-    if(publicKey) {
+    if(publicKey){
       setVariables({wallet: publicKey.toBase58()});
+      console.log("publicKey", publicKey.toBase58());
       getDetails();
+    } else {
+        checkLogin().then((res) => {
+          if(res){
+            if(res.account){
+              setVariables({wallet: res.account});
+              getDetails();
+            }
+          }
+      });
     }
   }, [publicKey]);
 
@@ -65,7 +75,7 @@ const DashboardNav = () => {
         />{' '}
       </Link>
       <div className="dashboard-nav__right">
-        <Popover
+        {/* <Popover
           content={notifications}
           title="Notifications"
           trigger="click"
@@ -82,7 +92,7 @@ const DashboardNav = () => {
             icon={notificationsData.length > 0 ? <LuBellDot /> : <LuBell />}
             type="circle"
           ></Button>
-        </Popover>
+        </Popover> */}
         <Avatar
           src={profileImg}
         />

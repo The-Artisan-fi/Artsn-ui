@@ -22,9 +22,10 @@ const Input = Dynamic(() => import('antd').then((mod) => mod.Input), { ssr: fals
 interface ProfileModalProps {
     showModal: boolean;
     handleClose: () => void;
+    handleCloseThenCheck: () => void;
 }
 
-const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose }) => {
+const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose, handleCloseThenCheck }) => {
     const { publicKey, sendTransaction } = useWallet();
     const [isOpen, setIsOpen] = useState(showModal);
     const [web3AuthPublicKey, setWeb3AuthPublicKey] = useState<string | null>(null);
@@ -44,6 +45,11 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose }) =
     const handleCloseModal = () => {
         setIsOpen(false);
         handleClose();
+    }
+
+    const handleCloseCheck = () => {
+        setIsOpen(false);
+        handleCloseThenCheck();
     }
 
     // @ts-expect-error - fileList is not empty
@@ -106,7 +112,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose }) =
 
                 await toastPromise(signature);
                 
-                handleCloseModal();
+                handleCloseThenCheck();
             }
 
             if(web3AuthPublicKey !== null && !publicKey){
@@ -117,7 +123,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose }) =
                     `Transaction sent: https://explorer.solana.com/tx/${signature}?cluster=devnet`
                 );
                 await toastPromise(signature);
-                handleCloseModal();            
+                handleCloseThenCheck();            
             }
         } catch (error) {
             console.error('Error sending transaction', error);
@@ -126,37 +132,37 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose }) =
     }
 
     async function createProfile(key: string) {
-        // if(fileList.length < 1){
-        //     return;
-        // }
-        // // convert newFileList to a Blob
-        // const fileListBlob = fileList.map((file: { originFileObj: Blob; type: string; }) => {
-        //     return new Blob([file.originFileObj], { type: file.type });
-        // });
-        // await trigger({ files: fileListBlob });
+        if(fileList.length < 1){
+            return;
+        }
+        // convert newFileList to a Blob
+        const fileListBlob = fileList.map((file: { originFileObj: Blob; type: string; }) => {
+            return new Blob([file.originFileObj], { type: file.type });
+        });
+        await trigger({ files: fileListBlob });
 
         initProfile(key);
 
-        // addUser({
-        //     variables: {
-        //         fullName: profile.fullName,
-        //         userName: profile.userName,
-        //         email: profile.email,
-        //         wallet: publicKey ? publicKey.toBase58() : web3AuthPublicKey,
-        //         currencyPreference: '$USD',
-        //         // @ts-expect-error - fileList is not empty
-        //         profileImg: `https://artisan-solana.s3.eu-central-1.amazonaws.com/${publicKey ? publicKey.toBase58() : web3AuthPublicKey}.${fileList.length > 0 ? fileList[0].name.split('.').pop() : ''}`
-        //     }
-        // });
-        // {!loading && !error && data && (
-        //     console.log('Submission success!', data)
-        // )}
-        // {error && (
-        //     console.log('Error submitting', error)
-        // )}
-        // {loading && (
-        //     console.log('Submitting...')
-        // )}
+        addUser({
+            variables: {
+                fullName: profile.fullName,
+                userName: profile.userName,
+                email: profile.email,
+                wallet: publicKey ? publicKey.toBase58() : web3AuthPublicKey,
+                currencyPreference: '$USD',
+                // @ts-expect-error - fileList is not empty
+                profileImg: `https://artisan-solana.s3.eu-central-1.amazonaws.com/${publicKey ? publicKey.toBase58() : web3AuthPublicKey}.${fileList.length > 0 ? fileList[0].name.split('.').pop() : ''}`
+            }
+        });
+        {!loading && !error && data && (
+           console.log('Profile created', data)
+        )}
+        {error && (
+            console.log('Error submitting', error)
+        )}
+        {loading && (
+            console.log('Submitting...')
+        )}
     }
 
     useEffect(() => {
@@ -180,11 +186,29 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose }) =
             {isOpen && (
                 <div className="modal-container">
                     <div className="modal-header">
-                        <Image
+                        {/* create an X to 'handleCloseModal' in the top right corner of the div and give it a z index so it stays on top of other ojects */}
+                        <button 
+                            onClick={handleCloseModal}
+                            style={{
+                                position: 'absolute',
+                                top: '2rem',
+                                right: '2.5rem',
+                                zIndex: 100,
+                                backgroundColor: 'transparent',
+                                color: 'white',
+                                border: 'none',                               
+                                fontSize: '2.5rem',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            x
+                        </button>
+                        {/* <Image
                             src={LoginHeader}
                             alt="login header"
                             className="login-header"
-                        />
+                        /> */}
+                        <div className="login-header" />
                         <Image
                             src={Logo}
                             alt="logo"
@@ -199,46 +223,39 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose }) =
                             </p>
                         </div>
                     </div>
-                    {/* <div className="profile">
-                        <div className="profile__image-upload">
-                            <ImgCrop rotationSlider>
-                                <Upload
-                                    style={{ color: '#fff' }}
-                                    action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-                                    listType="picture-card"
-                                    fileList={fileList}
-                                    onChange={onChange}
-                                    onPreview={onPreview}
-                                >
-                                    {fileList.length < 1 && (
-                                    <MdOutlineFileUpload style={{ fontSize: '2.5rem' }} />
-                                    )}
-                                </Upload>
-                            </ImgCrop>
-                            {fileList.length < 1 && <p className="p-4">Upload Profile Picture</p>}
-                        </div>
-                        <div className="profile__input-row">
-                            <div className="profile__input-col">
-                            <p className="caption-3">FULL NAME</p>
-                            <Input 
-                                className="profile__input-col__input"
-                                size="large" 
-                                style={{ backgroundColor: '#1e1e22', color: 'white'}}
-                                onChange={(e) => {setProfile({ ...profile, fullName: e.target.value });}}
-                            />
+                    <div className="profile">
+                        <div className="profile__top-row">
+                            <div className="profile__top-row__image-upload">
+                                <ImgCrop rotationSlider>
+                                    <Upload
+                                        action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+                                        listType="picture-card"
+                                        fileList={fileList}
+                                        onChange={onChange}
+                                        onPreview={onPreview}
+                                    >
+                                        {fileList.length < 1 && (
+                                        <MdOutlineFileUpload style={{ fontSize: '2.5rem' }} />
+                                        )}
+                                    </Upload>
+                                </ImgCrop>
+                                {fileList.length < 1 && <p className="p-4">Upload Profile Picture</p>}
                             </div>
-                            <div className="profile__input-col">
-                            <p className="caption-3">USERNAME</p>
-                            <Input 
-                                size="large" 
-                                style={{ backgroundColor: '#1e1e22', color: 'white'}}
-                                onChange={(e) => {setProfile({ ...profile, userName: e.target.value });}}
-                            />
-                            </div>
-                        </div>
 
-                        <div className="profile__input-row">
-                            <div className="profile__input-col">
+                            <div className="profile__top-row__col">
+                                <p className="caption-3">FULL NAME</p>
+                                <Input 
+                                    className="profile__input-col__input"
+                                    size="large" 
+                                    style={{ backgroundColor: '#1e1e22', color: 'white'}}
+                                    onChange={(e) => {setProfile({ ...profile, fullName: e.target.value });}}
+                                />
+                                <p className="caption-3">USERNAME</p>
+                                <Input 
+                                    size="large" 
+                                    style={{ backgroundColor: '#1e1e22', color: 'white'}}
+                                    onChange={(e) => {setProfile({ ...profile, userName: e.target.value });}}
+                                />
                                 <p className="caption-3">EMAIL</p>
                                 <Input
                                     size="large"
@@ -249,7 +266,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose }) =
                                 />
                             </div>
                         </div>
-                    </div> */}
+                    </div> 
                     <div className="login-container">
                         <button className="btn-primary" onClick={() => createProfile(publicKey ? publicKey!.toBase58() : web3AuthPublicKey!)}>
                             Create Profile

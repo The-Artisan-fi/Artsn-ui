@@ -30,12 +30,10 @@ const opportunities = [
 ];
 
 const OpportunitiesSection = () => {
-    return (
-        <section className="opportunities padding">
-            <div className="boxed">
-                <h2 className="heading-1">
-                    Discover our services:
-                </h2>
+  return (
+    <section className="opportunities padding">
+      <div className="boxed">
+        <h2 className="heading-1">Discover The Artisan Opportunities:</h2>
 
                 {/* cards grid */}
                 <div className="opportunities__cards">
