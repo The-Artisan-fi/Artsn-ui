@@ -6,7 +6,8 @@ import {
     Keypair,
     Transaction,
     Connection,
-    // sendAndConfirmTransaction,
+    sendAndConfirmTransaction,
+    ComputeBudgetProgram
   } from "@solana/web3.js";
 import * as b58 from "bs58";
   
@@ -20,8 +21,9 @@ export async function POST( request: Request ) {
     // @ts-expect-error - wallet is dummy variable, signing is not needed
     const provider = new anchor.AnchorProvider(connection, wallet, {});
     const programId = new PublicKey(PROGRAM_ID);
+    console.log('programId', programId.toBase58());
     const program = new anchor.Program<Fragment>(IDL, programId, provider);
-
+    const uri = 'www.example.com'
     try {
         const req = await request.json();
         const buyer_publicKey = new PublicKey(req.publicKey);
@@ -41,28 +43,38 @@ export async function POST( request: Request ) {
             .instruction()
 
         const { blockhash } = await connection.getLatestBlockhash("finalized");
+        console.log('blockhash', blockhash);
         const transaction = new Transaction({
             recentBlockhash: blockhash,
             feePayer: feePayer.publicKey,
         });
         
         transaction.add(profileInitIx);
-        transaction.partialSign(feePayer);
-        
-        const serializedTransaction = transaction.serialize({
-            requireAllSignatures: false,
-          });
-        const base64 = serializedTransaction.toString("base64");
 
-        return new Response(JSON.stringify({transaction: base64 }), {
+        const PRIORITY_RATE = 100; // MICRO_LAMPORTS 
+        const PRIORITY_FEE_IX = ComputeBudgetProgram.setComputeUnitPrice({microLamports: PRIORITY_RATE});
+
+        transaction.add(PRIORITY_FEE_IX);
+        transaction.partialSign(feePayer);
+        console.log('transaction', transaction);
+        const signature = await sendAndConfirmTransaction(connection, transaction, [feePayer], {
+            commitment: "confirmed",
+            skipPreflight: true,
+            maxRetries: 3,
+        });
+        console.log('Signature from buyer init:', signature);
+        return new Response(JSON.stringify({signature: signature }), {
             headers: {
                 'content-type': 'application/json',
             },
         });
 
-    } catch (e) {
+    } catch (e: any) {
         console.log(e);
+        // Catch the `SendTransactionError` and call `getLogs()` on it for full details.
+        if (e.logs) {
+            console.error("Transaction failed:", e.logs);
+        }
         throw e;
     }
 };
-

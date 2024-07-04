@@ -13,6 +13,7 @@ import { MdOutlineFileUpload } from 'react-icons/md';
 import { useMutation } from "@apollo/client";
 import { ADD_USER } from "@/lib/mutations";
 import useSWRMutation from "swr/mutation";
+import { LoadingSpinner } from '@/components/Loading/Loading';
 import LoginHeader from '@/public/assets/login/login_header.svg';
 import Logo from '@/public/assets/login/logo_bw.svg';
 
@@ -28,6 +29,7 @@ interface ProfileModalProps {
 const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose, handleCloseThenCheck }) => {
     const { publicKey, sendTransaction } = useWallet();
     const [isOpen, setIsOpen] = useState(showModal);
+    const [loadingFn, setLoadingFn] = useState(false);
     const [web3AuthPublicKey, setWeb3AuthPublicKey] = useState<string | null>(null);
     const [rpc, setRpc] = useState<RPC | null>(null);
     const [addUser, { loading, error, data }] = useMutation(ADD_USER);
@@ -104,8 +106,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose, han
                 return;
             }
             if(publicKey){
-                const tx = await initProfileTx(publicKey.toBase58());
-                const signature = await sendTransaction(tx!, connection);
+                const signature = await initProfileTx(publicKey.toBase58());
                 console.log(
                     `Transaction sent: https://explorer.solana.com/tx/${signature}?cluster=devnet`
                 );
@@ -116,8 +117,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose, han
             }
 
             if(web3AuthPublicKey !== null && !publicKey){
-                const tx = await initProfileTx(web3AuthPublicKey);
-                const signature = await rpc!.sendTransaction(tx!);
+                const signature = await initProfileTx(web3AuthPublicKey);
                
                 console.log(
                     `Transaction sent: https://explorer.solana.com/tx/${signature}?cluster=devnet`
@@ -132,6 +132,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose, han
     }
 
     async function createProfile(key: string) {
+        setLoadingFn(true);
         if(fileList.length < 1){
             return;
         }
@@ -141,7 +142,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose, han
         });
         await trigger({ files: fileListBlob });
 
-        initProfile(key);
+        await initProfile(key);
 
         addUser({
             variables: {
@@ -155,7 +156,8 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose, han
             }
         });
         {!loading && !error && data && (
-           console.log('Profile created', data)
+           console.log('Profile created', data),
+           setLoadingFn(false)
         )}
         {error && (
             console.log('Error submitting', error)
@@ -268,8 +270,8 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, handleClose, han
                         </div>
                     </div> 
                     <div className="login-container">
-                        <button className="btn-primary" onClick={() => createProfile(publicKey ? publicKey!.toBase58() : web3AuthPublicKey!)}>
-                            Create Profile
+                        <button className="btn-primary" disabled={loadingFn} onClick={() => createProfile(publicKey ? publicKey!.toBase58() : web3AuthPublicKey!)}>
+                            { loadingFn ? <LoadingSpinner /> : 'Create Profile' }
                         </button>
                     </div>
                 </div>

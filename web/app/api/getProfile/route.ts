@@ -21,7 +21,7 @@ export async function POST( request: Request ) {
     try {
         const req = await request.json();
         const buyer_publicKey = new PublicKey(req.publicKey);
-
+        console.log('buyer_publicKey on profile check', buyer_publicKey.toBase58())
         // VARIABLES
         const buyerProfile = PublicKey.findProgramAddressSync([Buffer.from('profile'), buyer_publicKey.toBuffer()], program.programId)[0];
 
@@ -47,4 +47,3 @@ export async function POST( request: Request ) {
         throw e;
     }
 };
-
