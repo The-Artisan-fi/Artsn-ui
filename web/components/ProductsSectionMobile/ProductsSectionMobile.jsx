@@ -1,15 +1,28 @@
 import "@/styles/ProductsSectionMobile.scss";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useRouter }from "next/navigation";
 // import products from "@/components/Utils/productData";
 import { fetchProducts } from "@/hooks/fetchProducts";
 import ProductBorder from "@/public/assets/product-border-bg.png";
 import Audemar from "@/public/assets/home/products/Audemars-piguet-Royaloak.webp";
+import { set } from "date-fns";
 const ProductsSectionMobile = () => {
     const [products, setProducts] = useState({ available: [], comingSoon: [] });
+    const [tabIndex, setTabIndex] = useState(0);
     const [productsLoading, setProductsLoading] = useState(true);
     const router = useRouter();
+
+    const handleTabChange = (index) => {
+        // divide products by 3, then round up to the nearest whole number
+        const maxIndex = Math.ceil(products.available.length / 3) - 1;
+
+        if(index <= maxIndex) { 
+            setTabIndex(index);
+        } else {
+            setTabIndex(0);
+        }
+    };
 
     useEffect(() => {
         if(products.available.length > 0) return;
@@ -18,6 +31,16 @@ const ProductsSectionMobile = () => {
         });
         setProductsLoading(false);
     }, []);
+
+    useEffect(() => {
+        // if products.length > 3, then every 5 seconds, change the tab index to tab index + 1
+        if(products.available.length > 3) {
+            const interval = setInterval(() => {
+                handleTabChange(tabIndex + 1);
+            }, 5000);
+            return () => clearInterval(interval);
+        }
+    }, [products.available, tabIndex]);
     
     return (
         <section className="products ">
@@ -27,7 +50,18 @@ const ProductsSectionMobile = () => {
                     <div>Loading...</div>
                 ) : (
                     <div className="products__available__slider">
-                        {products.available.map((item) => {
+                        {/* <button
+                            className="products__available__slider__nav prev"
+                            onClick={() => handleTabChange(
+                                tabIndex === 0 ? Math.ceil(products.available.length / 3) - 1 : tabIndex - 1
+                            )}
+                        >
+                            Prev
+                        </button> */}
+                        {products
+                            .available
+                            .slice(tabIndex * 3, products.available.length > tabIndex * 3 + 3 ? tabIndex * 3 + 3 : products.available.length)
+                            .map((item) => {
                             return (
                                 <div
                                     key={item.id}
@@ -39,9 +73,9 @@ const ProductsSectionMobile = () => {
                                         className="products__available__slider__item__bg"
                                     />
                                     <div className="item-top">
-                                        <Image
-                                            src={Audemar}
-                                            // src={item.image}
+                                        <img
+                                            // src={Audemar}
+                                            src={item.image}
                                             alt="product"
                                             className="item-top-img"
                                         />
@@ -94,6 +128,12 @@ const ProductsSectionMobile = () => {
                                 </div>
                             );
                         })}
+                        {/* <button
+                            className="products__available__slider__nav next"
+                            onClick={() => handleTabChange(tabIndex + 1)}
+                        >
+                            Next
+                        </button> */}
                     </div>
                 )}
             </div>

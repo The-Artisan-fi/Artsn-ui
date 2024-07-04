@@ -2,6 +2,7 @@
 import "@/styles/ProductDetails.scss";
 import Dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
+import { Loading } from "@/components/Loading/Loading";
 const Progress = Dynamic(() => import("antd").then((mod) => mod.Progress), { ssr: false });
 const Collapse = Dynamic(() => import("antd").then((mod) => mod.Collapse), { ssr: false });
 const Panel = Dynamic(() => import("antd").then((mod) => mod.Collapse.Panel), { ssr: false });
@@ -235,7 +236,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
     return (
         <>
             {isLoading ? (
-                <div>Loading...</div>
+                <Loading />
             ) : (
                 <div className="product-details">
                     <div className="product-details__header">

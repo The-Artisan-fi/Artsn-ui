@@ -69,7 +69,15 @@
         &__slider {
             display: flex;
             gap: 3rem;
-
+            // set the slider to be scrollable horizontally
+            overflow-x: scroll;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            &::-webkit-scrollbar {
+                display: none;
+            }
+            
             &__item {
                 display: flex;
                 flex-direction: column;
@@ -102,7 +110,7 @@
                     padding-top: 2rem;
 
                     & > .item-top-img {
-                        width: 216.674px;
+                        width: 256.674px;
                         height: 271.249px;
                         flex-shrink: 0;
                         filter: drop-shadow(

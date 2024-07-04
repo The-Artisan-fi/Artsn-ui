@@ -11,7 +11,7 @@ const heroTexts = ["Watches", "Art", "Cars", "Wine", "Whisky", "Memorabilia"];
 import Image from "next/image";
 import solanaSwissIcon from '@/public/assets/home/solana-swiss-icons.webp';
 import aboutIllustration from '@/public/assets/home/home-about-illustraiton.webp';
-
+import { LoadingSpinner } from "@/components/Loading/Loading";
 import homeBriefIllustration from '@/public/assets/home/home-brief-illustraiton.webp';
 
 import overlay from "@/public/assets/home/overlay.svg"
@@ -21,29 +21,28 @@ import howWorks2 from '@/public/assets/home/how-it-works-2.webp';
 import howWorks3 from '@/public/assets/home/how-it-works-3.webp';
 import howWorks4 from '@/public/assets/home/how-it-works-4.webp';
 import howWorks5 from '@/public/assets/home/how-it-works-5.webp';
-
 const PartnersMarque = dynamic(() => import("@/components/PartnersMarque/PartnersMarque"), {
-    loading: () => <p>Loading...</p>,
-    ssr: false,
+  loading: () => <LoadingSpinner/>,
+  ssr: false,
 });
 const CTA1Card = dynamic(() => import("@/components/CtaCards/CtaCard1"), {
-    loading: () => <p>Loading...</p>,
-    ssr: false,
+  loading: () => <LoadingSpinner/>,
+  ssr: false,
 });
 const CTA2Card = dynamic(() => import("@/components/CtaCards/CtaCard2"), {
-    loading: () => <p>Loading...</p>,
-    ssr: false,
+  loading: () => <LoadingSpinner/>,
+  ssr: false,
 });
 const ProductsSectionDesktop = dynamic(() => import("@/components/ProductsSectionDesktop/ProductsSectionDesktop"), {
-    loading: () => <p>Loading...</p>,
-    ssr: false,
+  loading: () => <LoadingSpinner/>,
+  ssr: false,
 });
 const ProductsSectionMobile = dynamic(() => import("@/components/ProductsSectionMobile/ProductsSectionMobile"), {
-    loading: () => <p>Loading...</p>,
-    ssr: false,
+  loading: () => <LoadingSpinner/>,
+  ssr: false,
 });
 // const OpportunitiesSection = dynamic(() => import("@/components/OpportunitiesSection/OpportunitiesSection"), {
-//     loading: () => <p>Loading...</p>,
+//     loading: () => <LoadingSpinner/>,
 //     ssr: false,
 // });
 
@@ -281,46 +280,8 @@ const Home = () => {
           </h2>
 
           <div className="home__featured__items-cont">
-            {featuredProducts.map((product, index) => {
-              return (
-                <div key={index} className="home__featured__items-cont__item">
-                  <img
-                    src="/assets/product-border-bg.png"
-                    alt=""
-                    className="home__featured__items-cont__item__bg"
-                  />
-                  <div className="item-top">
-                    <Image
-                      src={product.image}
-                      alt="product-img"
-                      className="item-top-img"
-                    />
-                  </div>
-                  <div className="item-body">
-                    <h3 className="heading-6">
-                        {product.name}
-                    </h3>
-
-                    <div className="item-body-details">
-                      <div className="item-body-details-set">
-                        <p className="label-5">RELEASE</p>
-                        <p className="label-3">TBA</p>
-                      </div>
-
-                      <div className="item-body-details-set">
-                        <p className="label-5">STARTING FROM</p>
-                        <p className="label-3">100$</p>
-                      </div>
-
-                      <div className="item-body-details-set">
-                        <p className="label-5">EARNING POTENTIAL</p>
-                        <p className="label-3 green">+8,1% y*</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+            {/* Products section */}
+            {isMobile ? <ProductsSectionMobile /> : <ProductsSectionDesktop />} 
           </div>
         </div>
       </section>
