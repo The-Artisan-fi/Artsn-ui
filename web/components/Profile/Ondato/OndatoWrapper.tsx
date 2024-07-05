@@ -13,11 +13,13 @@ type OnfidoProps = {
     postcode: string;
     country: string;
   };  
+  phoneNumber: string;
+  email: string;
   handleSuccessPending: () => void;
   handleRetry: () => void;
 };
 
-export default function OndatoWrapper({ publicKey, fullName, dob, address, handleSuccessPending }: OnfidoProps ) {
+export default function OndatoWrapper({ publicKey, fullName, dob, address, phoneNumber, email, handleSuccessPending }: OnfidoProps ) {
   const [idvId, setIdvId] = useState<String | null>(null);
   const [updateUserIdvId, { loading, error, data }] = useMutation(UPDATE_USER_IDV_ID);
   if(!loading && !error && data) {
@@ -48,10 +50,6 @@ export default function OndatoWrapper({ publicKey, fullName, dob, address, handl
       const firstName = fullName.split(' ')[0];
       const lastName = fullName.split(' ')[1];
       const middleName = '';
-      const personalCode = '1234567890';
-      const phoneNumber = '1234567890';
-      const countryCode = address.country;
-      const email = '';
       console.log('pinging idv api for new idv_id')
       try{
           const response = await fetch('/api/ondato/idv/create', {
@@ -65,9 +63,8 @@ export default function OndatoWrapper({ publicKey, fullName, dob, address, handl
               firstName,
               lastName,
               middleName,
-              personalCode,
               phoneNumber,
-              countryCode
+              address,
             }),
           });
           const data = await response.json();

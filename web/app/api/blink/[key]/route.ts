@@ -1,5 +1,12 @@
 import { prepareTransaction } from '../../../../helpers/transaction-utils';
 import * as anchor from "@coral-xyz/anchor";
+import {
+    ActionGetResponse,
+    ACTIONS_CORS_HEADERS,
+    ActionPostRequest,
+    createPostResponse,
+    ActionPostResponse,
+  } from "@solana/actions";
 import { IDL, Fragment, PROGRAM_ID, LISTING_GROUP} from "@/components/Utils/idl";
 import {
     SYSVAR_INSTRUCTIONS_PUBKEY,
@@ -42,22 +49,26 @@ export async function POST(_: Request, { params }: { params: { key : number } })
 
     try {
         // const req = await request.json();
-        const req = {
+        const req: ActionPostRequest = await _.json();
+        const url = new URL(_.url);
+        let account: PublicKey;
+        const ref = {
             id: 51129,
             reference: '15202ST.OO.1240ST.01',
             publicKey: '6KuX26FZqzqpsHDLfkXoBXbQRPEDEbstqNiPBKHNJQ9e',
             amount: 1
           }
-        const buyer_publicKey = new PublicKey(req.publicKey);
+        const buyer_publicKey = new PublicKey(req.account);
         console.log('buyer_publicKey', buyer_publicKey.toBase58());
-        const id = req.id;
+        const id = ref.id;
         const USDC_DEV = new PublicKey("Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr");
         // const id = 10817;
         // VARIABLES
-        const reference = req.reference;
+        const reference = ref.reference;
         const amount = params.key;
         const watch = PublicKey.findProgramAddressSync([Buffer.from('watch'),  Buffer.from(reference)], program.programId)[0];
-        const listing = PublicKey.findProgramAddressSync([Buffer.from('listing'), watch.toBuffer(), new anchor.BN(id).toBuffer("le", 8)], program.programId)[0];
+        // const listing = PublicKey.findProgramAddressSync([Buffer.from('listing'), watch.toBuffer(), new anchor.BN(id).toBuffer("le", 8)], program.programId)[0];
+        const listing = new PublicKey("AMygBqv7URhE1L6DjzzqYdX9Rujp3L4vXU5NJcXW8wA6");
         const fraction = PublicKey.findProgramAddressSync([Buffer.from('fraction'), listing.toBuffer()], program.programId)[0];
         // const metadata = PublicKey.findProgramAddressSync([Buffer.from('metadata'), fraction.toBuffer()], program.programId)[0];
         

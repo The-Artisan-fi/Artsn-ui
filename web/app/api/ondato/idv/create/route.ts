@@ -24,11 +24,12 @@ export async function POST( request: Request ) {
         middleName,
         personalCode,
         phoneNumber,
-        countryCode
+        address,
     } = await request.json();
     // console.log('backend request', dob, email, firstName, lastName, middleName, personalCode, phoneNumber, countryCode, setupId)
     console.log('url', `${process.env.ONDATO_SANDBOX_URL}/identity-verifications`)
-
+    // create a regex for the phone, it should remove any ( ) - and + signs and spaces, returning only the numbers
+    const phoneSanitized = phoneNumber.replace(/[\s\-\+\(\)]/g, '');
     const test_user = {
         "externalReferenceId": "123",
         "registration": {
@@ -51,9 +52,9 @@ export async function POST( request: Request ) {
           "firstName": firstName,
           "lastName": lastName,
           "middleName": middleName,
-          "personalCode": personalCode,
-          "phoneNumber": phoneNumber,
-          "countryCode": countryCode
+          "phoneNumber": phoneSanitized,
+          "fullAddress": address,
+          "countryCode": address.countryCode,
         },
         "setupId": setupId,
       };
