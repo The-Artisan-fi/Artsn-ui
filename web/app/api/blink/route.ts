@@ -1,19 +1,16 @@
 import { prepareTransaction } from '../../../helpers/transaction-utils';
 import * as anchor from "@coral-xyz/anchor";
-import { IDL, Fragment, PROGRAM_ID, LISTING_GROUP} from "@/components/Utils/idl";
+import { IDL, Fragment, PROGRAM_ID } from "@/components/Utils/idl";
 import {
     SYSVAR_INSTRUCTIONS_PUBKEY,
     PublicKey,
     SystemProgram,
     Keypair,
-    Transaction,
     Connection,
     VersionedTransaction,
-    LAMPORTS_PER_SOL
 } from "@solana/web3.js";
 import {
     ActionsSpecGetResponse,
-    ActionsSpecPostRequestBody,
     ActionsSpecPostResponse,
 } from '../../../helpers/spec/actions-spec';
   import { 
@@ -141,25 +138,6 @@ export async function POST( request: Request ) {
             })
             .instruction();
 
-        const { blockhash } = await connection.getLatestBlockhash("finalized");
-
-        // const transaction = new Transaction({
-        //     recentBlockhash: blockhash,
-        //     feePayer: feePayer.publicKey,
-        // });
-
-        // for(let i = 0; i < amount ; i++) {
-        //     console.log('buying share', i);
-        //     transaction.add(buyShareIx);
-        // }
-        
-
-        // const serializedTransaction = transaction.serialize({
-        //     requireAllSignatures: false,
-        //   });
-        // const base64 = serializedTransaction.toString("base64");
-
-        
         const instructions = [buyShareIx];
         const transaction = await prepareTransaction(instructions, feePayer.publicKey);
         transaction.sign([feePayer])
@@ -180,7 +158,6 @@ export async function POST( request: Request ) {
         throw e;
     }
 };
-
 
 export async function GET( request: Request ) {
     try {
