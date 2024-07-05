@@ -592,6 +592,8 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                                 postcode: profile!.address.postcode || '',
                                 country: profile!.address.country || ''
                             }}
+                            email=''
+                            phoneNumber=''
                         />
                 </div> 
                 {/* {
