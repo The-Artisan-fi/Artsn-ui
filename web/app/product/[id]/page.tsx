@@ -438,7 +438,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                                 {!publicKey && !web3AuthPublicKey ? 'Buy with QR' :'INVEST IN FRACTIONS'}
                                             </a>
 
-                                            <a 
+                                            {/* <a 
                                                 onClick={
                                                 ()=>{
                                                     console.log('stripe pay')
@@ -458,7 +458,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                                 }}
                                             >
                                                 Pay with <img src="/assets/stripe.svg" alt="stripe" style={{height: '3.5rem'}}/>
-                                            </a>
+                                            </a> */}
                                         </div>
                                         {!publicKey && !web3AuthPublicKey ? (
                                             <button className="btn btn-white" style={{ justifyContent: "center", width: '49%' }} onClick={()=> setDisplayLoginModal(true)}>
