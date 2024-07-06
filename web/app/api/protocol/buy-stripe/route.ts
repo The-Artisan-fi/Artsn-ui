@@ -101,23 +101,6 @@ export async function POST(request: Request) {
       buyer_publicKey
     );
 
-    // const createAtaIx = createAssociatedTokenAccountIdempotentInstruction(
-    //     buyer_publicKey,
-    //     buyerFractionAta,
-    //     buyer_publicKey,
-    //     fraction,
-    //     TOKEN_2022_PROGRAM_ID,
-    //     ASSOCIATED_TOKEN_PROGRAM_ID,
-    // );
-
-    // const profileInitIx = await await program.methods
-    //     .initializeProfileAccount()
-    //     .accounts({
-    //         user: buyer_publicKey,
-    //         profile: buyerProfile,
-    //         systemProgram: SystemProgram.programId,
-    //     })
-    //     .instruction();
     const feeKey = process.env.SIGNING_AUTHORITY!;
     const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
 
@@ -130,20 +113,6 @@ export async function POST(request: Request) {
 const buyShareIx = await program.methods
       .buyListing()
       .accounts({
-        // buyer: buyer_publicKey,
-        // payer: feePayer.publicKey,
-        // buyerProfile,
-        // buyerCurrencyAta,
-        // buyerFractionAta,
-        // listing,
-        // listingCurrencyAta,
-        // fraction,
-        // currency: USDC_DEV,
-        // auth,
-        // associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-        // tokenProgram: TOKEN_PROGRAM_ID,
-        // token2022Program: TOKEN_2022_PROGRAM_ID,
-        // systemProgram: SystemProgram.programId,
         payer: feePayer.publicKey,
         buyer: buyer_publicKey,
         buyerProfile,
