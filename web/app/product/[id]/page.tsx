@@ -25,10 +25,10 @@ import { encodeURL, TransactionRequestURLFields } from "@solana/pay";
 const QrModal = Dynamic(() => import("@/components/Qr/QrModal"), { ssr: false });
 import { FaQrcode } from "react-icons/fa";
 const Web3Auth = Dynamic(() => import("@/components/Web3Auth/Web3Auth"), { ssr: false });
-import { buyTx } from "@/components/Protocol/functions";
+import { buyStripeTx, buyTx } from "@/components/Protocol/functions";
 import { toastPromise, toastError } from "@/helpers/toast";
 import type { ProductDetails, OffChainData, OnChainData, Product, FAQ, Image } from "@/helpers/types";
-
+import { loadStripe } from "@stripe/stripe-js";
 
 export default function ProductDetails({ params }: { params: { id: string } }) {
     const { publicKey, sendTransaction } = useWallet();
@@ -234,6 +234,48 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
         }
     }, [offChainData]);
 
+    const asyncStripe = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string);
+    async function buyStripe() {
+        try {
+            const stripe = await asyncStripe;
+            const res = await fetch("/api/stripe", {
+                method: "POST",
+                body: JSON.stringify({
+                    amount,
+                    id: params.id
+                }),
+                headers: { "Content-Type": "application/json" },
+            });
+            const { sessionId } = await res.json();
+
+            await stripe?.redirectToCheckout({ sessionId });
+
+        } catch (err) {
+            console.log("Transaction failed");
+        }
+    }
+
+    async function buyStripeListing(amount: string) {
+        try {
+            if (web3AuthPublicKey !== null && !publicKey && product) {
+                const tx = await buyStripeTx(product.id, product.reference, web3AuthPublicKey, +amount);
+                const signature = await rpc!.sendTransaction(tx!);
+                await toastPromise(signature)
+            }
+        } catch (error) {
+            console.error('Error sending transaction', error);
+            toastError('Error sending transaction')
+        }
+    }
+
+    useEffect(() => {
+        const amount = new URLSearchParams(window.location.search).get('amount');
+        console.log(web3AuthPublicKey, 'web3AuthPublicKey')
+        if (((publicKey && product) || web3AuthPublicKey !== null && !publicKey && product) && amount) {
+            buyStripeListing(amount);
+        }
+    }, [publicKey, web3AuthPublicKey, product]);
+
     return (
         <>
             {isLoading ? (
@@ -431,6 +473,18 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                                 <FaQrcode size={30} />
                                             </a>
                                         )}
+                                    </div>
+                                    <div className="btn-container" style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <a
+                                            onClick={buyStripe}
+                                            className="btn btn-white"
+                                            style={{
+                                                justifyContent: "center",
+                                                width: !publicKey && !web3AuthPublicKey ? '49%' : '85%'
+                                            }}
+                                        >
+                                            BUY WITH STRIPE
+                                        </a>
                                     </div>
                                 </div>
                             </div>

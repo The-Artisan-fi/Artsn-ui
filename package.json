@@ -32,6 +32,8 @@
     "@solana/wallet-adapter-react-ui": "^0.9.34",
     "@solana/wallet-adapter-solflare": "^0.6.28",
     "@solana/web3.js": "^1.93.3",
+    "@stripe/react-stripe-js": "^2.7.3",
+    "@stripe/stripe-js": "^4.1.0",
     "@swc/helpers": "~0.5.2",
     "@tanstack/react-query-next-experimental": "5.8.4",
     "@web3auth/base": "^7.3.1",
@@ -62,6 +64,7 @@
     "realm-web": "^2.0.0",
     "sass": "^1.69.3",
     "slick-carousel": "^1.8.1",
+    "stripe": "^16.1.0",
     "swiper": "^8.4.4",
     "swr": "^2.2.5",
     "tslib": "^2.3.0"
