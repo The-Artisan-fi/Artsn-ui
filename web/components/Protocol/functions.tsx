@@ -229,3 +229,30 @@ export async function initTokenTx(id: number, reference: string, share: number, 
     console.error('Error sending transaction', error);
   }
 }
+export async function buyStripeTx(id: number, reference: string, key: string, amount: number) {
+  try {
+    const response = await fetch('/api/protocol/buy-stripe', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: id,
+        reference: reference,
+        publicKey: key,
+        amount: amount
+      })
+    })
+    const txData = await response.json();
+    const tx = Transaction.from(Buffer.from(txData.transaction, "base64"));
+
+    if (!tx) {
+      console.log('no transaction');
+      return;
+    }
+
+    return tx;
+  } catch (error) {
+    console.error('Error sending transaction', error);
+  }
+}
