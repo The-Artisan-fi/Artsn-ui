@@ -19,7 +19,6 @@
     "@aws-sdk/client-s3": "^3.515.0",
     "@aws-sdk/s3-request-presigner": "^3.515.0",
     "@coral-xyz/anchor": "^0.29.0",
-    "@mantine/dropzone": "^7.5.3",
     "@nivo/core": "^0.85.1",
     "@nivo/line": "^0.85.1",
     "@ondato-public/idv-sdk": "1.x.x",
