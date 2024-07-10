@@ -45,6 +45,7 @@ const concatenateUint8Arrays = (arr1: Uint8Array, arr2: Uint8Array) => {
 };
 
 export async function POST(request: Request) {
+
   console.log('route pinged');
   const wallet = Keypair.generate();
   const connection = new Connection(

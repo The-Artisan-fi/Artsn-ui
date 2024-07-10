@@ -13,11 +13,13 @@ type OnfidoProps = {
     postcode: string;
     country: string;
   };  
+  phoneNumber: string;
+  email: string;
   handleSuccessPending: () => void;
   handleRetry: () => void;
 };
 
-export default function OndatoWrapper({ publicKey, fullName, dob, address, handleSuccessPending }: OnfidoProps ) {
+export default function OndatoWrapper({ publicKey, fullName, dob, address, phoneNumber, email, handleSuccessPending }: OnfidoProps ) {
   const [idvId, setIdvId] = useState<String | null>(null);
   const [updateUserIdvId, { loading, error, data }] = useMutation(UPDATE_USER_IDV_ID);
   if(!loading && !error && data) {
@@ -48,10 +50,6 @@ export default function OndatoWrapper({ publicKey, fullName, dob, address, handl
       const firstName = fullName.split(' ')[0];
       const lastName = fullName.split(' ')[1];
       const middleName = '';
-      const personalCode = '1234567890';
-      const phoneNumber = '1234567890';
-      const countryCode = address.country;
-      const email = '';
       console.log('pinging idv api for new idv_id')
       try{
           const response = await fetch('/api/ondato/idv/create', {
@@ -65,72 +63,46 @@ export default function OndatoWrapper({ publicKey, fullName, dob, address, handl
               firstName,
               lastName,
               middleName,
-              personalCode,
               phoneNumber,
-              countryCode
+              address,
             }),
           });
           const data = await response.json();
          
           console.log('idv data', data);
-          // set the data.idv_id to a localStorage item named artisan_idv_id as [data.idv_id, timestamp]
-          localStorage.setItem('artisan_idv_id', `[${data.idv_id}, ${Date.now()}]`);
-          setIdvId(data.idv_id);
+          
 
-          return data.idv_id;
+
+          if(data.idv_id !== null){
+              // open https://sandbox-idv.ondato.com/?id=${idvId}` in a new tab
+            window.open(`https://sandbox-idv.ondato.com/?id=${data.idv_id}`, '_blank');
+            // set the data.idv_id to a localStorage item named artisan_idv_id as [data.idv_id, timestamp]
+            localStorage.setItem('artisan_idv_id', `[${data.idv_id}, ${Date.now()}]`);
+            
+            setIdvId(data.idv_id);
+
+            updateUserIdvId({
+              variables: {
+                wallet: publicKey,
+                idvId: data.idv_id,
+              },
+            });
+
+            return data.idv_id;
+          } else {
+            throw new Error('idv_id is null');
+          }
       } catch (error) {
         console.log('error', error);
       }
     }
-
-    useEffect(() => {
-      if (idvId !== null) {
-        getIdvId().then((id) => {
-          updateUserIdvId({
-            variables: {
-              wallet: publicKey,
-              idvId: id,
-            },
-          });
-        });
-      }
-    }, []);
   
     return (
-      <div
->
-        {
-          idvId != null ? (
-            <iframe
-              // display it full screen for now
-              style={{
-                zIndex: 1000,
-                width: '100%',
-                height: '100%',    
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: 4,
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                backgroundColor: 'white',
-              }}
-              onAbort={() => {
-                setIdvId(null);
-              }}
-              src={`https://sandbox-idv.ondato.com/?id=${idvId}`}
-            />
-          ) : (
-            <button 
-              onClick={getIdvId}
-              className="btn btn-primary"
-            >
-              Verify your identity
-            </button>
-          )
-        }
-      </div>
+      <button 
+        onClick={getIdvId}
+        className="btn btn-primary"
+      >
+        Verify your identity
+      </button>
     );
 };  

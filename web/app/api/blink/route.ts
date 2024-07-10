@@ -1,19 +1,16 @@
 import { prepareTransaction } from '../../../helpers/transaction-utils';
 import * as anchor from "@coral-xyz/anchor";
-import { IDL, Fragment, PROGRAM_ID, LISTING_GROUP} from "@/components/Utils/idl";
+import { IDL, Fragment, PROGRAM_ID } from "@/components/Utils/idl";
 import {
     SYSVAR_INSTRUCTIONS_PUBKEY,
     PublicKey,
     SystemProgram,
     Keypair,
-    Transaction,
     Connection,
     VersionedTransaction,
-    LAMPORTS_PER_SOL
 } from "@solana/web3.js";
 import {
     ActionsSpecGetResponse,
-    ActionsSpecPostRequestBody,
     ActionsSpecPostResponse,
 } from '../../../helpers/spec/actions-spec';
   import { 
@@ -141,25 +138,6 @@ export async function POST( request: Request ) {
             })
             .instruction();
 
-        const { blockhash } = await connection.getLatestBlockhash("finalized");
-
-        // const transaction = new Transaction({
-        //     recentBlockhash: blockhash,
-        //     feePayer: feePayer.publicKey,
-        // });
-
-        // for(let i = 0; i < amount ; i++) {
-        //     console.log('buying share', i);
-        //     transaction.add(buyShareIx);
-        // }
-        
-
-        // const serializedTransaction = transaction.serialize({
-        //     requireAllSignatures: false,
-        //   });
-        // const base64 = serializedTransaction.toString("base64");
-
-        
         const instructions = [buyShareIx];
         const transaction = await prepareTransaction(instructions, feePayer.publicKey);
         transaction.sign([feePayer])
@@ -181,7 +159,6 @@ export async function POST( request: Request ) {
     }
 };
 
-
 export async function GET( request: Request ) {
     try {
         console.log('route pinged')
@@ -190,10 +167,10 @@ export async function GET( request: Request ) {
             'icon' | 'title' | 'description'
         > {
             const icon =
-            'https://artsn.fi/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FAudemars-piguet-Royaloak.b2100923.webp&w=1080&q=75';
-            const title = 'Audemar Piguet Royal Oak';
+            'https://artisan-solana.s3.eu-central-1.amazonaws.com/AMygBqv7URhE1L6DjzzqYdX9Rujp3L4vXU5NJcXW8wA6-0.jpg';
+            const title = 'Richard Mille - Artsn.Fi';
             const description =
-            'Buy a share of this Audemar Piguet Royal Oak watch for 1 USDC-DEV. You will receive a fraction of the watch in return.';
+            'Buy a share of this Richard Mille watch for 1 USDC-DEV!';
             return { icon, title, description };
         }
         
@@ -207,7 +184,7 @@ export async function GET( request: Request ) {
             links: {
             actions: [
                 ...DONATION_AMOUNT_SOL_OPTIONS.map((amount) => ({
-                label: `${amount} USDC-DEV`,
+                label: `${amount} ${amount > 1 ? 'shares' : 'share'}`,
                 href: `/api/blink/${amount}`,
                 })),
                 // {
@@ -216,7 +193,7 @@ export async function GET( request: Request ) {
                 // parameters: [
                 //     {
                 //     name: amountParameterName,
-                //     label: 'Enter a custom SOL amount',
+                //     label: 'Enter a share amount',
                 //     },
                 // ],
                 // },

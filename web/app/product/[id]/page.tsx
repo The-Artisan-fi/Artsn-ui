@@ -2,6 +2,8 @@
 import "@/styles/ProductDetails.scss";
 import Dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
+import { Loading } from "@/components/Loading/Loading";
+// const Loading = Dynamic(() => import("@/components/Loading/Loading"), { ssr: false });
 const Progress = Dynamic(() => import("antd").then((mod) => mod.Progress), { ssr: false });
 const Collapse = Dynamic(() => import("antd").then((mod) => mod.Collapse), { ssr: false });
 const Panel = Dynamic(() => import("antd").then((mod) => mod.Collapse.Panel), { ssr: false });
@@ -289,7 +291,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
     return (
         <>
             {isLoading ? (
-                <div>Loading...</div>
+                <Loading />
             ) : (
                 <div className="product-details">
                     <div className="product-details__header">
@@ -428,26 +430,48 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                         </div>   
                                     </div>
                                     
-                                    <div className="btn-container" style={{width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                                        
-                                        <a 
-                                            onClick={
-                                            ()=>{
-                                                if(!publicKey && !web3AuthPublicKey){
-                                                    getQrCode();
-                                                }else {
-                                                    buyListing();
-                                                }
-                                            }} 
-                                            className="btn btn-white" 
-                                            style={{ 
-                                                justifyContent: "center", 
-                                                width: !publicKey && !web3AuthPublicKey ? '49%' : '85%'
-                                            }}
-                                        >
-                                            {!publicKey && !web3AuthPublicKey ? 'Buy with QR' :'INVEST IN FRACTIONS'}
-                                        </a>
-                                        
+                                    <div className="btn-container" style={{width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start'}}>
+                                        <div className="btn-container" style={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center'}}>
+                                            <a 
+                                                onClick={
+                                                ()=>{
+                                                    if(!publicKey && !web3AuthPublicKey){
+                                                        getQrCode();
+                                                    }else {
+                                                        buyListing();
+                                                    }
+                                                }} 
+                                                className="btn btn-white" 
+                                                style={{ 
+                                                    justifyContent: "center", 
+                                                    width: !publicKey && !web3AuthPublicKey ? '49%' : '85%'
+                                                }}
+                                            >
+                                                {!publicKey && !web3AuthPublicKey ? 'Buy with QR' :'INVEST IN FRACTIONS'}
+                                            </a>
+
+                                            {/* <a 
+                                                onClick={
+                                                ()=>{
+                                                    console.log('stripe pay')
+                                                }} 
+                                                // className="btn btn-white" 
+                                                style={{ 
+                                                    justifyContent: "center", 
+                                                    width: !publicKey && !web3AuthPublicKey ? '49%' : '85%',
+                                                    marginTop: '1rem',
+                                                    backgroundColor: 'transparent',
+                                                    border: '1px solid #fff',
+                                                    borderRadius: '0.5rem',
+                                                    display: 'flex',
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    cursor: 'pointer'
+                                                }}
+                                            >
+                                                Pay with <img src="/assets/stripe.svg" alt="stripe" style={{height: '3.5rem'}}/>
+                                            </a> */}
+                                        </div>
                                         {!publicKey && !web3AuthPublicKey ? (
                                             <button className="btn btn-white" style={{ justifyContent: "center", width: '49%' }} onClick={()=> setDisplayLoginModal(true)}>
                                                 Login
@@ -456,7 +480,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                             <a 
                                                 onClick={getQrCode}
                                                 // className="btn btn-white" 
-                                                style={{ justifyContent: "center", cursor: 'pointer'}}
+                                                style={{ justifyContent: "center", cursor: 'pointer', paddingTop: '1rem'}}
                                             >
                                                 <FaQrcode size={30} />
                                             </a>
