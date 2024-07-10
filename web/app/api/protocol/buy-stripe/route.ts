@@ -27,10 +27,21 @@ import * as b58 from 'bs58';
 const USDC_DEV = new PublicKey('Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr');
 
 export const intToBytes = (int: number): Uint8Array => {
-  let buffer = new ArrayBuffer(4); // Create a buffer of 4 bytes (32 bits).
-  let view = new DataView(buffer);
+  const buffer = new ArrayBuffer(4); // Create a buffer of 4 bytes (32 bits).
+  const view = new DataView(buffer);
   view.setUint32(0, int, true); // Write the integer to the buffer. 'true' for little endian.
   return new Uint8Array(buffer);
+};
+
+const stringToBytes = (sessionId: string) => {
+  return new TextEncoder().encode(sessionId);
+};
+
+const concatenateUint8Arrays = (arr1: Uint8Array, arr2: Uint8Array) => {
+  const concatenatedArray = new Uint8Array(arr1.length + arr2.length);
+  concatenatedArray.set(arr1, 0);
+  concatenatedArray.set(arr2, arr1.length);
+  return concatenatedArray;
 };
 
 export async function POST(request: Request) {
@@ -55,6 +66,7 @@ export async function POST(request: Request) {
     // VARIABLES
     const reference = req.reference;
     const amount = req.amount;
+    const sessionId = req.sessionId;
     const watch = PublicKey.findProgramAddressSync(
       [Buffer.from('watch'), Buffer.from(reference)],
       program.programId
@@ -105,12 +117,15 @@ export async function POST(request: Request) {
     const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
 
     const message = intToBytes(amount);
+    const stringBytes = stringToBytes(sessionId); // Convert string to bytes
+    const combinedBytes = concatenateUint8Arrays(message, stringBytes); // Concatenate the byte arrays
+  
     const ed25519Ix = Ed25519Program.createInstructionWithPrivateKey({
       privateKey: feePayer.secretKey,
-      message,
+      message: combinedBytes,
     });
 
-const buyShareIx = await program.methods
+    const buyShareIx = await program.methods
       .buyListing()
       .accounts({
         payer: feePayer.publicKey,
