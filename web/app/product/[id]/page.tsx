@@ -29,6 +29,7 @@ import { buyStripeTx, buyTx } from "@/components/Protocol/functions";
 import { toastPromise, toastError } from "@/helpers/toast";
 import type { ProductDetails, OffChainData, OnChainData, Product, FAQ, Image } from "@/helpers/types";
 import { loadStripe } from "@stripe/stripe-js";
+import { generateUUID } from "@/helpers/generateUuid";
 
 export default function ProductDetails({ params }: { params: { id: string } }) {
     const { publicKey, sendTransaction } = useWallet();
@@ -237,6 +238,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
     const asyncStripe = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string);
     async function buyStripe() {
         try {
+            const idempotencyKey = generateUUID();
             const stripe = await asyncStripe;
             const res = await fetch("/api/stripe", {
                 method: "POST",
@@ -244,12 +246,14 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                     amount,
                     id: params.id
                 }),
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    'Idempotency-Key': idempotencyKey,
+                },
             });
             const { sessionId } = await res.json();
-
+            sessionStorage.setItem('sessionId', sessionId);
             await stripe?.redirectToCheckout({ sessionId });
-
         } catch (err) {
             console.log("Transaction failed");
         }
@@ -265,13 +269,21 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
         } catch (error) {
             console.error('Error sending transaction', error);
             toastError('Error sending transaction')
+        } finally {
+            sessionStorage.removeItem('sessionId') 
         }
     }
 
     useEffect(() => {
         const amount = new URLSearchParams(window.location.search).get('amount');
         console.log(web3AuthPublicKey, 'web3AuthPublicKey')
-        if (((publicKey && product) || web3AuthPublicKey !== null && !publicKey && product) && amount) {
+        if (
+            ((publicKey && product) 
+            || web3AuthPublicKey !== null 
+            && !publicKey && product) 
+            && amount
+            && sessionStorage.getItem('sessionId')
+        ) {
             buyStripeListing(amount);
         }
     }, [publicKey, web3AuthPublicKey, product]);

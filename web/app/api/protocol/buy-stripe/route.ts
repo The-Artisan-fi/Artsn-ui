@@ -26,14 +26,25 @@ import * as b58 from 'bs58';
 //https://spl-token-faucet.com/?token-name=USDC-Dev
 const USDC_DEV = new PublicKey('Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr');
 
-export async function POST(request: Request) {
+export const intToBytes = (int: number): Uint8Array => {
+  const buffer = new ArrayBuffer(4); // Create a buffer of 4 bytes (32 bits).
+  const view = new DataView(buffer);
+  view.setUint32(0, int, true); // Write the integer to the buffer. 'true' for little endian.
+  return new Uint8Array(buffer);
+};
 
-  const intToBytes = (int: number): Uint8Array => {
-    let buffer = new ArrayBuffer(4); // Create a buffer of 4 bytes (32 bits).
-    let view = new DataView(buffer);
-    view.setUint32(0, int, true); // Write the integer to the buffer. 'true' for little endian.
-    return new Uint8Array(buffer);
-  };
+const stringToBytes = (sessionId: string) => {
+  return new TextEncoder().encode(sessionId);
+};
+
+const concatenateUint8Arrays = (arr1: Uint8Array, arr2: Uint8Array) => {
+  const concatenatedArray = new Uint8Array(arr1.length + arr2.length);
+  concatenatedArray.set(arr1, 0);
+  concatenatedArray.set(arr2, arr1.length);
+  return concatenatedArray;
+};
+
+export async function POST(request: Request) {
 
   console.log('route pinged');
   const wallet = Keypair.generate();
@@ -56,6 +67,7 @@ export async function POST(request: Request) {
     // VARIABLES
     const reference = req.reference;
     const amount = req.amount;
+    const sessionId = req.sessionId;
     const watch = PublicKey.findProgramAddressSync(
       [Buffer.from('watch'), Buffer.from(reference)],
       program.programId
@@ -102,49 +114,21 @@ export async function POST(request: Request) {
       buyer_publicKey
     );
 
-    // const createAtaIx = createAssociatedTokenAccountIdempotentInstruction(
-    //     buyer_publicKey,
-    //     buyerFractionAta,
-    //     buyer_publicKey,
-    //     fraction,
-    //     TOKEN_2022_PROGRAM_ID,
-    //     ASSOCIATED_TOKEN_PROGRAM_ID,
-    // );
-
-    // const profileInitIx = await await program.methods
-    //     .initializeProfileAccount()
-    //     .accounts({
-    //         user: buyer_publicKey,
-    //         profile: buyerProfile,
-    //         systemProgram: SystemProgram.programId,
-    //     })
-    //     .instruction();
     const feeKey = process.env.SIGNING_AUTHORITY!;
     const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
 
     const message = intToBytes(amount);
+    const stringBytes = stringToBytes(sessionId); // Convert string to bytes
+    const combinedBytes = concatenateUint8Arrays(message, stringBytes); // Concatenate the byte arrays
+  
     const ed25519Ix = Ed25519Program.createInstructionWithPrivateKey({
       privateKey: feePayer.secretKey,
-      message,
+      message: combinedBytes,
     });
 
-const buyShareIx = await program.methods
+    const buyShareIx = await program.methods
       .buyListing()
       .accounts({
-        // buyer: buyer_publicKey,
-        // payer: feePayer.publicKey,
-        // buyerProfile,
-        // buyerCurrencyAta,
-        // buyerFractionAta,
-        // listing,
-        // listingCurrencyAta,
-        // fraction,
-        // currency: USDC_DEV,
-        // auth,
-        // associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-        // tokenProgram: TOKEN_PROGRAM_ID,
-        // token2022Program: TOKEN_2022_PROGRAM_ID,
-        // systemProgram: SystemProgram.programId,
         payer: feePayer.publicKey,
         buyer: buyer_publicKey,
         buyerProfile,

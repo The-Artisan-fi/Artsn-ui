@@ -240,7 +240,8 @@ export async function buyStripeTx(id: number, reference: string, key: string, am
         id: id,
         reference: reference,
         publicKey: key,
-        amount: amount
+        amount: amount,
+        sessionId: sessionStorage.getItem('sessionId')
       })
     })
     const txData = await response.json();
