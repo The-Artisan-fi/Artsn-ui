@@ -1,5 +1,5 @@
 import * as anchor from "@coral-xyz/anchor";
-import { IDL, Fragment, PROGRAM_ID} from "@/components/Utils/idl";
+import { IDL, Fragment, PROGRAM_ID, USDC_MINT} from "@/components/Utils/idl";
 import {
     PublicKey,
     SystemProgram,
@@ -16,7 +16,7 @@ import {
  } from "@solana/spl-token";
 import * as b58 from "bs58";
 
-const USDC_DEV = new PublicKey("Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr");
+const USDC_DEV = new PublicKey(USDC_MINT);
 
 export type MakeTransactionInputData = {
     account: string,

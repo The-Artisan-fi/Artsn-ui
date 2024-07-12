@@ -1,5 +1,5 @@
 import * as anchor from "@coral-xyz/anchor";
-import { IDL, Fragment, PROGRAM_ID, LISTING_GROUP} from "@/components/Utils/idl";
+import { IDL, Fragment, PROGRAM_ID, USDC_MINT} from "@/components/Utils/idl";
 import {
     SYSVAR_INSTRUCTIONS_PUBKEY,
     PublicKey,
@@ -22,7 +22,7 @@ import * as b58 from "bs58";
 import { Base } from "@ant-design/plots";
 
 //https://spl-token-faucet.com/?token-name=USDC-Dev
-const USDC_DEV = new PublicKey("Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr");
+const USDC_DEV = new PublicKey(USDC_MINT);
 
 export async function POST( request: Request ) {
     console.log('route pinged')

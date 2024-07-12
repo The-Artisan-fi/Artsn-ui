@@ -3,6 +3,7 @@ import {
   IDL,
   Fragment,
   PROGRAM_ID,
+  USDC_MINT,
 } from '@/components/Utils/idl';
 import {
   SYSVAR_INSTRUCTIONS_PUBKEY,
@@ -23,7 +24,7 @@ import {
 import * as b58 from 'bs58';
 
 //https://spl-token-faucet.com/?token-name=USDC-Dev
-const USDC_DEV = new PublicKey('Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr');
+const USDC_DEV = new PublicKey(USDC_MINT);
 
 export const intToBytes = (int: number): Uint8Array => {
   const buffer = new ArrayBuffer(4); // Create a buffer of 4 bytes (32 bits).

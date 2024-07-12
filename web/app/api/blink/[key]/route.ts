@@ -7,7 +7,7 @@ import {
     createPostResponse,
     ActionPostResponse,
   } from "@solana/actions";
-import { IDL, Fragment, PROGRAM_ID, LISTING_GROUP} from "@/components/Utils/idl";
+import { IDL, Fragment, PROGRAM_ID, USDC_MINT} from "@/components/Utils/idl";
 import {
     SYSVAR_INSTRUCTIONS_PUBKEY,
     PublicKey,
@@ -61,7 +61,7 @@ export async function POST(_: Request, { params }: { params: { key : number } })
         const buyer_publicKey = new PublicKey(req.account);
         console.log('buyer_publicKey', buyer_publicKey.toBase58());
         const id = ref.id;
-        const USDC_DEV = new PublicKey("Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr");
+        const USDC_DEV = new PublicKey(USDC_MINT);
         // const id = 10817;
         // VARIABLES
         const reference = ref.reference;

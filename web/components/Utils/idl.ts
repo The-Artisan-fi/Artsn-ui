@@ -1313,3 +1313,5 @@ export const PROGRAM_ID = "FPxat7p4nwvj52MaJzxZeaZdfNnq5PzzSnzKbGFZFasU" as Addr
 export const LISTING_GROUP = 'LSTBuqygb7CMQryt45BC1fh5PPjuJKtoffDyASchWi2' as string;
 
 export const WATCH_GROUP = 'WaTL5TmFvfKeuFESWL1yp7tCg1feH55jxxhfcMHYR8g' as string;
+
+export const USDC_MINT = '4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU' as string; // USDC - DEVNET https://faucet.circle.com/
