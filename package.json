@@ -9,6 +9,7 @@
     "anchor-test": "nx run anchor:anchor test",
     "build": "nx build web",
     "dev": "nx serve web",
+    "prettier": "prettier --write \"**/*.{json,md,yml}\"",
     "reset": "nx reset"
   },
   "private": true,
@@ -50,6 +51,7 @@
     "framer-motion": "^11.0.3",
     "graphql": "^16.9.0",
     "next": "^14.2.3",
+    "prettier": "^3.2.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-fast-marquee": "^1.6.2",

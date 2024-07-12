@@ -30,6 +30,7 @@ import { toastPromise, toastError } from "@/helpers/toast";
 import type { ProductDetails, OffChainData, OnChainData, Product, FAQ, Image } from "@/helpers/types";
 import { loadStripe } from "@stripe/stripe-js";
 import { generateUUID } from "@/helpers/generateUuid";
+import { sign } from "crypto";
 
 export default function ProductDetails({ params }: { params: { id: string } }) {
     const { publicKey, sendTransaction } = useWallet();
@@ -61,7 +62,6 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
         }
     );
     if(!loading && data != undefined && offChainData == undefined){
-        console.log("data", data.listings[0]);
         setOffChainData(data.listings[0]);
     }
     if(!loading && error != undefined){
@@ -97,7 +97,6 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
             const refKey = Keypair.generate().publicKey.toBase58();
             setRefKey(refKey);
             const apiUrl = `${location.protocol}//${location.host}/api/qr/buy?new=true&id=${product?.id}&reference=${product?.reference}&refKey=${refKey}`
-            console.log('api url', apiUrl)
             
             const urlParams: TransactionRequestURLFields = {
                 link: new URL(apiUrl),
@@ -117,8 +116,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
     // **************************Data Functions***********************************
     async function fetchData(accountPubkey: string) {
         const on_chain_data: OnChainData | undefined = await fetchProductDetails(accountPubkey);
-        console.log('on chain data', on_chain_data)
-        console.log('off chain data', offChainData)
+
         const product_images = offChainData!.images.map((image: string) => {
             return {
                 original: image,
@@ -265,6 +263,10 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                 const tx = await buyStripeTx(product.id, product.reference, web3AuthPublicKey, +amount);
                 const signature = await rpc!.sendTransaction(tx!);
                 await toastPromise(signature)
+            } else if (publicKey && !web3AuthPublicKey && product) {
+                const tx = await buyStripeTx(product.id, product.reference, publicKey.toBase58(), +amount);
+                const signature = await sendTransaction(tx!, connection, {skipPreflight: true});
+                await toastPromise(signature)
             }
         } catch (error) {
             console.error('Error sending transaction', error);
@@ -276,7 +278,6 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
 
     useEffect(() => {
         const amount = new URLSearchParams(window.location.search).get('amount');
-        console.log(web3AuthPublicKey, 'web3AuthPublicKey')
         if (
             ((publicKey && product) 
             || web3AuthPublicKey !== null 
@@ -450,12 +451,9 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                                 {!publicKey && !web3AuthPublicKey ? 'Buy with QR' :'INVEST IN FRACTIONS'}
                                             </a>
 
-                                            {/* <a 
-                                                onClick={
-                                                ()=>{
-                                                    console.log('stripe pay')
-                                                }} 
-                                                // className="btn btn-white" 
+                                            <a
+                                                onClick={buyStripe}
+                                                className="btn btn-white"
                                                 style={{ 
                                                     justifyContent: "center", 
                                                     width: !publicKey && !web3AuthPublicKey ? '49%' : '85%',
@@ -469,8 +467,8 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                                     cursor: 'pointer'
                                                 }}
                                             >
-                                                Pay with <img src="/assets/stripe.svg" alt="stripe" style={{height: '3.5rem'}}/>
-                                            </a> */}
+                                                BUY WITH CARD | <img src="/assets/logos/google_pay.png" alt="google pay" style={{height: '2.5rem'}}/>
+                                            </a>
                                         </div>
                                         {!publicKey && !web3AuthPublicKey ? (
                                             <button className="btn btn-white" style={{ justifyContent: "center", width: '49%' }} onClick={()=> setDisplayLoginModal(true)}>
@@ -485,18 +483,6 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                                 <FaQrcode size={30} />
                                             </a>
                                         )}
-                                    </div>
-                                    <div className="btn-container" style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <a
-                                            onClick={buyStripe}
-                                            className="btn btn-white"
-                                            style={{
-                                                justifyContent: "center",
-                                                width: !publicKey && !web3AuthPublicKey ? '49%' : '85%'
-                                            }}
-                                        >
-                                            BUY WITH STRIPE
-                                        </a>
                                     </div>
                                 </div>
                             </div>
