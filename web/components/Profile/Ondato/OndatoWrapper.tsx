@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { UPDATE_USER_IDV_ID} from "@/lib/mutations";
 import { useMutation } from "@apollo/client";
+import { toastError } from "@/helpers/toast";
 
 type OnfidoProps = {
   publicKey: string;
@@ -31,72 +32,73 @@ export default function OndatoWrapper({ publicKey, fullName, dob, address, phone
   }
   if(error) {
     console.log('error', error);
+    toastError('Error verifying identity');
   }
-
-    const getIdvId = async () => {
-      // check local storage for idv_id
-      const artisan_idv_id = localStorage.getItem('artisan_idv_id'); // [idv_id, timestamp]
-      // if it exists, and the timestamp is less than 24 hours old, return it
-      // if (artisan_idv_id) {
-      //   const idv_id = artisan_idv_id.split(',')[0];
-      //   const timestamp = parseInt(artisan_idv_id.split(',')[1]);
-      //   const now = Date.now();
-      //   if (now - timestamp < 86400000) {
-      //     console.log('returning idv_id from local storage');
-      //     setIdvId(idv_id);
-      //     return idv_id;
-      //   }
-      // }
+    const getFreshIdvId = async () => {
       const firstName = fullName.split(' ')[0];
       const lastName = fullName.split(' ')[1];
       const middleName = '';
-      console.log('pinging idv api for new idv_id')
+      
       try{
-          const response = await fetch('/api/ondato/idv/create', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              dob,
-              email,
-              firstName,
-              lastName,
-              middleName,
-              phoneNumber,
-              address,
-            }),
-          });
-          const data = await response.json();
-         
-          console.log('idv data', data);
+        const response = await fetch('/api/ondato/idv/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            dob,
+            email,
+            firstName,
+            lastName,
+            middleName,
+            phoneNumber,
+            address,
+          }),
+        });
+        const data = await response.json();
+
+        if(data.idv_id !== null){
+            // open https://sandbox-idv.ondato.com/?id=${idvId}` in a new tab
+          window.open(`https://sandbox-idv.ondato.com/?id=${data.idv_id}`, '_blank');
+          // set the data.idv_id to a localStorage item named artisan_idv_id as [data.idv_id, timestamp]
+          localStorage.setItem('artisan_idv_id', `[${data.idv_id}, ${Date.now()}, ${publicKey.toString()}]`);
           
+          setIdvId(data.idv_id);
 
+          updateUserIdvId({
+            variables: {
+              wallet: publicKey,
+              idvId: data.idv_id,
+            },
+          });
 
-          if(data.idv_id !== null){
-              // open https://sandbox-idv.ondato.com/?id=${idvId}` in a new tab
-            window.open(`https://sandbox-idv.ondato.com/?id=${data.idv_id}`, '_blank');
-            // set the data.idv_id to a localStorage item named artisan_idv_id as [data.idv_id, timestamp]
-            localStorage.setItem('artisan_idv_id', `[${data.idv_id}, ${Date.now()}]`);
-            
-            setIdvId(data.idv_id);
-
-            updateUserIdvId({
-              variables: {
-                wallet: publicKey,
-                idvId: data.idv_id,
-              },
-            });
-
-            return data.idv_id;
-          } else {
-            throw new Error('idv_id is null');
-          }
+          return data.idv_id;
+        } else {
+          throw new Error('idv_id is null');
+        }
       } catch (error) {
         console.log('error', error);
       }
-    }
-  
+    };
+    
+
+    const getIdvId = async () => {
+      const artisan_idv_id = localStorage.getItem('artisan_idv_id'); // [idv_id, timestamp, publicKey]
+      if (artisan_idv_id) {
+        const idv_id = artisan_idv_id.split(',')[0];
+        const timestamp = parseInt(artisan_idv_id.split(',')[1]);
+        const _publicKey = artisan_idv_id.split(',')[2];
+        const now = Date.now();
+        if (now - timestamp < 86400000 && publicKey.toString() === _publicKey) {
+          console.log('returning idv_id from local storage');
+          setIdvId(idv_id);
+          return idv_id;
+        }
+      } else {
+        getFreshIdvId();
+      }
+    };
+     
     return (
       <button 
         onClick={getIdvId}

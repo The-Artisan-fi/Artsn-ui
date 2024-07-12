@@ -14,12 +14,13 @@ import { MdOutlineFileUpload } from 'react-icons/md';
 import { useMutation } from "@apollo/client";
 import { ADD_USER } from "@/lib/mutations";
 import useSWRMutation from "swr/mutation";
-import LoginHeader from '@/public/assets/login/login_header.svg';
 import Logo from '@/public/assets/login/logo_bw.svg';
 import OndatoWrapper from '@/components/Profile/Ondato/OndatoWrapper';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import { countries } from '@/lib/countries';
+import { confirm } from '@/hooks/confirmTx';
+import { toast } from 'react-toastify';
 const Upload = Dynamic(() => import('antd').then((mod) => mod.Upload), { ssr: false });
 const Input = Dynamic(() => import('antd').then((mod) => mod.Input), { ssr: false });
 
@@ -171,11 +172,9 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                 console.log(
                     `Transaction sent: https://explorer.solana.com/tx/${signature}?cluster=devnet`
                 );
+                const confirmation_sig = await confirm(connection, signature);
 
-                await toastPromise(signature);
-                
-                // handleCloseThenCheck();
-                setVerificationNeeded(true);
+                await toastPromise(confirmation_sig);
             }
 
             if(web3AuthPublicKey !== null && !publicKey){
@@ -184,9 +183,9 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                 console.log(
                     `Transaction sent: https://explorer.solana.com/tx/${signature}?cluster=devnet`
                 );
-                await toastPromise(signature);
-                // handleCloseThenCheck();   
-                setVerificationNeeded(true);         
+                const confirmation_sig = await confirm(connection, signature);
+
+                await toastPromise(confirmation_sig); 
             }
         } catch (error) {
             console.error('Error sending transaction', error);
@@ -195,32 +194,32 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
     }
 
     async function createProfile(key: string) {
-        // if(fileList.length < 1){
-        //     return;
-        // }
-        // convert newFileList to a Blob
-        // const fileListBlob = fileList.map((file: { originFileObj: Blob; type: string; }) => {
-        //     return new Blob([file.originFileObj], { type: file.type });
-        // });
-        // await trigger({ files: fileListBlob });
+        if(fileList.length < 1){
+            toastError('Please upload a profile picture');
+        }
+        const fileListBlob = fileList.map((file: { originFileObj: Blob; type: string; }) => {
+            return new Blob([file.originFileObj], { type: file.type });
+        });
+        await trigger({ files: fileListBlob });
 
         await initProfile(key);
-        // addUser({
-        //     variables: {
-        //         fullName: profile!.fullName,
-        //         userName: profile!.userName,
-        //         email: profile!.email,
-        //         wallet: publicKey ? publicKey.toBase58() : web3AuthPublicKey,
-        //         currencyPreference: '$USD',
-        //         // @ts-expect-error - fileList is not empty
-        //         profileImg: `https://artisan-solana.s3.eu-central-1.amazonaws.com/${publicKey ? publicKey.toBase58() : web3AuthPublicKey}.${fileList.length > 0 ? fileList[0].name.split('.').pop() : ''}`
-        //     }
-        // });
+        addUser({
+            variables: {
+                fullName: profile!.fullName,
+                userName: profile!.userName,
+                email: profile!.email,
+                wallet: publicKey ? publicKey.toBase58() : web3AuthPublicKey,
+                currencyPreference: '$USD',
+                // @ts-expect-error - fileList is not empty
+                profileImg: `https://artisan-solana.s3.eu-central-1.amazonaws.com/${publicKey ? publicKey.toBase58() : web3AuthPublicKey}.${fileList.length > 0 ? fileList[0].name.split('.').pop() : ''}`
+            }
+        });
         {!loading && !error && data && (
             handlePageChange(2)
         )}
         {error && (
-            console.log('Error submitting', error)
+            console.log('Error submitting', error),
+            toast.error('Error submitting, please try again')
         )}
         {loading && (
             console.log('Submitting...')
@@ -228,11 +227,9 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
     }
 
     const page1 = () => {
-
         return(
             <div style={{ width: 'fit-content'}}>
                 <div className="modal-header">
-                    {/* create an X to 'handleCloseModal' in the top right corner of the div and give it a z index so it stays on top of other ojects */}
                     <button 
                         onClick={handleCloseModal}
                         style={{
@@ -249,11 +246,6 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                     >
                         x
                     </button>
-                    {/* <Image
-                        src={LoginHeader}
-                        alt="login header"
-                        className="login-header"
-                    /> */}
                     <div className="login-header" />
                     <Image
                         src={Logo}
@@ -317,23 +309,11 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                         </div>
                     </div>
                 </div> 
-
-                
-                
-                {verificationPending && (
-                    <div className="verification-pending">
-                        <p className="caption-3">Verification Pending</p>
-                        <p className="caption-3">You will be notified when your verification is complete</p>
-                    </div>
-                )}
-
-                {!verificationNeeded && (
-                    <div className="login-container">
-                        <button className="btn-primary" onClick={() => createProfile(publicKey ? publicKey!.toBase58() : web3AuthPublicKey!)}>
-                            Create Profile
-                        </button>
-                    </div>
-                )}
+                <div className="login-container">
+                    <button className="btn-primary" onClick={() => createProfile(publicKey ? publicKey!.toBase58() : web3AuthPublicKey!)}>
+                        Create Profile
+                    </button>
+                </div>
             </div>
         )
     }

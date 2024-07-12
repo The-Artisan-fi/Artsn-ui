@@ -3,7 +3,6 @@ import {
   IDL,
   Fragment,
   PROGRAM_ID,
-  LISTING_GROUP,
 } from '@/components/Utils/idl';
 import {
   SYSVAR_INSTRUCTIONS_PUBKEY,
@@ -60,10 +59,8 @@ export async function POST(request: Request) {
   try {
     const req = await request.json();
     const buyer_publicKey = new PublicKey(req.publicKey);
-    console.log('buyer_publicKey', buyer_publicKey.toBase58());
     const id = req.id;
 
-    // const id = 10817;
     // VARIABLES
     const reference = req.reference;
     const amount = req.amount;
