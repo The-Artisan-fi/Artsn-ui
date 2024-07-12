@@ -70,49 +70,17 @@ const WalletPage = () => {
 
         <div className="wallet__item__action">
           <span className="p-5" style={{ color: 'white'}}>EST. BALANCE</span>
-          <span className="h-6" style={{ color: 'white'}}>
-            {/* {
-              solBalance ? solBalance.toFixed(4) : '0.00'
-            } */}
-            {usdcBalance ? usdcBalance.toFixed(2) : '0.00'}
-          </span>
-        </div>
-      </div>
-
-      {/* item 2 */}
-      <div className="wallet__item">
-        <RiMoneyDollarCircleFill className="wallet__item__icon" style={{ color: 'white'}}/>
-        <div className="wallet__item__details">
-          <p className="p-4 dimmed">USDC</p>
-          <p className="p-2 dimmed">
-            {usdcBalance ? usdcBalance.toFixed(2) : '0.00'}
-          </p>
-        </div>
-        <div className="wallet__item__action__container">
-          <div className="wallet__item__action__container__btn">
-            <span className="p-3">DEPOSIT USDC </span>
-          </div>
-          <div className="wallet__item__action__container__btn">
-            <span className="p-3">DEPOSIT SOL</span>
+          <div style={{ display: 'flex', flexDirection: 'row', gap: '1rem'}}>
+            <RiMoneyDollarCircleFill className="wallet__item__icon" style={{ color: 'white'}}/>
+            <div className="wallet__item__details">
+              <p className="p-4 dimmed">USDC</p>
+              <p className="p-2 dimmed">
+                {usdcBalance ? usdcBalance.toFixed(2) : '0.00'}
+              </p>
+            </div>
           </div>
         </div>
       </div>
-
-      {/* item 3 */}
-
-      {/* <div className="wallet__item">
-        <SiSolana className="wallet__item__icon" />
-        <div className="wallet__item__details">
-          <p className="p-4 dimmed">SOLANA</p>
-          <p className="p-2 dimmed">
-            {solBalance ? solBalance.toFixed(4) : '0.00'}
-          </p>
-        </div>
-
-        <div className="wallet__item__action">
-          <span className="p-3">DEPOSIT SOL</span>
-        </div>
-      </div> */}
     </div>
   );
 };

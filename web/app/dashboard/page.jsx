@@ -4,6 +4,7 @@ import Image from 'next/image';
 import '@/styles/DashboardInventory.scss';
 import { FiArrowUpRight } from 'react-icons/fi';
 import { fetchProductDetails } from "@/hooks/fetchProductDetails";
+import { LoadingSpinner } from '@/components/Loading/Loading';
 import dynamic from 'next/dynamic';
 import { getTokenAccounts } from '@/components/Protocol/functions';
 const Table  = dynamic(() => import('antd').then((mod) => mod.Table), { ssr: false });
@@ -66,8 +67,9 @@ const config = {
 };
 
 const Dashboard = () => {
+  const [tokensLoading, setTokensLoading] = useState(true);
   const [value4, setValue4] = useState('Weekly');
-  const [fractions] = useState([]);
+  const [fractions, setFractions] = useState([]);
   const [tokenAccounts, setTokenAccounts] = useState([]);
   const { publicKey, sendTransaction } = useWallet();
   const [web3AuthPublicKey, setWeb3AuthPublicKey] = useState(null);
@@ -82,14 +84,18 @@ const Dashboard = () => {
 
   const [getListing, { loading, error, data }] = useLazyQuery(getListingByMintAddress , {variables});
   if(!loading && data != undefined && listingAddress == ''){
-    console.log('data', data);
+    console.log('data from listing query', data);
     if(data.listings.length > 0 && fractions.filter((item) => item.associatedId == data.listings[0].associatedId).length == 0){
-
-      fractions.push({
-        ...queryItem,
-        associatedId: data.listings[0].associatedId
-      });
-
+    
+      const updatedFractions = [
+        ...fractions,
+        {
+          ...queryItem,
+          associatedId: data.listings[0].associatedId
+        }
+      ];
+    
+      setFractions(updatedFractions);
       setListingAddress(data.listings[0].associatedId);
     }
   }
@@ -218,6 +224,9 @@ const Dashboard = () => {
         await getListingAddress(data[i]);
         setListingAddress('');
       }
+      setTimeout(() => {
+        setTokensLoading(false);
+      }, 2000);
     }
   }
 
@@ -305,8 +314,9 @@ const Dashboard = () => {
           </p>
         </div>
       </div>
-      {fractions.length > 0 ? (
+      {!tokensLoading && fractions.length > 0 && (
         <div className="dashboard-inventory__body">
+          FRACTIONS TOTAL = {fractions.length}
           <Table
             style={{
               border: '1px solid #3d3d3d',
@@ -322,7 +332,8 @@ const Dashboard = () => {
             lazy={true}
           />
         </div>
-      ) : (
+      )}
+      {!tokensLoading && fractions.length == 0 && (
         <div
           style={{
             display: 'flex',
@@ -345,6 +356,9 @@ const Dashboard = () => {
               Start Collecting
             </button>
         </div>
+      )}
+      {tokensLoading && (
+        <LoadingSpinner />
       )}
     </div>
   );

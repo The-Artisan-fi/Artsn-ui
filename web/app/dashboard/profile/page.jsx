@@ -76,7 +76,7 @@ const Profile = () => {
 
   return (
     <div className="profile">
-      <div className="profile__image-upload">
+      {/* <div className="profile__image-upload">
         <ImgCrop rotationSlider>
           <Upload
             style={{ color: '#fff' }}
@@ -92,7 +92,7 @@ const Profile = () => {
           </Upload>
         </ImgCrop>
         {fileList.length < 1 && <p className="p-4">Upload Profile Picture</p>}
-      </div>
+      </div> */}
       <div className="profile__input-row">
         <div className="profile__input-col">
           <p className="caption-3">FULL NAME</p>
@@ -154,17 +154,35 @@ const Profile = () => {
       </div>
 
       <div className="profile__input-row">
-          <div>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            marginTop: '1rem',
+            marginBottom: '1rem',
+            gap: '1rem'
+          }}>
             {offChainData && offChainData.onfidoKyc ? (
               <p  className="caption-3">
                 Verified
               </p>
             ) : (
-              <div>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%',
+                marginTop: '1rem',
+                marginBottom: '1rem',
+                gap: '2rem'
+              }}>
                 <p
                   className="caption-3"
                 >
-                  Your profile is currently unverified, please click here to complete:
+                  Your profile is currently unverified, please click here to complete.
                 </p>
                 <button
                   className="btn-primary"
