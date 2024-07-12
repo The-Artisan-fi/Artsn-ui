@@ -19,6 +19,7 @@ import { getListingByMintAddress } from '@/lib/queries';
 import { useLazyQuery } from '@apollo/client';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { checkLogin } from "@/components/Web3Auth/solanaRPC";
+import { confirm } from '@/helpers/confirm';
 import { toastError, toastPromise } from '@/helpers/toast';
 
 // Graph configurations
@@ -78,13 +79,11 @@ const Dashboard = () => {
   const [queryItem, setQueryItem] = useState('');
   const [listingAddress, setListingAddress] = useState('');
   const onChange4 = ({ target: { value } }) => {
-    console.log('radio4 checked', value);
     setValue4(value);
   };
 
   const [getListing, { loading, error, data }] = useLazyQuery(getListingByMintAddress , {variables});
   if(!loading && data != undefined && listingAddress == ''){
-    console.log('data from listing query', data);
     if(data.listings.length > 0 && fractions.filter((item) => item.associatedId == data.listings[0].associatedId).length == 0){
     
       const updatedFractions = [
@@ -101,6 +100,7 @@ const Dashboard = () => {
   }
   if(!loading && error != undefined){
       console.log("error", error);
+      toastError(`Error: ${error.message}`);
   }
 
   async function getListingAddress(data){
@@ -161,7 +161,6 @@ const Dashboard = () => {
           <button
             className="btn-table"
             onClick={async () => {
-              // console.log('record', record);
               window.location.href = `/product/${record.associatedId}`;
             }}
           >
@@ -181,7 +180,6 @@ const Dashboard = () => {
   async function buyMore(product) {
     try{
         const data = await fetchProductDetails(product.associatedId);
-        // console.log('data', data)
         const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
         if(publicKey && data){
           const tx = await buyTx(data.id, data.reference, publicKey.toBase58(), 1);
@@ -198,8 +196,8 @@ const Dashboard = () => {
           };
           const provider = getProvider();
            const signature = await provider.signAndSendTransaction(tx)
-           console.log('signature from buy', signature);
-           await toastPromise(signature)
+           const _confirm = await confirm(signature);
+           await toastPromise(_confirm)
         } else if(web3AuthPublicKey && data){ 
           const tx = await buyTx(data.id, data.reference, web3AuthPublicKey, 1);
           const signature = await rpc.sendTransaction(tx); 
@@ -212,9 +210,7 @@ const Dashboard = () => {
   const getTokens = async (key) => {
     // only execute if tokenAccounts is empty
     if (tokenAccounts.length == 0) {
-      console.log('key', key)
       const data = await getTokenAccounts(key);
-      console.log('data', data)
       setTokenAccounts(data);
       if(!data){
         return;

@@ -106,7 +106,6 @@ const KycPage = () => {
           <button 
             onClick={() =>{
             //  getWorkRunData(record.workflow_run_id)
-            console.log('record', record)
             setApplicant(record);
             setShowKycModal(true);
             }}
@@ -180,7 +179,6 @@ const KycPage = () => {
         return (
           <button 
             onClick={() =>{
-              console.log('record', record)
               setApplicant(record);
               setShowApplicantModal(true);
             }}
@@ -201,7 +199,6 @@ const KycPage = () => {
 
   async function getAllApplicants() {
     const data = await retrieveAllApplicants();
-    console.log('all applicant data', data)
     setAllApplicants(data.applicants);
     return data;
   }

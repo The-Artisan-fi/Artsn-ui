@@ -46,12 +46,9 @@ export const fetchProducts = async () => {
                 get_accounts_config
             );
 
-             console.log('all_program_accounts', all_program_accounts)
             const productList = all_program_accounts.map((account) => {
                 try {
                     const decode = program.coder.accounts.decode("Listing", account.account.data);
-                    console.log('decode', decode)
-                    console.log('account', account.pubkey.toBase58());
                     if(!decode) return;
                     const fraction = PublicKey.findProgramAddressSync([Buffer.from('fraction'), account.pubkey.toBuffer()], program.programId)[0];
                     return {
@@ -65,7 +62,6 @@ export const fetchProducts = async () => {
             });
             const currentTime = Math.floor(Date.now() / 1000);
             const availableProducts = productList.filter(product => product.startingTime < currentTime);
-            console.log('availableProducts', availableProducts)
             const comingSoonProducts = productList.filter(product => product.startingTime >= currentTime);
 
             const products = {
@@ -94,8 +90,6 @@ export const fetchProducts = async () => {
                 })),
             };
 
-            console.log('products available: ', products.available);
-            console.log('products coming soon: ', products.comingSoon);
             return products;
         } catch (error) {
             console.error("Failed to fetch products:", error);
@@ -147,12 +141,9 @@ export const fetchProducts = async () => {
                 get_accounts_config
             );
 
-             console.log('all_program_accounts', all_program_accounts)
             const watchList = all_program_accounts.map((account) => {
                 try {
                     const decode = program.coder.accounts.decode("Watch", account.account.data);
-                    console.log('decode', decode)
-                    console.log('account', account.pubkey.toBase58());
                     if(!decode) return;
                     return {
                         accountPubkey: account.pubkey.toBase58(),

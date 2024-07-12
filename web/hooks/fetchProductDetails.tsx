@@ -20,11 +20,9 @@ export const fetchProductDetails = async (accountPubkey: string) => {
     try {
         const account_info = await connection.getAccountInfo(new PublicKey(accountPubkey))
         const listing = program.coder.accounts.decode("Listing", account_info!.data);
-        // console.log('product', product);
         
         const watch_account_info = await connection.getAccountInfo(new PublicKey(listing.watch));
         const watch = program.coder.accounts.decode("Watch", watch_account_info!.data);
-        console.log('watch', watch);
 
         const listingInfo = {
             id: listing.id.toNumber(),
@@ -33,16 +31,6 @@ export const fetchProductDetails = async (accountPubkey: string) => {
             startingPrice: listing.price.toNumber(),
             watchKey: listing.watch.toBase58(),
             reference: listing.reference,
-
-            // braceletMaterial: "Steel"
-            // brand: "Audemars Piguet"
-            // caseMaterial: "Steel"
-            // dialColor: "Blue"
-            // diamater: 39
-            // model: "Royal Oak Jumbo"
-            // movement: "Automatic"
-            // reference: "15202ST.OO.1240ST.01"
-            // yearOfProduction: 2020
             braceletMaterial: watch.braceletMaterial,
             brand: watch.brand,
             caseMaterial: watch.caseMaterial,

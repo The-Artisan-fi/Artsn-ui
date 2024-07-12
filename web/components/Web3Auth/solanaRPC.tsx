@@ -153,7 +153,6 @@ export const login = async () => {
     );
 
     if(!web3authProvider) {
-      console.log('web3authProvider not initialized yet')
       uiConsole("web3authProvider not initialized yet");
       return;
     }
@@ -165,7 +164,6 @@ export const login = async () => {
 };
 
 export const logout = async () => {
-  console.log('logging out')
   try{
   const chainConfig = {
     chainNamespace: CHAIN_NAMESPACES.SOLANA,
@@ -194,19 +192,6 @@ export const logout = async () => {
   web3auth.configureAdapter(openloginAdapter);
 
   await web3auth.init();
-
-  const web3authProvider: IProvider | null = await web3auth.connectTo(
-    WALLET_ADAPTERS.OPENLOGIN,
-    {
-      loginProvider: "google",
-    },
-  );
-
-  // if(!web3authProvider) {
-  //   console.log('web3authProvider not initialized yet')
-  //   uiConsole("web3authProvider not initialized yet");
-  //   return;
-  // }
 
   await web3auth.logout();
   

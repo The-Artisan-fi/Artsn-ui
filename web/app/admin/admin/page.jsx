@@ -9,6 +9,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { checkLogin } from "@/components/Web3Auth/solanaRPC";
 import { initAdminTx } from "@/components/Protocol/functions";
 import { toastPromise, toastError } from '@/helpers/toast';
+import { confirm } from '@/helpers/confirm';
 
 const Profile = () => {
   const { publicKey, sendTransaction } = useWallet();
@@ -23,11 +24,14 @@ const Profile = () => {
   
 
   async function handleCreateAdmin(){
-    console.log(newAdmin);
-    const tx = await initAdminTx(newAdmin.wallet, newAdmin.username, publicKey.toBase58());
-    const signature = await sendTransaction(tx, connection, {skipPreflight: true,});
-    console.log('signature', signature);
-    await toastPromise(signature)
+    try{
+      const tx = await initAdminTx(newAdmin.wallet, newAdmin.username, publicKey.toBase58());
+      const signature = await sendTransaction(tx, connection, {skipPreflight: true,});
+      const _confirm = await confirm(signature);
+      toastPromise(_confirm)
+    } catch (error) {
+      toastError(error);
+    }
   }
 
   useEffect(() => {

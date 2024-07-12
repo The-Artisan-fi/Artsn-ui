@@ -11,6 +11,7 @@ import { LuBellDot } from 'react-icons/lu';
 import { useLazyQuery } from "@apollo/client";
 import { userProfileBasic } from "@/lib/queries";
 import { checkLogin } from "@/components/Web3Auth/solanaRPC";
+import { toastError } from '@/helpers/toast';
 const DashboardNav = () => {
   const [open, setOpen] = useState(false);
   const { publicKey } = useWallet();
@@ -24,6 +25,7 @@ const DashboardNav = () => {
   }
   if(!loading && error != undefined){
       console.log("error", error);
+      toastError(error);
   }
   const [haveNotifications, setHaveNotifications] = useState(true);
 

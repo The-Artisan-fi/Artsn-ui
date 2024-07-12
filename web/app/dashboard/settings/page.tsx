@@ -13,6 +13,7 @@ import { HiOutlineLogout } from 'react-icons/hi';
 import { useLazyQuery } from "@apollo/client";
 import { userCurrencyPref } from "@/lib/queries";
 import { useWallet } from '@solana/wallet-adapter-react';
+import { toastError } from '@/helpers/toast';
 
 const SettingsPage = () => {
   const { publicKey, disconnect } = useWallet();
@@ -22,11 +23,11 @@ const SettingsPage = () => {
 
   const [getDetails, { loading, error, data }] = useLazyQuery(userCurrencyPref , {variables});
   if(!loading && data != undefined && currencyPref == '' ){
-    console.log("data", data);
     setCurrencyPref(data.users[0].currencyPreference);
   }
   if(!loading && error != undefined){
       console.log("error", error);
+      toastError("Error fetching data");
   }
 
   useEffect(() => {

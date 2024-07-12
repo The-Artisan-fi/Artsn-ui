@@ -24,7 +24,6 @@ export default function OndatoWrapper({ publicKey, fullName, dob, address, phone
   const [idvId, setIdvId] = useState<String | null>(null);
   const [updateUserIdvId, { loading, error, data }] = useMutation(UPDATE_USER_IDV_ID);
   if(!loading && !error && data) {
-    console.log('data', data);
     handleSuccessPending();
   }
   if(loading) {
@@ -78,6 +77,7 @@ export default function OndatoWrapper({ publicKey, fullName, dob, address, phone
         }
       } catch (error) {
         console.log('error', error);
+        toastError('Error verifying identity');
       }
     };
     
@@ -90,7 +90,6 @@ export default function OndatoWrapper({ publicKey, fullName, dob, address, phone
         const _publicKey = artisan_idv_id.split(',')[2];
         const now = Date.now();
         if (now - timestamp < 86400000 && publicKey.toString() === _publicKey) {
-          console.log('returning idv_id from local storage');
           setIdvId(idv_id);
           return idv_id;
         }

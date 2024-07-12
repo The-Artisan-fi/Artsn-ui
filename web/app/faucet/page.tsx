@@ -8,6 +8,7 @@ import Link from 'next/link';
 // QR Code Imports
 import { encodeURL, TransactionRequestURLFields } from "@solana/pay";
 import QrModal from '@/components/Qr/QrModal';
+import { toastError } from '@/helpers/toast';
 
 export default function FaucetPage() {
     const { publicKey, sendTransaction } = useWallet();
@@ -22,7 +23,7 @@ export default function FaucetPage() {
     async function getTransaction() {
         try {
             if(!publicKey){
-                console.log('no public key');
+                toastError("Please connect your wallet");
                 return;
             }
 
@@ -45,9 +46,6 @@ export default function FaucetPage() {
             );
             const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash()
 
-            console.log(
-                `Transaction sent: https://explorer.solana.com/tx/${signature}?cluster=devnet`
-              );
               toast.promise(
                 connection.confirmTransaction({
                     blockhash,

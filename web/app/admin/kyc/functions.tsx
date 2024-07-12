@@ -1,7 +1,6 @@
 
 
 export async function retrieveAllApplicants() {
-    console.log('retrieving all applicants')
   const response = await fetch('/api/onfido/retrieve/all_applicants', {
     method: 'GET',
     headers: {

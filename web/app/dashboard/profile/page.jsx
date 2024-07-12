@@ -33,7 +33,6 @@ const Profile = () => {
   });
   const [getDetails, { loading, error, data }] = useLazyQuery(user , {variables});
   if(!loading && data != undefined && offChainData == undefined){
-    console.log("data", data);
     setOffChainData(data.users[0]);
   }
   if(!loading && error != undefined){

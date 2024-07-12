@@ -36,8 +36,6 @@ const DashboardLayout = ({ children }) => {
     setSelectedKeys([key]);
     setActiveTabTitle(item.props.title);
 
-    console.log(key, item);
-
     // Get the URL based on the selected key
     let url;
     switch (key) {
@@ -62,7 +60,6 @@ const DashboardLayout = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log('currentPath', currentPath);
     if (currentPath === '/admin') {
       setSelectedKeys(['1']);
       setActiveTabTitle('Dashboard');

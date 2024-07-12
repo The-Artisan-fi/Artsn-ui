@@ -36,9 +36,6 @@ const WalletPage = () => {
     setSolBalance(sol / 10 ** 9);
     const ata = await getAssociatedTokenAddress(usdcAddress, publicKey);
     const accountData = await getAccount(connection, ata, "confirmed");
-    console.log(Number(accountData.amount));
-    // divide by 10^6 to get the actual balance
-
     setUsdcBalance(Number(accountData.amount) / 10 ** 6);
   }
 
