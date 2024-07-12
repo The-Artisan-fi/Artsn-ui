@@ -49,6 +49,7 @@ interface ProfileModalProps {
 const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainProfile, handleClose, handleCloseThenCheck }) => {
     const { publicKey, sendTransaction } = useWallet();
     const { token } = theme.useToken();
+    const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState(showModal);
     const [activePage, setActivePage] = useState(page ? page : 1);
     const [web3AuthPublicKey, setWeb3AuthPublicKey] = useState<string | null>(null);
@@ -310,7 +311,12 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                     </div>
                 </div> 
                 <div className="login-container">
-                    <button className="btn-primary" onClick={() => createProfile(publicKey ? publicKey!.toBase58() : web3AuthPublicKey!)}>
+                    {/* checkbox button that user has to click to acknowledge that they accept the terms and aggrements */}
+                    <div className="terms-checkbox">
+                        <input type="checkbox" id="terms" name="terms" value="terms" onChange={() => setAcceptedTerms(!acceptedTerms)} />
+                        <label htmlFor="terms">I accept the <a href="#">terms and conditions</a></label>
+                    </div>
+                    <button className="btn-primary" onClick={() => createProfile(publicKey ? publicKey!.toBase58() : web3AuthPublicKey!)} disabled={!acceptedTerms}>
                         Create Profile
                     </button>
                 </div>
@@ -652,7 +658,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
     }, []);
 
     return (
-        <>
+        <> 
             {isOpen && (
                 <div className="modal-container">
                     {renderPage(activePage)}
