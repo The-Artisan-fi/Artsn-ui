@@ -26,7 +26,7 @@ import * as b58 from 'bs58';
 //https://spl-token-faucet.com/?token-name=USDC-Dev
 const USDC_DEV = new PublicKey(USDC_MINT);
 
-export const intToBytes = (int: number): Uint8Array => {
+const intToBytes = (int: number): Uint8Array => {
   const buffer = new ArrayBuffer(4); // Create a buffer of 4 bytes (32 bits).
   const view = new DataView(buffer);
   view.setUint32(0, int, true); // Write the integer to the buffer. 'true' for little endian.

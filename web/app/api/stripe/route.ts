@@ -1,17 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-const stripeSecretKey = process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY;
-const host = process.env.NEXT_PUBLIC_HOST;
 
-// Check if variables are defined
-if (!stripeSecretKey || !host) {
-  throw new Error('Stripe secret key or host is not defined');
-}
-
-const stripe = new Stripe(stripeSecretKey);
 
 export async function POST(req: NextRequest) {
+
+  const stripeSecretKey = process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY;
+  const host = process.env.NEXT_PUBLIC_HOST;
+
+  // Check if variables are defined
+  if (!stripeSecretKey || !host) {
+    throw new Error('Stripe secret key or host is not defined');
+  }
+
+  const stripe = new Stripe(stripeSecretKey);
   const body = await req.json();
   const date = new Date().toISOString();
   const idempotencyKey = req.headers.get('Idempotency-Key');
