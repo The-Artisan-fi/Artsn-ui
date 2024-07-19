@@ -23,7 +23,7 @@ const Profile = () => {
   const [web3AuthPublicKey, setWeb3AuthPublicKey] = useState('');
   const [connectedWallet, setConnectedWallet] = useState('');
   const [offChainData, setOffChainData] = useState(undefined);
-  const [displayVerifiModal, setDisplayVerifiModal] = useState(false);
+  const [displayVerifyModal, setDisplayVerifyModal] = useState(false);
   const [fileList, setFileList] = useState([]);
   const onChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
@@ -186,7 +186,7 @@ const Profile = () => {
                 <button
                   className="btn-primary"
                   onClick={() => {
-                    setDisplayVerifiModal(true)
+                    setDisplayVerifyModal(true)
                   }}
                 >
                   Verify Profile
@@ -195,11 +195,11 @@ const Profile = () => {
             )}
           </div>
       </div>
-      {displayVerifiModal && (
+      {displayVerifyModal && (
         <ProfileModal
-          showModal={displayVerifiModal}
+          showModal={displayVerifyModal}
           handleClose={() => {
-            setDisplayVerifiModal(false);
+            setDisplayVerifyModal(false);
           }}
           page={2}
           offChainProfile={

@@ -176,6 +176,8 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                 const confirmation_sig = await confirm(connection, signature);
 
                 await toastPromise(confirmation_sig);
+
+                return;
             }
 
             if(web3AuthPublicKey !== null && !publicKey){
@@ -187,6 +189,8 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                 const confirmation_sig = await confirm(connection, signature);
 
                 await toastPromise(confirmation_sig); 
+
+                return;
             }
         } catch (error) {
             console.error('Error sending transaction', error);
@@ -229,7 +233,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
 
     const page1 = () => {
         return(
-            <div style={{ width: 'fit-content'}}>
+            <div style={{ width: 'fit-content' }}>
                 <div className="modal-header">
                     <button 
                         onClick={handleCloseModal}
@@ -310,11 +314,11 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                         </div>
                     </div>
                 </div> 
-                <div className="login-container">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', alignContent: 'center', justifyContent: 'center', width: 'fit-content', margin: 'auto'}}>
                     {/* checkbox button that user has to click to acknowledge that they accept the terms and aggrements */}
                     <div className="terms-checkbox">
-                        <input type="checkbox" id="terms" name="terms" value="terms" onChange={() => setAcceptedTerms(!acceptedTerms)} />
-                        <label htmlFor="terms">I accept the <a href="#">terms and conditions</a></label>
+                        <input type="checkbox" id="terms" name="terms" value="terms" onChange={() => setAcceptedTerms(!acceptedTerms)} />{" "}
+                        <label className="label-3" htmlFor="terms">I accept the <a href="#">terms and conditions</a></label>
                     </div>
                     <button className="btn-primary" onClick={() => createProfile(publicKey ? publicKey!.toBase58() : web3AuthPublicKey!)} disabled={!acceptedTerms}>
                         Create Profile
@@ -565,22 +569,22 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                         Go Back
                     </button> */}
                     <OndatoWrapper
-                            publicKey={publicKey ? publicKey.toString() : web3AuthPublicKey!} 
-                            handleSuccessPending={()=> setVerificationPending(true)}
-                            handleRetry={()=> retry()}
-                            fullName={profile!.fullName || ''}
-                            dob={profile!.dob || ''}
-                            address={{
-                                ...profile!.address,
-                                building_number: profile!.address.building_number || '',
-                                street: profile!.address.street || '',
-                                town: profile!.address.town || '',
-                                postcode: profile!.address.postcode || '',
-                                country: profile!.address.country || ''
-                            }}
-                            email=''
-                            phoneNumber=''
-                        />
+                        publicKey={publicKey ? publicKey.toString() : web3AuthPublicKey!} 
+                        handleSuccessPending={()=> setVerificationPending(true)}
+                        handleRetry={()=> retry()}
+                        fullName={profile!.fullName || ''}
+                        dob={profile!.dob || ''}
+                        address={{
+                            ...profile!.address,
+                            building_number: profile!.address.building_number || '',
+                            street: profile!.address.street || '',
+                            town: profile!.address.town || '',
+                            postcode: profile!.address.postcode || '',
+                            country: profile!.address.country || ''
+                        }}
+                        email=''
+                        phoneNumber=''
+                    />
                 </div> 
                 {/* {
                     !displayOnfido &&
