@@ -10,9 +10,10 @@ import { checkLogin } from "@/components/Web3Auth/solanaRPC";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { getAssociatedTokenAddress, getAccount } from '@solana/spl-token';
 import ArtisanIcon from "@/public/assets/artisan-icon.png"
-import { getPermission } from '@/components/Web3Auth/solanaRPC';
+import SolanaRpc from '@/components/Web3Auth/solanaRPC';
 
 const WalletPage = () => {
+  const [rpc, setRpc] = useState<SolanaRpc | null>(null);
   const [solBalance, setSolBalance] = useState<number | null>(null);
   const [usdcBalance, setUsdcBalance] = useState<number | null>(null);
   const { publicKey } = useWallet();
@@ -21,7 +22,7 @@ const WalletPage = () => {
   // const usdcAddress = new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v');
   
   // Get details about the USDC token - Devnet
-  const usdcAddress= new PublicKey('Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr')
+  const usdcAddress = new PublicKey('Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr')
   const connection = new Connection(
     process.env.NEXT_PUBLIC_HELIUS_DEVNET!,
     "confirmed"
@@ -40,13 +41,17 @@ const WalletPage = () => {
   }
 
   async function getWeb3AuthKey() {
-    try {
-      const permission = await getPermission();
-      if(permission){
-        console.log('permission', permission);
+    if(web3AuthPublicKey && rpc){
+      try {
+        console.log('web3AuthPublicKey', web3AuthPublicKey);
+        const permission = await rpc.getPermission();
+        if(permission){
+          alert('Private Key will display on next alert, please make sure no one is looking at your screen and do not share it with anyone!');
+          alert(`Private Key: ${permission}`);
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
     }
   }
 
@@ -57,6 +62,7 @@ const WalletPage = () => {
       checkLogin().then((res) => {
           if(res.connected && res.account){
             setWeb3AuthPublicKey(new PublicKey(res.account));
+            setRpc(res.rpc);
             getBalance(new PublicKey(res.account));
           }
       });
@@ -73,9 +79,13 @@ const WalletPage = () => {
         />
         <div className="wallet__item__details">
           <p className="p-2">THEARTISAN WALLET</p>
-          <p className="p-2 dimmed">{publicKey ? sliceKey(publicKey.toBase58()) : 'Connect Wallet'}</p>
-          {web3AuthPublicKey && <p className="p-2 dimmed">Export Private Key for {sliceKey(web3AuthPublicKey.toBase58())}</p>}
-          <button className="wallet__item__button" onClick={()=> getWeb3AuthKey()}>Export Web3Auth</button>
+          <p className="p-2 dimmed">{publicKey && sliceKey(publicKey.toBase58())}</p>
+          <p className="p-2 dimmed">{web3AuthPublicKey && sliceKey(web3AuthPublicKey.toBase58())}</p>
+          {web3AuthPublicKey && (
+            <>
+              <button className="btn-primary" style={{marginTop: '1rem'}} onClick={()=> getWeb3AuthKey()}>Export Private Key</button>
+            </>
+          )}
         </div>
 
         <div className="wallet__item__action">

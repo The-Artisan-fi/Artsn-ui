@@ -41,7 +41,7 @@ const ProductsSectionDesktop = () => {
             </div>
             )}
             {/* coming soon */}
-            {!productsLoading && products.comingSoon.length > 0 &&(
+            {!productsLoading && products.comingSoon.length > 0 && (
             <div className="products__coming ">
                 <div className="products__coming__slider">
                     <EmblaCarousel slides={products.comingSoon} options={OPTIONS} />

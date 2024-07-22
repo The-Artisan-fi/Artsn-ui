@@ -123,10 +123,11 @@ const Dashboard = () => {
       key: 'item',
   
       render: (text, record) => (
+        console.log(record),
         <Image
           width={40}
           height={50}
-          src={Audemars}
+          src={`https://artisan-solana.s3.eu-central-1.amazonaws.com/${record.associatedId}.jpg`}
           alt="Audemars Piguet Royal Oak Extra Thin, 2019"
         />
       ),
@@ -213,6 +214,7 @@ const Dashboard = () => {
       const data = await getTokenAccounts(key);
       setTokenAccounts(data);
       if(!data){
+        setTokensLoading(false);
         return;
       }
       for(let i = 0; i < data.length; i++){
@@ -238,12 +240,13 @@ const Dashboard = () => {
     } else {
         checkLogin().then((res) => {
           if(res){
-              if(res.account){
-                  setWeb3AuthPublicKey(new PublicKey(res.account));
-              }
-              if(res.rpc !== null){
-                  setRpc(res.rpc);
-              }
+            if(res.account){
+                setWeb3AuthPublicKey(new PublicKey(res.account));
+                getTokens(new PublicKey(res.account));
+            }
+            if(res.rpc !== null){
+                setRpc(res.rpc);
+            }
           }
       });
     }

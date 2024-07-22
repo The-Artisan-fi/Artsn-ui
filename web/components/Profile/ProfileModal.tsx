@@ -50,6 +50,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
     const { publicKey, sendTransaction } = useWallet();
     const { token } = theme.useToken();
     const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false);
+    const [creating, setCreating] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState(showModal);
     const [activePage, setActivePage] = useState(page ? page : 1);
     const [web3AuthPublicKey, setWeb3AuthPublicKey] = useState<string | null>(null);
@@ -199,6 +200,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
     }
 
     async function createProfile(key: string) {
+        setCreating(true);
         if(fileList.length < 1){
             toastError('Please upload a profile picture');
         }
@@ -320,9 +322,11 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                         <input type="checkbox" id="terms" name="terms" value="terms" onChange={() => setAcceptedTerms(!acceptedTerms)} />{" "}
                         <label className="label-3" htmlFor="terms">I accept the <a href="#">terms and conditions</a></label>
                     </div>
-                    <button className="btn-primary" onClick={() => createProfile(publicKey ? publicKey!.toBase58() : web3AuthPublicKey!)} disabled={!acceptedTerms}>
-                        Create Profile
-                    </button>
+                    {!creating && (
+                        <button className="btn-primary" onClick={() => createProfile(publicKey ? publicKey!.toBase58() : web3AuthPublicKey!)} disabled={!acceptedTerms}>
+                            Create Profile
+                        </button>
+                    )}
                 </div>
             </div>
         )
