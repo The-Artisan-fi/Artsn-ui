@@ -10,7 +10,7 @@ import { checkLogin } from "@/components/Web3Auth/solanaRPC";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { getAssociatedTokenAddress, getAccount } from '@solana/spl-token';
 import ArtisanIcon from "@/public/assets/artisan-icon.png"
-
+import { getPermission } from '@/components/Web3Auth/solanaRPC';
 
 const WalletPage = () => {
   const [solBalance, setSolBalance] = useState<number | null>(null);
@@ -39,6 +39,17 @@ const WalletPage = () => {
     setUsdcBalance(Number(accountData.amount) / 10 ** 6);
   }
 
+  async function getWeb3AuthKey() {
+    try {
+      const permission = await getPermission();
+      if(permission){
+        console.log('permission', permission);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     if (publicKey) {
       getBalance(publicKey);
@@ -63,6 +74,8 @@ const WalletPage = () => {
         <div className="wallet__item__details">
           <p className="p-2">THEARTISAN WALLET</p>
           <p className="p-2 dimmed">{publicKey ? sliceKey(publicKey.toBase58()) : 'Connect Wallet'}</p>
+          {web3AuthPublicKey && <p className="p-2 dimmed">Export Private Key for {sliceKey(web3AuthPublicKey.toBase58())}</p>}
+          <button className="wallet__item__button" onClick={()=> getWeb3AuthKey()}>Export Web3Auth</button>
         </div>
 
         <div className="wallet__item__action">

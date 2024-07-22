@@ -38,8 +38,8 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
       <div className="embla__viewport" ref={emblaRef}>
         <div className="embla__container">
 
-          {slides.available.length > 0 && 
-            (slides.available.map((item: any, index: number) => (
+          {slides && slides.length > 0 && 
+            (slides?.map((item: any, index: number) => (
                 <div
                     key={index}
                     className="products__available__slider__item"

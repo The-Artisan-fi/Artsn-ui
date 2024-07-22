@@ -33,17 +33,21 @@ const ProductsSectionDesktop = () => {
     return (
         <section className="products ">
             {/* Available */}
+            {!productsLoading && (
             <div className="products__available ">
                 <div className="products__available__slider">
                     <EmblaCarousel slides={products.available} options={OPTIONS} />   
                 </div>
             </div>
+            )}
             {/* coming soon */}
+            {!productsLoading && products.comingSoon.length > 0 &&(
             <div className="products__coming ">
                 <div className="products__coming__slider">
                     <EmblaCarousel slides={products.comingSoon} options={OPTIONS} />
                 </div>
             </div>
+            )}
         </section>
     );
 };

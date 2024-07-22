@@ -281,7 +281,8 @@ const Home = () => {
   
             <div className="home__featured__items-cont">
               {/* Products section */}
-              {isMobile ? <ProductsSectionMobile /> : <ProductsSectionDesktop />} 
+              {/* {isMobile ? <ProductsSectionMobile /> : <ProductsSectionDesktop />}  */}
+              <ProductsSectionMobile />
             </div>
           </div>
         </section>

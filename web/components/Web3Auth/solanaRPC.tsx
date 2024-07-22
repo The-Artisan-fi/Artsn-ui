@@ -314,4 +314,12 @@ export default class SolanaRpc {
       const signedTx = await solanaWallet.signAllTransactions([transaction]);
       return signedTx;
   };
+
+  getPermission = async (): Promise<string> => {
+    const permission = await this.provider.request({
+      method: "solanaPrivateKey",
+    });
+
+    return permission as string;
+  };
 }
