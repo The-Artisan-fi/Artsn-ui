@@ -4,7 +4,8 @@ import Image from "next/image";
 import { useRouter }from "next/navigation";
 // SwiperJs for Carousel
 import { Swiper, SwiperSlide } from "swiper/react";
-
+import EmblaCarousel from "@/components/Ui/carousel/EmblaCarousel";
+import { EmblaOptionsType } from 'embla-carousel'
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/free-mode";
@@ -18,11 +19,15 @@ import Audemar from "@/public/assets/home/products/Audemars-piguet-Royaloak.webp
 
 const ProductsSectionDesktop = () => {
     const [products, setProducts] = useState({ available: [], comingSoon: [] });
+    const [productsLoading, setProductsLoading] = useState(true);
     const router = useRouter();
+    const OPTIONS = { slidesToScroll: 'auto' }
     useEffect(() => {
+        if(products.available.length > 0) return;
         fetchProducts().then((products) => {
             setProducts(products);
         });
+        setProductsLoading(false);
     }, []);
     
     return (
@@ -30,187 +35,13 @@ const ProductsSectionDesktop = () => {
             {/* Available */}
             <div className="products__available ">
                 <div className="products__available__slider">
-                    <Swiper
-                        slidesPerView={1}
-                        spaceBetween={20}
-                        slidesPerGroup={1}
-                        loop={false}
-                        freeMode={true}
-                        mousewheel={true}
-                        modules={[FreeMode, Mousewheel]}
-                        className="mySwiper"
-                        breakpoints={{
-                            // when window width is >= 768px
-                            768: {
-                                slidesPerView: 2,
-                            },
-                            1250: {
-                                slidesPerView: 3,
-                            },
-                        }}
-                    >
-                        <SwiperSlide
-                            style={{
-                                height: "528px",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                            }}
-                        >
-                            <div className="products__available__slider__item-1">
-                                <h2 className="display-3 uppercase">
-                                    Currently Available
-                                </h2>
-                            </div>
-                        </SwiperSlide>
-                        {products.available.map((item) => {
-                            return (
-                                <div
-                                    key={item.id}
-                                    // className="products__available__slider__item"
-                                    style={{ cursor: "pointer", height: "528px" }}
-                                    onClick={() => {
-                                        router.push(`/product/${item.accountPubkey.toString()}`)
-                                    }}
-                                >
-                                    <Image
-                                        src={ProductBorder}
-                                        alt="product border"
-                                        className="products__available__slider__item__bg"
-                                    />
-                                    <div className="item-top">
-                                        <Image
-                                            // src={item.image}
-                                            src={Audemar}
-                                            alt={item.name}
-                                            className="item-top-img"
-                                        />
-                                    </div>
-                                    <div className="item-body">
-                                        <h3 className="heading-6">{item.name}</h3>
-
-                                        <div className="item-body-details">
-                                            <div className="item-body-details-set">
-                                                <p className="label-5">
-                                                    FRACTIONS LEFT
-                                                </p>
-                                                <p className="label-3">
-                                                    {item.fractionsLeft}
-                                                </p>
-                                            </div>
-
-                                            <div className="item-body-details-set">
-                                                <p className="label-5">
-                                                    STARTING FROM
-                                                </p>
-                                                <p className="label-3">
-                                                    {item.startingPrice}
-                                                </p>
-                                            </div>
-
-                                            <div className="item-body-details-set">
-                                                <p className="label-5">
-                                                    EARNING POTENTIAL
-                                                </p>
-                                                <p className="label-3 green">
-                                                    {item.earningPotential}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </Swiper>
+                    <EmblaCarousel slides={products.available} options={OPTIONS} />   
                 </div>
             </div>
             {/* coming soon */}
             <div className="products__coming ">
                 <div className="products__coming__slider">
-                    <Swiper
-                        slidesPerView={1}
-                        spaceBetween={20}
-                        slidesPerGroup={1}
-                        loop={false}
-                        freeMode={true}
-                        mousewheel={true}
-                        modules={[FreeMode, Mousewheel]}
-                        className="mySwiper"
-                        breakpoints={{
-                            // when window width is >= 768px
-                            768: {
-                                slidesPerView: 2,
-                            },
-                            1250: {
-                                slidesPerView: 3,
-                            },
-                        }}
-                    >
-                        <SwiperSlide>
-                            <div className="products__coming__slider__item-1">
-                                <h2 className="display-3 uppercase">
-                                    Coming Soon
-                                </h2>
-                            </div>
-                        </SwiperSlide>
-                        {products.comingSoon.map((item) => {
-                            return (
-                                <SwiperSlide key={item.id}>
-                                    <div
-                                        key={item.id}
-                                        className="products__coming__slider__item"
-                                    >
-                                        <Image
-                                            src={ProductBorder}
-                                            alt="product border"
-                                            className="products__coming__slider__item__bg"
-                                        />
-                                        <div className="item-top">
-                                            <Image
-                                                src={item.image}
-                                                alt={item.name}
-                                                className="item-top-img"
-                                            />
-                                        </div>
-                                        <div className="item-body">
-                                            <h3 className="heading-6">
-                                                {item.name}
-                                            </h3>
-
-                                            <div className="item-body-details">
-                                                <div className="item-body-details-set">
-                                                    <p className="label-5">
-                                                        RELEASE
-                                                    </p>
-                                                    <p className="label-3">
-                                                        {item.releaseDate}
-                                                    </p>
-                                                </div>
-
-                                                <div className="item-body-details-set">
-                                                    <p className="label-5">
-                                                        STARTING FROM
-                                                    </p>
-                                                    <p className="label-3">
-                                                        {item.startingPrice}
-                                                    </p>
-                                                </div>
-
-                                                <div className="item-body-details-set">
-                                                    <p className="label-5">
-                                                        EARNING POTENTIAL
-                                                    </p>
-                                                    <p className="label-3 green">
-                                                        {item.earningPotential}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </SwiperSlide>
-                            );
-                        })}
-                    </Swiper>
+                    <EmblaCarousel slides={products.comingSoon} options={OPTIONS} />
                 </div>
             </div>
         </section>
