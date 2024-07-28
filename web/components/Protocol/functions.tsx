@@ -1,8 +1,9 @@
 import { clusterApiUrl, Connection, PublicKey, Keypair, Transaction, GetProgramAccountsFilter, ParsedAccountData, VersionedMessage, VersionedTransaction, SimulateTransactionConfig } from "@solana/web3.js";
 import { Program, AnchorProvider, setProvider } from "@coral-xyz/anchor";
-import { IDL, PROGRAM_ID } from "@/components/Utils/idl";
-import { TOKEN_2022_PROGRAM_ID,getTokenMetadata } from "@solana/spl-token";
+import { IDL, PROGRAM_ID, Fragment } from "./idl";
+import { ASSOCIATED_TOKEN_PROGRAM_ID, createAssociatedTokenAccountIdempotentInstruction, createInitializeMint2Instruction, createMintToInstruction, getAssociatedTokenAddressSync, getMinimumBalanceForRentExemptMint, MINT_SIZE, TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID, getTokenMetadata } from "@solana/spl-token";
 import { ParsedProgramAccounts} from "@/helpers/types";
+import * as anchor from "@coral-xyz/anchor";
 
 const connection = new Connection(clusterApiUrl("devnet"), {
     commitment: "confirmed",
@@ -15,7 +16,24 @@ const wallet = Keypair.generate();
 // @ts-expect-error - wallet is dummy variable, signing is not needed
 const provider = new AnchorProvider(connection, wallet, {});
 setProvider(provider);
+// @ts-expect-error - wallet is dummy variable, signing is not needed
+const provider = new anchor.AnchorProvider(connection, wallet, {});
+const programId = new PublicKey(PROGRAM_ID);
+const program = new anchor.Program<Fragment>(IDL, provider);
 
+export const protocol = PublicKey.findProgramAddressSync([Buffer.from("protocol")], program.programId)[0];
+export const manager = PublicKey.findProgramAddressSync([Buffer.from("manager")], program.programId)[0];
+export const mplCoreProgram = new PublicKey("CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d");
+const mint = new PublicKey('4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU'); // circle DEVNET - USDC
+
+export async function getMintATA(wallet: PublicKey) {
+  try{
+    const mintAta = getAssociatedTokenAddressSync(mint, wallet);
+    return mintAta;
+  } catch (error) {
+    console.error('Error getting mint ATA', error);
+  }
+}
 
 export async function initProfileTx(key: string) {
   try{

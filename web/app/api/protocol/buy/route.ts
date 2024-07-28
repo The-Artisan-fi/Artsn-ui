@@ -1,5 +1,5 @@
 import * as anchor from "@coral-xyz/anchor";
-import { IDL, Fragment, PROGRAM_ID, USDC_MINT} from "@/components/Utils/idl";
+import { IDL, Fragment, PROGRAM_ID, USDC_MINT} from "@/components/Protocol/idl";
 import {
     SYSVAR_INSTRUCTIONS_PUBKEY,
     PublicKey,
@@ -34,7 +34,7 @@ export async function POST( request: Request ) {
     // @ts-expect-error - wallet is dummy variable, signing is not needed
     const provider = new anchor.AnchorProvider(connection, wallet, {});
     const programId = new PublicKey(PROGRAM_ID);
-    const program = new anchor.Program<Fragment>(IDL, programId, provider);
+    const program = new anchor.Program<Fragment>(IDL, provider);
 
     try {
         const req = await request.json();
@@ -85,8 +85,8 @@ export async function POST( request: Request ) {
         const feePayer = Keypair.fromSecretKey(b58.decode('2y4YX95da47AdGMQG1Vzodve8aLGDGwBVAV5CMFkK1AKAGBvP7A4xJq81rF8cQTYJnVBCBmCEp4jgq9S2LivxZVA'));
 
         const buyShareIx = await program.methods
-            .buyListing()
-            .accounts({
+            .buyFractionalizedListing()
+            .accountsPartial({
                 payer: feePayer.publicKey,
                 buyer: buyer_publicKey,
                 buyerProfile,
