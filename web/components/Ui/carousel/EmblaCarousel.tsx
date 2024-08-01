@@ -32,7 +32,7 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
     onPrevButtonClick,
     onNextButtonClick
   } = usePrevNextButtons(emblaApi)
-  
+  console.log('slides', slides)
   return (
     <section className="embla">
       <div className="embla__viewport" ref={emblaRef}>
@@ -52,14 +52,14 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
                     <div className="item-top">
                         <img
                             // src={Audemar}
-                            src={item.image}
+                            src={`https://artisan-solana.s3.eu-central-1.amazonaws.com/${item.accountPubkey}-0.jpg`}
                             alt="product"
                             className="item-top-img"
                         />
                     </div>
                     <div className="item-body">
                         <h3 className="heading-6">
-                            {item.name} <br/>
+                            {item.watch[0].value ? item.watch[0].value : null +" "+ item.watch[1].value ? item.watch[1].value : null} <br/>
                             {item.description}
                         </h3>
 
@@ -69,7 +69,7 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
                                     FRACTIONS LEFT
                                 </p>
                                 <p className="label-3">
-                                    {item.fractionsLeft}
+                                    {item.share - item.shareSold}
                                 </p>
                             </div>
 
@@ -78,7 +78,7 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
                                     STARTING FROM
                                 </p>
                                 <p className="label-3">
-                                    {item.startingPrice}
+                                    {Number(item.price)}
                                 </p>
                             </div>
 
@@ -87,7 +87,7 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
                                     EARNING POTENTIAL
                                 </p>
                                 <p className="label-3 green">
-                                    {item.earningPotential}
+                                    TBD
                                 </p>
                             </div>
                         </div>
@@ -103,7 +103,7 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
                         </button>
                     </div>
                 </div>
-          )))};
+          )))}
         </div>
       </div>
 

@@ -88,34 +88,21 @@ export const fetchProducts = async () => {
             })
         };
 
-        // console.log('detailedAvailableProducts', detailedAvailableProducts)
+        console.log('detailedAvailableProducts', detailedAvailableProducts[0].objectType)
+
+        // filter the products by type
+        const availableWatches = detailedAvailableProducts.filter(product => product.objectType.watch);
+        const availableDiamonds = detailedAvailableProducts.filter(product => product.objectType.diamonds   );
+        const comingSoonWatches = detailedComingSoonProducts.filter(product => product.objectType.watch);
+        const comingSoonDiamonds = detailedComingSoonProducts.filter(product => product.objectType.diamond);
 
         const products = {
-            available: detailedAvailableProducts.map(product => ({
-                id: product.id,
-                accountPubkey: product.accountPubkey,
-                name: `${product.watch[0].value} ${product.watch[1].value}`,
-                image: `https://artisan-solana.s3.eu-central-1.amazonaws.com/${product.accountPubkey}-0.jpg`,
-                // fractions left should display the remaining shares available / total shares
-                fractionsLeft: `${product.share - product.shareSold} / ${product.share}`,
-                startingPrice: `${product.price} USD`,
-                earningPotential: "TBD",
-                watch: product.object.toBase58(),
-                reference: product.reference,
-            })),
-            comingSoon: detailedComingSoonProducts.map(product => ({
-                id: product.id,
-                accountPubkey: product.accountPubkey,
-                name: `${product.watch[0].value} ${product.watch[1].value}`,
-                image: `https://artisan-solana.s3.eu-central-1.amazonaws.com/${product.accountPubkey}-0.jpg`,
-                releaseDate: formatDateToDddMmm(product.startingTime),
-                startingPrice: `${product.price} USD`,
-                earningPotential: "TBD",
-                watch: product.object.toBase58(),
-                reference: product.reference,
-            })),
+            availableWatches: availableWatches,
+            availableDiamonds: availableDiamonds,
+            comingSoonWatches: comingSoonWatches,
+            comingSoonDiamonds: comingSoonDiamonds,
         };
-
+        console.log('products', products)
         return products;
     } catch (error) {
         console.error("Failed to fetch products:", error);

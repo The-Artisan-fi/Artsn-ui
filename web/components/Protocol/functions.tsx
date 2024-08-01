@@ -206,7 +206,49 @@ export async function initAdminTx(newAdmin: string, username: string, signer: st
   }
 }
 
-export async function initTokenTx(id: number, reference: string, share: number, price: number, starting_time: number, uri: string, signer: string) {
+// const createWatchArgs = {
+//   name: req.watchName,
+//   uri: req.watchUri,
+//   brand: req.watchBrand,
+//   model: req.watchModel,
+//   reference: req.watchReference,
+//   diameter: req.watchDiameter,
+//   movement: req.watchMovement,
+//   dialColor: req.watchDialColor,
+//   caseMaterial: req.watchCaseMaterial,
+//   braceletMaterial: req.watchBraceletMaterial,
+//   yearOfProduction: req.watchYearOfProduction,
+// };
+
+// const createFractionalizedListingArgs = {
+//   id: new anchor.BN(req.listingId),
+//   objectType: req.listingObjectType,
+//   share: new anchor.BN(req.listingShare),
+//   price: new anchor.BN(req.listingPrice),
+//   startingTime: new anchor.BN(req.listingStartingTime)
+// };
+
+
+export async function initTokenTx(
+  watchName: string,
+  watchUri: string,
+  watchBrand: string,
+  watchModel: string,
+  watchReference: string,
+  watchDiameter: number,
+  watchMovement: string,
+  watchDialColor: string,
+  watchCaseMaterial: string,
+  watchBraceletMaterial: string,
+  watchYearOfProduction: number,
+  listingId: number,
+  listingObjectType: string,
+  listingShare: number,
+  listingPrice: number,
+  listingStartingTime: number,
+  signer: string,
+  fileList: any
+) {
   try{
     const response = await fetch('/api/protocol/create/token', {
       method: 'POST',
@@ -214,13 +256,24 @@ export async function initTokenTx(id: number, reference: string, share: number, 
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        id: id,
-        reference: "1520", //reference,
-        share: share,
-        price: price,
-        starting_time: starting_time,
-        uri: uri,
-        signer: signer
+        watchName: watchName,
+        watchUri: watchUri,
+        watchBrand: watchBrand,
+        watchModel: watchModel,
+        watchReference: watchReference,
+        watchDiameter: watchDiameter,
+        watchMovement: watchMovement,
+        watchDialColor: watchDialColor,
+        watchCaseMaterial: watchCaseMaterial,
+        watchBraceletMaterial: watchBraceletMaterial,
+        watchYearOfProduction: watchYearOfProduction,
+        listingId: listingId,
+        listingObjectType: listingObjectType,
+        listingShare: listingShare,
+        listingPrice: listingPrice,
+        listingStartingTime: listingStartingTime,
+        signer: signer,
+        fileList: fileList
       })
     })
 

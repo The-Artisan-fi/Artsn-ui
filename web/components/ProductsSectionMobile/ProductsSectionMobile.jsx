@@ -29,53 +29,45 @@ const ProductsSectionMobile = () => {
     useEffect(() => {
         if(products.available.length > 0) return;
         fetchProducts().then((products) => {
+            console.log(products);
             setProducts(products);
         });
         setProductsLoading(false);
     }, []);
 
-    useEffect(() => {
-        if(products.available.length > 3) {
-            const interval = setInterval(() => {
-                handleTabChange(tabIndex + 1);
-            }, 5000);
-            return () => clearInterval(interval);
-        }
-    }, [products.available, tabIndex]);
     
     return (
         <section className="products ">
+            {productsLoading && <LoadingSpinner />}
             {/* available */}
-            <div className="products__available ">
-                {productsLoading ? (
-                    <LoadingSpinner />
-                ) : (
-                    <div className="products__available__slider">
-                        <EmblaCarousel slides={products.available} options={OPTIONS} />
-                    </div>
-                )}
-            </div>
-            {products.comingSoon.length > 0 && (
-                <div className="products__coming ">
-                    <h2 className="display">Coming soon</h2>
-                    {productsLoading ? (
-                        <LoadingSpinner />
-                    ) : (
-                        <div className="products__coming__slider">
-                            {products.comingSoon.map((item) => {
-                                return (
-                                    <div
-                                        key={item.id}
-                                        className="products__coming__slider__item"
-                                    >
-                                        <EmblaCarousel slides={products.comingSoon} options={OPTIONS} />
-                                    </div>
-                                );
-                            })}
+            {!productsLoading && (
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+                    <p className="caption-1" style={{ marginBottom: '2rem' }}>Available Watches</p>
+                    <div className="products__available" >
+                        <div className="products__available__slider">
+                            <EmblaCarousel slides={products.availableWatches} options={OPTIONS} />   
                         </div>
-                    )}
+                    </div>
+                    <p className="caption-1" style={{ marginBottom: '2rem' }}>Available Diamonds</p>
+                    <div className="products__available" >
+                        
+                        <div className="products__available__slider">
+                            <EmblaCarousel slides={products.availableDiamonds} options={OPTIONS} />   
+                        </div>
+                    </div>
                 </div>
             )}
+            {/* {!productsLoading && products.comingSoonWatches && products.comingSoonWatches.length > 0 || products.conmingSoonDiamonds.length > 0 && (
+                <div className="products__coming ">
+                    <h2 className="display">Coming soon</h2>
+                    <div className="products__coming__slider">
+                        <EmblaCarousel slides={products.comingSoonWatches} options={OPTIONS} />
+                    </div>
+                    <div className="products__available__slider">
+                        <EmblaCarousel slides={products.conmingSoonDiamonds} options={OPTIONS} />   
+                    </div>
+                </div>
+            )} */}
         </section>
     );
 };

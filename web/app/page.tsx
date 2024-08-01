@@ -81,7 +81,7 @@ const howItWorks = [
 const Home = () => {
     const [index, setIndex] = useState(0);
     const [opacity, setOpacity] = useState(0);
-    const [isMobile, setIsMobile] = useState(true);
+    const [isMobile, setIsMobile] = useState(false);
 
     // create a function that increases the opacity state by 0.1 every 150ms, when it reaches 1 start to decrease it by 0.1 every 150ms
     function increaseOpacity() {

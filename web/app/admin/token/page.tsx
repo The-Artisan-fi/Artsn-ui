@@ -28,22 +28,50 @@ import { checkLogin } from '@/components/Web3Auth/checkLogin';
 import { useMutation } from "@apollo/client";
 import { ADD_LISTING } from "@/lib/mutations";
 import { fetchWatches } from '@/hooks/fetchProducts';
+import { watch } from 'fs';
+import { render } from 'react-dom';
+import { token } from '@coral-xyz/anchor/dist/cjs/utils';
 const SettingsPage = () => {
   const { TextArea } = Input;
   const { publicKey, sendTransaction } = useWallet();
   const [connectedWallet, setConnectedWallet] = useState('');
+  const [step, setStep] = useState(1);
   const [currencyPref, setCurrencyPref] = useState('');
   const [fileList, setFileList] = useState([]);
   const [watches, setWatches] = useState<any[]>([]);
   const randomNo = Math.floor(Math.random() * 1000000);
   const tokenObj = useMemo(() => {
     return {
-      id: randomNo,
-      reference: '',
-      share: 0,
-      price: 0,
-      startingTime: 0,
-      uri: '',
+      watchName: '',
+      watchUri: '',
+      watchBrand: '',
+      watchModel: '',
+      watchReference: '',
+      watchDiameter: 0,
+      watchMovement: '',
+      watchDialColor: '',
+      watchCaseMaterial: '',
+      watchBraceletMaterial: '',
+      watchYearOfProduction: 0,
+      listingId: randomNo,
+      listingObjectType: '0',
+      listingShare: 0,
+      listingPrice: 0,
+      listingStartingTime: 0,
+      offAssetDetails: '',
+      offExpectednetReturn: '',
+      offMarketValue: '',
+      offPastReturns: '',
+      offEarningPotential: '',
+      offEarningPotentialDuration: '',
+      offCurrency: '',
+      offDescription: '',
+      offModel: '',
+      offOfferViews: 0,
+      offSold: 0,
+      offTotal: 0,
+      offMintAddress: '',
+      offAbout: '',
     }
   }, []);
 
@@ -79,12 +107,41 @@ const SettingsPage = () => {
   async function handleCreateToken() {
     try {
       const tx = await initTokenTx(
-        tokenObj.id, 
-        tokenObj.reference, 
-        tokenObj.share, 
-        tokenObj.price, 
-        tokenObj.startingTime, 
-        tokenObj.uri, connectedWallet
+  //       watchName: string,
+        // watchUri: string,
+        // watchBrand: string,
+        // watchModel: string,
+        // watchReference: string,
+        // watchDiameter: number,
+        // watchMovement: string,
+        // watchDialColor: string,
+        // watchCaseMaterial: string,
+        // watchBraceletMaterial: string,
+        // watchYearOfProduction: number,
+        // listingId: number,
+        // listingObjectType: string,
+        // listingShare: number,
+        // listingPrice: number,
+        // listingStartingTime: number,
+        // signer: string
+        tokenObj.watchName,
+        tokenObj.watchUri,
+        tokenObj.watchBrand,
+        tokenObj.watchModel,
+        tokenObj.watchReference,
+        tokenObj.watchDiameter,
+        tokenObj.watchMovement,
+        tokenObj.watchDialColor,
+        tokenObj.watchCaseMaterial,
+        tokenObj.watchBraceletMaterial,
+        tokenObj.watchYearOfProduction,
+        tokenObj.listingId,
+        tokenObj.listingObjectType,
+        tokenObj.listingShare,
+        tokenObj.listingPrice,
+        tokenObj.listingStartingTime,
+        connectedWallet,
+        fileList[0]
       );
       if(tx){
         variables.associatedId = tx.associatedId;
@@ -162,6 +219,413 @@ const SettingsPage = () => {
     }
   };
 
+
+
+
+  // we need to create a mini modal that will progress the user through 3 separate steps/pages to create a token
+  // 1. Create the Object (watch or diamonds)
+  // 2. Create the Listing (fractionalized or whole)
+  // 3. Input the details (about, model, description, images, etc)
+  // 4. Confirm the details and create the token (button)
+  const renderSwitch = (step: number) => {
+    switch (step) {
+      case 1:
+        return (
+          <div style={{ display: 'flex', flexDirection: 'column', width: '100%', justifyContent: 'center',
+          }}>
+            <p className="caption-3">CREATE A TOKEN</p>
+            <div 
+              className="profile__input-row"
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignContent: 'center',
+                justifyContent: 'center',
+
+              }}
+            >
+              <div className="profile__top-row__image-upload">
+                <ImgCrop rotationSlider>
+                    <Upload
+                      action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+                      listType="picture-card"
+                      fileList={fileList}
+                      onChange={onChange}
+                      onPreview={onPreview}
+                    >
+                        {fileList.length < 1 && (
+                        <MdOutlineFileUpload style={{ fontSize: '2.5rem' }} />
+                        )}
+                    </Upload>
+                </ImgCrop>
+                {fileList.length < 1 && <p className="p-4">Upload Item Images</p>}
+              </div>
+              <div 
+                className="profile__input-col"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  width: '40%',
+                }}
+              >
+                <div className="profile__input-col-sm">
+                  <p className="caption-3">ID</p>
+                  <Input
+                    suffix={<FaLock />}
+                    size="large"
+                    placeholder="Token ID"
+                    value={
+                      tokenObj.listingId
+                    }
+                    type="id"
+                    disabled={true}
+                    style={{ color: 'white', backgroundColor: 'transparent'}}
+                  />
+                </div>
+                <div className="profile__input-col-sm">
+                  <p className="caption-3">Reference</p>
+                  <Input
+                    size="large"
+                    placeholder="Watch Reference"
+                    onChange={(e) => {
+                      tokenObj.watchReference = e.target.value;
+                    }}
+                    disabled={false}
+                    style={{ color: 'white', backgroundColor: 'transparent'}}
+                  />
+                </div>
+                <div className="profile__input-col-sm">
+                  <p className="caption-3">Total Shares</p>
+                  <Input
+                    size="large"
+                    placeholder="Enter the total shares"
+                    onChange={(e) => {
+                      tokenObj.listingShare = parseInt(e.target.value);
+                    }}
+                    style={{ color: 'white', backgroundColor: 'transparent'}}
+                  />
+                </div>
+                <div className="profile__input-col-sm">
+                  <p className="caption-3">Price</p>
+                  <Input
+                    size="large"
+                    placeholder="Enter the price"
+                    onChange={(e) => {
+                      tokenObj.listingPrice = parseInt(e.target.value);
+                    }}
+                    disabled={false}
+                    style={{ color: 'white', backgroundColor: 'transparent'}}
+                  />
+                </div>
+                
+              </div>
+              
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'row', gap: '4rem', alignContent: 'center', justifyContent: 'center', marginTop: '4rem'}}>
+              <button
+                className="btn-primary"
+                onClick={() => {
+                  setStep(step + 1);
+                }}
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        );
+      case 2:
+        return (
+          <div>
+            <div className="profile__input-col">
+              <p className="caption-3">Starting Time</p>
+              <Input
+                size="large"
+                placeholder="Enter the starting time"
+                onChange={(e) => {
+                  tokenObj.listingStartingTime = parseInt(e.target.value);
+                }}
+                disabled={false}
+                style={{ color: 'white', backgroundColor: 'transparent',
+
+                  // placeholder color should be white
+                  textDecorationColor: 'white',
+                }}
+              />
+            </div>
+            <div className="profile__input-col">
+              <p className="caption-3">Market Value</p>
+              <Input
+                size="large"
+                placeholder="Enter the market value"
+                onChange={(e) => {
+                  tokenObj.offMarketValue = e.target.value;
+                }}
+                disabled={false}
+                style={{ color: 'white', backgroundColor: 'transparent'}}
+              />
+            </div>
+            <div className="profile__input-col">
+              <p className="caption-3">Earning Potential</p>
+              <Input
+                size="large"
+                placeholder="Enter the earning potential"
+                onChange={(e) => {
+                  tokenObj.offEarningPotential = e.target.value;
+                }}
+                disabled={false}
+                style={{ color: 'white', backgroundColor: 'transparent'}}
+              />
+            </div>
+            <div className="profile__input-col">
+              <p className="caption-3">Earning Potential Duration</p>
+              <Input
+                size="large"
+                placeholder="Enter the earning potential duration"
+                onChange={(e) => {
+                  tokenObj.offEarningPotentialDuration = e.target.value;
+                }}
+                disabled={false}
+                style={{ color: 'white', backgroundColor: 'transparent'}}
+              />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'row', gap: '4rem', alignContent: 'center', justifyContent: 'center', marginTop: '4rem'}}>
+              <button
+                className="btn-primary"
+                onClick={() => {
+                  setStep(step - 1);
+                }}
+              >
+                Back
+              </button>
+              <button
+                className="btn-primary"
+                onClick={() => {
+                  setStep(step + 1);
+                }}
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        );
+      case 3:
+        return (
+          <div>
+            <div className="profile__input-col">
+              <p className="caption-3">Expected Net Return</p>
+              <Input
+                size="large"
+                placeholder="Enter the expected net return"
+                onChange={(e) => {
+                  tokenObj.offExpectednetReturn = e.target.value;
+                }}
+                disabled={false}
+                style={{ color: 'white', backgroundColor: 'transparent'}}
+                defaultValue="Enter the expected net return"
+              />
+            </div>
+            <div className="profile__input-col">
+              <p className="caption-3">Past Returns</p>
+              <Input
+                size="large"
+                placeholder="Enter the past returns"
+                onChange={(e) => {
+                  tokenObj.offPastReturns = e.target.value;
+                }}
+                disabled={false}
+                style={{ color: 'white', backgroundColor: 'transparent'}}
+              />
+            </div>
+            <div className="profile__input-col">
+              <p className="caption-3">Currency</p>
+              <Select
+                size="large"
+                placeholder="Select Currency"
+                onChange={(value) => {
+                  setCurrencyPref(value as string);
+                  tokenObj.offCurrency = value as string;
+                }}
+                style={{ color: 'white', backgroundColor: 'transparent'}}
+              >
+                <Option value="USDC">USDC</Option>
+                <Option value="SOL">SOL</Option>
+              </Select>
+            </div>
+            <div className="profile__input-col">
+              <p className="caption-3">Object Type</p>
+              <Select
+                size="large"
+                placeholder="Select Type"
+                onChange={(value) => {
+                  setCurrencyPref(value as string);
+                  tokenObj.listingObjectType = value as string;
+                }}
+                style={{ color: 'white', backgroundColor: 'transparent'}}
+              >
+                <Option value="0">Watch</Option>
+                <Option value="1">Diamonds</Option>
+              </Select>
+            </div>
+            <div className="profile__input-col">
+              <p className="caption-3">Asset Details</p>
+              <TextArea
+                autoSize={{ minRows: 3, maxRows: 5 }}
+                placeholder="Enter the asset details"
+                onChange={(e) => {
+                  tokenObj.offAssetDetails = e.target.value;
+                }}
+                disabled={false}
+                style={{ color: 'white', backgroundColor: 'transparent', height: '100px'}}
+              />
+            </div>
+            <div className="profile__input-col">
+              <p className="caption-3">Description</p>
+              <TextArea
+                placeholder="Enter the description"
+                onChange={(e) => {
+                  tokenObj.offDescription = e.target.value;
+                }}
+                disabled={false}
+                style={{ color: 'white', backgroundColor: 'transparent', height: '100px'}}
+              />
+            </div>
+            <div className="profile__input-col">
+              <p className="caption-3">Model</p>
+              <TextArea
+                autoSize={{ minRows: 3, maxRows: 5 }}
+                placeholder="Enter the model"
+                onChange={(e) => {
+                  tokenObj.watchModel = e.target.value;
+                }}
+                disabled={false}
+                style={{ color: 'white', backgroundColor: 'transparent', height: '100px'}}
+              />
+            </div>
+            <div className="profile__input-col">
+              <p className="caption-3">About</p>
+              <TextArea
+                placeholder="Enter the about"
+                onChange={(e) => {
+                  tokenObj.offAbout = e.target.value;
+                }}
+                disabled={false}
+                style={{ color: 'white', backgroundColor: 'transparent'}}
+                autoSize={{ minRows: 3, maxRows: 5 }}
+              />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'row', gap: '4rem', alignContent: 'center', justifyContent: 'center', marginTop: '4rem'}}>
+              <button
+                className="btn-primary"
+                onClick={() => {
+                  setStep(step - 1);
+                }}
+              >
+                Back
+              </button>
+              <button
+                className="btn-primary"
+                onClick={() => {
+                  setStep(step + 1);
+                }}
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        );
+      case 4:
+        // case 4 is the final step where the user can confirm the details and create the token
+        // display all the details in an orderly and easy to read fashion, and a button to create the token
+        return (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem' }}>
+                <p className="caption-3">Review Token Details</p>
+                {/* <div style={{ display: 'flex', flexDirection: 'row', gap: '2rem', marginTop: '2rem' }}> */}
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <p className="caption-3">Token ID</p>
+                    <p className="caption-3">{tokenObj.listingId}</p>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <p className="caption-3">Watch Reference</p>
+                    <p className="caption-3">{tokenObj.watchReference}</p>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <p className="caption-3">Starting Time</p>
+                    <p className="caption-3">{tokenObj.listingStartingTime}</p>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <p className="caption-3">Earning Potential</p>
+                    <p className="caption-3">{tokenObj.offEarningPotential}</p>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <p className="caption-3">Earning Potential Duration</p>
+                    <p className="caption-3">{tokenObj.offEarningPotentialDuration}</p>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <p className="caption-3">URI</p>
+                    <p className="caption-3">{tokenObj.watchUri}</p>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <p className="caption-3">Expected Net Return</p>
+                    <p className="caption-3">{tokenObj.offExpectednetReturn}</p>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <p className="caption-3">Past Returns</p>
+                    <p className="caption-3">{tokenObj.offPastReturns}</p>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <p className="caption-3">Currency</p>
+                    <p className="caption-3">{tokenObj.offCurrency}</p>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <p className="caption-3">Asset Details</p>
+                    <p className="caption-3">{tokenObj.offAssetDetails}</p>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <p className="caption-3">Description</p>
+                    <p className="caption-3">{tokenObj.offDescription}</p>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <p className="caption-3">Model</p>
+                    <p className="caption-3">{tokenObj.watchModel}</p>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <p className="caption-3">About</p>
+                    <p className="caption-3">{tokenObj.offAbout}</p>
+                  </div>
+                {/* </div> */}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'row', gap: '4rem', alignContent: 'center', justifyContent: 'center', marginTop: '4rem'}}>
+                <button
+                  className="btn-primary"
+                  onClick={() => {
+                    setStep(step - 1);
+                  }}
+                >
+                  Back
+                </button>
+                <button className="btn-primary" onClick={()=>{handleCreateToken()}}>
+                  Create Token
+                </button>
+              </div>
+            </div>
+        );
+      default: null;
+      }
+    };
+  
+
+
+
+
+
+
+
+
+
+
   useEffect(() => {
     if (publicKey) {
       setConnectedWallet(publicKey.toBase58());
@@ -192,356 +656,7 @@ const SettingsPage = () => {
       ? (
         // TOP HALF
         <div className="settings">
-          <p className="caption-3">CREATE A TOKEN</p>
-          <div 
-            className="profile__input-row"
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignContent: 'center',
-              justifyContent: 'center',
-
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                width: '100%',
-              }}
-            >
-              <p className="caption-3">Available Watches</p>
-              {watches.map((watch, index) => (
-                <div key={index}>
-                  <img src={`${process.env.AWS_PREFIX}${watch.accountPubkey}`} alt={watch.reference} />
-                  <p>{watch.model}</p>
-                  <p>{watch.brand}</p>
-                  <p>{watch.reference}</p>
-                </div>
-                // braceletMaterial
-                // : 
-                // "Steel"
-                // brand
-                // : 
-                // "Patek Philippe"
-                // caseMaterial
-                // : 
-                // "Steel"
-                // dialColor
-                // : 
-                // "Blue"
-                // diamater
-                // : 
-                // 40
-                // group
-                // : 
-                // PublicKey {_bn: BN}
-                // model
-                // : 
-                // "Nautilus"
-                // movement
-                // : 
-                // "Automatic"
-                // reference
-                // : 
-                // "15202ST.OO.1240ST.02"
-                // yearOfProduction
-                // : 
-                // 2023
-              ))}
-            </div>
-            <div className="profile__top-row__image-upload">
-              <ImgCrop rotationSlider>
-                  <Upload
-                    action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-                    listType="picture-card"
-                    fileList={fileList}
-                    onChange={onChange}
-                    onPreview={onPreview}
-                  >
-                      {fileList.length < 1 && (
-                      <MdOutlineFileUpload style={{ fontSize: '2.5rem' }} />
-                      )}
-                  </Upload>
-              </ImgCrop>
-              {fileList.length < 1 && <p className="p-4">Upload Item Images</p>}
-            </div>
-            <div 
-              className="profile__input-col"
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                width: '40%',
-              }}
-            >
-              <div className="profile__input-col-sm">
-                <p className="caption-3">ID</p>
-                <Input
-                  suffix={<FaLock />}
-                  size="large"
-                  placeholder="Token ID"
-                  value={
-                    tokenObj.id
-                  }
-                  type="id"
-                  disabled={true}
-                  style={{ color: 'white', backgroundColor: 'transparent'}}
-                />
-              </div>
-              <div className="profile__input-col-sm">
-                <p className="caption-3">Reference</p>
-                <Input
-                  size="large"
-                  placeholder="Watch Reference"
-                  onChange={(e) => {
-                    tokenObj.reference = e.target.value;
-                  }}
-                  disabled={false}
-                  style={{ color: 'white', backgroundColor: 'transparent'}}
-                />
-              </div>
-              <div className="profile__input-col-sm">
-                <p className="caption-3">Total Shares</p>
-                <Input
-                  size="large"
-                  placeholder="Enter the total shares"
-                  onChange={(e) => {
-                    tokenObj.share = parseInt(e.target.value);
-                  }}
-                  disabled={false}
-                  style={{ color: 'white', backgroundColor: 'transparent'}}
-                />
-              </div>
-              <div className="profile__input-col-sm">
-                <p className="caption-3">Price</p>
-                <Input
-                  size="large"
-                  placeholder="Enter the price"
-                  onChange={(e) => {
-                    tokenObj.price = parseInt(e.target.value);
-                  }}
-                  disabled={false}
-                  style={{ color: 'white', backgroundColor: 'transparent'}}
-                />
-              </div>
-            </div>
-          </div>
-
-
-          {/* BOTTOM HALF */}
-
-          <div className="profile__input-col">
-
-            
-            <div 
-              className="profile__input-row"
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignContent: 'center',
-                justifyContent: 'space-evenly',
-              }}
-            >
-              <div 
-                className="profile__input-col"
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  width: '40%',
-                }}
-              >
-                <div className="profile__input-col">
-                  <p className="caption-3">Starting Time</p>
-                  <Input
-                    size="large"
-                    placeholder="Enter the starting time"
-                    onChange={(e) => {
-                      tokenObj.startingTime = parseInt(e.target.value);
-                    }}
-                    disabled={false}
-                    style={{ color: 'white', backgroundColor: 'transparent',
-
-                      // placeholder color should be white
-                      textDecorationColor: 'white',
-                    }}
-                  />
-                </div>
-                <div className="profile__input-col">
-                  <p className="caption-3">Total</p>
-                  <Input
-                    size="large"
-                    placeholder="Enter the total"
-                    onChange={(e) => {
-                      variables.total = parseInt(e.target.value);
-                    }}
-                    disabled={false}
-                    style={{ color: 'white', backgroundColor: 'transparent'}}
-                  />
-                </div>
-                <div className="profile__input-col">
-                  <p className="caption-3">Market Value</p>
-                  <Input
-                    size="large"
-                    placeholder="Enter the market value"
-                    onChange={(e) => {
-                      variables.marketValue = e.target.value;
-                    }}
-                    disabled={false}
-                    style={{ color: 'white', backgroundColor: 'transparent'}}
-                  />
-                </div>
-                <div className="profile__input-col">
-                  <p className="caption-3">Earning Potential</p>
-                  <Input
-                    size="large"
-                    placeholder="Enter the earning potential"
-                    onChange={(e) => {
-                      variables.earningPotential = e.target.value;
-                    }}
-                    disabled={false}
-                    style={{ color: 'white', backgroundColor: 'transparent'}}
-                  />
-                </div>
-                <div className="profile__input-col">
-                  <p className="caption-3">Earning Potential Duration</p>
-                  <Input
-                    size="large"
-                    placeholder="Enter the earning potential duration"
-                    onChange={(e) => {
-                      variables.earningPotentialDuration = e.target.value;
-                    }}
-                    disabled={false}
-                    style={{ color: 'white', backgroundColor: 'transparent'}}
-                  />
-                </div>
-                
-                </div>
-                <div 
-                  className="profile__input-col"
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    width: '40%',
-                  }}
-                >
-                <div className="profile__input-col">
-                  <p className="caption-3">URI</p>
-                  <Input
-                    size="large"
-                    placeholder="Enter the URI"
-                    onChange={(e) => {
-                      tokenObj.uri = e.target.value;
-                    }}
-                    disabled={false}
-                    style={{ color: 'white', backgroundColor: 'transparent'}}
-                  />
-                </div>
-                <div className="profile__input-col">
-                  <p className="caption-3">Expected Net Return</p>
-                  <Input
-                    size="large"
-                    placeholder="Enter the expected net return"
-                    onChange={(e) => {
-                      variables.expectedNetReturn = e.target.value;
-                    }}
-                    disabled={false}
-                    style={{ color: 'white', backgroundColor: 'transparent'}}
-                  />
-                </div>
-                <div className="profile__input-col">
-                  <p className="caption-3">Past Returns</p>
-                  <Input
-                    size="large"
-                    placeholder="Enter the past returns"
-                    onChange={(e) => {
-                      variables.pastReturns = e.target.value;
-                    }}
-                    disabled={false}
-                    style={{ color: 'white', backgroundColor: 'transparent'}}
-                  />
-                </div>
-                <div className="profile__input-col">
-                  <p className="caption-3">Currency</p>
-                  <Select
-                    size="large"
-                    placeholder="Select Currency"
-                    onChange={(value) => {
-                      setCurrencyPref(value as string);
-                      variables.currency = value as string;
-                    }}
-                    style={{ color: 'white', backgroundColor: 'transparent'}}
-                  >
-                    <Option value="USDC">USDC</Option>
-                    <Option value="SOL">SOL</Option>
-                  </Select>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div>
-            <div className="profile__input-col">
-              <p className="caption-3">Asset Details</p>
-              <TextArea
-                autoSize={{ minRows: 3, maxRows: 5 }}
-                placeholder="Enter the asset details"
-                onChange={(e) => {
-                  variables.assetDetails = e.target.value;
-                }}
-                disabled={false}
-                style={{ color: 'white', backgroundColor: 'transparent', height: '100px'}}
-              />
-            </div>
-            <div className="profile__input-col">
-              <p className="caption-3">Description</p>
-              <TextArea
-                autoSize={{ minRows: 3, maxRows: 5 }}
-                placeholder="Enter the description"
-                onChange={(e) => {
-                  variables.description = e.target.value;
-                }}
-                disabled={false}
-                style={{ color: 'white', backgroundColor: 'transparent', height: '100px'}}
-              />
-            </div>
-            <div className="profile__input-col">
-              <p className="caption-3">Model</p>
-              <TextArea
-                autoSize={{ minRows: 3, maxRows: 5 }}
-                placeholder="Enter the model"
-                onChange={(e) => {
-                  variables.model = e.target.value;
-                }}
-                disabled={false}
-                style={{ color: 'white', backgroundColor: 'transparent', height: '100px'}}
-              />
-            </div>
-            <div className="profile__input-col">
-              <p className="caption-3">About</p>
-              <TextArea
-                placeholder="Enter the about"
-                onChange={(e) => {
-                  variables.about = e.target.value;
-                }}
-                disabled={false}
-                style={{ color: 'white', backgroundColor: 'transparent'}}
-                autoSize={{ minRows: 3, maxRows: 5 }}
-              />
-            </div>
-          </div>
-          <button
-            className="btn-primary"
-            onClick={()=> {
-              initToken();
-            }}
-          >
-            Create Token
-          </button>
+          {renderSwitch(step)}
         </div>
       ) : (
         <div className="wallet">

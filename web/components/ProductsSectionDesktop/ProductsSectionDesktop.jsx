@@ -35,16 +35,24 @@ const ProductsSectionDesktop = () => {
             {/* Available */}
             {!productsLoading && (
             <div className="products__available ">
+                <p className="caption-1">Available</p>
                 <div className="products__available__slider">
-                    <EmblaCarousel slides={products.available} options={OPTIONS} />   
+                    <EmblaCarousel slides={products.availableWatches} options={OPTIONS} />   
+                </div>
+                <div className="products__available__slider">
+                    Diamonds
+                    <EmblaCarousel slides={products.availableDiamonds} options={OPTIONS} />   
                 </div>
             </div>
             )}
             {/* coming soon */}
-            {!productsLoading && products.comingSoon.length > 0 && (
+            {!productsLoading && products.comingSoonWatches.length > 0 || products.conmingSoonDiamonds.length > 0 && (
             <div className="products__coming ">
                 <div className="products__coming__slider">
-                    <EmblaCarousel slides={products.comingSoon} options={OPTIONS} />
+                    <EmblaCarousel slides={products.comingSoonWatches} options={OPTIONS} />
+                </div>
+                <div className="products__available__slider">
+                    <EmblaCarousel slides={products.conmingSoonDiamonds} options={OPTIONS} />   
                 </div>
             </div>
             )}
