@@ -38,10 +38,11 @@ export type OnChainData = {
     brand: string;
     caseMaterial: string;
     dialColor: string;
-    diamater: number;
+    diamater: string;
     model: string;
     movement: string;
-    yearOfProduction: number;
+    yearOfProduction: string;
+    uri: string;
 };
 
 export type Product = {
@@ -67,6 +68,7 @@ export type Product = {
     investUrl: string;
     gallery: string[];
     about: string;
+    uri: string;
 }
 
 export type FAQ = {

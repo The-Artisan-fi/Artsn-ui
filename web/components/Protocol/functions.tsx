@@ -1,9 +1,12 @@
 import { clusterApiUrl, Connection, PublicKey, Keypair, Transaction, GetProgramAccountsFilter, ParsedAccountData, VersionedMessage, VersionedTransaction, SimulateTransactionConfig } from "@solana/web3.js";
-import { Program, AnchorProvider, setProvider } from "@coral-xyz/anchor";
-import { IDL, PROGRAM_ID, Fragment } from "./idl";
 import { ASSOCIATED_TOKEN_PROGRAM_ID, createAssociatedTokenAccountIdempotentInstruction, createInitializeMint2Instruction, createMintToInstruction, getAssociatedTokenAddressSync, getMinimumBalanceForRentExemptMint, MINT_SIZE, TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID, getTokenMetadata } from "@solana/spl-token";
 import { ParsedProgramAccounts} from "@/helpers/types";
-import * as anchor from "@coral-xyz/anchor";
+import { createUmi } from '@metaplex-foundation/umi-bundle-defaults';
+import { keypairIdentity } from '@metaplex-foundation/umi'
+import { fetchCollectionV1 } from '@metaplex-foundation/mpl-core'
+import { publicKey } from '@metaplex-foundation/umi'
+import { bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
+
 
 const connection = new Connection(clusterApiUrl("devnet"), {
     commitment: "confirmed",
@@ -13,17 +16,6 @@ const connection = new Connection(clusterApiUrl("devnet"), {
 // })
 const wallet = Keypair.generate();
 
-// @ts-expect-error - wallet is dummy variable, signing is not needed
-const provider = new AnchorProvider(connection, wallet, {});
-setProvider(provider);
-// @ts-expect-error - wallet is dummy variable, signing is not needed
-const provider = new anchor.AnchorProvider(connection, wallet, {});
-const programId = new PublicKey(PROGRAM_ID);
-const program = new anchor.Program<Fragment>(IDL, provider);
-
-export const protocol = PublicKey.findProgramAddressSync([Buffer.from("protocol")], program.programId)[0];
-export const manager = PublicKey.findProgramAddressSync([Buffer.from("manager")], program.programId)[0];
-export const mplCoreProgram = new PublicKey("CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d");
 const mint = new PublicKey('4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU'); // circle DEVNET - USDC
 
 export async function getMintATA(wallet: PublicKey) {
@@ -61,7 +53,7 @@ export async function initProfileTx(key: string) {
   }
 }
 
-export async function buyTx(id: number, reference: string, key: string, amount: number) {
+export async function buyTx(id: number, reference: string, key: string, amount: number, uri: string) {
   try{
     const response = await fetch('/api/protocol/buy', {
       method: 'POST',
@@ -72,7 +64,8 @@ export async function buyTx(id: number, reference: string, key: string, amount: 
           id: id,
           reference: reference,
           publicKey: key,
-          amount: amount
+          amount: amount,
+          uri: uri,
       })
     })
     const { transaction } = await response.json(); //VersionedTransaction

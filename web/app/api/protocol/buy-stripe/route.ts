@@ -1,10 +1,10 @@
 import * as anchor from '@coral-xyz/anchor';
 import {
   IDL,
-  Fragment,
+  ArtsnCore,
   PROGRAM_ID,
   USDC_MINT,
-} from '@/components/Utils/idl';
+} from '@/components/Protocol/idl';
 import {
   SYSVAR_INSTRUCTIONS_PUBKEY,
   PublicKey,
@@ -125,7 +125,7 @@ export async function POST(request: Request) {
     });
 
     const buyShareIx = await program.methods
-      .buyListing()
+      .buy_fractionalized_listing(uri)
       .accounts({
         payer: feePayer.publicKey,
         buyer: buyer_publicKey,

@@ -1,6 +1,6 @@
 import { prepareTransaction } from '../../../helpers/transaction-utils';
 import * as anchor from "@coral-xyz/anchor";
-import { IDL, Fragment, PROGRAM_ID, USDC_MINT } from "@/components/Utils/idl";
+import { IDL, ArtsnCore, PROGRAM_ID, USDC_MINT } from "@/components/Protocol/idl";
 import {
     SYSVAR_INSTRUCTIONS_PUBKEY,
     PublicKey,
@@ -35,7 +35,7 @@ export async function POST( request: Request ) {
     // @ts-expect-error - wallet is dummy variable, signing is not needed
     const provider = new anchor.AnchorProvider(connection, wallet, {});
     const programId = new PublicKey(PROGRAM_ID);
-    const program = new anchor.Program<Fragment>(IDL, programId, provider);
+    const program = new anchor.Program<Fragment>(IDL, provider);
 
     try {
         // const req = await request.json();

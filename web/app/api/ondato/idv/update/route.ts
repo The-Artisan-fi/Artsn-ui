@@ -2,7 +2,7 @@ import { UPDATE_USER_IDV} from "@/lib/mutations";
 import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 import * as Realm from 'realm-web';
 import * as anchor from "@coral-xyz/anchor";
-import { IDL, Fragment, PROGRAM_ID} from "@/components/Utils/idl";
+import { IDL, ArtsnCore, PROGRAM_ID} from "@/components/Protocol/idl";
 import {
     PublicKey,
     SystemProgram,

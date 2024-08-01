@@ -7,7 +7,7 @@ import {
     createPostResponse,
     ActionPostResponse,
   } from "@solana/actions";
-import { IDL, Fragment, PROGRAM_ID, USDC_MINT} from "@/components/Utils/idl";
+import { IDL, ArtsnCore, PROGRAM_ID, USDC_MINT} from "@/components/Protocol/idl";
 import {
     SYSVAR_INSTRUCTIONS_PUBKEY,
     PublicKey,

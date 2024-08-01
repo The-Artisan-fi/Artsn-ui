@@ -8,7 +8,7 @@ const Progress = Dynamic(() => import("antd").then((mod) => mod.Progress), { ssr
 const Collapse = Dynamic(() => import("antd").then((mod) => mod.Collapse), { ssr: false });
 const Panel = Dynamic(() => import("antd").then((mod) => mod.Collapse.Panel), { ssr: false });
 // const Slider = Dynamic(() => import("antd").then((mod) => mod.Slider), { ssr: false });
-import { fetchProductDetails } from "@/hooks/fetchProductDetails";
+import { fetchProductDetails } from "@/hooks/fetchProducts";
 const ProductsSectionDesktop = Dynamic(() => import("@/components/ProductsSectionDesktop/ProductsSectionDesktop"), { ssr: false });
 const ProductsSectionMobile = Dynamic(() => import("@/components/ProductsSectionMobile/ProductsSectionMobile"), { ssr: false });
 const OpportunitiesSection = Dynamic(() => import("@/components/OpportunitiesSection/OpportunitiesSection"), { ssr: false });
@@ -72,12 +72,12 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
     async function buyListing() {        
         try {
             if(publicKey && product){
-               const tx = await buyTx(product.id, product.reference, publicKey.toBase58(), amount);
+               const tx = await buyTx(product.id, product.reference, publicKey.toBase58(), amount, product.uri);
                 const signature = await sendTransaction(tx!, connection, {skipPreflight: true,});
                 await toastPromise(signature)
             } 
             if(web3AuthPublicKey !== null && !publicKey && product){
-                const tx = await buyTx(product.id, product.reference, web3AuthPublicKey, amount);
+                const tx = await buyTx(product.id, product.reference, web3AuthPublicKey, amount, product.uri);
                 const signature = await rpc!.sendTransaction(tx!);
                 await toastPromise(signature)
             }
@@ -148,6 +148,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
             investUrl: "#",
             gallery: offChainData!.images,
             about: offChainData!.about,
+            uri: on_chain_data!.uri,
         }
 
         const faq_items = [
@@ -372,14 +373,15 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                         <div className="product-details__hero__info__set__cont">
                                             <div className="market-value">
                                                 <p className="body">Market Value</p>
-                                                <p className="heading-2 w-700">
-                                                    {product!.marketValue} €
+                                                <p className="heading-2 w-700" style={{ fontSize: '28px' }}>
+                                                    {/* turn marketValue into a number and insert a , if needed */}
+                                                    {product!.currency === "USDC" && "$"} {product!.marketValue.toLocaleString()} {product!.currency === "USDC" ? "" : product!.currency}
                                                 </p>
                                             </div>
                                             <div className="fraction-left">
                                                 <p className="body">Price</p>
-                                                <p className="heading-2 w-700">
-                                                    {product!.price} €
+                                                <p className="heading-2 w-700" style={{ fontSize: '28px' }}>
+                                                    {product!.currency === "USDC" && "$"} {product!.price.toLocaleString()} {product!.currency === "USDC" ? "" : product!.currency}
                                                 </p>
                                             </div>
                                         </div>
@@ -390,7 +392,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                         <div className="product-details__hero__info__set__cont">
                                             <div className="past-returns">
                                                 <p className="body">Past Returns</p>
-                                                <p className="heading-2">
+                                                <p className="heading-2" style={{ fontSize: '24px'}}>
                                                     <span className="w-700">
                                                         +{product!.pastReturns}%{" "}
                                                     </span>
@@ -406,7 +408,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                                         (over {product!.earningPotentialDuration})
                                                     </span>
                                                 </p>
-                                                <p className="heading-2">
+                                                <p className="heading-2" style={{ fontSize: '24px'}}>
                                                     <span className="w-700">
                                                         +{product!.earningPotential}%{" "}
                                                     </span>

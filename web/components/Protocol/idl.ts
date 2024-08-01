@@ -1,8 +1,8 @@
 import { Address } from "@coral-xyz/anchor";
 
 
-export type Fragment = {
-  "address": "2uqpz6ZbWQKrYAjNRtU933VRa9TzRVoREEsaH9wDkzKs",
+export type ArtsnCore = {
+  "address": "Gyaq4i9b9t42Qufx12uioHMa8z91WxFCQ2doXC5ieXdf",
   "metadata": {
     "name": "artsn_core",
     "version": "0.1.0",
@@ -291,6 +291,10 @@ export type Fragment = {
           "name": "fraction",
           "writable": true,
           "signer": true
+        },
+        {
+          "name": "instructions",
+          "address": "Sysvar1nstructions1111111111111111111111111"
         },
         {
           "name": "associated_token_program",
@@ -1193,16 +1197,16 @@ export type Fragment = {
       ]
     },
     {
-      "name": "intialize_protocol",
+      "name": "initialize_protocol",
       "discriminator": [
-        144,
-        138,
-        38,
-        251,
-        66,
-        37,
-        60,
-        10
+        188,
+        233,
+        252,
+        106,
+        134,
+        146,
+        202,
+        91
       ],
       "accounts": [
         {
@@ -1884,7 +1888,7 @@ export type Fragment = {
             "type": "string"
           },
           {
-            "name": "diamater",
+            "name": "diameter",
             "type": "u8"
           },
           {
@@ -2195,8 +2199,8 @@ export type Fragment = {
 }
 
   
-export const IDL: Fragment = {
-  "address": "2uqpz6ZbWQKrYAjNRtU933VRa9TzRVoREEsaH9wDkzKs",
+export const IDL: ArtsnCore = {
+  "address": "Gyaq4i9b9t42Qufx12uioHMa8z91WxFCQ2doXC5ieXdf",
   "metadata": {
     "name": "artsn_core",
     "version": "0.1.0",
@@ -2485,6 +2489,10 @@ export const IDL: Fragment = {
           "name": "fraction",
           "writable": true,
           "signer": true
+        },
+        {
+          "name": "instructions",
+          "address": "Sysvar1nstructions1111111111111111111111111"
         },
         {
           "name": "associated_token_program",
@@ -3387,16 +3395,16 @@ export const IDL: Fragment = {
       ]
     },
     {
-      "name": "intialize_protocol",
+      "name": "initialize_protocol",
       "discriminator": [
-        144,
-        138,
-        38,
-        251,
-        66,
-        37,
-        60,
-        10
+        188,
+        233,
+        252,
+        106,
+        134,
+        146,
+        202,
+        91
       ],
       "accounts": [
         {
@@ -4078,7 +4086,7 @@ export const IDL: Fragment = {
             "type": "string"
           },
           {
-            "name": "diamater",
+            "name": "diameter",
             "type": "u8"
           },
           {
@@ -4390,7 +4398,7 @@ export const IDL: Fragment = {
 
 
 
-export const PROGRAM_ID = "TZNhSSbZWQaeWe5x3NUyhSxi1GvtY92TLsatxnCPwYt" as Address
+export const PROGRAM_ID = "Gyaq4i9b9t42Qufx12uioHMa8z91WxFCQ2doXC5ieXdf" as Address
 
 export const LISTING_GROUP = 'LSTBuqygb7CMQryt45BC1fh5PPjuJKtoffDyASchWi2' as string;
 

@@ -1,5 +1,5 @@
 import * as anchor from "@coral-xyz/anchor";
-import { IDL, Fragment, PROGRAM_ID, USDC_MINT} from "@/components/Utils/idl";
+import { IDL, ArtsnCore, PROGRAM_ID, USDC_MINT} from "@/components/Protocol/idl";
 import {
     PublicKey,
     SystemProgram,

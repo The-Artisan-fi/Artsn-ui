@@ -1,5 +1,5 @@
 import * as anchor from "@coral-xyz/anchor";
-import { IDL, Fragment, PROGRAM_ID, LISTING_GROUP, WATCH_GROUP} from "@/components/Utils/idl";
+import { IDL, ArtsnCore, PROGRAM_ID, LISTING_GROUP, WATCH_GROUP} from "@/components/Protocol/idl";
 import {
     PublicKey,
     SystemProgram,
