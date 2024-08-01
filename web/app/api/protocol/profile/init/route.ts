@@ -22,7 +22,7 @@ export async function POST( request: Request ) {
     const provider = new anchor.AnchorProvider(connection, wallet, {});
     const programId = new PublicKey(PROGRAM_ID);
     console.log('programId', programId.toBase58());
-    const program = new anchor.Program<Fragment>(IDL, programId, provider);
+    const program = new anchor.Program<ArtsnCore>(IDL, provider);
     const uri = 'www.example.com'
     try {
         const req = await request.json();
@@ -33,7 +33,8 @@ export async function POST( request: Request ) {
         const feeKey = process.env.PRIVATE_KEY!;
         const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
         const profileInitIx = await program.methods
-            .initializeProfileAccount()
+        //@ts-expect-error - missing arguments
+            .initializeProfile()
             .accounts({
                 payer: feePayer.publicKey,
                 user: buyer_publicKey,

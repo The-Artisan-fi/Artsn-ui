@@ -3,10 +3,10 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import '@/styles/DashboardInventory.scss';
 import { FiArrowUpRight } from 'react-icons/fi';
-import { fetchProductDetails } from "@/hooks/fetchProductDetails";
+import { fetchProductDetails } from "@/hooks/fetchProducts";
 import { LoadingSpinner } from '@/components/Loading/Loading';
 import dynamic from 'next/dynamic';
-import { getTokenAccounts } from '@/components/Protocol/functions';
+import { fetchAssets } from '@/components/Protocol/umi';
 const Table  = dynamic(() => import('antd').then((mod) => mod.Table), { ssr: false });
 const Radio  = dynamic(() => import('antd').then((mod) => mod.Radio.Group), { ssr: false });
 const Line = dynamic(() => import('@ant-design/plots').then((mod) => mod.Line), {
@@ -15,13 +15,11 @@ const Line = dynamic(() => import('@ant-design/plots').then((mod) => mod.Line), 
 import Audemars from "@/public/assets/home/products/Audemars-piguet-Royaloak.webp"
 import { useWallet } from '@solana/wallet-adapter-react';
 import { buyTx } from "@/components/Protocol/functions";
-import { getListingByMintAddress } from '@/lib/queries';
-import { useLazyQuery } from '@apollo/client';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { checkLogin } from "@/components/Web3Auth/solanaRPC";
 import { confirm } from '@/helpers/confirm';
 import { toastError, toastPromise } from '@/helpers/toast';
-
+import { getListingByWatch } from '@/components/Protocol/functions';
 // Graph configurations
 
 const optionsWithDisabled = [
@@ -82,33 +80,6 @@ const Dashboard = () => {
     setValue4(value);
   };
 
-  const [getListing, { loading, error, data }] = useLazyQuery(getListingByMintAddress , {variables});
-  if(!loading && data != undefined && listingAddress == ''){
-    if(data.listings.length > 0 && fractions.filter((item) => item.associatedId == data.listings[0].associatedId).length == 0){
-    
-      const updatedFractions = [
-        ...fractions,
-        {
-          ...queryItem,
-          associatedId: data.listings[0].associatedId
-        }
-      ];
-    
-      setFractions(updatedFractions);
-      setListingAddress(data.listings[0].associatedId);
-    }
-  }
-  if(!loading && error != undefined){
-      console.log("error", error);
-      toastError(`Error: ${error.message}`);
-  }
-
-  async function getListingAddress(data){
-    setVariables({mintAddress: data.mint});
-    await getListing();
-    return;
-  }
-
   const columns = [
     {
       title: '',
@@ -123,11 +94,10 @@ const Dashboard = () => {
       key: 'item',
   
       render: (text, record) => (
-        console.log(record),
         <Image
           width={40}
           height={50}
-          src={`https://artisan-solana.s3.eu-central-1.amazonaws.com/${record.associatedId}.jpg`}
+          src={`https://artisan-solana.s3.eu-central-1.amazonaws.com/${record.associatedId}-0.jpg`}
           alt="Audemars Piguet Royal Oak Extra Thin, 2019"
         />
       ),
@@ -136,13 +106,15 @@ const Dashboard = () => {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
+
+      render: (text, record) => <p>{`${record.attributes.attributeList[0].value} - ${record.attributes.attributeList[1].value}`}</p>,
     },
     {
       title: 'Value',
       dataIndex: 'value',
       key: 'value',
   
-      render: (text, record) => <p>{`$${text}`}</p>,
+      render: (text, record) => <p>{`$${record.price * record.quantity}`}</p>,
     },
   
     {
@@ -151,14 +123,15 @@ const Dashboard = () => {
       key: 'amount',
   
       sorter: (a, b) => a.amount - b.amount,
+      render: (text, record) => <p>{record.quantity}</p>,
     },
     {
       title: 'Action',
       dataIndex: 'action',
       key: 'action',
   
-      render: (text, record) => (
-        <div className="dashboard-inventory__body__table__action">
+      render: (text, record, index) => (
+        <div className="dashboard-inventory__body__table__action" key={index}>
           <button
             className="btn-table"
             onClick={async () => {
@@ -183,7 +156,7 @@ const Dashboard = () => {
         const data = await fetchProductDetails(product.associatedId);
         const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
         if(publicKey && data){
-          const tx = await buyTx(data.id, data.reference, publicKey.toBase58(), 1);
+          const tx = await buyTx(data.id, data.reference, publicKey.toBase58(), 1, data.uri);
           const getProvider = () => {
             if ('phantom' in window) {
               const provider = window.phantom?.solana;
@@ -198,34 +171,42 @@ const Dashboard = () => {
           const provider = getProvider();
            const signature = await provider.signAndSendTransaction(tx)
            const _confirm = await confirm(signature);
-           await toastPromise(_confirm)
+           await toastPromise(_confirm.signature)
         } else if(web3AuthPublicKey && data){ 
-          const tx = await buyTx(data.id, data.reference, web3AuthPublicKey, 1);
+          const tx = await buyTx(data.id, data.reference, web3AuthPublicKey, 1, data.uri);
           const signature = await rpc.sendTransaction(tx); 
-          await toastPromise(signature)
+          const _confirm = await confirm(signature);
+          await toastPromise(_confirm.signature)
         }
     } catch (error) {
         toastError(`Error: ${error.message}`);
     };
   };
   const getTokens = async (key) => {
-    // only execute if tokenAccounts is empty
-    if (tokenAccounts.length == 0) {
-      const data = await getTokenAccounts(key);
-      setTokenAccounts(data);
-      if(!data){
-        setTokensLoading(false);
-        return;
+    const data = await fetchAssets(key.toString());
+    // for each asset get the listing address by watch address (data[i].updateAuthority.address)
+    const listingArray = [];
+    for (let i = 0; i < data.length; i++) {
+      const listing = await getListingByWatch(data[i].updateAuthority.address);
+
+      // if the listing exists already in the listingArray with the same associatedId as the listing.listing, then increase the quantity by 1
+      // else just push the new listing to the listingArray
+      if (listingArray.find((item) => item.associatedId === listing.listing)) {
+        const index = listingArray.findIndex((item) => item.associatedId === listing.listing);
+        listingArray[index].quantity += 1;
+        continue;
+      } else {
+        listingArray.push({
+          ...data[i],
+          associatedId: listing.listing,
+          price: listing.price,
+          quantity: 1,
+        });
       }
-      for(let i = 0; i < data.length; i++){
-        setQueryItem(data[i]);
-        await getListingAddress(data[i]);
-        setListingAddress('');
-      }
-      setTimeout(() => {
-        setTokensLoading(false);
-      }, 2000);
     }
+
+    setFractions(listingArray);
+    setTokensLoading(false);
   }
 
   useEffect(() => {

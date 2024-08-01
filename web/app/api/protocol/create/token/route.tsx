@@ -23,7 +23,7 @@ export async function POST( request: Request ) {
     // @ts-expect-error - wallet is dummy variable, signing is not needed
     const provider = new anchor.AnchorProvider(connection, wallet, {});
     const programId = new PublicKey(PROGRAM_ID);
-    const program = new anchor.Program<Fragment>(IDL, programId, provider);
+    const program = new anchor.Program<ArtsnCore>(IDL, provider);
     try {
         const req = await request.json();
         const id = req.id;
@@ -56,7 +56,8 @@ export async function POST( request: Request ) {
         const auth = PublicKey.findProgramAddressSync([Buffer.from('auth')], program.programId)[0];
         const adminState = PublicKey.findProgramAddressSync([Buffer.from('admin_state'), signer.toBuffer()], program.programId)[0];
         const ix = await program.methods
-            .createListing(
+        //@ts-expect-error - missing arguments
+            .createFractionalizedListing(
                 new anchor.BN(id),
                 listingGroup,
                 share,

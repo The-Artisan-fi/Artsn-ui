@@ -55,26 +55,27 @@ const ProductsSectionMobile = () => {
                     </div>
                 )}
             </div>
-
-            <div className="products__coming ">
-                <h2 className="display">Coming soon</h2>
-                {productsLoading ? (
-                    <LoadingSpinner />
-                ) : (
-                    <div className="products__coming__slider">
-                        {products.comingSoon.map((item) => {
-                            return (
-                                <div
-                                    key={item.id}
-                                    className="products__coming__slider__item"
-                                >
-                                    <EmblaCarousel slides={products.comingSoon} options={OPTIONS} />
-                                </div>
-                            );
-                        })}
-                    </div>
-                )}
-            </div>
+            {products.comingSoon.length > 0 && (
+                <div className="products__coming ">
+                    <h2 className="display">Coming soon</h2>
+                    {productsLoading ? (
+                        <LoadingSpinner />
+                    ) : (
+                        <div className="products__coming__slider">
+                            {products.comingSoon.map((item) => {
+                                return (
+                                    <div
+                                        key={item.id}
+                                        className="products__coming__slider__item"
+                                    >
+                                        <EmblaCarousel slides={products.comingSoon} options={OPTIONS} />
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
+            )}
         </section>
     );
 };

@@ -43,7 +43,7 @@ export async function POST( request: Request) {
     // @ts-expect-error - wallet is dummy variable, signing is not needed
     const provider = new anchor.AnchorProvider(connection, wallet, {});
     const programId = new PublicKey(PROGRAM_ID);
-    const program = new anchor.Program<Fragment>(IDL, programId, provider);
+    const program = new anchor.Program<ArtsnCore>(IDL, provider);
 
     try {
         const req = await request.json();
@@ -92,7 +92,8 @@ export async function POST( request: Request) {
         console.log('feePayer', feePayer.publicKey.toBase58())
 
         const profileInitIx = await program.methods
-            .initializeProfileAccount()
+            //@ts-expect-error - missing arguments
+            .initializeProfile()
             .accounts({
                 payer: feePayer.publicKey,
                 user: buyer_publicKey,
@@ -103,6 +104,7 @@ export async function POST( request: Request) {
         
 
         const buyShareIx = await program.methods
+            //@ts-expect-error - missing arguments
             .buyListing()
             .accounts({
                 payer: feePayer.publicKey,

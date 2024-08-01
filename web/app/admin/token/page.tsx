@@ -214,7 +214,7 @@ const SettingsPage = () => {
               <p className="caption-3">Available Watches</p>
               {watches.map((watch, index) => (
                 <div key={index}>
-                  <img src={`https://artisan-solana.s3.eu-central-1.amazonaws.com/${watch.accountPubkey}`} alt={watch.reference} />
+                  <img src={`${process.env.AWS_PREFIX}${watch.accountPubkey}`} alt={watch.reference} />
                   <p>{watch.model}</p>
                   <p>{watch.brand}</p>
                   <p>{watch.reference}</p>

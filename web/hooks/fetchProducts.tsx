@@ -3,9 +3,7 @@ import { Program, AnchorProvider, setProvider } from "@coral-xyz/anchor";
 import { IDL, PROGRAM_ID, LISTING_GROUP, WATCH_GROUP } from "@/components/Protocol/idl";
 import { fetchCollectionV1 } from '@metaplex-foundation/mpl-core'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults';
-// import fs from 'fs';
-// const key = './wallet.json'
-// const secretKey = JSON.parse(fs.readFileSync(key, 'utf-8'))
+
 // Create Umi Instance
 const umi = createUmi('https://api.devnet.solana.com');
 
@@ -13,9 +11,7 @@ export const fetchProducts = async () => {
     const connection = new Connection(clusterApiUrl("devnet"), {
             commitment: "confirmed",
         });
-    // const connection = new Connection("http://localhost:8899", {
-    //     commitment: "confirmed",
-    // })
+    
     const wallet = Keypair.generate();
 
     // @ts-expect-error - wallet is dummy variable, signing is not needed
@@ -52,7 +48,6 @@ export const fetchProducts = async () => {
         const all_program_accounts = await connection.getProgramAccounts(new PublicKey(PROGRAM_ID),
             get_accounts_config
         );
-        console.log('all_program_accounts', all_program_accounts);
         const productList = all_program_accounts.map((account) => {
             try {
                 const decode = program.coder.accounts.decode("fractionalizedListing", account.account.data);
@@ -73,9 +68,7 @@ export const fetchProducts = async () => {
 
         for( let i = 0; i < availableProducts.length; i++){
             const nft = availableProducts[i];
-            console.log('nft', nft)
             const watch = await fetchCollectionV1(umi, availableProducts[i].object);
-            console.log('collection', ...watch.attributes!.attributeList)
 
             detailedAvailableProducts.push({
                 ...nft,
@@ -87,9 +80,7 @@ export const fetchProducts = async () => {
 
         for( let i = 0; i < comingSoonProducts.length; i++){
             const nft = comingSoonProducts[i];
-            console.log('nft', nft)
             const watch = await fetchCollectionV1(umi, comingSoonProducts[i].object);
-            console.log('collection', ...watch.attributes!.attributeList)
 
             detailedComingSoonProducts.push({
                 ...nft,
@@ -97,7 +88,7 @@ export const fetchProducts = async () => {
             })
         };
 
-        console.log('detailedAvailableProducts', detailedAvailableProducts)
+        // console.log('detailedAvailableProducts', detailedAvailableProducts)
 
         const products = {
             available: detailedAvailableProducts.map(product => ({
@@ -220,9 +211,6 @@ export const fetchProductDetails = async (accountPubkey: string) => {
         
         const watch = await fetchCollectionV1(umi, object);
         const attributes = watch.attributes!.attributeList;
-        console.log('listing', listing)
-        console.log('watch', watch)
-        console.log('attributes', attributes)
         const listingInfo = {
             id: listing.id.toNumber(),
             share: listing.share,

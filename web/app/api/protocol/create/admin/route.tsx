@@ -21,7 +21,7 @@ export async function POST( request: Request ) {
     // @ts-expect-error - wallet is dummy variable, signing is not needed
     const provider = new anchor.AnchorProvider(connection, wallet, {});
     const programId = new PublicKey(PROGRAM_ID);
-    const program = new anchor.Program<Fragment>(IDL, programId, provider);
+    const program = new anchor.Program<ArtsnCore>(IDL, provider);
     try {
         const req = await request.json();
         const username = req.username;
@@ -33,7 +33,8 @@ export async function POST( request: Request ) {
         console.log('signer', signer.toString());
         const newAdminState = PublicKey.findProgramAddressSync([Buffer.from('admin_state'), newAdmin.toBuffer()], program.programId)[0];
         const profileInitIx = await program.methods
-            .initializeAdminAccount(username)
+        //@ts-expect-error - missing arguments
+            .initializeAdmin(username)
             .accounts({
                 admin: signer,
                 adminState: null,

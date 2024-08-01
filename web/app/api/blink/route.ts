@@ -35,7 +35,7 @@ export async function POST( request: Request ) {
     // @ts-expect-error - wallet is dummy variable, signing is not needed
     const provider = new anchor.AnchorProvider(connection, wallet, {});
     const programId = new PublicKey(PROGRAM_ID);
-    const program = new anchor.Program<Fragment>(IDL, provider);
+    const program = new anchor.Program<ArtsnCore>(IDL, provider);
 
     try {
         // const req = await request.json();
@@ -93,7 +93,7 @@ export async function POST( request: Request ) {
         // );
 
         // const profileInitIx = await await program.methods
-        //     .initializeProfileAccount()
+        //     .initializeProfile()
         //     .accounts({
         //         user: buyer_publicKey,
         //         profile: buyerProfile,
@@ -104,7 +104,8 @@ export async function POST( request: Request ) {
         const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
 
         const buyShareIx = await program.methods
-            .buyListing()
+            //@ts-expect-error - not sure why this is throwing an error
+            .buyFractionalizedListing()
             .accounts({
                 // buyer: buyer_publicKey,
                 // payer: feePayer.publicKey,
@@ -167,7 +168,7 @@ export async function GET( request: Request ) {
             'icon' | 'title' | 'description'
         > {
             const icon =
-            'https://artisan-solana.s3.eu-central-1.amazonaws.com/AMygBqv7URhE1L6DjzzqYdX9Rujp3L4vXU5NJcXW8wA6-0.jpg';
+            `${process.env.AWS_PREFIX}AMygBqv7URhE1L6DjzzqYdX9Rujp3L4vXU5NJcXW8wA6-0.jpg`;
             const title = 'Richard Mille - Artsn.Fi';
             const description =
             'Buy a share of this Richard Mille watch for 1 USDC-DEV!';

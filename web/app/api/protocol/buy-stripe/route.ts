@@ -55,7 +55,7 @@ export async function POST(request: Request) {
   // @ts-expect-error - wallet is dummy variable, signing is not needed
   const provider = new anchor.AnchorProvider(connection, wallet, {});
   const programId = new PublicKey(PROGRAM_ID);
-  const program = new anchor.Program<Fragment>(IDL, programId, provider);
+  const program = new anchor.Program<ArtsnCore>(IDL, provider);
 
   try {
     const req = await request.json();
@@ -125,7 +125,8 @@ export async function POST(request: Request) {
     });
 
     const buyShareIx = await program.methods
-      .buy_fractionalized_listing(uri)
+    //@ts-expect-error - missing arguments
+      .buyFractionalizedListing(uri)
       .accounts({
         payer: feePayer.publicKey,
         buyer: buyer_publicKey,

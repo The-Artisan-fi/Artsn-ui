@@ -1,4 +1,4 @@
-import { clusterApiUrl, Connection, PublicKey, Keypair, Transaction, GetProgramAccountsFilter, ParsedAccountData, VersionedMessage, VersionedTransaction, SimulateTransactionConfig } from "@solana/web3.js";
+import { GetProgramAccountsConfig, clusterApiUrl, Connection, PublicKey, Keypair, Transaction, GetProgramAccountsFilter, ParsedAccountData, VersionedMessage, VersionedTransaction, SimulateTransactionConfig } from "@solana/web3.js";
 import { ASSOCIATED_TOKEN_PROGRAM_ID, createAssociatedTokenAccountIdempotentInstruction, createInitializeMint2Instruction, createMintToInstruction, getAssociatedTokenAddressSync, getMinimumBalanceForRentExemptMint, MINT_SIZE, TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID, getTokenMetadata } from "@solana/spl-token";
 import { ParsedProgramAccounts} from "@/helpers/types";
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults';
@@ -6,7 +6,8 @@ import { keypairIdentity } from '@metaplex-foundation/umi'
 import { fetchCollectionV1 } from '@metaplex-foundation/mpl-core'
 import { publicKey } from '@metaplex-foundation/umi'
 import { bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
-
+import { AnchorProvider, Program } from "@coral-xyz/anchor";
+import { ArtsnCore, IDL } from "@/components/Protocol/idl";
 
 const connection = new Connection(clusterApiUrl("devnet"), {
     commitment: "confirmed",
@@ -115,7 +116,6 @@ export async function getTokenAccounts(key: PublicKey) {
   if(!key){
     return;
   }
-  console.log('key', key.toBase58());
   const filters:GetProgramAccountsFilter[] = [
     {
       dataSize: 175,    //size of account (bytes)
@@ -267,4 +267,41 @@ export async function buyStripeTx(id: number, reference: string, key: string, am
   } catch (error) {
     console.error('Error sending transaction', error);
   }
-}
+};
+
+
+export async function getListingByWatch (key: string) {
+  const memcmp_filter = {
+      memcmp: {
+        offset: 17,
+        bytes: new PublicKey(key).toBase58(),
+      },
+  };
+  const get_accounts_config: GetProgramAccountsConfig = {
+      commitment: "confirmed",
+      filters: [
+          memcmp_filter,
+        { dataSize: 70 }
+      ]
+  };
+  const connection = new Connection('https://devnet.helius-rpc.com/?api-key=b7faf1b9-5b70-4085-bf8e-a7be3e3b78c2', 'confirmed');
+  const wallet = Keypair.generate();
+  //@ts-expect-error - we are not signing
+  const provider = new AnchorProvider(connection,  wallet, {commitment: "confirmed"});
+  const program : Program<ArtsnCore> = new Program(IDL, provider);
+  const PROGRAM_ID = new PublicKey('Gyaq4i9b9t42Qufx12uioHMa8z91WxFCQ2doXC5ieXdf');
+  const nft = await connection.getProgramAccounts(
+    PROGRAM_ID,
+    get_accounts_config 
+  );
+
+  const nft_decoded = program.coder.accounts.decode(
+    "fractionalizedListing",
+    nft[0].account.data
+  );
+
+  return {
+    listing: nft[0].pubkey.toBase58(),
+    price: Number(nft_decoded.price),
+  };
+};

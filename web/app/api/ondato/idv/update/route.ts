@@ -236,7 +236,7 @@ export async function POST( request: Request ) {
         // // @ts-expect-error - wallet is dummy variable, signing is not needed
         // const provider = new anchor.AnchorProvider(connection, wallet, {});
         // const programId = new PublicKey(PROGRAM_ID);
-        // const program = new anchor.Program<Fragment>(IDL, programId, provider);
+        // const program = new anchor.Program<ArtsnCore>(IDL, provider);
         // const feeKey = process.env.PRIVATE_KEY!;
         // const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
 

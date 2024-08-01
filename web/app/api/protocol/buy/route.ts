@@ -32,7 +32,6 @@ export async function POST( request: Request ) {
     //     process.env.NEXT_PUBLIC_HELIUS_DEVNET!,
     //     "confirmed"
     // );
-    const keypair = Keypair.fromSecretKey(new Uint8Array([98,92,169,66,67,41,67,79,124,116,29,120,47,124,34,232,98,109,153,34,123,18,134,155,92,250,127,229,94,243,246,2,79,34,69,95,251,23,207,224,32,29,49,152,130,23,100,237,160,59,67,83,92,154,62,228,201,255,143,18,27,180,118,169]));
     // const wallet = new Wallet(keypair);
     //   const program = anchor.workspace.ArtsnCore as Program<ArtsnCore>;
     const connection = new Connection('https://devnet.helius-rpc.com/?api-key=b7faf1b9-5b70-4085-bf8e-a7be3e3b78c2', 'confirmed');
@@ -84,7 +83,7 @@ export async function POST( request: Request ) {
         // );
 
         // const profileInitIx = await await program.methods
-        //     .initializeProfileAccount()
+        //     .initializeProfile()
         //     .accounts({
         //         user: buyer_publicKey,
         //         profile: buyerProfile,
@@ -94,8 +93,7 @@ export async function POST( request: Request ) {
         const feeKey = process.env.PRIVATE_KEY!;
 
         const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
-        const mintAta = getAssociatedTokenAddressSync(mint, buyer_publicKey);
-        const listingAta = getAssociatedTokenAddressSync(mint, listing, true);
+
 
         console.log('buyer: ', buyer_publicKey.toBase58());
         console.log('feePayer: ', feePayer.publicKey.toBase58());
@@ -113,6 +111,7 @@ export async function POST( request: Request ) {
         console.log('system_program: ', anchor.web3.SystemProgram.programId.toBase58());
 
         const buyShareIx = await program.methods
+            //@ts-expect-error - not sure why this is throwing an error
             .buyFractionalizedListing(uri)
             .accountsPartial({
                 buyer: buyer_publicKey,

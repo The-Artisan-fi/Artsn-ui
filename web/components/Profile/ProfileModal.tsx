@@ -218,7 +218,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                 wallet: publicKey ? publicKey.toBase58() : web3AuthPublicKey,
                 currencyPreference: '$USD',
                 // @ts-expect-error - fileList is not empty
-                profileImg: `https://artisan-solana.s3.eu-central-1.amazonaws.com/${publicKey ? publicKey.toBase58() : web3AuthPublicKey}.${fileList.length > 0 ? fileList[0].name.split('.').pop() : ''}`
+                profileImg: `${process.env.AWS_PREFIX}${publicKey ? publicKey.toBase58() : web3AuthPublicKey}.${fileList.length > 0 ? fileList[0].name.split('.').pop() : ''}`
             }
         });
         {!loading && !error && data && (
