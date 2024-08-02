@@ -28,7 +28,7 @@ export async function getMintATA(wallet: PublicKey) {
   }
 }
 
-export async function initProfileTx(key: string) {
+export async function initProfileTx(key: string, username: string) {
   try{
     const response = await fetch('/api/protocol/profile/init', {
       method: 'POST',
@@ -37,6 +37,7 @@ export async function initProfileTx(key: string) {
       },
       body: JSON.stringify({
           publicKey: key,
+          username: username
       })
     })
 
@@ -324,37 +325,39 @@ export async function buyStripeTx(id: number, reference: string, key: string, am
 
 
 export async function getListingByWatch (key: string) {
-  const memcmp_filter = {
-      memcmp: {
-        offset: 17,
-        bytes: new PublicKey(key).toBase58(),
-      },
-  };
-  const get_accounts_config: GetProgramAccountsConfig = {
-      commitment: "confirmed",
-      filters: [
-          memcmp_filter,
-        { dataSize: 70 }
-      ]
-  };
-  const connection = new Connection('https://devnet.helius-rpc.com/?api-key=b7faf1b9-5b70-4085-bf8e-a7be3e3b78c2', 'confirmed');
-  const wallet = Keypair.generate();
-  //@ts-expect-error - we are not signing
-  const provider = new AnchorProvider(connection,  wallet, {commitment: "confirmed"});
-  const program : Program<ArtsnCore> = new Program(IDL, provider);
-  const PROGRAM_ID = new PublicKey('Gyaq4i9b9t42Qufx12uioHMa8z91WxFCQ2doXC5ieXdf');
-  const nft = await connection.getProgramAccounts(
-    PROGRAM_ID,
-    get_accounts_config 
-  );
+  try {
+    const memcmp_filter = {
+        memcmp: {
+          offset: 17,
+          bytes: new PublicKey(key).toBase58(),
+        },
+    };
+    const get_accounts_config: GetProgramAccountsConfig = {
+        commitment: "confirmed",
+        filters: [
+            memcmp_filter,
+          { dataSize: 70 }
+        ]
+    };
+    const connection = new Connection('https://devnet.helius-rpc.com/?api-key=b7faf1b9-5b70-4085-bf8e-a7be3e3b78c2', 'confirmed');
+    const wallet = Keypair.generate();
+    //@ts-expect-error - we are not signing
+    const provider = new AnchorProvider(connection,  wallet, {commitment: "confirmed"});
+    const program : Program<ArtsnCore> = new Program(IDL, provider);
+    const nft = await connection.getProgramAccounts(
+      program.programId,
+      get_accounts_config 
+    );
 
-  const nft_decoded = program.coder.accounts.decode(
-    "fractionalizedListing",
-    nft[0].account.data
-  );
-
-  return {
-    listing: nft[0].pubkey.toBase58(),
-    price: Number(nft_decoded.price),
-  };
+    const nft_decoded = program.coder.accounts.decode(
+      "fractionalizedListing",
+      nft[0].account.data
+    );
+    return {
+      listing: nft[0].pubkey.toBase58(),
+      price: Number(nft_decoded.price),
+    };
+  } catch (error) {
+    console.error('Error fetching listing', error);
+  }
 };

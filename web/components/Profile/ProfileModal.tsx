@@ -57,7 +57,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
     const [verificationPending, setVerificationPending] = useState<boolean>(false);
     const [verificationNeeded, setVerificationNeeded] = useState<boolean>(false);
     const [rpc, setRpc] = useState<RPC | null>(null);
-    const [addUser, { loading, error, data }] = useMutation(ADD_USER);
+    
     const [fileList, setFileList] = useState([]);
     const [selectedValue, setSelectedValue] = useState<Dayjs>(
         dayjs('1990-01-31')
@@ -75,6 +75,17 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
             country: '',
         }
     });
+    const [addUser, { loading, error, data }] = useMutation(ADD_USER);
+    {!loading && !error && data && (
+        handleCloseThenCheck()
+    )}
+    {error && (
+        console.log('Error submitting', error),
+        toast.error('Error submitting, please try again')
+    )}
+    {loading && (
+        console.log('Submitting...')
+    )}
     const connection = new Connection(
         process.env.NEXT_PUBLIC_HELIUS_DEVNET!,
         "confirmed"
@@ -169,28 +180,46 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                 console.log('no public key');
                 return;
             }
-            if(publicKey){
-                const signature = await initProfileTx(publicKey.toBase58());
+            if(publicKey && profile?.userName){
+                const tx = await initProfileTx(publicKey.toBase58(), profile.userName);
                 console.log(
-                    `Transaction sent: https://explorer.solana.com/tx/${signature}?cluster=devnet`
+                    `Transaction `
                 );
+                console.log(tx);
+                const signature = await sendTransaction(tx, connection, 
+                    {
+                        skipPreflight: true,
+                    },
+                );
+
+                console.log('signature', signature);
+
                 const confirmation_sig = await confirm(connection, signature);
 
-                await toastPromise(confirmation_sig);
-
-                return;
+                if(confirmation_sig){
+                    console.log('profile init hash:', confirmation_sig);
+                    return;
+                } else {
+                    console.log('error initializing profile');
+                    toastError('Error initializing profile');
+                }
             }
 
-            if(web3AuthPublicKey !== null && !publicKey){
-                const signature = await initProfileTx(web3AuthPublicKey);
+            if(web3AuthPublicKey !== null && !publicKey && profile?.userName){
+                const signature = await initProfileTx(web3AuthPublicKey, profile.userName);
                
                 console.log(
                     `Transaction sent: https://explorer.solana.com/tx/${signature}?cluster=devnet`
                 );
                 const confirmation_sig = await confirm(connection, signature);
 
-                await toastPromise(confirmation_sig); 
-
+                if(confirmation_sig){
+                    console.log('profile init hash:', confirmation_sig);
+                    return;
+                } else {
+                    console.log('error initializing profile');
+                    toastError('Error initializing profile');
+                }
                 return;
             }
         } catch (error) {
@@ -207,9 +236,10 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
         const fileListBlob = fileList.map((file: { originFileObj: Blob; type: string; }) => {
             return new Blob([file.originFileObj], { type: file.type });
         });
-        await trigger({ files: fileListBlob });
+        
 
         await initProfile(key);
+        await trigger({ files: fileListBlob });
         addUser({
             variables: {
                 fullName: profile!.fullName,
@@ -218,19 +248,9 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                 wallet: publicKey ? publicKey.toBase58() : web3AuthPublicKey,
                 currencyPreference: '$USD',
                 // @ts-expect-error - fileList is not empty
-                profileImg: `${process.env.AWS_PREFIX}${publicKey ? publicKey.toBase58() : web3AuthPublicKey}.${fileList.length > 0 ? fileList[0].name.split('.').pop() : ''}`
+                profileImg: `https://artisan-solana.s3.eu-central-1.amazonaws.com/${publicKey ? publicKey.toBase58() : web3AuthPublicKey}.${fileList.length > 0 ? fileList[0].name.split('.').pop() : ''}`
             }
         });
-        {!loading && !error && data && (
-            handlePageChange(2)
-        )}
-        {error && (
-            console.log('Error submitting', error),
-            toast.error('Error submitting, please try again')
-        )}
-        {loading && (
-            console.log('Submitting...')
-        )}
     }
 
     const page1 = () => {

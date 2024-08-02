@@ -20,7 +20,6 @@ type PropType = {
 const EmblaCarousel: React.FC<PropType> = (props) => {
   const router = useRouter();
   const { slides, options } = props
-  console.log(slides)
   const [emblaRef, emblaApi] = useEmblaCarousel(options)
 
   const { selectedIndex, scrollSnaps, onDotButtonClick } =
@@ -32,7 +31,6 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
     onPrevButtonClick,
     onNextButtonClick
   } = usePrevNextButtons(emblaApi)
-  console.log('slides', slides)
   return (
     <section className="embla">
       <div className="embla__viewport" ref={emblaRef}>

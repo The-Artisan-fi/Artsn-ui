@@ -2,7 +2,7 @@ import { Address } from "@coral-xyz/anchor";
 
 
 export type ArtsnCore = {
-  "address": "Gyaq4i9b9t42Qufx12uioHMa8z91WxFCQ2doXC5ieXdf",
+  "address": "4zRpccBb5ozQ7u8CLKkNQp7NGySUZpc9Bp16Tn4udTos",
   "metadata": {
     "name": "artsn_core",
     "version": "0.1.0",
@@ -1152,8 +1152,7 @@ export type ArtsnCore = {
       ],
       "accounts": [
         {
-          "name": "user",
-          "signer": true
+          "name": "user"
         },
         {
           "name": "payer",
@@ -1707,28 +1706,33 @@ export type ArtsnCore = {
   "errors": [
     {
       "code": 6000,
-      "name": "Unauthorized",
-      "msg": "You are not authorized to perform this action"
+      "name": "NotVerified",
+      "msg": "You already bought more than 500$ worth of fraction, to buy more you need to do KYC"
     },
     {
       "code": 6001,
-      "name": "ProfileAlreadyVerified",
-      "msg": "You are already verified!"
+      "name": "NotTimeYet",
+      "msg": "Listing is not Live yet, come back later!"
     },
     {
       "code": 6002,
-      "name": "InvalidMembership",
-      "msg": "You have a Non-Upgradable Membership Type!"
+      "name": "Overflow",
+      "msg": "Overflow"
     },
     {
       "code": 6003,
-      "name": "InvalidCondition",
-      "msg": "You used an invalid condition"
+      "name": "Underflow",
+      "msg": "Underflow"
     },
     {
       "code": 6004,
-      "name": "InvalidObjectType",
-      "msg": "You used an invalid object type"
+      "name": "PriceMismatch",
+      "msg": "The amount offered does not match the initial token price"
+    },
+    {
+      "code": 6005,
+      "name": "SignatureAuthorityMismatch",
+      "msg": "Signature authority mismatch"
     }
   ],
   "types": [
@@ -2200,7 +2204,7 @@ export type ArtsnCore = {
 
   
 export const IDL: ArtsnCore = {
-  "address": "Gyaq4i9b9t42Qufx12uioHMa8z91WxFCQ2doXC5ieXdf",
+  "address": "4zRpccBb5ozQ7u8CLKkNQp7NGySUZpc9Bp16Tn4udTos",
   "metadata": {
     "name": "artsn_core",
     "version": "0.1.0",
@@ -3350,8 +3354,7 @@ export const IDL: ArtsnCore = {
       ],
       "accounts": [
         {
-          "name": "user",
-          "signer": true
+          "name": "user"
         },
         {
           "name": "payer",
@@ -3905,28 +3908,33 @@ export const IDL: ArtsnCore = {
   "errors": [
     {
       "code": 6000,
-      "name": "Unauthorized",
-      "msg": "You are not authorized to perform this action"
+      "name": "NotVerified",
+      "msg": "You already bought more than 500$ worth of fraction, to buy more you need to do KYC"
     },
     {
       "code": 6001,
-      "name": "ProfileAlreadyVerified",
-      "msg": "You are already verified!"
+      "name": "NotTimeYet",
+      "msg": "Listing is not Live yet, come back later!"
     },
     {
       "code": 6002,
-      "name": "InvalidMembership",
-      "msg": "You have a Non-Upgradable Membership Type!"
+      "name": "Overflow",
+      "msg": "Overflow"
     },
     {
       "code": 6003,
-      "name": "InvalidCondition",
-      "msg": "You used an invalid condition"
+      "name": "Underflow",
+      "msg": "Underflow"
     },
     {
       "code": 6004,
-      "name": "InvalidObjectType",
-      "msg": "You used an invalid object type"
+      "name": "PriceMismatch",
+      "msg": "The amount offered does not match the initial token price"
+    },
+    {
+      "code": 6005,
+      "name": "SignatureAuthorityMismatch",
+      "msg": "Signature authority mismatch"
     }
   ],
   "types": [
@@ -4398,7 +4406,7 @@ export const IDL: ArtsnCore = {
 
 
 
-export const PROGRAM_ID = "Gyaq4i9b9t42Qufx12uioHMa8z91WxFCQ2doXC5ieXdf" as Address
+export const PROGRAM_ID = "4zRpccBb5ozQ7u8CLKkNQp7NGySUZpc9Bp16Tn4udTos" as Address
 
 export const LISTING_GROUP = 'LSTBuqygb7CMQryt45BC1fh5PPjuJKtoffDyASchWi2' as string;
 

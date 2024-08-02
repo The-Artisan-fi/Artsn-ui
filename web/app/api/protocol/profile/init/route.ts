@@ -23,18 +23,19 @@ export async function POST( request: Request ) {
     const programId = new PublicKey(PROGRAM_ID);
     console.log('programId', programId.toBase58());
     const program = new anchor.Program<ArtsnCore>(IDL, provider);
-    const uri = 'www.example.com'
     try {
         const req = await request.json();
         const buyer_publicKey = new PublicKey(req.publicKey);
-
+        const username = req.username;
         // VARIABLES
         const buyerProfile = PublicKey.findProgramAddressSync([Buffer.from('profile'), buyer_publicKey.toBuffer()], program.programId)[0];
         const feeKey = process.env.PRIVATE_KEY!;
         const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
         const profileInitIx = await program.methods
-        //@ts-expect-error - missing arguments
-            .initializeProfile()
+        //@ts-expect-error - not sure why this is throwing an error
+            .initializeProfile(
+                username
+            )
             .accounts({
                 payer: feePayer.publicKey,
                 user: buyer_publicKey,

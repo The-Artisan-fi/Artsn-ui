@@ -154,7 +154,6 @@ const Dashboard = () => {
   async function buyMore(product) {
     try{
         const data = await fetchProductDetails(product.associatedId);
-        const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
         if(publicKey && data){
           const tx = await buyTx(data.id, data.reference, publicKey.toBase58(), 1, data.uri);
           const getProvider = () => {
@@ -169,14 +168,23 @@ const Dashboard = () => {
             window.open('https://phantom.app/', '_blank');
           };
           const provider = getProvider();
-           const signature = await provider.signAndSendTransaction(tx)
-           const _confirm = await confirm(signature);
-           await toastPromise(_confirm.signature)
+            const signature = await provider.signAndSendTransaction(tx)
+            console.log(signature);
+            const _confirm = await confirm(signature);
+            if(_confirm){
+              getTokens(publicKey);
+            } else {
+              toastError('Transaction failed');
+            }
         } else if(web3AuthPublicKey && data){ 
           const tx = await buyTx(data.id, data.reference, web3AuthPublicKey, 1, data.uri);
           const signature = await rpc.sendTransaction(tx); 
           const _confirm = await confirm(signature);
-          await toastPromise(_confirm.signature)
+          if(_confirm){
+            getTokens(web3AuthPublicKey);
+          } else {
+            toastError('Transaction failed');
+          }
         }
     } catch (error) {
         toastError(`Error: ${error.message}`);
@@ -188,35 +196,34 @@ const Dashboard = () => {
     const listingArray = [];
     for (let i = 0; i < data.length; i++) {
       const listing = await getListingByWatch(data[i].updateAuthority.address);
-
+      
       // if the listing exists already in the listingArray with the same associatedId as the listing.listing, then increase the quantity by 1
       // else just push the new listing to the listingArray
       if (listingArray.find((item) => item.associatedId === listing.listing)) {
         const index = listingArray.findIndex((item) => item.associatedId === listing.listing);
         listingArray[index].quantity += 1;
-        continue;
-      } else {
-        listingArray.push({
-          ...data[i],
-          associatedId: listing.listing,
-          price: listing.price,
-          quantity: 1,
-        });
-      }
+        continue; 
+      } 
+      listingArray.push({
+        ...data[i],
+        associatedId: listing.listing,
+        price: listing.price,
+        quantity: 1,
+      });
     }
 
     setFractions(listingArray);
     setTokensLoading(false);
   }
 
-  useEffect(() => {
-    if (publicKey && tokenAccounts?.length == 0) {
-      getTokens(publicKey);
-    }
-  }, [publicKey, tokenAccounts]);
+  // useEffect(() => {
+  //   if (publicKey && tokenAccounts?.length == 0) {
+  //     getTokens(publicKey);
+  //   }
+  // }, [publicKey, tokenAccounts]);
 
   useEffect(() => {
-    if (publicKey && tokenAccounts.length == 0) {
+    if (publicKey) {
       getTokens(publicKey);
     } else {
         checkLogin().then((res) => {
@@ -231,7 +238,7 @@ const Dashboard = () => {
           }
       });
     }
-  }, []);
+  }, [publicKey]);
 
 
   return (

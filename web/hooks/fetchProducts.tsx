@@ -151,7 +151,7 @@ export const fetchWatches = async () => {
             // filters: [size_filter]
         };
         const all_program_accounts = await connection.getProgramAccounts(new PublicKey(PROGRAM_ID),
-            get_accounts_config
+            // get_accounts_config
         );
 
         const watchList = all_program_accounts.map((account) => {
