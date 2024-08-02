@@ -154,7 +154,7 @@ const SettingsPage = () => {
       if(tx){
         variables.associatedId = tx.associatedId;
         console.log('associatedId', tx.associatedId);
-        // const signature = await sendTransaction(tx.tx, connection, {skipPreflight: true,});
+        const signature = await sendTransaction(tx.tx, connection, {skipPreflight: true,});
 
         const _confirm = await confirm(
           signature,
