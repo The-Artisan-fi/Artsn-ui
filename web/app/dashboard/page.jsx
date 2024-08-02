@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { LoadingSpinner } from '@/components/Loading/Loading';
 import '@/styles/DashboardInventory.scss';
 import { FiArrowUpRight } from 'react-icons/fi';
 import { fetchProductDetails } from "@/hooks/fetchProducts";

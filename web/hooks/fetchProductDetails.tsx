@@ -15,7 +15,7 @@ export const fetchProductDetails = async (accountPubkey: string) => {
     const provider = new AnchorProvider(connection, wallet, {});
     setProvider(provider);
 
-    const program = new Program(IDL, PROGRAM_ID);
+    const program = new Program(IDL, provider);
 
     try {
         const account_info = await connection.getAccountInfo(new PublicKey(accountPubkey))
