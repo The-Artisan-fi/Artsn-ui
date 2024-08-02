@@ -340,7 +340,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                     {/* checkbox button that user has to click to acknowledge that they accept the terms and aggrements */}
                     <div className="terms-checkbox">
                         <input type="checkbox" id="terms" name="terms" value="terms" onChange={() => setAcceptedTerms(!acceptedTerms)} />{" "}
-                        <label className="label-3" htmlFor="terms">I accept the <a href="#">terms and conditions</a></label>
+                        <label className="label-3" htmlFor="terms">I accept the <a href="/forms/termsandconditions" target='_blank'>terms and conditions</a></label>
                     </div>
                     {!creating && (
                         <button className="btn-primary" onClick={() => createProfile(publicKey ? publicKey!.toBase58() : web3AuthPublicKey!)} disabled={!acceptedTerms}>
