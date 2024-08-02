@@ -1,29 +1,43 @@
-import { clusterApiUrl, Connection, PublicKey, Keypair, Transaction, GetProgramAccountsFilter, ParsedAccountData } from "@solana/web3.js";
-import { Program, AnchorProvider, setProvider } from "@coral-xyz/anchor";
-import { IDL, PROGRAM_ID } from "@/components/Utils/idl";
-import { TOKEN_2022_PROGRAM_ID,getTokenMetadata } from "@solana/spl-token";
+import { GetProgramAccountsConfig, clusterApiUrl, Connection, PublicKey, Keypair, Transaction, GetProgramAccountsFilter, ParsedAccountData, VersionedMessage, VersionedTransaction, SimulateTransactionConfig } from "@solana/web3.js";
+import { ASSOCIATED_TOKEN_PROGRAM_ID, createAssociatedTokenAccountIdempotentInstruction, createInitializeMint2Instruction, createMintToInstruction, getAssociatedTokenAddressSync, getMinimumBalanceForRentExemptMint, MINT_SIZE, TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID, getTokenMetadata } from "@solana/spl-token";
 import { ParsedProgramAccounts} from "@/helpers/types";
+import { createUmi } from '@metaplex-foundation/umi-bundle-defaults';
+import { keypairIdentity } from '@metaplex-foundation/umi'
+import { fetchCollectionV1 } from '@metaplex-foundation/mpl-core'
+import { publicKey } from '@metaplex-foundation/umi'
+import { bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
+import { AnchorProvider, Program } from "@coral-xyz/anchor";
+import { ArtsnCore, IDL } from "@/components/Protocol/idl";
 
 const connection = new Connection(clusterApiUrl("devnet"), {
     commitment: "confirmed",
 });
-
+// const connection = new Connection("http://localhost:8899", {
+//   commitment: "confirmed",
+// })
 const wallet = Keypair.generate();
 
-// @ts-expect-error - wallet is dummy variable, signing is not needed
-const provider = new AnchorProvider(connection, wallet, {});
-setProvider(provider);
-const program = new Program(IDL, PROGRAM_ID);
+const mint = new PublicKey('4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU'); // circle DEVNET - USDC
 
-export async function initProfileTx(key: string) {
+export async function getMintATA(wallet: PublicKey) {
   try{
-    const response = await fetch('/api/initProfile', {
+    const mintAta = getAssociatedTokenAddressSync(mint, wallet);
+    return mintAta;
+  } catch (error) {
+    console.error('Error getting mint ATA', error);
+  }
+}
+
+export async function initProfileTx(key: string, username: string) {
+  try{
+    const response = await fetch('/api/protocol/profile/init', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
       },
       body: JSON.stringify({
           publicKey: key,
+          username: username
       })
     })
 
@@ -41,9 +55,9 @@ export async function initProfileTx(key: string) {
   }
 }
 
-export async function buyTx(id: number, reference: string, key: string, amount: number) {
+export async function buyTx(id: number, reference: string, key: string, amount: number, uri: string) {
   try{
-    const response = await fetch('/api/buy', {
+    const response = await fetch('/api/protocol/buy', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
@@ -52,17 +66,16 @@ export async function buyTx(id: number, reference: string, key: string, amount: 
           id: id,
           reference: reference,
           publicKey: key,
-          amount: amount
+          amount: amount,
+          uri: uri,
       })
     })
-    const txData = await response.json();
-    const tx = Transaction.from(Buffer.from(txData.transaction, "base64"));
-
+    const { transaction } = await response.json(); //VersionedTransaction
+    const tx = VersionedTransaction.deserialize(Buffer.from(transaction, "base64"));
     if(!tx){
       console.log('no transaction');
       return;
     }
-
     return tx;
   } catch (error) {
     console.error('Error sending transaction', error);
@@ -71,7 +84,7 @@ export async function buyTx(id: number, reference: string, key: string, amount: 
 
 export async function fetchBuyerProfile(key: PublicKey) {
     try {
-      const response = await fetch('/api/getProfile', {
+      const response = await fetch('/api/protocol/profile/get', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -90,18 +103,20 @@ export async function fetchBuyerProfile(key: PublicKey) {
 export async function decodeProfileData(key: PublicKey) {
     try {
         const profile = await fetchBuyerProfile(key);
-        const decodedProfile = program.coder.accounts.decode(
-            "Profile",
-            profile.data
-        );
-        return decodedProfile;
+        // const decodedProfile = program.coder.accounts.decode(
+        //     "Profile",
+        //     profile.data
+        // );
+        // return decodedProfile;
     } catch (error) {
       console.error('Error decoding data', error);
     }
 }
 
 export async function getTokenAccounts(key: PublicKey) {
-  console.log('fetching token accounts for key:', key.toBase58());
+  if(!key){
+    return;
+  }
   const filters:GetProgramAccountsFilter[] = [
     {
       dataSize: 175,    //size of account (bytes)
@@ -117,7 +132,7 @@ export async function getTokenAccounts(key: PublicKey) {
       TOKEN_2022_PROGRAM_ID,
       {filters: filters}
   );
-  console.log(`Found ${accounts.length} token account(s) for wallet ${wallet}.`);
+  console.log(`Found ${accounts.length} token account(s) for wallet ${wallet.publicKey.toBase58()}.`);
   const tokenMetadata = async (mintAddress: string) => {
     const metadata = await getTokenMetadata(
       connection,
@@ -163,3 +178,186 @@ export async function getTokenAccounts(key: PublicKey) {
 
   return filteredAccounts;
 }
+
+export async function initAdminTx(newAdmin: string, username: string, signer: string) {
+  try{
+    const response = await fetch('/api/protocol/create/admin', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        newAdmin: newAdmin,
+        username: username,
+        signer: signer
+      })
+    })
+
+    const txData = await response.json();
+    const tx = Transaction.from(Buffer.from(txData.transaction, "base64"));
+    if(!tx){
+      console.log('no transaction');
+      return;
+    }
+
+    return tx;
+  }
+  catch (error) {
+    console.error('Error sending transaction', error);
+  }
+}
+
+// const createWatchArgs = {
+//   name: req.watchName,
+//   uri: req.watchUri,
+//   brand: req.watchBrand,
+//   model: req.watchModel,
+//   reference: req.watchReference,
+//   diameter: req.watchDiameter,
+//   movement: req.watchMovement,
+//   dialColor: req.watchDialColor,
+//   caseMaterial: req.watchCaseMaterial,
+//   braceletMaterial: req.watchBraceletMaterial,
+//   yearOfProduction: req.watchYearOfProduction,
+// };
+
+// const createFractionalizedListingArgs = {
+//   id: new anchor.BN(req.listingId),
+//   objectType: req.listingObjectType,
+//   share: new anchor.BN(req.listingShare),
+//   price: new anchor.BN(req.listingPrice),
+//   startingTime: new anchor.BN(req.listingStartingTime)
+// };
+
+
+export async function initTokenTx(
+  watchName: string,
+  watchUri: string,
+  watchBrand: string,
+  watchModel: string,
+  watchReference: string,
+  watchDiameter: number,
+  watchMovement: string,
+  watchDialColor: string,
+  watchCaseMaterial: string,
+  watchBraceletMaterial: string,
+  watchYearOfProduction: number,
+  listingId: number,
+  listingObjectType: string,
+  listingShare: number,
+  listingPrice: number,
+  listingStartingTime: number,
+  signer: string,
+  fileList: any
+) {
+  try{
+    const response = await fetch('/api/protocol/create/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        watchName: watchName,
+        watchUri: watchUri,
+        watchBrand: watchBrand,
+        watchModel: watchModel,
+        watchReference: watchReference,
+        watchDiameter: watchDiameter,
+        watchMovement: watchMovement,
+        watchDialColor: watchDialColor,
+        watchCaseMaterial: watchCaseMaterial,
+        watchBraceletMaterial: watchBraceletMaterial,
+        watchYearOfProduction: watchYearOfProduction,
+        listingId: listingId,
+        listingObjectType: listingObjectType,
+        listingShare: listingShare,
+        listingPrice: listingPrice,
+        listingStartingTime: listingStartingTime,
+        signer: signer,
+        fileList: fileList
+      })
+    })
+
+    const txData = await response.json();
+    const tx = Transaction.from(Buffer.from(txData.transaction, "base64"));
+    if(!tx){
+      console.log('no transaction');
+      return;
+    }
+
+    return {
+      tx: tx,
+      associatedId: txData.associatedId
+    }
+  }
+  catch (error) {
+    console.error('Error sending transaction', error);
+  }
+}
+export async function buyStripeTx(id: number, reference: string, key: string, amount: number) {
+  try {
+    const response = await fetch('/api/protocol/buy-stripe', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: id,
+        reference: reference,
+        publicKey: key,
+        amount: amount,
+        sessionId: sessionStorage.getItem('sessionId')
+      })
+    })
+    const txData = await response.json();
+    const tx = Transaction.from(Buffer.from(txData.transaction, "base64"));
+
+    if (!tx) {
+      console.log('no transaction');
+      return;
+    }
+
+    return tx;
+  } catch (error) {
+    console.error('Error sending transaction', error);
+  }
+};
+
+
+export async function getListingByWatch (key: string) {
+  try {
+    const memcmp_filter = {
+        memcmp: {
+          offset: 17,
+          bytes: new PublicKey(key).toBase58(),
+        },
+    };
+    const get_accounts_config: GetProgramAccountsConfig = {
+        commitment: "confirmed",
+        filters: [
+            memcmp_filter,
+          { dataSize: 70 }
+        ]
+    };
+    const connection = new Connection('https://devnet.helius-rpc.com/?api-key=b7faf1b9-5b70-4085-bf8e-a7be3e3b78c2', 'confirmed');
+    const wallet = Keypair.generate();
+    //@ts-expect-error - we are not signing
+    const provider = new AnchorProvider(connection,  wallet, {commitment: "confirmed"});
+    const program : Program<ArtsnCore> = new Program(IDL, provider);
+    const nft = await connection.getProgramAccounts(
+      program.programId,
+      get_accounts_config 
+    );
+
+    const nft_decoded = program.coder.accounts.decode(
+      "fractionalizedListing",
+      nft[0].account.data
+    );
+    return {
+      listing: nft[0].pubkey.toBase58(),
+      price: Number(nft_decoded.price),
+    };
+  } catch (error) {
+    console.error('Error fetching listing', error);
+  }
+};

@@ -100,7 +100,7 @@ const teamDataDesktop = [
     },
     {
         name: "Macarena Segura",
-        title: "Regulatory & Strategy Lead",
+        title: "Business Developer",
         img: Macarena,
         about: [
             "International Fintech Lawyer",

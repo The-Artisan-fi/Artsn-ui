@@ -1,5 +1,5 @@
 import * as anchor from "@coral-xyz/anchor";
-import { IDL, Fragment, PROGRAM_ID} from "@/components/Utils/idl";
+import { IDL, ArtsnCore, PROGRAM_ID, USDC_MINT} from "@/components/Protocol/idl";
 import {
     PublicKey,
     SystemProgram,
@@ -16,7 +16,7 @@ import {
  } from "@solana/spl-token";
 import * as b58 from "bs58";
 
-const USDC_DEV = new PublicKey("Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr");
+const USDC_DEV = new PublicKey(USDC_MINT);
 
 export type MakeTransactionInputData = {
     account: string,
@@ -43,7 +43,7 @@ export async function POST( request: Request) {
     // @ts-expect-error - wallet is dummy variable, signing is not needed
     const provider = new anchor.AnchorProvider(connection, wallet, {});
     const programId = new PublicKey(PROGRAM_ID);
-    const program = new anchor.Program<Fragment>(IDL, programId, provider);
+    const program = new anchor.Program<ArtsnCore>(IDL, provider);
 
     try {
         const req = await request.json();
@@ -92,7 +92,8 @@ export async function POST( request: Request) {
         console.log('feePayer', feePayer.publicKey.toBase58())
 
         const profileInitIx = await program.methods
-            .initializeProfileAccount()
+            //@ts-expect-error - missing arguments
+            .initializeProfile()
             .accounts({
                 payer: feePayer.publicKey,
                 user: buyer_publicKey,
@@ -103,22 +104,9 @@ export async function POST( request: Request) {
         
 
         const buyShareIx = await program.methods
+            //@ts-expect-error - missing arguments
             .buyListing()
             .accounts({
-                // buyer: buyer_publicKey,
-                // payer: feePayer.publicKey,
-                // buyerProfile,
-                // buyerCurrencyAta,
-                // buyerFractionAta,
-                // listing,
-                // listingCurrencyAta,
-                // fraction,
-                // currency: USDC_DEV,
-                // auth,
-                // associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-                // tokenProgram: TOKEN_PROGRAM_ID,
-                // token2022Program: TOKEN_2022_PROGRAM_ID,
-                // systemProgram: SystemProgram.programId,
                 payer: feePayer.publicKey,
                 buyer: buyer_publicKey,
                 buyerProfile,

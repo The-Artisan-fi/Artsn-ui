@@ -56,6 +56,15 @@ export const getListingByMintAddress = gql`
     }
 `;
 
+export const getListingImageByAssociatedId = gql`
+    query($associatedId: String!) {
+        listings(query: { associatedId: $associatedId }) {
+            _id
+            images
+        }
+    }
+`;
+
 
 ////////////////USER QUERIES////////////////////
 
@@ -69,6 +78,20 @@ export const user = gql`
             wallet
             currencyPreference
             profileImg
+            idvId
+            idvStatus
+        }
+    }
+`;
+
+export const user_by_idvId = gql`
+    query($idvId: String!) {
+        users(query: { idvId: $idvId }) {
+            _id
+            email
+            wallet
+            idvId
+            idvStatus
         }
     }
 `;
@@ -78,6 +101,7 @@ export const userProfileBasic = gql`
         users(query: { wallet: $wallet }) {
             profileImg
             userName
+            onfidoKyc
         }
     }
 `;

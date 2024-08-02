@@ -6,7 +6,7 @@
 }
 header {
     width: 100%;
-    z-index: 1000;
+    z-index: 10;
 }
 
 .navbrand {
@@ -39,7 +39,7 @@ header {
     justify-content: flex-end;
     align-items: center;
     gap: 10px;
-    border-radius: 7px;
+    border-radius: 3px;
     border: 1px solid #F90;
     background: rgba(255, 153, 0, 0.30);
     color: #FFF;

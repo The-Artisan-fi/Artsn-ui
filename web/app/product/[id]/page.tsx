@@ -3,11 +3,12 @@ import "@/styles/ProductDetails.scss";
 import Dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import { Loading } from "@/components/Loading/Loading";
+// const Loading = Dynamic(() => import("@/components/Loading/Loading"), { ssr: false });
 const Progress = Dynamic(() => import("antd").then((mod) => mod.Progress), { ssr: false });
 const Collapse = Dynamic(() => import("antd").then((mod) => mod.Collapse), { ssr: false });
 const Panel = Dynamic(() => import("antd").then((mod) => mod.Collapse.Panel), { ssr: false });
 // const Slider = Dynamic(() => import("antd").then((mod) => mod.Slider), { ssr: false });
-import { fetchProductDetails } from "@/hooks/fetchProductDetails";
+import { fetchProductDetails } from "@/hooks/fetchProducts";
 const ProductsSectionDesktop = Dynamic(() => import("@/components/ProductsSectionDesktop/ProductsSectionDesktop"), { ssr: false });
 const ProductsSectionMobile = Dynamic(() => import("@/components/ProductsSectionMobile/ProductsSectionMobile"), { ssr: false });
 const OpportunitiesSection = Dynamic(() => import("@/components/OpportunitiesSection/OpportunitiesSection"), { ssr: false });
@@ -24,10 +25,12 @@ import { encodeURL, TransactionRequestURLFields } from "@solana/pay";
 const QrModal = Dynamic(() => import("@/components/Qr/QrModal"), { ssr: false });
 import { FaQrcode } from "react-icons/fa";
 const Web3Auth = Dynamic(() => import("@/components/Web3Auth/Web3Auth"), { ssr: false });
-import { buyTx } from "@/components/Protocol/functions";
+import { buyStripeTx, buyTx } from "@/components/Protocol/functions";
 import { toastPromise, toastError } from "@/helpers/toast";
 import type { ProductDetails, OffChainData, OnChainData, Product, FAQ, Image } from "@/helpers/types";
-
+import { loadStripe } from "@stripe/stripe-js";
+import { generateUUID } from "@/helpers/generateUuid";
+import { sign } from "crypto";
 
 export default function ProductDetails({ params }: { params: { id: string } }) {
     const { publicKey, sendTransaction } = useWallet();
@@ -59,7 +62,6 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
         }
     );
     if(!loading && data != undefined && offChainData == undefined){
-        console.log("data", data.listings[0]);
         setOffChainData(data.listings[0]);
     }
     if(!loading && error != undefined){
@@ -70,12 +72,12 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
     async function buyListing() {        
         try {
             if(publicKey && product){
-               const tx = await buyTx(product.id, product.reference, publicKey.toBase58(), amount);
+               const tx = await buyTx(product.id, product.reference, publicKey.toBase58(), amount, product.uri);
                 const signature = await sendTransaction(tx!, connection, {skipPreflight: true,});
                 await toastPromise(signature)
             } 
             if(web3AuthPublicKey !== null && !publicKey && product){
-                const tx = await buyTx(product.id, product.reference, web3AuthPublicKey, amount);
+                const tx = await buyTx(product.id, product.reference, web3AuthPublicKey, amount, product.uri);
                 const signature = await rpc!.sendTransaction(tx!);
                 await toastPromise(signature)
             }
@@ -95,7 +97,6 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
             const refKey = Keypair.generate().publicKey.toBase58();
             setRefKey(refKey);
             const apiUrl = `${location.protocol}//${location.host}/api/qr/buy?new=true&id=${product?.id}&reference=${product?.reference}&refKey=${refKey}`
-            console.log('api url', apiUrl)
             
             const urlParams: TransactionRequestURLFields = {
                 link: new URL(apiUrl),
@@ -115,8 +116,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
     // **************************Data Functions***********************************
     async function fetchData(accountPubkey: string) {
         const on_chain_data: OnChainData | undefined = await fetchProductDetails(accountPubkey);
-        console.log(`on chain data for pubkey: ${accountPubkey}`, on_chain_data)
-        console.log('off chain data', offChainData)
+
         const product_images = offChainData!.images.map((image: string) => {
             return {
                 original: image,
@@ -148,6 +148,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
             investUrl: "#",
             gallery: offChainData!.images,
             about: offChainData!.about,
+            uri: on_chain_data!.uri,
         }
 
         const faq_items = [
@@ -232,6 +233,62 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
             fetchData(offChainData.associatedId);
         }
     }, [offChainData]);
+
+    const asyncStripe = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string);
+    async function buyStripe() {
+        try {
+            const idempotencyKey = generateUUID();
+            const stripe = await asyncStripe;
+            const res = await fetch("/api/stripe", {
+                method: "POST",
+                body: JSON.stringify({
+                    amount,
+                    id: params.id
+                }),
+                headers: { 
+                    "Content-Type": "application/json",
+                    'Idempotency-Key': idempotencyKey,
+                },
+            });
+            const { sessionId } = await res.json();
+            sessionStorage.setItem('sessionId', sessionId);
+            await stripe?.redirectToCheckout({ sessionId });
+        } catch (err) {
+            console.log("Transaction failed");
+        }
+    }
+
+    async function buyStripeListing(amount: string) {
+        try {
+            if (web3AuthPublicKey !== null && !publicKey && product) {
+                const tx = await buyStripeTx(product.id, product.reference, web3AuthPublicKey, +amount);
+                const signature = await rpc!.sendTransaction(tx!);
+                await toastPromise(signature)
+            } else if (publicKey && !web3AuthPublicKey && product) {
+                const tx = await buyStripeTx(product.id, product.reference, publicKey.toBase58(), +amount);
+                const signature = await sendTransaction(tx!, connection, {skipPreflight: true});
+                await toastPromise(signature)
+            }
+        } catch (error) {
+            console.error('Error sending transaction', error);
+            toastError('Error sending transaction')
+        } finally {
+            sessionStorage.removeItem('sessionId') 
+        }
+    }
+
+    useEffect(() => {
+        const amount = new URLSearchParams(window.location.search).get('amount');
+        if (
+            ((publicKey && product) 
+            || web3AuthPublicKey !== null 
+            && !publicKey && product) 
+            && amount
+            && sessionStorage.getItem('sessionId')
+        ) {
+            buyStripeListing(amount);
+        }
+    }, [publicKey, web3AuthPublicKey, product]);
 
     return (
         <>
@@ -318,14 +375,15 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                         <div className="product-details__hero__info__set__cont">
                                             <div className="market-value">
                                                 <p className="body">Market Value</p>
-                                                <p className="heading-2 w-700">
-                                                    {product!.marketValue} €
+                                                <p className="heading-2 w-700" style={{ fontSize: '28px' }}>
+                                                    {/* turn marketValue into a number and insert a , if needed */}
+                                                    {product!.currency === "USDC" && "$"} {product!.marketValue.toLocaleString()} {product!.currency === "USDC" ? "" : product!.currency}
                                                 </p>
                                             </div>
                                             <div className="fraction-left">
                                                 <p className="body">Price</p>
-                                                <p className="heading-2 w-700">
-                                                    {product!.price} €
+                                                <p className="heading-2 w-700" style={{ fontSize: '28px' }}>
+                                                    {product!.currency === "USDC" && "$"} {product!.price.toLocaleString()} {product!.currency === "USDC" ? "" : product!.currency}
                                                 </p>
                                             </div>
                                         </div>
@@ -336,7 +394,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                         <div className="product-details__hero__info__set__cont">
                                             <div className="past-returns">
                                                 <p className="body">Past Returns</p>
-                                                <p className="heading-2">
+                                                <p className="heading-2" style={{ fontSize: '24px'}}>
                                                     <span className="w-700">
                                                         +{product!.pastReturns}%{" "}
                                                     </span>
@@ -352,7 +410,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                                         (over {product!.earningPotentialDuration})
                                                     </span>
                                                 </p>
-                                                <p className="heading-2">
+                                                <p className="heading-2" style={{ fontSize: '24px'}}>
                                                     <span className="w-700">
                                                         +{product!.earningPotential}%{" "}
                                                     </span>
@@ -377,26 +435,45 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                         </div>   
                                     </div>
                                     
-                                    <div className="btn-container" style={{width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                                        
-                                        <a 
-                                            onClick={
-                                            ()=>{
-                                                if(!publicKey && !web3AuthPublicKey){
-                                                    getQrCode();
-                                                }else {
-                                                    buyListing();
-                                                }
-                                            }} 
-                                            className="btn btn-white" 
-                                            style={{ 
-                                                justifyContent: "center", 
-                                                width: !publicKey && !web3AuthPublicKey ? '49%' : '85%'
-                                            }}
-                                        >
-                                            {!publicKey && !web3AuthPublicKey ? 'Buy with QR' :'INVEST IN FRACTIONS'}
-                                        </a>
-                                        
+                                    <div className="btn-container" style={{width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start'}}>
+                                        <div className="btn-container" style={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center'}}>
+                                            <a 
+                                                onClick={
+                                                ()=>{
+                                                    if(!publicKey && !web3AuthPublicKey){
+                                                        getQrCode();
+                                                    }else {
+                                                        buyListing();
+                                                    }
+                                                }} 
+                                                className="btn btn-white" 
+                                                style={{ 
+                                                    justifyContent: "center", 
+                                                    width: !publicKey && !web3AuthPublicKey ? '49%' : '85%'
+                                                }}
+                                            >
+                                                {!publicKey && !web3AuthPublicKey ? 'Buy with QR' :'INVEST IN FRACTIONS'}
+                                            </a>
+
+                                            <a
+                                                onClick={buyStripe}
+                                                className="btn btn-white"
+                                                style={{ 
+                                                    justifyContent: "center", 
+                                                    width: !publicKey && !web3AuthPublicKey ? '49%' : '85%',
+                                                    marginTop: '1rem',
+                                                    backgroundColor: 'transparent',
+                                                    border: '1px solid #fff',
+                                                    borderRadius: '0.5rem',
+                                                    display: 'flex',
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    cursor: 'pointer'
+                                                }}
+                                            >
+                                                BUY WITH CARD | <img src="/assets/logos/google_pay.png" alt="google pay" style={{height: '2.5rem'}}/>
+                                            </a>
+                                        </div>
                                         {!publicKey && !web3AuthPublicKey ? (
                                             <button className="btn btn-white" style={{ justifyContent: "center", width: '49%' }} onClick={()=> setDisplayLoginModal(true)}>
                                                 Login
@@ -405,7 +482,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
                                             <a 
                                                 onClick={getQrCode}
                                                 // className="btn btn-white" 
-                                                style={{ justifyContent: "center", cursor: 'pointer'}}
+                                                style={{ justifyContent: "center", cursor: 'pointer', paddingTop: '1rem'}}
                                             >
                                                 <FaQrcode size={30} />
                                             </a>

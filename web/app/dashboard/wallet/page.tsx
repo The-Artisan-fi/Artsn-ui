@@ -10,9 +10,10 @@ import { checkLogin } from "@/components/Web3Auth/solanaRPC";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { getAssociatedTokenAddress, getAccount } from '@solana/spl-token';
 import ArtisanIcon from "@/public/assets/artisan-icon.png"
-
+import SolanaRpc from '@/components/Web3Auth/solanaRPC';
 
 const WalletPage = () => {
+  const [rpc, setRpc] = useState<SolanaRpc | null>(null);
   const [solBalance, setSolBalance] = useState<number | null>(null);
   const [usdcBalance, setUsdcBalance] = useState<number | null>(null);
   const { publicKey } = useWallet();
@@ -21,7 +22,7 @@ const WalletPage = () => {
   // const usdcAddress = new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v');
   
   // Get details about the USDC token - Devnet
-  const usdcAddress= new PublicKey('Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr')
+  const usdcAddress = new PublicKey('Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr')
   const connection = new Connection(
     process.env.NEXT_PUBLIC_HELIUS_DEVNET!,
     "confirmed"
@@ -36,10 +37,22 @@ const WalletPage = () => {
     setSolBalance(sol / 10 ** 9);
     const ata = await getAssociatedTokenAddress(usdcAddress, publicKey);
     const accountData = await getAccount(connection, ata, "confirmed");
-    console.log(Number(accountData.amount));
-    // divide by 10^6 to get the actual balance
-
     setUsdcBalance(Number(accountData.amount) / 10 ** 6);
+  }
+
+  async function getWeb3AuthKey() {
+    if(web3AuthPublicKey && rpc){
+      try {
+        console.log('web3AuthPublicKey', web3AuthPublicKey);
+        const permission = await rpc.getPermission();
+        if(permission){
+          alert('Private Key will display on next alert, please make sure no one is looking at your screen and do not share it with anyone!');
+          alert(`Private Key: ${permission}`);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
   }
 
   useEffect(() => {
@@ -49,6 +62,7 @@ const WalletPage = () => {
       checkLogin().then((res) => {
           if(res.connected && res.account){
             setWeb3AuthPublicKey(new PublicKey(res.account));
+            setRpc(res.rpc);
             getBalance(new PublicKey(res.account));
           }
       });
@@ -65,54 +79,28 @@ const WalletPage = () => {
         />
         <div className="wallet__item__details">
           <p className="p-2">THEARTISAN WALLET</p>
-          <p className="p-2 dimmed">{publicKey ? sliceKey(publicKey.toBase58()) : 'Connect Wallet'}</p>
+          <p className="p-2 dimmed">{publicKey && sliceKey(publicKey.toBase58())}</p>
+          <p className="p-2 dimmed">{web3AuthPublicKey && sliceKey(web3AuthPublicKey.toBase58())}</p>
+          {web3AuthPublicKey && (
+            <>
+              <button className="btn-primary" style={{marginTop: '1rem'}} onClick={()=> getWeb3AuthKey()}>Export Private Key</button>
+            </>
+          )}
         </div>
 
         <div className="wallet__item__action">
           <span className="p-5" style={{ color: 'white'}}>EST. BALANCE</span>
-          <span className="h-6" style={{ color: 'white'}}>
-            {/* {
-              solBalance ? solBalance.toFixed(4) : '0.00'
-            } */}
-            {usdcBalance ? usdcBalance.toFixed(2) : '0.00'}
-          </span>
-        </div>
-      </div>
-
-      {/* item 2 */}
-      <div className="wallet__item">
-        <RiMoneyDollarCircleFill className="wallet__item__icon" style={{ color: 'white'}}/>
-        <div className="wallet__item__details">
-          <p className="p-4 dimmed">USDC</p>
-          <p className="p-2 dimmed">
-            {usdcBalance ? usdcBalance.toFixed(2) : '0.00'}
-          </p>
-        </div>
-        <div className="wallet__item__action__container">
-          <div className="wallet__item__action__container__btn">
-            <span className="p-3">DEPOSIT USDC </span>
-          </div>
-          <div className="wallet__item__action__container__btn">
-            <span className="p-3">DEPOSIT SOL</span>
+          <div style={{ display: 'flex', flexDirection: 'row', gap: '1rem'}}>
+            <RiMoneyDollarCircleFill className="wallet__item__icon" style={{ color: 'white'}}/>
+            <div className="wallet__item__details">
+              <p className="p-4 dimmed">USDC</p>
+              <p className="p-2 dimmed">
+                {usdcBalance ? usdcBalance.toFixed(2) : '0.00'}
+              </p>
+            </div>
           </div>
         </div>
       </div>
-
-      {/* item 3 */}
-
-      {/* <div className="wallet__item">
-        <SiSolana className="wallet__item__icon" />
-        <div className="wallet__item__details">
-          <p className="p-4 dimmed">SOLANA</p>
-          <p className="p-2 dimmed">
-            {solBalance ? solBalance.toFixed(4) : '0.00'}
-          </p>
-        </div>
-
-        <div className="wallet__item__action">
-          <span className="p-3">DEPOSIT SOL</span>
-        </div>
-      </div> */}
     </div>
   );
 };

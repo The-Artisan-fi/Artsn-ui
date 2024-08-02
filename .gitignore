@@ -46,4 +46,4 @@ anchor/target/.rustc_info.json
 test-ledger
 .yarn
 .env
-
+wallet.json

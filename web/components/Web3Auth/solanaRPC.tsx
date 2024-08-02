@@ -3,6 +3,7 @@ import {
   PublicKey,
   Transaction,
   TransactionInstruction,
+  VersionedTransaction,
 } from "@solana/web3.js";
 import { CHAIN_NAMESPACES, WALLET_ADAPTERS, IProvider, CustomChainConfig } from "@web3auth/base";
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
@@ -11,7 +12,6 @@ import { SolanaWallet } from "@web3auth/solana-provider";
 import { SolanaPrivateKeyProvider } from "@web3auth/solana-provider";
 
 const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
-
 const chainConfig = {
   chainNamespace: CHAIN_NAMESPACES.SOLANA,
   chainId: "0x3", // Please use 0x1 for Mainnet, 0x2 for Testnet, 0x3 for Devnet
@@ -153,7 +153,6 @@ export const login = async () => {
     );
 
     if(!web3authProvider) {
-      console.log('web3authProvider not initialized yet')
       uiConsole("web3authProvider not initialized yet");
       return;
     }
@@ -165,7 +164,6 @@ export const login = async () => {
 };
 
 export const logout = async () => {
-  console.log('logging out')
   try{
   const chainConfig = {
     chainNamespace: CHAIN_NAMESPACES.SOLANA,
@@ -195,19 +193,6 @@ export const logout = async () => {
 
   await web3auth.init();
 
-  const web3authProvider: IProvider | null = await web3auth.connectTo(
-    WALLET_ADAPTERS.OPENLOGIN,
-    {
-      loginProvider: "google",
-    },
-  );
-
-  // if(!web3authProvider) {
-  //   console.log('web3authProvider not initialized yet')
-  //   uiConsole("web3authProvider not initialized yet");
-  //   return;
-  // }
-
   await web3auth.logout();
   
   return true;
@@ -217,10 +202,34 @@ export const logout = async () => {
 };
 
 export const loginWithEmail = async (email: string) => {
-  if (!web3auth) {
-    uiConsole("web3auth not initialized yet");
-    return;
-  }
+  const chainConfig = {
+      chainNamespace: CHAIN_NAMESPACES.SOLANA,
+      chainId: "0x3", // Please use 0x1 for Mainnet, 0x2 for Testnet, 0x3 for Devnet
+      rpcTarget: "https://api.devnet.solana.com",
+      displayName: "Solana Devnet",
+      blockExplorer: "https://explorer.solana.com",
+      ticker: "SOL",
+      tickerName: "Solana Token",
+    };
+    const web3auth = new Web3AuthNoModal({
+      clientId,
+      chainConfig,
+      web3AuthNetwork: "sapphire_mainnet",
+    });
+
+
+    const privateKeyProvider = new SolanaPrivateKeyProvider({ config: { chainConfig } });
+
+    const openloginAdapter = new OpenloginAdapter({
+      privateKeyProvider,
+      adapterSettings: {
+        uxMode: "redirect",
+      }
+    });
+    web3auth.configureAdapter(openloginAdapter);
+
+    await web3auth.init();
+  console.log('email', email)
   const web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
     loginProvider: "email_passwordless",
     extraLoginOptions: {
@@ -278,7 +287,7 @@ export default class SolanaRpc {
     }
   };
 
-  sendTransaction = async (tx: Transaction): Promise<string> => {
+  sendTransaction = async (tx: Transaction | VersionedTransaction): Promise<string> => {
     try {
       const solanaWallet = new SolanaWallet(this.provider);
 
@@ -304,5 +313,13 @@ export default class SolanaRpc {
 
       const signedTx = await solanaWallet.signAllTransactions([transaction]);
       return signedTx;
+  };
+
+  getPermission = async (): Promise<string> => {
+    const permission = await this.provider.request({
+      method: "solanaPrivateKey",
+    });
+
+    return permission as string;
   };
 }

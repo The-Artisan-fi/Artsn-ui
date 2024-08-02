@@ -68,6 +68,8 @@ export const ADD_USER = gql`
         wallet: $wallet
         currencyPreference: $currencyPreference
         profileImg: $profileImg
+        idvId: ""
+        idvStatus: ""
       }
     ) {
       _id
@@ -77,6 +79,34 @@ export const ADD_USER = gql`
       wallet
       currencyPreference
       profileImg
+      idvId
+      idvStatus
+    }
+  }
+`;
+
+export const UPDATE_USER_IDV = gql`
+  mutation($idvStatus: String!, $idvId: String!) {
+    updateOneUser(
+      query: { idvId: $idvId }
+      set: { idvStatus: $idvStatus}
+    ) {
+      _id
+      wallet
+      idvStatus
+    }
+  }
+`;
+
+export const UPDATE_USER_IDV_ID = gql`
+  mutation($wallet: String! $idvId: String!) {
+    updateOneUser(
+      query: { wallet: $wallet }
+      set: { idvId: $idvId}
+    ) {
+      _id
+      wallet
+      idvId
     }
   }
 `;

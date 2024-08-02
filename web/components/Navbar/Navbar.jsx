@@ -90,7 +90,8 @@ function Navbar() {
 
   async function checkBuyerProfile(key) {
     try {
-      const response = await fetch('/api/getProfile', {
+      console.log('checking key', key)
+      const response = await fetch('/api/protocol/profile/get', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -100,7 +101,7 @@ function Navbar() {
         }),
       });
       const profile = await response.json();
-      console.log('profile***', profile.profile)
+      console.log('profile response from checking', profile);
       if(profile.profile != false) {
         setBuyerProfileExists(profile.profile);
       } else {

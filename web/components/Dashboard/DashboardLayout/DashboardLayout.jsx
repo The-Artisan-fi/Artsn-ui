@@ -36,8 +36,6 @@ const DashboardLayout = ({ children }) => {
     setSelectedKeys([key]);
     setActiveTabTitle(item.props.title);
 
-    console.log(key, item);
-
     // Get the URL based on the selected key
     let url;
     switch (key) {

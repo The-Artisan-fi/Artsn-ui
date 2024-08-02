@@ -45,7 +45,7 @@
             }
 
             .image-gallery-thumbnail {
-                border-radius: 10px;
+                border-radius: 5px;
                 opacity: 0.3;
                 background: #000;
                 border: 1px solid transparent;
@@ -114,7 +114,7 @@
                     & > .market-value,
                     & > .fraction-left {
                         padding: 2rem;
-                        border-radius: 10px;
+                        border-radius: 5px;
 
                         display: flex;
                         flex-direction: column;
@@ -128,13 +128,13 @@
 
                     & > .past-returns,
                     & > .earning-potential {
-                        padding: 2rem;
+                        padding: 1rem;
 
                         display: flex;
                         flex-direction: column;
                         justify-content: center;
-                        gap: 2rem;
-                        border-radius: 10px;
+                        gap: 1rem;
+                        border-radius: 5px;
                         text-align: left;
                         min-height: 10rem;
                         color: #e4e4e4;
@@ -193,7 +193,7 @@
 
         &__calc {
             flex-basis: 45%;
-            border-radius: 10px;
+            border-radius: 5px;
             border: 1px solid #23b371;
             background: linear-gradient(
                 108deg,

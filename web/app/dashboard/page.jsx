@@ -4,9 +4,10 @@ import Image from 'next/image';
 import { LoadingSpinner } from '@/components/Loading/Loading';
 import '@/styles/DashboardInventory.scss';
 import { FiArrowUpRight } from 'react-icons/fi';
-import { fetchProductDetails } from "@/hooks/fetchProductDetails";
+import { fetchProductDetails } from "@/hooks/fetchProducts";
+import { LoadingSpinner } from '@/components/Loading/Loading';
 import dynamic from 'next/dynamic';
-import { getTokenAccounts } from '@/components/Protocol/functions';
+import { fetchAssets } from '@/components/Protocol/umi';
 const Table  = dynamic(() => import('antd').then((mod) => mod.Table), { ssr: false });
 const Radio  = dynamic(() => import('antd').then((mod) => mod.Radio.Group), { ssr: false });
 const Line = dynamic(() => import('@ant-design/plots').then((mod) => mod.Line), {
@@ -15,12 +16,11 @@ const Line = dynamic(() => import('@ant-design/plots').then((mod) => mod.Line), 
 import Audemars from "@/public/assets/home/products/Audemars-piguet-Royaloak.webp"
 import { useWallet } from '@solana/wallet-adapter-react';
 import { buyTx } from "@/components/Protocol/functions";
-import { getListingByMintAddress } from '@/lib/queries';
-import { useLazyQuery } from '@apollo/client';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { checkLogin } from "@/components/Web3Auth/solanaRPC";
+import { confirm } from '@/helpers/confirm';
 import { toastError, toastPromise } from '@/helpers/toast';
-
+import { getListingByWatch } from '@/components/Protocol/functions';
 // Graph configurations
 
 const optionsWithDisabled = [
@@ -67,8 +67,9 @@ const config = {
 };
 
 const Dashboard = () => {
+  const [tokensLoading, setTokensLoading] = useState(true);
   const [value4, setValue4] = useState('Weekly');
-  const [fractions] = useState([]);
+  const [fractions, setFractions] = useState([]);
   const [tokenAccounts, setTokenAccounts] = useState([]);
   const { publicKey, sendTransaction } = useWallet();
   const [web3AuthPublicKey, setWeb3AuthPublicKey] = useState(null);
@@ -78,39 +79,8 @@ const Dashboard = () => {
   const [listingAddress, setListingAddress] = useState('');
   const [loadingFn, setLoadingFn] = useState(true);
   const onChange4 = ({ target: { value } }) => {
-    console.log('radio4 checked', value);
     setValue4(value);
   };
-
-  const [getListing, { loading, error, data }] = useLazyQuery(getListingByMintAddress, {
-    variables: variables,
-  });
-  if(!loading && data != undefined && listingAddress == ''){
-    console.log('data****', data);
-    if(data.listings.length > 0 && fractions.filter((item) => item.associatedId == data.listings[0].associatedId).length == 0){
-      console.log('data.listings[0].associatedId', data.listings[0].associatedId);
-      fractions.push({
-        ...queryItem,
-        associatedId: data.listings[0].associatedId
-      });
-
-      setListingAddress(data.listings[0].associatedId);
-    }
-  }
-  if(!loading && error != undefined){
-      console.log("error", error);
-  }
-
-  async function getListingAddress(data){
-    setVariables({mintAddress: data.mint});
-    setTimeout(() => {
-      console.log('waiting one second');
-    }, 3000);
-    console.log('getting listing for variable', variables);
-    console.log('fractions', fractions);
-    await getListing();
-    return;
-  }
 
   const columns = [
     {
@@ -129,7 +99,7 @@ const Dashboard = () => {
         <Image
           width={40}
           height={50}
-          src={Audemars}
+          src={`https://artisan-solana.s3.eu-central-1.amazonaws.com/${record.associatedId}-0.jpg`}
           alt="Audemars Piguet Royal Oak Extra Thin, 2019"
         />
       ),
@@ -138,13 +108,15 @@ const Dashboard = () => {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
+
+      render: (text, record) => <p>{`${record.attributes.attributeList[0].value} - ${record.attributes.attributeList[1].value}`}</p>,
     },
     {
       title: 'Value',
       dataIndex: 'value',
       key: 'value',
   
-      render: (text, record) => <p>{`$${text}`}</p>,
+      render: (text, record) => <p>{`$${record.price * record.quantity}`}</p>,
     },
   
     {
@@ -153,18 +125,18 @@ const Dashboard = () => {
       key: 'amount',
   
       sorter: (a, b) => a.amount - b.amount,
+      render: (text, record) => <p>{record.quantity}</p>,
     },
     {
       title: 'Action',
       dataIndex: 'action',
       key: 'action',
   
-      render: (text, record) => (
-        <div className="dashboard-inventory__body__table__action">
+      render: (text, record, index) => (
+        <div className="dashboard-inventory__body__table__action" key={index}>
           <button
             className="btn-table"
             onClick={async () => {
-              // console.log('record', record);
               window.location.href = `/product/${record.associatedId}`;
             }}
           >
@@ -184,10 +156,8 @@ const Dashboard = () => {
   async function buyMore(product) {
     try{
         const data = await fetchProductDetails(product.associatedId);
-        // console.log('data', data)
-        const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
         if(publicKey && data){
-          const tx = await buyTx(data.id, data.reference, publicKey.toBase58(), 1);
+          const tx = await buyTx(data.id, data.reference, publicKey.toBase58(), 1, data.uri);
           const getProvider = () => {
             if ('phantom' in window) {
               const provider = window.phantom?.solana;
@@ -200,59 +170,77 @@ const Dashboard = () => {
             window.open('https://phantom.app/', '_blank');
           };
           const provider = getProvider();
-           const signature = await provider.signAndSendTransaction(tx)
-           console.log('signature from buy', signature);
-           await toastPromise(signature)
+            const signature = await provider.signAndSendTransaction(tx)
+            console.log(signature);
+            const _confirm = await confirm(signature);
+            if(_confirm){
+              getTokens(publicKey);
+            } else {
+              toastError('Transaction failed');
+            }
         } else if(web3AuthPublicKey && data){ 
-          const tx = await buyTx(data.id, data.reference, web3AuthPublicKey, 1);
+          const tx = await buyTx(data.id, data.reference, web3AuthPublicKey, 1, data.uri);
           const signature = await rpc.sendTransaction(tx); 
-          await toastPromise(signature)
+          const _confirm = await confirm(signature);
+          if(_confirm){
+            getTokens(web3AuthPublicKey);
+          } else {
+            toastError('Transaction failed');
+          }
         }
     } catch (error) {
         toastError(`Error: ${error.message}`);
     };
   };
   const getTokens = async (key) => {
-    // only execute if tokenAccounts is empty
-    if (tokenAccounts.length == 0) {
-      console.log('key', key)
-      const data = await getTokenAccounts(key);
-      console.log('data', data)
-      setTokenAccounts(data);
-      if(!data){
-        return;
-      }
-      for(let i = 0; i < data.length; i++){
-        setQueryItem(data[i]);
-        await getListingAddress(data[i]);
-        setListingAddress('');
-      }
-      setLoadingFn(false);
+    const data = await fetchAssets(key.toString());
+    // for each asset get the listing address by watch address (data[i].updateAuthority.address)
+    const listingArray = [];
+    for (let i = 0; i < data.length; i++) {
+      const listing = await getListingByWatch(data[i].updateAuthority.address);
+      
+      // if the listing exists already in the listingArray with the same associatedId as the listing.listing, then increase the quantity by 1
+      // else just push the new listing to the listingArray
+      if (listingArray.find((item) => item.associatedId === listing.listing)) {
+        const index = listingArray.findIndex((item) => item.associatedId === listing.listing);
+        listingArray[index].quantity += 1;
+        continue; 
+      } 
+      listingArray.push({
+        ...data[i],
+        associatedId: listing.listing,
+        price: listing.price,
+        quantity: 1,
+      });
     }
+
+    setFractions(listingArray);
+    setTokensLoading(false);
   }
 
-  useEffect(() => {
-    if (publicKey && tokenAccounts?.length == 0) {
-      getTokens(publicKey);
-    }
-  }, [publicKey, tokenAccounts]);
+  // useEffect(() => {
+  //   if (publicKey && tokenAccounts?.length == 0) {
+  //     getTokens(publicKey);
+  //   }
+  // }, [publicKey, tokenAccounts]);
 
   useEffect(() => {
-    if (publicKey && tokenAccounts.length == 0) {
+    if (publicKey) {
       getTokens(publicKey);
     } else {
         checkLogin().then((res) => {
           if(res){
-              if(res.account){
-                  setWeb3AuthPublicKey(new PublicKey(res.account));
-              }
-              if(res.rpc !== null){
-                  setRpc(res.rpc);
-              }
+            if(res.account){
+                setWeb3AuthPublicKey(new PublicKey(res.account));
+                getTokens(new PublicKey(res.account));
+            }
+            if(res.rpc !== null){
+                setRpc(res.rpc);
+            }
           }
       });
     }
-  }, []);
+  }, [publicKey]);
 
 
   return (
@@ -315,12 +303,9 @@ const Dashboard = () => {
           </p>
         </div>
       </div>
-      {loadingFn ? (
-        <LoadingSpinner />
-      ) : (
-        <>
-      {fractions.length > 0 ? (
+      {!tokensLoading && fractions.length > 0 && (
         <div className="dashboard-inventory__body">
+          FRACTIONS TOTAL = {fractions.length}
           <Table
             style={{
               border: '1px solid #3d3d3d',
@@ -336,7 +321,8 @@ const Dashboard = () => {
             lazy={true}
           />
         </div>
-      ) : (
+      )}
+      {!tokensLoading && fractions.length == 0 && (
         <div
           style={{
             display: 'flex',
@@ -360,8 +346,9 @@ const Dashboard = () => {
             </button>
         </div>
       )}
-      </>
-    )}
+      {tokensLoading && (
+        <LoadingSpinner />
+      )}
     </div>
   );
 };

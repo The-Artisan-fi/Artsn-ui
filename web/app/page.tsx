@@ -22,24 +22,24 @@ import howWorks3 from '@/public/assets/home/how-it-works-3.webp';
 import howWorks4 from '@/public/assets/home/how-it-works-4.webp';
 import howWorks5 from '@/public/assets/home/how-it-works-5.webp';
 const PartnersMarque = dynamic(() => import("@/components/PartnersMarque/PartnersMarque"), {
-  loading: () => <LoadingSpinner/>,
-  ssr: false,
+    loading: () => <LoadingSpinner/>,
+    ssr: false,
 });
 const CTA1Card = dynamic(() => import("@/components/CtaCards/CtaCard1"), {
-  loading: () => <LoadingSpinner/>,
-  ssr: false,
+    loading: () => <LoadingSpinner/>,
+    ssr: false,
 });
 const CTA2Card = dynamic(() => import("@/components/CtaCards/CtaCard2"), {
-  loading: () => <LoadingSpinner/>,
-  ssr: false,
+    loading: () => <LoadingSpinner/>,
+    ssr: false,
 });
 const ProductsSectionDesktop = dynamic(() => import("@/components/ProductsSectionDesktop/ProductsSectionDesktop"), {
-  loading: () => <LoadingSpinner/>,
-  ssr: false,
+    loading: () => <LoadingSpinner/>,
+    ssr: false,
 });
 const ProductsSectionMobile = dynamic(() => import("@/components/ProductsSectionMobile/ProductsSectionMobile"), {
-  loading: () => <LoadingSpinner/>,
-  ssr: false,
+    loading: () => <LoadingSpinner/>,
+    ssr: false,
 });
 // const OpportunitiesSection = dynamic(() => import("@/components/OpportunitiesSection/OpportunitiesSection"), {
 //     loading: () => <LoadingSpinner/>,
@@ -81,7 +81,7 @@ const howItWorks = [
 const Home = () => {
     const [index, setIndex] = useState(0);
     const [opacity, setOpacity] = useState(0);
-    const [isMobile, setIsMobile] = useState(true);
+    const [isMobile, setIsMobile] = useState(false);
 
     // create a function that increases the opacity state by 0.1 every 150ms, when it reaches 1 start to decrease it by 0.1 every 150ms
     function increaseOpacity() {
@@ -131,192 +131,193 @@ const Home = () => {
         return () => clearTimeout(intervalId);
     }, []);
 
-  return (
-    <div className="home">
-      <div className="home__hero padding">
-        {/* <div className="hero-overlay"></div> */}
-        <Image
-          className="hero-overlay"
-          src={overlay}
-          alt="overlay"
-        />
-        <div className="home__hero__content">
-          <h2 className="display-2 highlight">Digitally Owned</h2>
-          <TextTransition
-            style={{ color: '#fff' }}
-            springConfig={presets.molasses}
-            direction="down"
-          >
-            <h2 className="transition-text">
-              {heroTexts[index % heroTexts.length]}
-            </h2>
-          </TextTransition>{' '}
-          <h3 className="heading-5">Collect & Trade Luxury Goods</h3>
-          <a href="https://tally.so/r/mYWaJz" className="btn btn-gold" style={{ zIndex: "1"}}>
-            JOIN THE WAITLIST
-          </a>
-          <Image className="solana-swiss-icons" src={solanaSwissIcon} alt="" />
-        </div>
-      </div>
-
-      {/* partners section */}
-      <PartnersMarque />
-
-      <div className="home__about padding">
-        <div className="boxed">
-          <div className="home__about__illustration">
-            <Image
-              className="home__about__illustration__img"
-              src={aboutIllustration}
-              alt="about illustration"
-            />
-          </div>
-          <div className="home__about__content">
-            <p className="heading-6">
-              In the past decade, certain Luxury Assets have demonstrated
-              superior performance compared to the S&P 500.
-            </p>
-            <p className="heading-6">
-              Luxury Markets and Vintage collections tend to appreciate over
-              time, yet they often remain out of reach for the majority of
-              individuals.
-            </p>
-            <p className="heading-6">
-              {' '}
-              We offer the opportunity to access these markets through
-              digitization with a starting investment of just $100.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Briefing section */}
-      <section className="home__brief padding">
-        <div className="boxed">
-          {/* top */}
-          <div className="home__brief__top">
-            <div className="home__brief__top__content">
-              <h2 className="heading-2">
-                You collect shares of goods, we handle everything else.
+    return (
+      <div className="home">
+        <div className="home__hero padding">
+          {/* <div className="hero-overlay"></div> */}
+          <Image
+            className="hero-overlay"
+            src={overlay}
+            alt="overlay"
+          />
+          <div className="home__hero__content">
+            <h2 className="display-2 highlight">Digitally Owned</h2>
+            <TextTransition
+              style={{ color: '#fff' }}
+              springConfig={presets.molasses}
+              direction="down"
+            >
+              <h2 className="transition-text">
+                {heroTexts[index % heroTexts.length]}
               </h2>
-              <p className="caption-1">
-                All Luxury Goods on our platform are authenticated, certified,
-                and securely stored in a third-party vault.
-              </p>
-              <p className="caption-1">
-                We carefully curate assets, selecting only those identified by
-                our expert team as having potential for value appreciation.
-              </p>
-              <div className="home__brief__cta">
-                <a href="#" className="home__brief__button">
-                  + certified & authentic goods
-                </a>
-                <a href="#" className="home__brief__button">
-                  + transparency
-                </a>
-              </div>
-            </div>
-
-            <div className="home__brief__top__illustration">
+            </TextTransition>{' '}
+            <h3 className="heading-5">Collect & Trade Luxury Goods</h3>
+            <a href="https://tally.so/r/mYWaJz" className="btn btn-gold">
+              JOIN THE WAITLIST
+            </a>
+            <Image className="solana-swiss-icons" src={solanaSwissIcon} alt="" />
+          </div>
+        </div>
+  
+        {/* partners section */}
+        <PartnersMarque />
+  
+        <div className="home__about padding">
+          <div className="boxed">
+            <div className="home__about__illustration">
               <Image
-                className="home__brief__top__illustration__img"
-                src={homeBriefIllustration}
+                className="home__about__illustration__img"
+                src={aboutIllustration}
                 alt="about illustration"
               />
             </div>
-          </div>
-
-          {/* bottom */}
-          <div className="home__brief__bottom">
-            {/* card light */}
-            <div className="home__brief__bottom__card-light">
-              <h2 className="heading-2">Designed for non-experts.</h2>
-              <h3 className="heading-5">(Enjoy a seamless Web3 experience)</h3>
-              <p className="caption-1">
-                Thanks to our Solana-based solution, you have the flexibility to
-                choose how to connect and pay on the platform, ensuring a
-                straightforward experience and the transparency of Web3
-                technology.
+            <div className="home__about__content">
+              <p className="heading-6">
+                In the past decade, certain Luxury Assets have demonstrated
+                superior performance compared to the S&P 500.
               </p>
-
-              <div className="home__brief__cta">
-                <a href="#" className="home__brief__button">
-                  sign in with email or wallet
-                </a>
-                <a href="#" className="home__brief__button">
-                  pay with credit card or crypto
-                </a>
-              </div>
-            </div>
-
-            {/* card dark */}
-            <div className="home__brief__bottom__card-dark">
-              <h2 className="heading-2">
-                Collect and admire your curated collection.{' '}
-              </h2>
-            <p className="caption-1">
-                You will have the ability to trade your shares and redeem the
-                value you&apos;ve accrued over time with The Artisan.
-            </p>
-
-              <div className="home__brief__cta">
-                <a href="#" className="home__brief__button light-button">
-                  value appreciation &uarr;
-                </a>
-                <a href="#" className="home__brief__button light-button">
-                  metaverse ready
-                </a>
-              </div>
+              <p className="heading-6">
+                Luxury Markets and Vintage collections tend to appreciate over
+                time, yet they often remain out of reach for the majority of
+                individuals.
+              </p>
+              <p className="heading-6">
+                {' '}
+                We offer the opportunity to access these markets through
+                digitization with a starting investment of just $100.
+              </p>
             </div>
           </div>
         </div>
-      </section>
-
-      {/* products section */}
-      <section className="home__featured padding">
-        <div className="boxed">
-          <h2 className="heading-1">
-            Explore the collections available on the platform.
-          </h2>
-
-          <div className="home__featured__items-cont">
-            {/* Products section */}
-            {isMobile ? <ProductsSectionMobile /> : <ProductsSectionDesktop />} 
-          </div>
-        </div>
-      </section>
-
-      <div className="home__bottom-cta padding">
-        {/* <div className="boxed"> */}
-        <CTA1Card />
-
-        {/* hwo it works section */}
-        <section className="home__working ">
+  
+        {/* Briefing section */}
+        <section className="home__brief padding">
           <div className="boxed">
-            <h2 className="heading-1">How It Works</h2>
-            <div className="home__working__steps">
-              {howItWorks.map((step, index) => {
-                return (
-                  <div key={index} className="home__working__item">
-                    <Image
-                      src={step.img}
-                      alt="how it works"
-                      className="home__working__item__img"
-                    />
-                    <h3 className="heading-3">{step.title}</h3>
-                    <p className="caption-3">{step.description}</p>
-                  </div>
-                );
-              })}
+            {/* top */}
+            <div className="home__brief__top">
+              <div className="home__brief__top__content">
+                <h2 className="heading-2">
+                  You collect shares of goods, we handle everything else.
+                </h2>
+                <p className="caption-1">
+                  All Luxury Goods on our platform are authenticated, certified,
+                  and securely stored in a third-party vault.
+                </p>
+                <p className="caption-1">
+                  We carefully curate assets, selecting only those identified by
+                  our expert team as having potential for value appreciation.
+                </p>
+                <div className="home__brief__cta">
+                  <a href="#" className="home__brief__button">
+                    + certified & authentic goods
+                  </a>
+                  <a href="#" className="home__brief__button">
+                    + transparency
+                  </a>
+                </div>
+              </div>
+  
+              <div className="home__brief__top__illustration">
+                <Image
+                  className="home__brief__top__illustration__img"
+                  src={homeBriefIllustration}
+                  alt="about illustration"
+                />
+              </div>
+            </div>
+  
+            {/* bottom */}
+            <div className="home__brief__bottom">
+              {/* card light */}
+              <div className="home__brief__bottom__card-light">
+                <h2 className="heading-2">Designed for non-experts.</h2>
+                <h3 className="heading-5">(Enjoy a seamless Web3 experience)</h3>
+                <p className="caption-1">
+                  Thanks to our Solana-based solution, you have the flexibility to
+                  choose how to connect and pay on the platform, ensuring a
+                  straightforward experience and the transparency of Web3
+                  technology.
+                </p>
+  
+                <div className="home__brief__cta">
+                  <a href="#" className="home__brief__button">
+                    sign in with email or wallet
+                  </a>
+                  <a href="#" className="home__brief__button">
+                    pay with credit card or crypto
+                  </a>
+                </div>
+              </div>
+  
+              {/* card dark */}
+              <div className="home__brief__bottom__card-dark">
+                <h2 className="heading-2">
+                  Collect and admire your curated collection.{' '}
+                </h2>
+              <p className="caption-1">
+                  You will have the ability to trade your shares and redeem the
+                  value you&apos;ve accrued over time with The Artisan.
+              </p>
+  
+                <div className="home__brief__cta">
+                  <a href="#" className="home__brief__button light-button">
+                    value appreciation &uarr;
+                  </a>
+                  <a href="#" className="home__brief__button light-button">
+                    metaverse ready
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </section>
-
-        <CTA2Card />
-        {/* </div> */}
+  
+        {/* products section */}
+        <section className="home__featured padding">
+          <div className="boxed">
+            <h2 className="heading-1">
+              Explore the collections available on the platform.
+            </h2>
+  
+            <div className="home__featured__items-cont">
+              {/* Products section */}
+              {/* {isMobile ? <ProductsSectionMobile /> : <ProductsSectionDesktop />}  */}
+              <ProductsSectionMobile />
+            </div>
+          </div>
+        </section>
+  
+        <div className="home__bottom-cta padding">
+          {/* <div className="boxed"> */}
+          <CTA1Card />
+  
+          {/* hwo it works section */}
+          <section className="home__working ">
+            <div className="boxed">
+              <h2 className="heading-1">How It Works</h2>
+              <div className="home__working__steps">
+                {howItWorks.map((step, index) => {
+                  return (
+                    <div key={index} className="home__working__item">
+                      <Image
+                        src={step.img}
+                        alt="how it works"
+                        className="home__working__item__img"
+                      />
+                      <h3 className="heading-3">{step.title}</h3>
+                      <p className="caption-3">{step.description}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+  
+          <CTA2Card />
+          {/* </div> */}
+        </div>
       </div>
-    </div>
-  );
+    );
 };
 
 export default Home;

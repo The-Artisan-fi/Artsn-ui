@@ -2,13 +2,14 @@
 import '@/styles/DashboardProfile.scss';
 import { useEffect, useState } from 'react';
 import Dynamic from 'next/dynamic';
+import ProfileModal from "@/components/Profile/ProfileModal";
 const Upload = Dynamic(() => import('antd').then((mod) => mod.Upload), { ssr: false });
 const Input = Dynamic(() => import('antd').then((mod) => mod.Input), { ssr: false });
 const message = Dynamic(() => import('antd').then((mod) => mod.message), { ssr: false });
 
 // import { Upload, Input, message } from 'antd';
 import ImgCrop from 'antd-img-crop';
-
+import { toastSuccess } from '@/helpers/toast';
 import { MdOutlineFileUpload } from 'react-icons/md';
 import { FaLock } from 'react-icons/fa';
 import { FaCopy } from 'react-icons/fa';
@@ -22,6 +23,7 @@ const Profile = () => {
   const [web3AuthPublicKey, setWeb3AuthPublicKey] = useState('');
   const [connectedWallet, setConnectedWallet] = useState('');
   const [offChainData, setOffChainData] = useState(undefined);
+  const [displayVerifyModal, setDisplayVerifyModal] = useState(false);
   const [fileList, setFileList] = useState([]);
   const onChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
@@ -31,7 +33,6 @@ const Profile = () => {
   });
   const [getDetails, { loading, error, data }] = useLazyQuery(user , {variables});
   if(!loading && data != undefined && offChainData == undefined){
-    console.log("data", data);
     setOffChainData(data.users[0]);
   }
   if(!loading && error != undefined){
@@ -74,7 +75,7 @@ const Profile = () => {
 
   return (
     <div className="profile">
-      <div className="profile__image-upload">
+      {/* <div className="profile__image-upload">
         <ImgCrop rotationSlider>
           <Upload
             style={{ color: '#fff' }}
@@ -90,7 +91,7 @@ const Profile = () => {
           </Upload>
         </ImgCrop>
         {fileList.length < 1 && <p className="p-4">Upload Profile Picture</p>}
-      </div>
+      </div> */}
       <div className="profile__input-row">
         <div className="profile__input-col">
           <p className="caption-3">FULL NAME</p>
@@ -136,8 +137,8 @@ const Profile = () => {
             suffix={
               <FaCopy
                 onClick={() => {
-                  navigator.clipboard.writeText(publicKey.toBase58());
-                  message.success('Copied!');
+                  publicKey ? navigator.clipboard.writeText(publicKey.toBase58()) : navigator.clipboard.writeText(web3AuthPublicKey);
+                  toastSuccess('Copied!');
                 }}
                 style={{ cursor: 'pointer', color: 'white' }}
               />
@@ -150,6 +151,64 @@ const Profile = () => {
           />
         </div>
       </div>
+
+      <div className="profile__input-row">
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            marginTop: '1rem',
+            marginBottom: '1rem',
+            gap: '1rem'
+          }}>
+            {offChainData && offChainData.onfidoKyc ? (
+              <p  className="caption-3">
+                Verified
+              </p>
+            ) : (
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%',
+                marginTop: '1rem',
+                marginBottom: '1rem',
+                gap: '2rem'
+              }}>
+                <p
+                  className="caption-3"
+                >
+                  Your profile is currently unverified, please click here to complete.
+                </p>
+                <button
+                  className="btn-primary"
+                  onClick={() => {
+                    setDisplayVerifyModal(true)
+                  }}
+                >
+                  Verify Profile
+                </button>
+              </div>
+            )}
+          </div>
+      </div>
+      {displayVerifyModal && (
+        <ProfileModal
+          showModal={displayVerifyModal}
+          handleClose={() => {
+            setDisplayVerifyModal(false);
+          }}
+          page={2}
+          offChainProfile={
+            {
+              fullName: offChainData.fullName
+            }
+          }
+        />
+      )}
     </div>
   );
 };

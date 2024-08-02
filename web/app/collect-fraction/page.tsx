@@ -4,20 +4,21 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import CollectFractionImg from "@/public/assets/collect-fraction/collect-fraction-hero-illustration.webp"
+import { LoadingSpinner } from '@/components/Loading/Loading';
 const CTA1Card = dynamic(() => import("@/components/CtaCards/CtaCard1"), {
-  loading: () => <p>Loading...</p>,
+  loading: () => <LoadingSpinner/>,
   ssr: false,
 });
 const ProductsSectionDesktop = dynamic(() => import("@/components/ProductsSectionDesktop/ProductsSectionDesktop"), {
-  loading: () => <p>Loading...</p>,
+  loading: () => <LoadingSpinner/>,
   ssr: false,
 });
 const ProductsSectionMobile = dynamic(() => import("@/components/ProductsSectionMobile/ProductsSectionMobile"), {
-  loading: () => <p>Loading...</p>,
+  loading: () => <LoadingSpinner/>,
   ssr: false,
 });
 const OpportunitiesSection = dynamic(() => import("@/components/OpportunitiesSection/OpportunitiesSection"), {
-  loading: () => <p>Loading...</p>,
+  loading: () => <LoadingSpinner/>,
   ssr: false,
 });
 
