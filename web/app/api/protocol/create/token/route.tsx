@@ -82,145 +82,145 @@ export async function POST( request: Request ) {
 
         console.log("Your image URI: ", myUri);
 
-        // const image = myUri;
-        // const metadata = {
-        //     name: name,
-        //     symbol: brand.slice(0,3).toUpperCase(),
-        //     description: "Rugs not Drugs is a collection of rugs that are not drugs.",
-        //     image: image,
-        //     attributes: [
-        //         {
-        //             "key": "Brand",
-        //             "value": brand
-        //         },
-        //         {
-        //             "key": "Model",
-        //             "value": model
-        //         },
-        //         {
-        //             "key": "Reference",
-        //             "value": reference
-        //         },
-        //         {
-        //             "key": "Diameter",
-        //             "value": diameter
-        //         },
-        //         {
-        //             "key": "Movement",
-        //             "value": movement
-        //         },
-        //         {
-        //             "key": "Dial Color",
-        //             "value": dialColor
-        //         },
-        //         {
-        //             "key": "Case Material",
-        //             "value": caseMaterial
-        //         },
-        //         {
-        //             "key": "Bracelet Material",
-        //             "value": braceletMaterial
-        //         },
-        //         {
-        //             "key": "Year of Production",
-        //             "value": yearOfProduction
-        //         }
-        //     ],
-        //     properties: {
-        //         files: [
-        //             {
-        //                 type: "image/png",
-        //                 uri: image,
-        //             },
-        //         ]
-        //     },
-        //     creators: [
-        //         {
-        //             address: keypair.publicKey.toString(),
-        //             share: 100
-        //         }
-        //     ]
-        // };
-        // const tokenUri = await umi.uploader.uploadJson(metadata);
-        // console.log("Your URI: ", tokenUri);
+        const image = myUri;
+        const metadata = {
+            name: name,
+            symbol: brand.slice(0,3).toUpperCase(),
+            description: "Rugs not Drugs is a collection of rugs that are not drugs.",
+            image: image,
+            attributes: [
+                {
+                    "key": "Brand",
+                    "value": brand
+                },
+                {
+                    "key": "Model",
+                    "value": model
+                },
+                {
+                    "key": "Reference",
+                    "value": reference
+                },
+                {
+                    "key": "Diameter",
+                    "value": diameter
+                },
+                {
+                    "key": "Movement",
+                    "value": movement
+                },
+                {
+                    "key": "Dial Color",
+                    "value": dialColor
+                },
+                {
+                    "key": "Case Material",
+                    "value": caseMaterial
+                },
+                {
+                    "key": "Bracelet Material",
+                    "value": braceletMaterial
+                },
+                {
+                    "key": "Year of Production",
+                    "value": yearOfProduction
+                }
+            ],
+            properties: {
+                files: [
+                    {
+                        type: "image/png",
+                        uri: image,
+                    },
+                ]
+            },
+            creators: [
+                {
+                    address: keypair.publicKey.toString(),
+                    share: 100
+                }
+            ]
+        };
+        const tokenUri = await umi.uploader.uploadJson(metadata);
+        console.log("Your URI: ", tokenUri);
         
-        // const createWatchArgs = {
-        //     name: name,
-        //     uri: tokenUri,
-        //     brand: brand,
-        //     model: model,
-        //     reference: reference,
-        //     diameter: diameter,
-        //     movement: movement,
-        //     dialColor: dialColor,
-        //     caseMaterial: caseMaterial,
-        //     braceletMaterial: braceletMaterial,
-        //     yearOfProduction: yearOfProduction,
-        // };
+        const createWatchArgs = {
+            name: name,
+            uri: tokenUri,
+            brand: brand,
+            model: model,
+            reference: reference,
+            diameter: diameter,
+            movement: movement,
+            dialColor: dialColor,
+            caseMaterial: caseMaterial,
+            braceletMaterial: braceletMaterial,
+            yearOfProduction: yearOfProduction,
+        };
         
-        // const createFractionalizedListingArgs = {
-        //     id: new anchor.BN(id),
-        //     objectType: objectType,
-        //     share: new anchor.BN(share),
-        //     price: new anchor.BN(price),
-        //     startingTime: new anchor.BN(Math.floor(Date.now() / 1000) - 7 * 24 * 60 * 60)
-        // };
+        const createFractionalizedListingArgs = {
+            id: new anchor.BN(id),
+            objectType: objectType,
+            share: new anchor.BN(share),
+            price: new anchor.BN(price),
+            startingTime: new anchor.BN(Math.floor(Date.now() / 1000) - 7 * 24 * 60 * 60)
+        };
         
         
-        // const ix = await program.methods
-        // //@ts-expect-error - missing arguments
-        //     .createWatch(
-        //         createWatchArgs
-        //     )
-        //     .accountsPartial({
-        //         admin: signer,
-        //         adminProfile,   
-        //         manager,
-        //         protocol,
-        //         watch,
-        //         mplCoreProgram,
-        //         systemProgram: SystemProgram.programId,
-        //     })
-        //     .signers([signer])
-        //     .instruction()
+        const ix = await program.methods
+        //@ts-expect-error - missing arguments
+            .createWatch(
+                createWatchArgs
+            )
+            .accountsPartial({
+                admin: signer,
+                adminProfile,   
+                manager,
+                protocol,
+                watch,
+                mplCoreProgram,
+                systemProgram: SystemProgram.programId,
+            })
+            .signers([signer])
+            .instruction()
 
-        // const ix2 = await program.methods
-        // //@ts-expect-error - missing arguments
-        //     .createFractionalizedListing(
-        //         createFractionalizedListingArgs
-        //     )
-        //     .accounts({
-        //         admin: signer,
-        //         adminProfile,   
-        //         manager,
-        //         object: watch,
-        //         listing,
-        //         systemProgram: SystemProgram.programId,
-        //     })
-        //     .instruction()
+        const ix2 = await program.methods
+        //@ts-expect-error - missing arguments
+            .createFractionalizedListing(
+                createFractionalizedListingArgs
+            )
+            .accounts({
+                admin: signer,
+                adminProfile,   
+                manager,
+                object: watch,
+                listing,
+                systemProgram: SystemProgram.programId,
+            })
+            .instruction()
 
-        // const { blockhash } = await connection.getLatestBlockhash("finalized");
-        // const transaction = new Transaction({
-        //     recentBlockhash: blockhash,
-        //     feePayer: signer,
-        // });
+        const { blockhash } = await connection.getLatestBlockhash("finalized");
+        const transaction = new Transaction({
+            recentBlockhash: blockhash,
+            feePayer: signer,
+        });
         
-        // transaction.add(ix).add(ix2);
+        transaction.add(ix).add(ix2);
         
-        // const serializedTransaction = transaction.serialize({
-        //     requireAllSignatures: false,
-        //   });
-        // const base64 = serializedTransaction.toString("base64");
+        const serializedTransaction = transaction.serialize({
+            requireAllSignatures: false,
+          });
+        const base64 = serializedTransaction.toString("base64");
 
-        // return new Response(JSON.stringify({
-        //     transaction: base64,
-        //     watch: watch.toString(),
-        //     associatedId: listing.toString(),
-        // }), {
-        //     headers: {
-        //         'content-type': 'application/json',
-        //     },
-        // });
+        return new Response(JSON.stringify({
+            transaction: base64,
+            watch: watch.toString(),
+            associatedId: listing.toString(),
+        }), {
+            headers: {
+                'content-type': 'application/json',
+            },
+        });
 
 
         // write a curl route to test the api
