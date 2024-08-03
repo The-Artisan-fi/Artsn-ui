@@ -5,6 +5,7 @@ import {
   PROGRAM_ID,
   USDC_MINT,
 } from '@/components/Protocol/idl';
+import { mplCoreProgram, manager, mint } from "@/components/Protocol/constants";
 import {
   SYSVAR_INSTRUCTIONS_PUBKEY,
   PublicKey,
@@ -78,29 +79,6 @@ export async function POST(request: Request) {
       ],
       program.programId
     )[0];
-    const fraction = PublicKey.findProgramAddressSync(
-      [Buffer.from('fraction'), listing.toBuffer()],
-      program.programId
-    )[0];
-    // const metadata = PublicKey.findProgramAddressSync([Buffer.from('metadata'), fraction.toBuffer()], program.programId)[0];
-
-    const auth = PublicKey.findProgramAddressSync(
-      [Buffer.from('auth')],
-      program.programId
-    )[0];
-    // const adminState = PublicKey.findProgramAddressSync([Buffer.from('admin_state'), buyer_publicKey.toBuffer()], program.programId)[0];
-
-    const buyerProfile = PublicKey.findProgramAddressSync(
-      [Buffer.from('profile'), buyer_publicKey.toBuffer()],
-      program.programId
-    )[0];
-    const buyerFractionAta = getAssociatedTokenAddressSync(
-      fraction,
-      buyer_publicKey,
-      false,
-      TOKEN_2022_PROGRAM_ID,
-      ASSOCIATED_TOKEN_PROGRAM_ID
-    );
 
     const listingCurrencyAta = getAssociatedTokenAddressSync(
       USDC_DEV,
@@ -123,31 +101,31 @@ export async function POST(request: Request) {
       privateKey: feePayer.secretKey,
       message: combinedBytes,
     });
-
+    const buyer_profile = PublicKey.findProgramAddressSync([Buffer.from('profile'), buyer_publicKey.toBuffer()], program.programId)[0];
+    const fraction = Keypair.generate();
     const buyShareIx = await program.methods
     //@ts-expect-error - missing arguments
       .buyFractionalizedListing(uri)
-      .accounts({
-        payer: feePayer.publicKey,
-        buyer: buyer_publicKey,
-        buyerProfile,
-        buyerCurrencyAta,
-        buyerFractionAta,
-        listing,
-        listingCurrencyAta,
-        fraction,
-        currency: USDC_DEV,
-        auth,
-        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-        tokenProgram: TOKEN_PROGRAM_ID,
-        token2022Program: TOKEN_2022_PROGRAM_ID,
-        systemProgram: SystemProgram.programId,
-        instructions: SYSVAR_INSTRUCTIONS_PUBKEY,
+      .accountsPartial({
+          buyer: buyer_publicKey,
+          payer: feePayer.publicKey,
+          mint: mint,
+          buyerAta: buyerCurrencyAta,
+          listingAta: listingCurrencyAta,
+          manager,
+          buyerProfile: buyer_profile,
+          listing,
+          object: watch,
+          fraction: fraction.publicKey,
+          associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+          tokenProgram: TOKEN_PROGRAM_ID,
+          mplCoreProgram: mplCoreProgram,
+          systemProgram: anchor.web3.SystemProgram.programId,
       })
+      .signers([feePayer, fraction])
       .instruction();
 
     const { blockhash } = await connection.getLatestBlockhash('finalized');
-    console.log('blockhash', blockhash);
     const transaction = new Transaction({
       recentBlockhash: blockhash,
       feePayer: feePayer.publicKey,

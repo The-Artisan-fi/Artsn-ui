@@ -8,7 +8,7 @@ const Input = Dynamic(() => import('antd').then((mod) => mod.Input), { ssr: fals
 import { useWallet } from '@solana/wallet-adapter-react';
 import { checkLogin } from "@/components/Web3Auth/solanaRPC";
 import { initAdminTx } from "@/components/Protocol/functions";
-import { toastPromise, toastError } from '@/helpers/toast';
+import { toastPromise, toastError, toastSuccess } from '@/helpers/toast';
 import { confirm } from '@/helpers/confirm';
 
 const Profile = () => {
@@ -27,8 +27,7 @@ const Profile = () => {
     try{
       const tx = await initAdminTx(newAdmin.wallet, newAdmin.username, publicKey.toBase58());
       const signature = await sendTransaction(tx, connection, {skipPreflight: true,});
-      const _confirm = await confirm(signature);
-      toastPromise(_confirm)
+      toastPromise(signature)
     } catch (error) {
       toastError(error);
     }

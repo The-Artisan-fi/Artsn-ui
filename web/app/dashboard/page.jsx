@@ -171,21 +171,11 @@ const Dashboard = () => {
           const provider = getProvider();
             const signature = await provider.signAndSendTransaction(tx)
             console.log(signature);
-            const _confirm = await confirm(signature);
-            if(_confirm){
-              getTokens(publicKey);
-            } else {
-              toastError('Transaction failed');
-            }
+            toastPromise(signature);
         } else if(web3AuthPublicKey && data){ 
           const tx = await buyTx(data.id, data.reference, web3AuthPublicKey, 1, data.uri);
           const signature = await rpc.sendTransaction(tx); 
-          const _confirm = await confirm(signature);
-          if(_confirm){
-            getTokens(web3AuthPublicKey);
-          } else {
-            toastError('Transaction failed');
-          }
+          toastPromise(signature);
         }
     } catch (error) {
         toastError(`Error: ${error.message}`);

@@ -36,9 +36,9 @@ export async function POST( request: Request ) {
             .initializeProfile(
                 username
             )
-            .accounts({
-                payer: feePayer.publicKey,
+            .accountsPartial({
                 user: buyer_publicKey,
+                payer: feePayer.publicKey,
                 profile: buyerProfile,
                 systemProgram: SystemProgram.programId,
             })

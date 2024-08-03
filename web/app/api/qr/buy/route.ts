@@ -1,5 +1,6 @@
 import * as anchor from "@coral-xyz/anchor";
 import { IDL, ArtsnCore, PROGRAM_ID, USDC_MINT} from "@/components/Protocol/idl";
+import { mplCoreProgram, manager, mint } from "@/components/Protocol/constants";
 import {
     PublicKey,
     SystemProgram,
@@ -59,18 +60,17 @@ export async function POST( request: Request) {
         console.log('reference', reference)
         console.log('refKey', refKey)
         console.log('buyer_publicKey', buyer_publicKey.toBase58())
-
-
+        const _uri = searchParams.get('uri');
+        const uri = `https://arweave.net/${_uri}`
         const watch = PublicKey.findProgramAddressSync([Buffer.from('watch'),  Buffer.from(reference!)], program.programId)[0];
-        const listing = PublicKey.findProgramAddressSync([Buffer.from('listing'), watch.toBuffer(), new anchor.BN(id).toBuffer("le", 8)], program.programId)[0];
-        const fraction = PublicKey.findProgramAddressSync([Buffer.from('fraction'), listing.toBuffer()], program.programId)[0];
+        const listing = PublicKey.findProgramAddressSync([Buffer.from('listing'), new anchor.BN(id).toBuffer("le", 8)], program.programId)[0];
+        const fraction = Keypair.generate();
         // const metadata = PublicKey.findProgramAddressSync([Buffer.from('metadata'), fraction.toBuffer()], program.programId)[0];
         
         const auth = PublicKey.findProgramAddressSync([Buffer.from('auth')], program.programId)[0];
         // const adminState = PublicKey.findProgramAddressSync([Buffer.from('admin_state'), buyer_publicKey.toBuffer()], program.programId)[0];
       
         const buyerProfile = PublicKey.findProgramAddressSync([Buffer.from('profile'), buyer_publicKey.toBuffer()], program.programId)[0];
-        const buyerFractionAta = getAssociatedTokenAddressSync(fraction, buyer_publicKey, false, TOKEN_2022_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID)
       
         const listingCurrencyAta = getAssociatedTokenAddressSync(USDC_DEV, listing, true)
         const buyerCurrencyAta = getAssociatedTokenAddressSync(USDC_DEV, buyer_publicKey)
@@ -81,47 +81,41 @@ export async function POST( request: Request) {
         const feeKey = process.env.PRIVATE_KEY!;
         const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
 
-        console.log('watch', watch.toBase58())
-        console.log('listing', listing.toBase58())
-        console.log('fraction', fraction.toBase58())
-        console.log('auth', auth.toBase58())
-        console.log('buyerProfile', buyerProfile.toBase58())
-        console.log('buyerFractionAta', buyerFractionAta.toBase58())
-        console.log('listingCurrencyAta', listingCurrencyAta.toBase58())
-        console.log('buyerCurrencyAta', buyerCurrencyAta.toBase58())
-        console.log('feePayer', feePayer.publicKey.toBase58())
-
         const profileInitIx = await program.methods
             //@ts-expect-error - missing arguments
-            .initializeProfile()
+            .initializeProfile(
+                buyer_publicKey.toBase58().slice(-4),
+            )
             .accounts({
                 payer: feePayer.publicKey,
                 user: buyer_publicKey,
                 profile: buyerProfile,
                 systemProgram: SystemProgram.programId,
             })
+            .signers([feePayer])
             .instruction();
         
 
         const buyShareIx = await program.methods
             //@ts-expect-error - missing arguments
-            .buyListing()
-            .accounts({
-                payer: feePayer.publicKey,
+            .buyFractionalizedListing(uri)
+            .accountsPartial({
                 buyer: buyer_publicKey,
-                buyerProfile,
-                buyerCurrencyAta,
-                buyerFractionAta,
+                payer: feePayer.publicKey,
+                mint: mint,
+                buyerAta: buyerCurrencyAta,
+                listingAta: listingCurrencyAta,
+                manager,
+                buyerProfile: buyerProfile,
                 listing,
-                listingCurrencyAta,
-                fraction,
-                currency: USDC_DEV,
-                auth,
+                object: watch,
+                fraction: fraction.publicKey,
                 associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
                 tokenProgram: TOKEN_PROGRAM_ID,
-                token2022Program: TOKEN_2022_PROGRAM_ID,
-                systemProgram: SystemProgram.programId,
+                mplCoreProgram: mplCoreProgram,
+                systemProgram: anchor.web3.SystemProgram.programId,
             })
+            .signers([feePayer, fraction])
             .instruction();
 
         const { blockhash } = await connection.getLatestBlockhash("finalized");
@@ -142,8 +136,6 @@ export async function POST( request: Request) {
         }
         
         transaction.add(buyShareIx);
-
-        transaction.partialSign(feePayer);
 
         const serializedTransaction = transaction.serialize({
             requireAllSignatures: false,

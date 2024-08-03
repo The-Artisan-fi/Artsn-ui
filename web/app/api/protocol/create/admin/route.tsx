@@ -31,15 +31,14 @@ export async function POST( request: Request ) {
          console.log('newAdmin', newAdmin.toString());
         const signer = new PublicKey(req.signer);
         console.log('signer', signer.toString());
-        const newAdminState = PublicKey.findProgramAddressSync([Buffer.from('admin_state'), newAdmin.toBuffer()], program.programId)[0];
+        const adminProfile = PublicKey.findProgramAddressSync([Buffer.from("admin"), newAdmin.toBuffer()], program.programId)[0];
         const profileInitIx = await program.methods
         //@ts-expect-error - missing arguments
             .initializeAdmin(username)
-            .accounts({
-                admin: signer,
-                adminState: null,
+            .accountsPartial({
+                owner: signer,
                 newAdmin: newAdmin,
-                newAdminState: newAdminState,
+                adminProfile,
                 systemProgram: SystemProgram.programId,
             })
             .instruction()

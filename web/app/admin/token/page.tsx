@@ -34,6 +34,7 @@ import { watch } from 'fs';
 import { render } from 'react-dom';
 import { token } from '@coral-xyz/anchor/dist/cjs/utils';
 import { set } from 'date-fns';
+import { toast } from 'react-toastify';
 const SettingsPage = () => {
   const { TextArea } = Input;
   const { publicKey, sendTransaction } = useWallet();
@@ -156,24 +157,17 @@ const SettingsPage = () => {
         console.log('associatedId', tx.associatedId);
         const signature = await sendTransaction(tx.tx, connection, {skipPreflight: true,});
 
-        const _confirm = await confirm(
-          signature,
-          connection,
-        ); 
-        if(_confirm){
-          toastSuccess('Token Data on-chain created successfully');
+        toastPromise(signature);
 
-          return true;
-        } else {
-          toastError('Error creating token data on-chain');
-
-          return false;
-        }
-      } 
+        return true;
+      } else {
+        return false;
+      }
       
     } catch (error) {
       console.error('Error creating token', error);
       toastError('Error creating token');
+      return false;
     }
   }
 
@@ -222,7 +216,7 @@ const SettingsPage = () => {
     try{
       setCreateLoading(true);
       // Add token to Protocol
-      const create = await handleCreateToken();
+      const create: boolean = await handleCreateToken();
       if(!create){
         toastError('Please try again');
         setCreateLoading(false);
