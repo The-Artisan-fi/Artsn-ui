@@ -152,11 +152,10 @@ export async function GET( request: Request ) {
             ActionsSpecGetResponse,
             'icon' | 'title' | 'description'
         > {
-            const icon =
-            `${process.env.AWS_PREFIX}AMygBqv7URhE1L6DjzzqYdX9Rujp3L4vXU5NJcXW8wA6-0.jpg`;
-            const title = 'Richard Mille - Artsn.Fi';
+            const icon ='/ArtisanBlink.png';
+            const title = 'Real World Asset Investing - Artsn.Fi';
             const description =
-            'Buy a share of this Richard Mille watch for 1 USDC-DEV!';
+            'Invest in Real World Assets with Artsn.Fi';
             return { icon, title, description };
         }
         
