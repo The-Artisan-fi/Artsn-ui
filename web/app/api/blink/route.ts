@@ -25,7 +25,7 @@ import * as b58 from "bs58";
     '7wK3jPMYjpZHZAghjersW6hBNMgi9VAGr75AhYRqR2n';
   const DONATION_AMOUNT_SOL_OPTIONS = [1, 2, 3, 4];
   const ITEMS = [
-    "Diamonds",
+    "Magentaflare Diamond",
     "Nardin - Freak",
     "Richard Mille",
     "Patek - Nautilus"
@@ -152,10 +152,10 @@ export async function GET( request: Request ) {
             ActionsSpecGetResponse,
             'icon' | 'title' | 'description'
         > {
-            const icon ='/ArtisanBlink.png';
+            const icon ='https://artisan-solana.s3.eu-central-1.amazonaws.com/ArtisanBlink.png';
             const title = 'Real World Asset Investing - Artsn.Fi';
             const description =
-            'Invest in Real World Assets with Artsn.Fi';
+            'Choose from a selection of real world assets to invest in for $1 USDC-Dev.';
             return { icon, title, description };
         }
         
@@ -168,8 +168,8 @@ export async function GET( request: Request ) {
             description,
             links: {
             actions: [
-                ...DONATION_AMOUNT_SOL_OPTIONS.map((amount) => ({
-                label: `${ITEMS[amount - 1]} - 1 USDC-DEV`,
+                ...DONATION_AMOUNT_SOL_OPTIONS.map((amount, index) => ({
+                label: `${index +1}) ${ITEMS[amount - 1]}`,
                 href: `/api/blink/${amount}`,
                 })),
                 // {

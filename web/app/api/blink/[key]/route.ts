@@ -67,19 +67,10 @@ export async function POST(_: Request, { params }: { params: { key : number } })
         const req: ActionPostRequest = await _.json();
         const url = new URL(_.url);
         let account: PublicKey;
-        const ref = {
-            id: 51129,
-            reference: '15202ST.OO.1240ST.01',
-            publicKey: '6KuX26FZqzqpsHDLfkXoBXbQRPEDEbstqNiPBKHNJQ9e',
-            amount: 1
-          }
         const buyer_publicKey = new PublicKey(req.account);
-        console.log('buyer_publicKey', buyer_publicKey.toBase58());
-        const id = ref.id;
         const USDC_DEV = new PublicKey(USDC_MINT);
         // const id = 10817;
         // VARIABLES
-        const reference = ref.reference;
         const object = params.key;
         const ITEMS = [
             {
@@ -122,14 +113,6 @@ export async function POST(_: Request, { params }: { params: { key : number } })
             return prepareTransaction(instructions, payer);
           }
 
-        // const createAtaIx = createAssociatedTokenAccountIdempotentInstruction(
-        //     buyer_publicKey,
-        //     buyerFractionAta,
-        //     buyer_publicKey,
-        //     fraction,
-        //     TOKEN_2022_PROGRAM_ID,
-        //     ASSOCIATED_TOKEN_PROGRAM_ID,
-        // );
         const feeKey = process.env.PRIVATE_KEY!;
         const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
         const profileInitIx = await await program.methods
@@ -167,23 +150,22 @@ export async function POST(_: Request, { params }: { params: { key : number } })
                     mplCoreProgram: mplCoreProgram,
                     systemProgram: anchor.web3.SystemProgram.programId,
                 })
-                .signers([feePayer, fraction])
                 .instruction();
 
         const { blockhash } = await connection.getLatestBlockhash("finalized");
-        console.log('blockhash', blockhash);
 
         const total_instructions = [];
 
-        const buyerProfileAccount = await connection.getAccountInfo(buyerProfile);
-        const lamports = buyerProfileAccount?.lamports;
-        if( lamports == 0) {
+        const buyerProfileAccount = await connection.getAccountInfo(buyer_profile);
+       
+        if(buyerProfileAccount == null) {
             total_instructions.push(profileInitIx);
         }
         // run a for loop to add a set of instructions to the total_instructions array for the amount of shares to buy
 
         total_instructions.push(buyShareIx);
         const transaction = await prepareTransaction(total_instructions, buyer_publicKey);
+        transaction.sign([feePayer, fraction]);
         const base64 = Buffer.from(transaction.serialize()).toString('base64');
         console.log('base64', base64);
         const response: ActionsSpecPostResponse = {

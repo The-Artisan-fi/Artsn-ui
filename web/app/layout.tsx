@@ -55,7 +55,24 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap"
           rel="stylesheet"
         />
+        {/* <!-- HTML Meta Tags --> */}
         <title>The Artisan</title>
+        <meta name="description" content="The Artisan is a digital boutique specializing in fractionalized high-end collectibles on the Solana blockchain." />
+
+        {/* <!-- Facebook Meta Tags --> */}
+        <meta property="og:url" content="https://beta.artsn.fi/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="The Artisan" />
+        <meta property="og:description" content="The Artisan is a digital boutique specializing in fractionalized high-end collectibles on the Solana blockchain." />
+        <meta property="og:image" content="/assets/opengraph.png" />
+
+        {/* <!-- Twitter Meta Tags --> */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta property="twitter:domain" content="beta.artsn.fi" />
+        <meta property="twitter:url" content="https://beta.artsn.fi/" />
+        <meta name="twitter:title" content="The Artisan" />
+        <meta name="twitter:description" content="The Artisan is a digital boutique specializing in fractionalized high-end collectibles on the Solana blockchain." />
+        <meta name="twitter:image" content="/assets/opengraph.png" />
       </head>
       <body>
         
