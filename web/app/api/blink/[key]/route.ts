@@ -168,22 +168,13 @@ export async function POST(_: Request, { params }: { params: { key : number } })
         transaction.sign([feePayer, fraction]);
         const base64 = Buffer.from(transaction.serialize()).toString('base64');
         console.log('base64', base64);
-        const response: ActionsSpecPostResponse = {
-            transaction: base64,
-        };
 
-        console.log('response', response);
-        return new Response(
-            JSON.stringify(
-                response,
-            ), {
-                status: 200,
-                headers: {
-                    'access-control-allow-origin': '*',
-                    'content-type': 'application/json; charset=UTF-8'
-                }
-            }
-        );
+        const response : ActionPostResponse = {
+            transaction: base64,
+            message: `Success! You bought 1 share of the ${ITEM_NAMES[object - 1]}!`
+        };
+        
+        return Response.json(response, {headers: ACTIONS_CORS_HEADERS})
 
     } catch (e) {
         console.log(e);
