@@ -1,5 +1,6 @@
 import { prepareTransaction } from '../../../../helpers/transaction-utils';
 import * as anchor from "@coral-xyz/anchor";
+import { mplCoreProgram, manager, mint } from "@/components/Protocol/constants";
 import {
     ActionGetResponse,
     ACTIONS_CORS_HEADERS,
@@ -35,6 +36,20 @@ import * as b58 from "bs58";
   const DONATION_AMOUNT_SOL_OPTIONS = [1, 5, 10];
   const DEFAULT_DONATION_AMOUNT_SOL = 1;
 
+  const ITEM_NAMES = [
+    "Diamonds",
+    "Nardin - Freak",
+    "Richard Mille",
+    "Patek - Nautilus"
+    ];
+
+    const ITEM_URIS = [
+        "https://arweave.net/G7r27Nw0A3jH0fdFkuh1xqqSaJvtU4HQoN_R-X6Y-is",
+        "https://arweave.net/ErEQ1RmoPwDXZd40wmiw37IWrbHBGu3bL0VODueW6gc",
+        "https://arweave.net/39goFY1vD4npxsN8RU4P6YWyVsDU85jYzfdUqYczbgM",
+        "https://arweave.net/MNsnBsKulwBQ_zYyX-vJEuajj_KqUY6mXfMOb6naLP0"
+    ];
+
 export async function POST(_: Request, { params }: { params: { key : number } }) {
   console.log('route pinged')
     const wallet = Keypair.generate();
@@ -65,21 +80,31 @@ export async function POST(_: Request, { params }: { params: { key : number } })
         // const id = 10817;
         // VARIABLES
         const reference = ref.reference;
-        const amount = params.key;
-        const watch = PublicKey.findProgramAddressSync([Buffer.from('watch'),  Buffer.from(reference)], program.programId)[0];
+        const object = params.key;
+        const ITEMS = [
+            {
+                listing: "CBCYqnej9pvGNC5L9S3x5qTSxjf9rUUMRLeJgZfTKWX3",
+                watch: "4oMxCX2RRwfhpGiPqAQC4wHpDBxXdmnd2MWtNXHABFY4"
+            },
+            {
+                listing: "Fb4QK96rsraG5Bvqq1JkHEnnbidkq71QoKPB3gNSAmmY",
+                watch: "4o2D9bR5Q31H7nVKSd3RUuKSGFKV5PWxvftByriLpPnF"
+            },
+            {
+                listing: "2eZEfQ19cJQxqBt8z5HjHuK221yj5HZ3nJdo771fnU6G",
+                watch: "B4h81CidkF9iTxwLrvY36GJQbiDmDtdp6fPjZMA3cnxy"
+            },
+            {
+                listing: "2t8F7ANAgzLAE3UujiEFNn8VAEPNQrnWVqujNKtBsKvT",
+                watch: "2B7Yn1eK4S7qs9g4cwYUPR29f5AY9kMNp69L36Wz8cfN"
+            }
+        ];
+        const watch = new PublicKey(ITEMS[object - 1].watch);
         // const listing = PublicKey.findProgramAddressSync([Buffer.from('listing'), watch.toBuffer(), new anchor.BN(id).toBuffer("le", 8)], program.programId)[0];
-        const listing = new PublicKey("AMygBqv7URhE1L6DjzzqYdX9Rujp3L4vXU5NJcXW8wA6");
-        const fraction = PublicKey.findProgramAddressSync([Buffer.from('fraction'), listing.toBuffer()], program.programId)[0];
-        // const metadata = PublicKey.findProgramAddressSync([Buffer.from('metadata'), fraction.toBuffer()], program.programId)[0];
-        
-        const auth = PublicKey.findProgramAddressSync([Buffer.from('auth')], program.programId)[0];
-        // const adminState = PublicKey.findProgramAddressSync([Buffer.from('admin_state'), buyer_publicKey.toBuffer()], program.programId)[0];
-      
-        const buyerProfile = PublicKey.findProgramAddressSync([Buffer.from('profile'), buyer_publicKey.toBuffer()], program.programId)[0];
-        const buyerFractionAta = getAssociatedTokenAddressSync(fraction, buyer_publicKey, false, TOKEN_2022_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID)
-      
-        const listingCurrencyAta = getAssociatedTokenAddressSync(USDC_DEV, listing, true)
-        const buyerCurrencyAta = getAssociatedTokenAddressSync(USDC_DEV, buyer_publicKey)
+        const listing = new PublicKey(ITEMS[object - 1].listing);
+        const buyerProfile = PublicKey.findProgramAddressSync([Buffer.from('profile'), buyer_publicKey.toBuffer()], program.programId)[0];      
+        const listingCurrencyAta = getAssociatedTokenAddressSync(mint, listing, true)
+        const buyerCurrencyAta = getAssociatedTokenAddressSync(mint, buyer_publicKey)
 
         async function prepareDonateTransaction(
             sender: PublicKey,
@@ -105,77 +130,48 @@ export async function POST(_: Request, { params }: { params: { key : number } })
         //     TOKEN_2022_PROGRAM_ID,
         //     ASSOCIATED_TOKEN_PROGRAM_ID,
         // );
-
+        const feeKey = process.env.PRIVATE_KEY!;
+        const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
         const profileInitIx = await await program.methods
             //@ts-expect-error - missing arguments
-            .initializeProfile()
-            .accounts({
+            .initializeProfile(
+                buyer_publicKey.toBase58().slice(-4)
+            )
+            .accountsPartial({
                 user: buyer_publicKey,
+                payer: feePayer.publicKey,
                 profile: buyerProfile,
                 systemProgram: SystemProgram.programId,
             })
-            .instruction();
-
-        const feeKey = process.env.PRIVATE_KEY!;
-        const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
-
-        const buyShareIx = await program.methods
-        //@ts-expect-error - missing arguments
-            .buyListing()
-            .accounts({
-                // buyer: buyer_publicKey,
-                // payer: feePayer.publicKey,
-                // buyerProfile,
-                // buyerCurrencyAta,
-                // buyerFractionAta,
-                // listing,
-                // listingCurrencyAta,
-                // fraction,
-                // currency: USDC_DEV,
-                // auth,
-                // associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-                // tokenProgram: TOKEN_PROGRAM_ID,
-                // token2022Program: TOKEN_2022_PROGRAM_ID,
-                // systemProgram: SystemProgram.programId,
-                payer: feePayer.publicKey,
-                buyer: buyer_publicKey,
-                buyerProfile,
-                buyerCurrencyAta,
-                buyerFractionAta,
-                listing,
-                listingCurrencyAta,
-                fraction,
-                currency: USDC_DEV,
-                auth,
-                associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-                tokenProgram: TOKEN_PROGRAM_ID,
-                token2022Program: TOKEN_2022_PROGRAM_ID,
-                systemProgram: SystemProgram.programId,
-                instructions: SYSVAR_INSTRUCTIONS_PUBKEY,
-            })
-            .instruction();
+            .signers([feePayer])
+            .instruction()
+            const fraction = Keypair.generate();
+            const buyer_profile = PublicKey.findProgramAddressSync([Buffer.from('profile'), buyer_publicKey.toBuffer()], program.programId)[0];
+            console.log('uri', ITEM_URIS[object - 1])
+            const buyShareIx = await program.methods
+                //@ts-expect-error - not sure why this is throwing an error
+                .buyFractionalizedListing(ITEM_URIS[object - 1])
+                .accountsPartial({
+                    buyer: buyer_publicKey,
+                    payer: feePayer.publicKey,
+                    mint: mint,
+                    buyerAta: buyerCurrencyAta,
+                    listingAta: listingCurrencyAta,
+                    manager,
+                    buyerProfile: buyer_profile,
+                    listing,
+                    object: watch,
+                    fraction: fraction.publicKey,
+                    associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+                    tokenProgram: TOKEN_PROGRAM_ID,
+                    mplCoreProgram: mplCoreProgram,
+                    systemProgram: anchor.web3.SystemProgram.programId,
+                })
+                .signers([feePayer, fraction])
+                .instruction();
 
         const { blockhash } = await connection.getLatestBlockhash("finalized");
         console.log('blockhash', blockhash);
-
-        // const transaction = new Transaction({
-        //     recentBlockhash: blockhash,
-        //     feePayer: feePayer.publicKey,
-        // });
-
-        // for(let i = 0; i < amount ; i++) {
-        //     console.log('buying share', i);
-        //     transaction.add(buyShareIx);
-        // }
-        
-
-        // const serializedTransaction = transaction.serialize({
-        //     requireAllSignatures: false,
-        //   });
-        // const base64 = serializedTransaction.toString("base64");
-
-
-        // check buyerProfile account for lamports, if none, add the prfileInitIx instruction
 
         const total_instructions = [];
 
@@ -185,13 +181,9 @@ export async function POST(_: Request, { params }: { params: { key : number } })
             total_instructions.push(profileInitIx);
         }
         // run a for loop to add a set of instructions to the total_instructions array for the amount of shares to buy
-        for(let i = 0; i < amount ; i++) {
-            total_instructions.push(buyShareIx);
-        }
-        
-        const instructions = total_instructions;
+
+        total_instructions.push(buyShareIx);
         const transaction = await prepareTransaction(total_instructions, buyer_publicKey);
-        transaction.sign([feePayer])
         const base64 = Buffer.from(transaction.serialize()).toString('base64');
         console.log('base64', base64);
         const response: ActionsSpecPostResponse = {
@@ -227,9 +219,9 @@ export async function GET(_: Request, { params }: { params: { key : number } }) 
         > {
             const icon =
             'https://artsn.fi/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FAudemars-piguet-Royaloak.b2100923.webp&w=1080&q=75';
-            const title = 'Audemar Piguet Royal Oak';
+            const title = ITEM_NAMES[params.key - 1];
             const description =
-            'Buy a share of this Audemar Piguet Royal Oak watch for 1 USDC-DEV. You will receive a fraction of the watch in return.';
+            `Buy a share of this ${ITEM_NAMES[params.key - 1]} for 1 USDC-DEV! Explore Real World Assets with Artsn.Fi`;
             return { icon, title, description };
         }
         

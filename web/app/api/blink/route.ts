@@ -1,6 +1,7 @@
 import { prepareTransaction } from '../../../helpers/transaction-utils';
 import * as anchor from "@coral-xyz/anchor";
 import { IDL, ArtsnCore, PROGRAM_ID, USDC_MINT } from "@/components/Protocol/idl";
+import { mplCoreProgram, manager, mint } from "@/components/Protocol/constants";
 import {
     SYSVAR_INSTRUCTIONS_PUBKEY,
     PublicKey,
@@ -22,7 +23,13 @@ import {
 import * as b58 from "bs58";
   const DONATION_DESTINATION_WALLET =
     '7wK3jPMYjpZHZAghjersW6hBNMgi9VAGr75AhYRqR2n';
-  const DONATION_AMOUNT_SOL_OPTIONS = [1, 5, 10];
+  const DONATION_AMOUNT_SOL_OPTIONS = [1, 2, 3, 4];
+  const ITEMS = [
+    "Diamonds",
+    "Nardin - Freak",
+    "Richard Mille",
+    "Patek - Nautilus"
+    ];
   const DEFAULT_DONATION_AMOUNT_SOL = 1;
 
 export async function POST( request: Request ) {
@@ -54,16 +61,8 @@ export async function POST( request: Request ) {
         const reference = req.reference;
         const amount = req.amount;
         const watch = PublicKey.findProgramAddressSync([Buffer.from('watch'),  Buffer.from(reference)], program.programId)[0];
-        const listing = PublicKey.findProgramAddressSync([Buffer.from('listing'), watch.toBuffer(), new anchor.BN(id).toBuffer("le", 8)], program.programId)[0];
-        const fraction = PublicKey.findProgramAddressSync([Buffer.from('fraction'), listing.toBuffer()], program.programId)[0];
-        // const metadata = PublicKey.findProgramAddressSync([Buffer.from('metadata'), fraction.toBuffer()], program.programId)[0];
-        
-        const auth = PublicKey.findProgramAddressSync([Buffer.from('auth')], program.programId)[0];
-        // const adminState = PublicKey.findProgramAddressSync([Buffer.from('admin_state'), buyer_publicKey.toBuffer()], program.programId)[0];
-      
-        const buyerProfile = PublicKey.findProgramAddressSync([Buffer.from('profile'), buyer_publicKey.toBuffer()], program.programId)[0];
-        const buyerFractionAta = getAssociatedTokenAddressSync(fraction, buyer_publicKey, false, TOKEN_2022_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID)
-      
+        const listing = PublicKey.findProgramAddressSync([Buffer.from('listing'), new anchor.BN(id).toBuffer("le", 8)], program.programId)[0];
+        const fraction = Keypair.generate();
         const listingCurrencyAta = getAssociatedTokenAddressSync(USDC_DEV, listing, true)
         const buyerCurrencyAta = getAssociatedTokenAddressSync(USDC_DEV, buyer_publicKey)
 
@@ -102,41 +101,27 @@ export async function POST( request: Request ) {
         //     .instruction();
         const feeKey = process.env.PRIVATE_KEY!;
         const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
-
+        const buyer_profile = PublicKey.findProgramAddressSync([Buffer.from('profile'), buyer_publicKey.toBuffer()], program.programId)[0];
         const buyShareIx = await program.methods
             //@ts-expect-error - not sure why this is throwing an error
-            .buyFractionalizedListing()
-            .accounts({
-                // buyer: buyer_publicKey,
-                // payer: feePayer.publicKey,
-                // buyerProfile,
-                // buyerCurrencyAta,
-                // buyerFractionAta,
-                // listing,
-                // listingCurrencyAta,
-                // fraction,
-                // currency: USDC_DEV,
-                // auth,
-                // associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-                // tokenProgram: TOKEN_PROGRAM_ID,
-                // token2022Program: TOKEN_2022_PROGRAM_ID,
-                // systemProgram: SystemProgram.programId,
-                payer: feePayer.publicKey,
+            .buyFractionalizedListing(uri)
+            .accountsPartial({
                 buyer: buyer_publicKey,
-                buyerProfile,
-                buyerCurrencyAta,
-                buyerFractionAta,
+                payer: feePayer.publicKey,
+                mint: mint,
+                buyerAta: buyerCurrencyAta,
+                listingAta: listingCurrencyAta,
+                manager,
+                buyerProfile: buyer_profile,
                 listing,
-                listingCurrencyAta,
-                fraction,
-                currency: USDC_DEV,
-                auth,
+                object: watch,
+                fraction: fraction.publicKey,
                 associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
                 tokenProgram: TOKEN_PROGRAM_ID,
-                token2022Program: TOKEN_2022_PROGRAM_ID,
-                systemProgram: SystemProgram.programId,
-                instructions: SYSVAR_INSTRUCTIONS_PUBKEY,
+                mplCoreProgram: mplCoreProgram,
+                systemProgram: anchor.web3.SystemProgram.programId,
             })
+            .signers([feePayer, fraction])
             .instruction();
 
         const instructions = [buyShareIx];
@@ -179,13 +164,13 @@ export async function GET( request: Request ) {
         const amountParameterName = 'amount';
         const response: ActionsSpecGetResponse = {
             icon,
-            label: `${DEFAULT_DONATION_AMOUNT_SOL} USDC-DEV`,
+            label: `Invest in Real World Assets with Artsn.Fi`,
             title,
             description,
             links: {
             actions: [
                 ...DONATION_AMOUNT_SOL_OPTIONS.map((amount) => ({
-                label: `${amount} ${amount > 1 ? 'shares' : 'share'}`,
+                label: `${ITEMS[amount - 1]} - 1 USDC-DEV`,
                 href: `/api/blink/${amount}`,
                 })),
                 // {
