@@ -189,5 +189,5 @@ export async function GET( request: Request ) {
 }
 
 export async function OPTIONS( request: Request ) {
-    return Response.json({headers: ACTIONS_CORS_HEADERS})
+    return Response.json(null, {headers: ACTIONS_CORS_HEADERS})
 };
