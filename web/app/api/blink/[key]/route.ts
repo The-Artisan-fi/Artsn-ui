@@ -134,6 +134,7 @@ export async function POST(_: Request, { params }: { params: { key : number } })
                     listing,
                     object: watch,
                     fraction: fraction.publicKey,
+                    instructions: SYSVAR_INSTRUCTIONS_PUBKEY,
                     associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
                     tokenProgram: TOKEN_PROGRAM_ID,
                     mplCoreProgram: mplCoreProgram,
