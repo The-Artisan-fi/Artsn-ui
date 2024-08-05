@@ -1,6 +1,6 @@
 import { clusterApiUrl, Connection, PublicKey, Keypair } from "@solana/web3.js";
 import { Program, AnchorProvider, setProvider } from "@coral-xyz/anchor";
-import { IDL, PROGRAM_ID } from "@/components/Utils/idl";
+import { IDL, PROGRAM_ID } from "@/components/Protocol/idl";
 
 export const fetchProductDetails = async (accountPubkey: string) => {
     const connection = new Connection(clusterApiUrl("devnet"), {
