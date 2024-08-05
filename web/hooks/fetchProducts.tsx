@@ -1,6 +1,6 @@
 import { clusterApiUrl, Connection, PublicKey, Keypair, DataSizeFilter, GetProgramAccountsConfig } from "@solana/web3.js";
 import { Program, AnchorProvider, setProvider } from "@coral-xyz/anchor";
-import { IDL, PROGRAM_ID, LISTING_GROUP, WATCH_GROUP } from "@/components/Protocol/idl";
+import { IDL, PROGRAM_ID} from "@/components/Protocol/idl";
 import { fetchCollectionV1 } from '@metaplex-foundation/mpl-core'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults';
 
@@ -37,12 +37,6 @@ export const fetchProducts = async () => {
         };
         const get_accounts_config: GetProgramAccountsConfig = {
             commitment: "confirmed",
-            // filters: [{
-            //     memcmp: {
-            //         offset: 16,
-            //         bytes: LISTING_GROUP,
-            //     }
-            // }]
             filters: [size_filter]
         };
         const all_program_accounts = await connection.getProgramAccounts(new PublicKey(PROGRAM_ID),
@@ -140,16 +134,7 @@ export const fetchWatches = async () => {
         const size_filter: DataSizeFilter = {
             dataSize: 92,
         };
-        const get_accounts_config: GetProgramAccountsConfig = {
-            commitment: "confirmed",
-            filters: [{
-                memcmp: {
-                    offset: 8,
-                    bytes: WATCH_GROUP,
-                }
-            }]
-            // filters: [size_filter]
-        };
+        
         const all_program_accounts = await connection.getProgramAccounts(new PublicKey(PROGRAM_ID),
             // get_accounts_config
         );

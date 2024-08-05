@@ -2,7 +2,7 @@ import { Address } from "@coral-xyz/anchor";
 
 
 export type ArtsnCore = {
-  "address": "4zRpccBb5ozQ7u8CLKkNQp7NGySUZpc9Bp16Tn4udTos",
+  "address": "6T9tPPCTnBB1GfMn6R8xXZwaPHdcYDEBaQmeuy9asniH",
   "metadata": {
     "name": "artsn_core",
     "version": "0.1.0",
@@ -685,6 +685,247 @@ export type ArtsnCore = {
         {
           "name": "mpl_core_program",
           "address": "CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "claim_fractionalized_listing_revenue",
+      "discriminator": [
+        217,
+        177,
+        179,
+        128,
+        4,
+        254,
+        139,
+        166
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "owner_ata",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "owner"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "listing_ata",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "listing"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "listing",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  105,
+                  115,
+                  116,
+                  105,
+                  110,
+                  103
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "listing.id",
+                "account": "FractionalizedCompletedListing"
+              }
+            ]
+          }
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
         }
       ],
       "args": []
@@ -1638,6 +1879,19 @@ export type ArtsnCore = {
       ]
     },
     {
+      "name": "FractionalizedCompletedListing",
+      "discriminator": [
+        178,
+        49,
+        18,
+        12,
+        26,
+        42,
+        27,
+        5
+      ]
+    },
+    {
       "name": "FractionalizedListing",
       "discriminator": [
         37,
@@ -1733,6 +1987,11 @@ export type ArtsnCore = {
       "code": 6005,
       "name": "SignatureAuthorityMismatch",
       "msg": "Signature authority mismatch"
+    },
+    {
+      "code": 6006,
+      "name": "InvalidInstruction",
+      "msg": "Invalid instruction"
     }
   ],
   "types": [
@@ -1931,6 +2190,42 @@ export type ArtsnCore = {
           },
           {
             "name": "Pass"
+          }
+        ]
+      }
+    },
+    {
+      "name": "FractionalizedCompletedListing",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "u64"
+          },
+          {
+            "name": "object_type",
+            "type": {
+              "defined": {
+                "name": "ObjectType"
+              }
+            }
+          },
+          {
+            "name": "object",
+            "type": "pubkey"
+          },
+          {
+            "name": "share",
+            "type": "u16"
+          },
+          {
+            "name": "price",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
           }
         ]
       }
@@ -2204,7 +2499,7 @@ export type ArtsnCore = {
 
   
 export const IDL: ArtsnCore = {
-  "address": "4zRpccBb5ozQ7u8CLKkNQp7NGySUZpc9Bp16Tn4udTos",
+  "address": "6T9tPPCTnBB1GfMn6R8xXZwaPHdcYDEBaQmeuy9asniH",
   "metadata": {
     "name": "artsn_core",
     "version": "0.1.0",
@@ -2887,6 +3182,247 @@ export const IDL: ArtsnCore = {
         {
           "name": "mpl_core_program",
           "address": "CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "claim_fractionalized_listing_revenue",
+      "discriminator": [
+        217,
+        177,
+        179,
+        128,
+        4,
+        254,
+        139,
+        166
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "owner_ata",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "owner"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "listing_ata",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "listing"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "listing",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  105,
+                  115,
+                  116,
+                  105,
+                  110,
+                  103
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "listing.id",
+                "account": "FractionalizedCompletedListing"
+              }
+            ]
+          }
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
         }
       ],
       "args": []
@@ -3840,6 +4376,19 @@ export const IDL: ArtsnCore = {
       ]
     },
     {
+      "name": "FractionalizedCompletedListing",
+      "discriminator": [
+        178,
+        49,
+        18,
+        12,
+        26,
+        42,
+        27,
+        5
+      ]
+    },
+    {
       "name": "FractionalizedListing",
       "discriminator": [
         37,
@@ -3935,6 +4484,11 @@ export const IDL: ArtsnCore = {
       "code": 6005,
       "name": "SignatureAuthorityMismatch",
       "msg": "Signature authority mismatch"
+    },
+    {
+      "code": 6006,
+      "name": "InvalidInstruction",
+      "msg": "Invalid instruction"
     }
   ],
   "types": [
@@ -4133,6 +4687,42 @@ export const IDL: ArtsnCore = {
           },
           {
             "name": "Pass"
+          }
+        ]
+      }
+    },
+    {
+      "name": "FractionalizedCompletedListing",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "u64"
+          },
+          {
+            "name": "object_type",
+            "type": {
+              "defined": {
+                "name": "ObjectType"
+              }
+            }
+          },
+          {
+            "name": "object",
+            "type": "pubkey"
+          },
+          {
+            "name": "share",
+            "type": "u16"
+          },
+          {
+            "name": "price",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
           }
         ]
       }
@@ -4406,10 +4996,6 @@ export const IDL: ArtsnCore = {
 
 
 
-export const PROGRAM_ID = "4zRpccBb5ozQ7u8CLKkNQp7NGySUZpc9Bp16Tn4udTos" as Address
-
-export const LISTING_GROUP = 'LSTBuqygb7CMQryt45BC1fh5PPjuJKtoffDyASchWi2' as string;
-
-export const WATCH_GROUP = 'WaTL5TmFvfKeuFESWL1yp7tCg1feH55jxxhfcMHYR8g' as string;
+export const PROGRAM_ID = "6T9tPPCTnBB1GfMn6R8xXZwaPHdcYDEBaQmeuy9asniH" as Address
 
 export const USDC_MINT = '4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU' as string; // USDC - DEVNET https://faucet.circle.com/
