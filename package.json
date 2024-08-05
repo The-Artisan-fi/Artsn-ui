@@ -29,7 +29,7 @@
     "@ondato-public/idv-sdk": "1.x.x",
     "@solana-developers/helpers": "^2.4.0",
     "@solana-developers/preset-next": "2.0.1",
-    "@solana/actions": "^1.1.1",
+    "@solana/actions": "^1.6.1",
     "@solana/pay": "^0.2.5",
     "@solana/spl-token": "0.4.6",
     "@solana/wallet-adapter-base": "^0.9.23",

@@ -1,13 +1,7 @@
 import { prepareTransaction } from '../../../../helpers/transaction-utils';
 import * as anchor from "@coral-xyz/anchor";
 import { mplCoreProgram, manager, mint } from "@/components/Protocol/constants";
-import {
-    ActionGetResponse,
-    ACTIONS_CORS_HEADERS,
-    ActionPostRequest,
-    createPostResponse,
-    ActionPostResponse,
-  } from "@solana/actions";
+import {ActionGetResponse, ActionPostResponse, ActionPostRequest, ACTIONS_CORS_HEADERS, } from "@solana/actions"
 import { IDL, ArtsnCore, PROGRAM_ID, USDC_MINT} from "@/components/Protocol/idl";
 import {
     SYSVAR_INSTRUCTIONS_PUBKEY,
@@ -19,11 +13,6 @@ import {
     VersionedTransaction,
     LAMPORTS_PER_SOL
 } from "@solana/web3.js";
-import {
-    ActionsSpecGetResponse,
-    ActionsSpecPostRequestBody,
-    ActionsSpecPostResponse,
-} from '../../../../helpers/spec/actions-spec';
   import { 
     ASSOCIATED_TOKEN_PROGRAM_ID, 
     TOKEN_2022_PROGRAM_ID, 
@@ -187,7 +176,7 @@ export async function GET(_: Request, { params }: { params: { key : number } }) 
     try {
         console.log('route pinged')
         function getDonateInfo(): Pick<
-            ActionsSpecGetResponse,
+            ActionGetResponse,
             'icon' | 'title' | 'description'
         > {
             const icon =
@@ -200,7 +189,7 @@ export async function GET(_: Request, { params }: { params: { key : number } }) 
         
         const { icon, title, description } = getDonateInfo();
         const amountParameterName = 'amount';
-        const response: ActionsSpecGetResponse = {
+        const response: ActionGetResponse = {
             icon,
             label: `${params.key} SOL`,
             title,
@@ -208,15 +197,7 @@ export async function GET(_: Request, { params }: { params: { key : number } }) 
           };
 
         console.log('response', response);
-        const res = new Response(
-            JSON.stringify(response), {
-                status: 200,
-                headers: {
-                    'access-control-allow-origin': '*',
-                    'content-type': 'application/json; charset=UTF-8'
-                }
-            }
-        );
+        const res = Response.json(response, {headers: ACTIONS_CORS_HEADERS})
         console.log('res', res);
         return res
     } catch (e) {
@@ -226,11 +207,5 @@ export async function GET(_: Request, { params }: { params: { key : number } }) 
 }
 
 export async function OPTIONS(_: Request) {
-    return new Response(null, {
-        headers: {
-            'access-control-allow-origin': '*',
-            'access-control-allow-methods': 'GET, POST, OPTIONS',
-            'access-control-allow-headers': 'Content-Type',
-        },
-    });
+    return Response.json({headers: ACTIONS_CORS_HEADERS})
 };

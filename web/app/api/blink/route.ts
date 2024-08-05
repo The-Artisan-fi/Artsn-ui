@@ -10,10 +10,7 @@ import {
     Connection,
     VersionedTransaction,
 } from "@solana/web3.js";
-import {
-    ActionsSpecGetResponse,
-    ActionsSpecPostResponse,
-} from '../../../helpers/spec/actions-spec';
+import {ActionGetResponse, ActionPostResponse, ActionPostRequest, ACTIONS_CORS_HEADERS, } from "@solana/actions"
   import { 
     ASSOCIATED_TOKEN_PROGRAM_ID, 
     TOKEN_2022_PROGRAM_ID, 
@@ -128,16 +125,11 @@ export async function POST( request: Request ) {
         const transaction = await prepareTransaction(instructions, feePayer.publicKey);
         transaction.sign([feePayer])
         const base64 = Buffer.from(transaction.serialize()).toString('base64');
-        const response: ActionsSpecPostResponse = {
+        const response: ActionPostResponse = {
             transaction: base64,
         };
-        return new Response(JSON.stringify(response), {
-            status: 200,
-            headers: {
-                'access-control-allow-origin': '*',
-                'content-type': 'application/json; charset=UTF-8'
-            }
-        });
+
+        return Response.json(response, {headers: ACTIONS_CORS_HEADERS})
 
     } catch (e) {
         console.log(e);
@@ -149,7 +141,7 @@ export async function GET( request: Request ) {
     try {
         console.log('route pinged')
         function getDonateInfo(): Pick<
-            ActionsSpecGetResponse,
+            ActionGetResponse,
             'icon' | 'title' | 'description'
         > {
             const icon ='https://artisan-solana.s3.eu-central-1.amazonaws.com/ArtisanBlink.png';
@@ -161,7 +153,7 @@ export async function GET( request: Request ) {
         
         const { icon, title, description } = getDonateInfo();
         const amountParameterName = 'amount';
-        const response: ActionsSpecGetResponse = {
+        const response: ActionGetResponse = {
             icon,
             label: `Invest in Real World Assets with Artsn.Fi`,
             title,
@@ -187,15 +179,7 @@ export async function GET( request: Request ) {
         };
 
         console.log('response', response);
-        const res = new Response(
-            JSON.stringify(response), {
-                status: 200,
-                headers: {
-                    'access-control-allow-origin': '*',
-                    'content-type': 'application/json; charset=UTF-8'
-                }
-            }
-        );
+        const res = Response.json(response, {headers: ACTIONS_CORS_HEADERS})
         console.log('res', res);
         return res
     } catch (e) {
@@ -205,10 +189,5 @@ export async function GET( request: Request ) {
 }
 
 export async function OPTIONS( request: Request ) {
-    return new Response(null, {
-        headers: {
-            'access-control-allow-origin': '*',
-            'content-type': 'application/json; charset=UTF-8'
-        }
-    });
+    return Response.json({headers: ACTIONS_CORS_HEADERS})
 };
