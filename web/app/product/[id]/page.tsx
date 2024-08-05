@@ -74,12 +74,16 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
             if(publicKey && product){
                const tx = await buyTx(product.id, product.reference, publicKey.toBase58(), amount, product.uri);
                 const signature = await sendTransaction(tx!, connection, {skipPreflight: true,});
-                await toastPromise(signature)
+                const toast = await toastPromise(signature)
+                if(toast){
+                    fetchData(offChainData!.associatedId);
+                }
             } 
             if(web3AuthPublicKey !== null && !publicKey && product){
                 const tx = await buyTx(product.id, product.reference, web3AuthPublicKey, amount, product.uri);
                 const signature = await rpc!.sendTransaction(tx!);
                 await toastPromise(signature)
+                fetchData(offChainData!.associatedId);
             }
         } catch (error) {
             console.error('Error sending transaction', error);
@@ -115,6 +119,8 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
 
     // **************************Data Functions***********************************
     async function fetchData(accountPubkey: string) {
+        console.log("fetching data");
+        setIsLoading(true);
         const on_chain_data: OnChainData | undefined = await fetchProductDetails(accountPubkey);
 
         const product_images = offChainData!.images.map((image: string) => {

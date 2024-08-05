@@ -21,7 +21,7 @@ export async function toastPromise(signature: string) {
         "confirmed"
     );
     const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash()
-    toast.promise(
+    await toast.promise(
         connection.confirmTransaction({
             blockhash,
             lastValidBlockHeight,
@@ -46,5 +46,7 @@ export async function toastPromise(signature: string) {
             },
             error: 'Error sending transaction'
         }
-    );
+    )
+
+    return true;
 }

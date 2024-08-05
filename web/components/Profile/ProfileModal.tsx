@@ -201,7 +201,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
                     return;
                 } else {
                     console.log('error initializing profile');
-                    toastError('Error initializing profile');
+                    // toastError('Error initializing profile');
                 }
             }
 
@@ -224,7 +224,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ showModal, page, offChainPr
             }
         } catch (error) {
             console.error('Error sending transaction', error);
-            toastError('Error sending transaction');
+            // toastError('Error sending transaction');
         }
     }
 
