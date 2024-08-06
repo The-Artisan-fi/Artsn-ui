@@ -14,6 +14,7 @@ import { userProfileBasic } from "@/lib/queries";
 import { checkLogin } from "@/components/Web3Auth/solanaRPC";
 import { toastError } from '@/helpers/toast';
 import dynamic from 'next/dynamic';
+
 const LoadingSpinner = dynamic(() => import('@/components/Loading/Loading').then((mod) => mod.LoadingSpinner), { ssr: false });
 const DashboardNav = () => {
   const router = useRouter();
@@ -28,10 +29,19 @@ const DashboardNav = () => {
   const [getDetails, { loading, error, data }] = useLazyQuery(userProfileBasic , {variables});
   if(!loading && data != undefined && profileImg == ''){
     console.log('data', data);
-    setProfileImg(data.users[0].profileImg);
-    setUserName(data.users[0].userName);
-    setVerified(data.users[0].idvStatus == true ? true : false)
-    setProfileLoading(false);
+    if(data.users.length > 0){
+      
+      setProfileImg(data.users[0].profileImg);
+      setUserName(data.users[0].userName);
+      setVerified(data.users[0].idvStatus == true ? true : false)
+      setProfileLoading(false);
+    } else {
+      setProfileImg('/assets/swiss-icon.webp');
+      setUserName(publicKey.toBase58().slice(-4));
+      setVerified(false);
+      setProfileLoading(false);
+    }
+    
   }
   if(!loading && error != undefined){
       console.log("error", error);
@@ -140,9 +150,11 @@ const DashboardNav = () => {
           </Popover> */}
           {profileLoading ? <LoadingSpinner /> : (
             <>
+            {profileImg == null && (
               <Avatar
                 src={profileImg}
               />
+            )}
               <p className="dashboard-nav__user-name">
                 {userName}
               </p>
