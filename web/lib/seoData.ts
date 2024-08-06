@@ -28,7 +28,6 @@ export const seoData = {
     'Brian Frederiksen',
     'Paolo Piana',
     'Craig Pollock',
-    'Macarena Segura',
     'Domenico Fava',
     'Matt Weichel',
     'Formula Equal',

@@ -55,17 +55,6 @@ const teamDataDesktop = [
         twitter: "#", 
     },
     {
-        name: "Paolo Piana",
-        title: "CGO",
-        img: Paolo,
-        about: [    
-            "Web3 Marketer & UX Designer",
-            "Web3 full time (SMEs and DFINITY Foundation)",
-        ],
-        linkedIn: "https://www.linkedin.com/in/paolo-piana/",
-        twitter: "https://twitter.com/pinoweb3",
-    },
-    {
         name: "Craig Pollock",
         title: "F1 Ambassador",
         img: Craig,
@@ -78,20 +67,6 @@ const teamDataDesktop = [
         ],
         linkedIn: "https://www.linkedin.com/in/craig-pollock-538a9412/",
         twitter: "#",
-    },
-    {
-        name: "Macarena Segura",
-        title: "Business Developer",
-        img: Macarena,
-        about: [
-            "International Fintech Lawyer",
-            "Blockchain, RegTech, Cybersecurity, IDV, Crypto Assets, Web3",
-            "Regulatory Supervisor - Bank de España",
-            "Regulatory Advisory Fintech & Digital Assets - KPMG",
-            "Regulatory Advisory Fintech & Digital Assets - PwC"
-        ],
-        linkedIn: "https://www.linkedin.com/in/macarena-linaza-segura/",
-        twitter: "#", // Macarena's Twitter link is missing
     },
     // {
     //     name: "Simone Leonardi",
