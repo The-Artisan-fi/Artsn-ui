@@ -11,7 +11,8 @@ import {
     Transaction,
     Connection,
     VersionedTransaction,
-    LAMPORTS_PER_SOL
+    LAMPORTS_PER_SOL,
+    sendAndConfirmTransaction
 } from "@solana/web3.js";
   import { 
     ASSOCIATED_TOKEN_PROGRAM_ID, 
@@ -83,6 +84,7 @@ export async function POST(_: Request, { params }: { params: { key : number } })
         // const listing = PublicKey.findProgramAddressSync([Buffer.from('listing'), watch.toBuffer(), new anchor.BN(id).toBuffer("le", 8)], program.programId)[0];
         const listing = new PublicKey(ITEMS[object - 1].listing);
         const buyerProfile = PublicKey.findProgramAddressSync([Buffer.from('profile'), buyer_publicKey.toBuffer()], program.programId)[0];      
+        const buyer_profile = PublicKey.findProgramAddressSync([Buffer.from('profile'), buyer_publicKey.toBuffer()], program.programId)[0];
         const listingCurrencyAta = getAssociatedTokenAddressSync(mint, listing, true)
         const buyerCurrencyAta = getAssociatedTokenAddressSync(mint, buyer_publicKey)
 
@@ -104,6 +106,7 @@ export async function POST(_: Request, { params }: { params: { key : number } })
 
         const feeKey = process.env.PRIVATE_KEY!;
         const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
+        console.log('feePayer', feePayer.publicKey.toBase58());
         const profileInitIx = await await program.methods
             //@ts-expect-error - missing arguments
             .initializeProfile(
@@ -118,7 +121,6 @@ export async function POST(_: Request, { params }: { params: { key : number } })
             .signers([feePayer])
             .instruction()
             const fraction = Keypair.generate();
-            const buyer_profile = PublicKey.findProgramAddressSync([Buffer.from('profile'), buyer_publicKey.toBuffer()], program.programId)[0];
             console.log('uri', ITEM_URIS[object - 1])
             const buyShareIx = await program.methods
                 //@ts-expect-error - not sure why this is throwing an error
@@ -147,9 +149,21 @@ export async function POST(_: Request, { params }: { params: { key : number } })
         const total_instructions = [];
 
         const buyerProfileAccount = await connection.getAccountInfo(buyer_profile);
-       
+        console.log('buyerProfileAccount', buyerProfileAccount);
         if(buyerProfileAccount == null) {
-            total_instructions.push(profileInitIx);
+            const { blockhash } = await connection.getLatestBlockhash("finalized");
+            console.log('blockhash', blockhash);
+            const transaction = new Transaction({
+                recentBlockhash: blockhash,
+                feePayer: feePayer.publicKey,
+            });
+            
+            transaction.add(profileInitIx);
+            await sendAndConfirmTransaction(connection, transaction, [feePayer], {
+                commitment: "confirmed",
+                skipPreflight: true,
+                maxRetries: 3,
+            });
         }
         // run a for loop to add a set of instructions to the total_instructions array for the amount of shares to buy
 
@@ -208,7 +222,7 @@ export async function GET(_: Request, { params }: { params: { key : number } }) 
 }
 
 export async function OPTIONS(_: Request) {
-    return new Response(null, {
+    return Response.json(null, {
         headers: ACTIONS_CORS_HEADERS,
     });
 };
