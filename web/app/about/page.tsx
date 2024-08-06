@@ -11,7 +11,6 @@ import Leonardo from "@/public/assets/about/leonardo.webp";
 import Brian from "@/public/assets/about/brian.png";
 import Paolo from "@/public/assets/about/paolo.webp";
 import Craig from "@/public/assets/about/craig.jpg";
-import Macarena from "@/public/assets/about/macarena.webp";
 import Domenico from "@/public/assets/about/domenico.webp";
 import Matt from "@/public/assets/about/matt.jpeg";
 
@@ -55,31 +54,6 @@ const teamDataDesktop = [
         twitter: "#", 
     },
     {
-        name: "Brian Frederiksen",
-        title: "COO",
-        img: Brian,
-        about: [
-            "Managing Partner - Monaco Foundry",
-            "CEO - WEOPTIT", 
-            "Senior Government Advisor - Finland", 
-            "Global Head of Business Development - IBM Watson", 
-            "Chief Strategy & Operating Officer - Merck & Co Healthcare Services",
-        ],
-        linkedIn: "https://www.linkedin.com/in/brianfrederiksen/",
-        twitter: "#", 
-    },
-    {
-        name: "Paolo Piana",
-        title: "CGO",
-        img: Paolo,
-        about: [    
-            "Web3 Marketer & UX Designer",
-            "Web3 full time (SMEs and DFINITY Foundation)",
-        ],
-        linkedIn: "https://www.linkedin.com/in/paolo-piana/",
-        twitter: "https://twitter.com/pinoweb3",
-    },
-    {
         name: "Craig Pollock",
         title: "F1 Ambassador",
         img: Craig,
@@ -98,34 +72,7 @@ const teamDataDesktop = [
         linkedIn: "https://www.linkedin.com/in/craig-pollock-538a9412/",
         twitter: "#",
     },
-    {
-        name: "Macarena Segura",
-        title: "Business Developer",
-        img: Macarena,
-        about: [
-            "International Fintech Lawyer",
-            "Blockchain, RegTech, Cybersecurity, IDV, Crypto Assets, Web3",
-            "Regulatory Supervisor - Bank de España",
-            "Regulatory Advisory Fintech & Digital Assets - KPMG",
-            "Regulatory Advisory Fintech & Digital Assets - PwC"
-        ],
-        linkedIn: "https://www.linkedin.com/in/macarena-linaza-segura/",
-        twitter: "#", // Macarena's Twitter link is missing
-    },
-    // {
-    //     name: "Simone Leonardi",
-    //     title: "Tax & Fiscal Expert",
-    //     img: simone,
-    //     about: [
-    //         "National and Internationl Fiscal Expert",
-    //         "International Corporate Tax Senior Manager - KPMG",
-    //         "Director - Fiduciaria Antonini",
-    //         "Member - Fiscal Association",
-    //         "Member - Register of Accountant Trustees Ticino Canton", 
-    //     ],
-    //     linkedIn: "https://www.linkedin.com/in/simone-leonardi-a6a13a12/",
-    //     twitter: "#", // Macarena's Twitter link is missing
-    // },
+   
     {
         name: "Domenico Fava",
         title: "Identity Verification & Data Protection",
