@@ -63,20 +63,20 @@ export async function POST(_: Request, { params }: { params: { key : number } })
         const object = params.key;
         const ITEMS = [
             {
-                listing: "CBCYqnej9pvGNC5L9S3x5qTSxjf9rUUMRLeJgZfTKWX3",
-                watch: "4oMxCX2RRwfhpGiPqAQC4wHpDBxXdmnd2MWtNXHABFY4"
+                listing: "7J4McGtP4WM8s3riHZCCLYE9nRScedQDzsJsevn4pnjY",
+                watch: "2FJ2uf6N25CyyUskmi7R6TCuESXbRKsGjgwvDDWFSZtM"
             },
             {
-                listing: "Fb4QK96rsraG5Bvqq1JkHEnnbidkq71QoKPB3gNSAmmY",
-                watch: "4o2D9bR5Q31H7nVKSd3RUuKSGFKV5PWxvftByriLpPnF"
+                listing: "94d356AP9RK3kJSDtMop3i9WRy1ftVqtkUrnjho1b1Km",
+                watch: "72LDr9L54mQ7pbbxZnnpQjVrUWMXv8XU6bo5eKp9Ahu"
             },
             {
-                listing: "2eZEfQ19cJQxqBt8z5HjHuK221yj5HZ3nJdo771fnU6G",
-                watch: "B4h81CidkF9iTxwLrvY36GJQbiDmDtdp6fPjZMA3cnxy"
+                listing: "FwFmVPyWZC4BRD4wRNxbUHaHWE7T6j4GCbh5byuPDrQn",
+                watch: "8p1KNe5DUnBww1o2pRaLyA3LSE5dBXnAxVhhh4FQGtNr"
             },
             {
-                listing: "2t8F7ANAgzLAE3UujiEFNn8VAEPNQrnWVqujNKtBsKvT",
-                watch: "2B7Yn1eK4S7qs9g4cwYUPR29f5AY9kMNp69L36Wz8cfN"
+                listing: "ADnQLB6phTAGLAQZfaXRoMybLK1Z9ycSmJdoxyQ8tGjQ",
+                watch: "6RXjKfgrTGvSFh9YpSo8LwaCsVuKDw65cZScYnNxMmGi"
             }
         ];
         const watch = new PublicKey(ITEMS[object - 1].watch);
@@ -208,5 +208,7 @@ export async function GET(_: Request, { params }: { params: { key : number } }) 
 }
 
 export async function OPTIONS(_: Request) {
-    return Response.json({headers: ACTIONS_CORS_HEADERS})
+    return new Response(null, {
+        headers: ACTIONS_CORS_HEADERS,
+    });
 };
