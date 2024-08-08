@@ -2,7 +2,7 @@ import { Address } from "@coral-xyz/anchor";
 
 
 export type ArtsnCore = {
-  "address": "6T9tPPCTnBB1GfMn6R8xXZwaPHdcYDEBaQmeuy9asniH",
+  "address": "Hyjee2KiJXJRtabtvwQgWGt9ZozPEF18DYr5oRvYTq6K",
   "metadata": {
     "name": "artsn_core",
     "version": "0.1.0",
@@ -291,6 +291,26 @@ export type ArtsnCore = {
           "name": "fraction",
           "writable": true,
           "signer": true
+        },
+        {
+          "name": "protocol",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108
+                ]
+              }
+            ]
+          }
         },
         {
           "name": "instructions",
@@ -2499,7 +2519,7 @@ export type ArtsnCore = {
 
   
 export const IDL: ArtsnCore = {
-  "address": "6T9tPPCTnBB1GfMn6R8xXZwaPHdcYDEBaQmeuy9asniH",
+  "address": "Hyjee2KiJXJRtabtvwQgWGt9ZozPEF18DYr5oRvYTq6K",
   "metadata": {
     "name": "artsn_core",
     "version": "0.1.0",
@@ -2788,6 +2808,26 @@ export const IDL: ArtsnCore = {
           "name": "fraction",
           "writable": true,
           "signer": true
+        },
+        {
+          "name": "protocol",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108
+                ]
+              }
+            ]
+          }
         },
         {
           "name": "instructions",
@@ -4996,6 +5036,6 @@ export const IDL: ArtsnCore = {
 
 
 
-export const PROGRAM_ID = "6T9tPPCTnBB1GfMn6R8xXZwaPHdcYDEBaQmeuy9asniH" as Address
+export const PROGRAM_ID = "Hyjee2KiJXJRtabtvwQgWGt9ZozPEF18DYr5oRvYTq6K" as Address
 
 export const USDC_MINT = '4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU' as string; // USDC - DEVNET https://faucet.circle.com/

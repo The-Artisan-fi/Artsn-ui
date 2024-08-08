@@ -83,8 +83,8 @@ export async function POST(_: Request, { params }: { params: { key : number } })
         const watch = new PublicKey(ITEMS[object - 1].watch);
         // const listing = PublicKey.findProgramAddressSync([Buffer.from('listing'), watch.toBuffer(), new anchor.BN(id).toBuffer("le", 8)], program.programId)[0];
         const listing = new PublicKey(ITEMS[object - 1].listing);
-        const buyerProfile = PublicKey.findProgramAddressSync([Buffer.from('profile'), buyer_publicKey.toBuffer()], program.programId)[0];      
-        const buyer_profile = PublicKey.findProgramAddressSync([Buffer.from('profile'), buyer_publicKey.toBuffer()], program.programId)[0];
+        const buyerProfile = PublicKey.findProgramAddressSync([Buffer.from('profile'), buyer_publicKey.toBuffer()], programId)[0];      
+        const buyer_profile = PublicKey.findProgramAddressSync([Buffer.from('profile'), buyer_publicKey.toBuffer()], programId)[0];
         const listingCurrencyAta = getAssociatedTokenAddressSync(mint, listing, true)
         const buyerCurrencyAta = getAssociatedTokenAddressSync(mint, buyer_publicKey)
 
@@ -107,19 +107,7 @@ export async function POST(_: Request, { params }: { params: { key : number } })
         const feeKey = process.env.PRIVATE_KEY!;
         const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
         console.log('feePayer', feePayer.publicKey.toBase58());
-        const profileInitIx = await await program.methods
-            //@ts-expect-error - missing arguments
-            .initializeProfile(
-                buyer_publicKey.toBase58().slice(-4)
-            )
-            .accountsPartial({
-                user: buyer_publicKey,
-                payer: feePayer.publicKey,
-                profile: buyerProfile,
-                systemProgram: SystemProgram.programId,
-            })
-            .signers([feePayer])
-            .instruction()
+        
             const fraction = Keypair.generate();
             console.log('uri', ITEM_URIS[object - 1])
             const buyShareIx = await program.methods
@@ -151,6 +139,19 @@ export async function POST(_: Request, { params }: { params: { key : number } })
         const buyerProfileAccount = await connection.getAccountInfo(buyer_profile);
         console.log('buyerProfileAccount', buyerProfileAccount);
         if(buyerProfileAccount == null) {
+            const profileInitIx = await await program.methods
+            //@ts-expect-error - missing arguments
+            .initializeProfile(
+                buyer_publicKey.toBase58().slice(-4)
+            )
+            .accountsPartial({
+                user: buyer_publicKey,
+                payer: feePayer.publicKey,
+                profile: buyerProfile,
+                systemProgram: SystemProgram.programId,
+            })
+            .signers([feePayer])
+            .instruction()
             const { blockhash } = await connection.getLatestBlockhash("finalized");
             console.log('blockhash', blockhash);
             const transaction = new Transaction({
