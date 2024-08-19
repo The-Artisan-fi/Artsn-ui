@@ -111,7 +111,7 @@ export async function POST( request: Request ) {
         console.log('system_program: ', anchor.web3.SystemProgram.programId.toBase58());
 
         const buyShareIx = await program.methods
-            //@ts-expect-error - not sure why this is throwing an error
+        ///@ts-expect-error - missing arguments
             .buyFractionalizedListing(uri)
             .accountsPartial({
                 buyer: buyer_publicKey,

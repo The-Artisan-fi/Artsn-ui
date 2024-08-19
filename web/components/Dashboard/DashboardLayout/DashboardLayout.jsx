@@ -25,6 +25,7 @@ import { IoWalletOutline } from 'react-icons/io5';
 // import { IoSettingsOutline } from 'react-icons/io5';
 
 import { Layout, Menu, Button } from 'antd';
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 const { Header, Sider, Content } = Layout;
 const DashboardLayout = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -129,6 +130,7 @@ const DashboardLayout = ({ children }) => {
             // },
           ]}
         />
+        <WalletMultiButton />
       </Sider>
       <Layout>
         <Header
