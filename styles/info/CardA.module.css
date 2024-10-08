@@ -1,0 +1,21 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    padding: 14px;
+}
+
+.textBlock {
+    display: block;
+    text-align: center;
+    color: #00000059;
+    font-size: 30px;
+    /* font-weight: 600; */
+    line-height: 32.51px;
+    text-align: left;
+
+}
+
+.textBlock > span {
+    font-weight: bold;
+    color: black;
+}

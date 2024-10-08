@@ -1,0 +1,103 @@
+{
+    "user": {
+      "_id": "string",
+      "email": "string",
+      "password": "string",
+      "username": "string",
+      "firstName": "string",
+      "lastName": "string",
+      "createdAt": "string",
+      "updatedAt": "string",
+      "lastLogin": "string",
+      "isActive": "boolean",
+      "role": "string",
+      "verificationToken": "string",
+      "isVerified": "boolean",
+      "resetPasswordToken": "string",
+      "resetPasswordExpires": "string",
+      "profilePictureUrl": "string",
+      "publicKey": "string",
+      "solanaTransactionId": "string",
+      "phoneNumber": "string",
+      "baseProfile": {
+        "id": "string",
+        "displayName": "string",
+        "displayRole": "string",
+        "photoUrl": "string",
+        "bio": "string",
+        "createdAt": "string",
+        "updatedAt": "string"
+      },
+      "creatorInfo": {
+        "id": "string",
+        "createdAt": "string",
+        "updatedAt": "string",
+        "detailedBio": {
+          "profession": "string",
+          "education": {
+            "schools": [
+              {
+                "name": "string",
+                "degree": "string",
+                "fieldOfStudy": "string",
+                "graduationYear": "string"
+              }
+            ],
+            "relevantCourses": ["string"],
+            "specializedTraining": ["string"]
+          },
+          "professionalAchievements": {
+            "awards": ["string"],
+            "exhibitions": ["string"],
+            "portfolioLinks": ["string"]
+          },
+          "collaborators": ["string"],
+          "employmentContracts": [
+            {
+              "employer": "string",
+              "startDate": "string",
+              "endDate": "string",
+              "ipRightsInfo": "string"
+            }
+          ]
+        },
+        "ipAssets": [
+
+        ]
+      },
+      "investorInfo": {
+        "id": "string",
+        "createdAt": "string",
+        "updatedAt": "string",
+        "investmentPreferences": ["string"],
+        "investmentHistory": [
+          {
+            "id": "string",
+            "type": "string",
+            "investmentDate": "string",
+            "amount": "number",
+            "terms": "string",
+            "transactionId": "string",
+            "creatorId": "string",
+            "ipId": "string"
+          }
+        ],
+        "portfolioSize": "number",
+        "riskTolerance": "string",
+        "preferredInvestmentDuration": "string"
+      },
+      "kycInfo": {
+        "kycStatus": "string",
+        "kycCompletionDate": "string",
+        "kycDocuments": [
+          {
+            "documentType": "string",
+            "documentUrl": "string",
+            "verificationStatus": "string"
+          }
+        ]
+      }
+    }
+  }
+
+

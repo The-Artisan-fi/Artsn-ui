@@ -1,6 +1,0 @@
-[build]
-  command = "npm run build"
-  publish = "dist/web/.next"
-
-[build.environment]
-NETLIFY_NEXT_PLUGIN_SKIP = "true"
