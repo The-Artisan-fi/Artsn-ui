@@ -5,6 +5,7 @@ import { PublicKey } from "@solana/web3.js";
 import {
   useArtisanProgramAccount,
 } from '@/components/protocol/protocol-data-access';
+import { LoadingFeature } from '@/components/loading/loading-feature';
 import { BN } from '@coral-xyz/anchor';
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults';
 import { fetchCollectionV1 } from '@metaplex-foundation/mpl-core'
@@ -40,7 +41,7 @@ const ProductCard = ({ account, listing, image }: { image: string, account: Publ
 
   return (
     <>
-      {loading && <p>Loading...</p>}
+      {loading && <LoadingFeature />}
       {!loading && (
 
     <div className="bg-white rounded-3xl p-3.5 flex border-gray flex-col justify-between">

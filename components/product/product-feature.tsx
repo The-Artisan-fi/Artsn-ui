@@ -11,6 +11,7 @@ import InvestmentSummary from './components/product-investment-summary-feature';
 import AboutBrand from './components/product-about-brand-feature';
 import MetadataLinks from './components/product-metadata-feature';
 import { set } from '@metaplex-foundation/umi/serializers';
+import { LoadingFeature } from '../loading/loading-feature';
 
 interface ProductData {
   offChainData: any;
@@ -79,7 +80,7 @@ const ProductFeature: React.FC<{ params: { id: string } }> = ({ params }) => {
   }, [offChainData, onChainData, attributes]);
 
   if (loading || !productData) {
-    return <div>Loading...</div>;
+    return <LoadingFeature />;
   }
 
   return (

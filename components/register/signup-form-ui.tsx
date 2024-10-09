@@ -23,6 +23,7 @@ import { Progress } from '../ui/shadcn/progress-ui';
 import { Card, CardHeader, CardTitle, CardDescription } from '../ui/shadcn/card-ui';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useToast } from '@/hooks/use-toast';
+import { LoadingFeature } from '../loading/loading-feature';
 const WalletMultiButton = dynamic(() => import('@solana/wallet-adapter-react-ui').then((mod) => mod.WalletMultiButton), { ssr: false });
 type SignupFormProps = {
     onClose: () => void;
@@ -431,7 +432,7 @@ export function SignupForm({ onClose }: SignupFormProps) {
     }, []);
     
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<LoadingFeature />}>
             {web3auth && defaultSolanaAdapters.length > 0 && (
                 <div className="fixed h-full inset-0 bg-black bg-opacity-100 flex items-center justify-center z-[100]">
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10" onClick={()=>console.log('click')} />

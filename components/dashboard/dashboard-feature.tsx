@@ -21,6 +21,7 @@ import { IDL } from '@coral-xyz/anchor/dist/cjs/native/system';
 import { ArtsnCore, getArtisanProgram } from '../solana/protocol/artisan-exports';
 import TrendingUp from './TrendingUp';
 import { TrendingUp as TrendingIcon } from "lucide-react"
+import { LoadingFeature } from '@/components/loading/loading-feature';
 
 import { useSolanaRPC } from "@/hooks/use-web3-rpc";
 import { useWeb3Auth } from '@/hooks/use-web3-auth';
@@ -213,7 +214,7 @@ export default function DashboardFeature() {
   }, [authUser]);
 
   if (loading || !user) {
-    return <div>Loading...</div>;
+    return <LoadingFeature />;
   }
 
   return (

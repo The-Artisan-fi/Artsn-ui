@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
+import { LoadingFeature } from '@/components/loading/loading-feature';
 import { useMutation } from '@apollo/client';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { Web3AuthNoModal } from "@web3auth/no-modal";
@@ -216,7 +217,7 @@ const LoginDialog: React.FC<DialogProps> = ({ _isOpen }) => {
 
 
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<LoadingFeature />}>
             {web3auth && defaultSolanaAdapters.length > 0 ? (
                 <>
                     <Button variant='secondary' className='rounded-xl' onClick={handleOpen}>

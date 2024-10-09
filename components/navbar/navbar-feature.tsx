@@ -4,6 +4,7 @@ import { useTheme } from '@/hooks/use-theme';
 import { WalletButton } from '../solana/solana-provider';
 import Link from 'next/link';
 import { ReadonlyURLSearchParams, useRouter } from 'next/navigation'
+import { LoadingFeature } from '@/components/loading/loading-feature';
 import { Web3AuthNoModal } from "@web3auth/no-modal";
 import Image from 'next/image';
 import { IS_USER_REGISTERED } from '@/graphql/queries';
@@ -533,7 +534,7 @@ const NavbarFeature: React.FC<NavbarProps> = ({ searchParams, links, scrollThres
                 Explore the Marketplace <ChevronRightIcon />
               </Link>
             </Button>
-              { loading && <div className="animate-pulse bg-bg text-black w-20 h-8 rounded-xl">Loading...</div> }
+              { loading && <LoadingFeature /> }
               {/* <LoginDialog _isOpen={true} /> */}
               { !loading && (userWallet && !_params ? <UserDropdown publicKey={new PublicKey(userWallet!)}/> : <LoginDialog _isOpen={_params} />) }
           </ul>

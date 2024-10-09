@@ -3,6 +3,7 @@ import { useState, useEffect, Suspense } from 'react';
 import styles from '@/styles/components/Home.module.css';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { LoadingFeature } from '@/components/loading/loading-feature';
 import Wrapper from '@/components/ui/ui-wrapper';
 import { Button } from '@/components/ui/shadcn/button-ui';
 // import TransparentCard from '../ui/cards/TransparentCard';
@@ -43,7 +44,7 @@ export default function HomeFeature() {
 
 
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<LoadingFeature />}>
         <div className='bg-bg w-screen pt-20 lg:pt-2 gap-12 lg:gap-0 flex flex-col justify-center' style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
             <Wrapper
                 id="hero"

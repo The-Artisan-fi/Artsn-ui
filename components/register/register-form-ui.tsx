@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery } from '@apollo/client';
 import { useAuth } from '@/components/apollo/auth-context-provider';
+import { LoadingFeature } from '@/components/loading/loading-feature';
 import { 
     REGISTER_USER, UPDATE_USER
 } from '@/graphql/mutations';
@@ -359,7 +360,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ _id, onRegister, variant, c
         }
     };
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingFeature />}>
       {user && (
         <div className="flex flex-col md:flex-row h-3/4">
             <div className="w-11/12 md:w-1/2 p-6">
