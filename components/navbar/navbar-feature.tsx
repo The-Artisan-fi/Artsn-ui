@@ -534,7 +534,7 @@ const NavbarFeature: React.FC<NavbarProps> = ({ searchParams, links, scrollThres
                 Explore the Marketplace <ChevronRightIcon />
               </Link>
             </Button>
-              { loading && <LoadingFeature /> }
+              { loading && <div className='animate-pulse'>Loading...</div>}
               {/* <LoginDialog _isOpen={true} /> */}
               { !loading && (userWallet && !_params ? <UserDropdown publicKey={new PublicKey(userWallet!)}/> : <LoginDialog _isOpen={_params} />) }
           </ul>

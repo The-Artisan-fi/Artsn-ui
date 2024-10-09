@@ -217,7 +217,7 @@ const LoginDialog: React.FC<DialogProps> = ({ _isOpen }) => {
 
 
     return (
-        <Suspense fallback={<LoadingFeature />}>
+        <Suspense fallback={<div className='animate-pulse'>Loading...</div>}>
             {web3auth && defaultSolanaAdapters.length > 0 ? (
                 <>
                     <Button variant='secondary' className='rounded-xl' onClick={handleOpen}>
