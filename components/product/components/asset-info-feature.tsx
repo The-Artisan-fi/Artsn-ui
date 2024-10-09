@@ -1,7 +1,7 @@
 "use client"
 import Image from "next/image";
-import { useState } from "react";
-import { VersionedTransaction } from "@solana/web3.js";
+import { useEffect, useState } from "react";
+import { Transaction, VersionedTransaction } from "@solana/web3.js";
 import { useSolanaRPC } from "@/hooks/use-web3-rpc";
 import { useWeb3Auth } from "@/hooks/use-web3-auth";
 import RPC from "@/components/solana/web3auth/solana-rpc";
@@ -24,16 +24,21 @@ import { useToast } from "@/hooks/use-toast";
 import { set } from "@metaplex-foundation/umi/serializers";
 import { Button } from "@/components/ui/shadcn/button-ui";
 import { Progress } from "@/components/ui/shadcn/progress-ui";
+// import { buyStripeTx, buyTx } from "@/components/Protocol/functions";
+import { loadStripe } from "@stripe/stripe-js";
+import { generateUUID } from "@/helpers/generate-uuid";
+import { useAuth } from "@/components/apollo/auth-context-provider";
 export default function AssetInfo({ asset }: { asset: any }) {
   console.log('asset to render->', asset);
   const { provider, login: web3Login, logout: web3Logout, getUserInfo, web3auth, userAccounts } = useWeb3Auth();
-  const { signVersionedTransaction, getAccounts } = useSolanaRPC(provider);
+  const { signVersionedTransaction, getAccounts, signTransaction } = useSolanaRPC(provider);
   const { toast } = useToast();
   const [amount, setAmount] = useState(1); // Initial amount set to 5
   const [isBuying, setIsBuying] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const { handleCopy, copied } = useHandleShare();
+  const { user } = useAuth();
   const increment = () => {if(amount < 4)setAmount(amount + 1)};
   const decrement = () => {if(amount > 1) setAmount(amount - 1)};
   const router = useRouter();
@@ -95,8 +100,87 @@ export default function AssetInfo({ asset }: { asset: any }) {
       }
     }
   }
+  const asyncStripe = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string);
+  async function buyStripe() {
+    try {
+        const idempotencyKey = generateUUID();
+        const stripe = await asyncStripe;
+        const res = await fetch("/api/stripe", {
+            method: "POST",
+            body: JSON.stringify({
+                amount,
+                id: asset.offChainData.associatedId
+            }),
+            headers: { 
+                "Content-Type": "application/json",
+                'Idempotency-Key': idempotencyKey,
+            },
+        });
+        const { sessionId } = await res.json();
+        sessionStorage.setItem('sessionId', sessionId);
+        await stripe?.redirectToCheckout({ sessionId });
+    } catch (err) {
+        console.log("Transaction failed");
+    }
+  }
 
+  async function buyStripeTx(id: number, reference: string, key: string, amount: number) {
+    try {
+      const response = await fetch('/api/protocol/buy-stripe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id: asset.offChainData.associatedId,
+          reference: reference,
+          publicKey: key,
+          amount: amount,
+          sessionId: sessionStorage.getItem('sessionId')
+        })
+      })
+      const txData = await response.json();
+      const tx = Transaction.from(Buffer.from(txData.transaction, "base64"));
+  
+      if (!tx) {
+        console.log('no transaction');
+        return;
+      }
+  
+      return tx;
+    } catch (error) {
+      console.error('Error sending transaction', error);
+    }
+  };
 
+  async function buyStripeListing(amount: string) {
+    try {
+        if (!user) {
+          const tx = await buyStripeTx(asset.onChainData.id, asset.offChainData.reference, user!.publicKey, +amount);
+          const signature = await signTransaction(tx!);
+          console.log('signature ->', signature);
+          toast({
+              title: 'Transaction sent',
+              description: 'Transaction has been sent to the blockchain',
+          });
+        }
+    } catch (error) {
+        console.error('Error sending transaction', error);
+    } finally {
+        sessionStorage.removeItem('sessionId') 
+    }
+  }
+
+  useEffect(() => {
+    const amount = new URLSearchParams(window.location.search).get('amount');
+    if (
+        (user && user.publicKey) 
+        && amount
+        && sessionStorage.getItem('sessionId')
+    ) {
+        buyStripeListing(amount);
+    }
+  }, [user]);
 
   return (
     <section className="bg-white rounded-3xl border-gray p-5 mb-5">
@@ -225,7 +309,7 @@ export default function AssetInfo({ asset }: { asset: any }) {
                 <div className="flex flex-col justify-between gap-2 items-center px-4 w-full">
                   <Separator className="bg-slate-300"/>    
                   <Button className="w-full rounded-xl bg-secondary text-primary hover:bg-primary hover:text-secondary" onClick={()=> handleBuy()}>Pay with crypto</Button>
-                  <Button className="w-full rounded-xl bg-secondary text-primary hover:bg-primary hover:text-secondary" onClick={()=> handleBuy()}><CreditCard className="mr-2"/>Pay with card</Button>
+                  <Button className="w-full rounded-xl bg-secondary text-primary hover:bg-primary hover:text-secondary" onClick={()=> buyStripe()}><CreditCard className="mr-2"/>Pay with card</Button>
                 </div>
               )}
               {isComplete && (
