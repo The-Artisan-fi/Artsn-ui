@@ -1,0 +1,23 @@
+.container {
+    height: fit-content;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: transparent;
+    text-align: center;
+    align-self: center;
+    padding: 8px 0px 8px 0px;
+    align-items: center;
+    gap: 21px;
+}
+
+.container > h2 {
+    font-size: 14px;
+    /* font-weight: 600; */
+    line-height: 16.8px;
+    /* width: Hug (154px)px; */
+    padding: 6px 16px 6px 16px;
+    border-radius: 14px;
+    align-self: center;
+}

@@ -1,0 +1,71 @@
+.container {
+    width: 94vw;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    gap: 24px;
+}
+
+.container > h2 {
+    font-size: 14px;
+    /* font-weight: 600; */
+    line-height: 16.8px;
+    width: Hug (154px)px;
+    padding: 6px 16px 6px 16px;
+    border-radius: 14px;
+    border: 1px solid ;   
+    align-self: center;
+}
+
+.carousel {
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.badges {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+}
+
+.badgesText {
+    width: fit-content;
+    height: 16.15px;
+    padding: 3.58px 7.71px 3.58px 7.71px;
+    gap: 11.7px;
+    border-radius: 7.8px;
+    border: 0.56px solid #000000;
+    background-color: #1C1616;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 7.8px;
+    /* font-weight: 600; */
+    line-height: 9.36px;
+    text-align: left;
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 80%;
+}
+
+.footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
