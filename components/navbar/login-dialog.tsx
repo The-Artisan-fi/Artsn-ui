@@ -220,7 +220,7 @@ const LoginDialog: React.FC<DialogProps> = ({ _isOpen }) => {
         <Suspense fallback={<div className='animate-pulse'>Loading...</div>}>
             {web3auth && defaultSolanaAdapters.length > 0 ? (
                 <>
-                    <Button variant='secondary' className='rounded-xl' onClick={handleOpen}>
+                    <Button variant='secondary' className='rounded-xl z-[201]' onClick={handleOpen}>
                         Login
                     </Button>
                     {isOpen && (
@@ -229,65 +229,62 @@ const LoginDialog: React.FC<DialogProps> = ({ _isOpen }) => {
                             <div className="bg-transparent rounded-lg p-6 w-full max-w-4xl relative z-20">
                                 <Button onClick={handleClose} className="absolute -top-10 right-2 z-10">Close</Button>
                                 {/* <Progress className='w-full my-6 shadow-sm rounded-full bg-gradient-to-r from-primary to-secondary' value={slide * 25} max={100} /> */}
-                                <div className='flex flex-row gap-6'>
-                            <Card className='bg-transparent flex flex-col text-secondary border-none w-1/2'>
-                                <CardHeader className='bg-bg rounded-t-xl'>
-                                    <CardTitle className='font-bold'>Welcome to the Artisan</CardTitle>
-                                    <CardDescription>Connect your buyer profile to access the marketplace and begin collecting</CardDescription>
-                                </CardHeader>
-                                <CardContent className='bg-bg flex flex-col gap-2'>
-                                    {/* <form className='flex flex-col gap-2'>
-                                        <input type='email' placeholder='Email' className='rounded-full p-2 border-2 border-gray-300' />
-                                        <Button onClick={handleNext} className='rounded-full'>Continue</Button>
-                                    </form> */}
-                                    <Button className='w-full rounded-full border-secondary font-urbanist text-lg hover:bg-secondary hover:text-primary' onClick={()=> loginWithGoogle()}>
-                                        Sign in with Google
-                                    </Button>
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button variant={'default'} className='w-full rounded-full border-secondary font-urbanist text-lg hover:bg-secondary hover:text-primary'>
-                                            Connect 
-                                                {['phantom', 'solflare', 'backpack', 'ledger'].map(icon => (
-                                                    <img key={icon} src={`/login/${icon}_icon.svg`} alt={icon} className='ml-2' style={{ width: '20px', height: '20px'}} />
-                                                ))}
+                                <div className='flex flex-col md:flex-row gap-6'>
+                                    <Card className='bg-transparent flex flex-col text-secondary border-none w-full md:w-1/2 z-[301]'>
+                                        <CardHeader className='bg-bg rounded-t-xl'>
+                                            <CardTitle className='font-bold'>Welcome to the Artisan</CardTitle>
+                                            <CardDescription>Connect your buyer profile to access the marketplace and begin collecting</CardDescription>
+                                        </CardHeader>
+                                        <CardContent className='bg-bg flex flex-col gap-2'>
+                                            {/* <form className='flex flex-col gap-2'>
+                                                <input type='email' placeholder='Email' className='rounded-full p-2 border-2 border-gray-300' />
+                                                <Button onClick={handleNext} className='rounded-full'>Continue</Button>
+                                            </form> */}
+                                            <Button className='w-full rounded-full border-secondary font-urbanist text-lg hover:bg-secondary hover:text-primary' onClick={()=> loginWithGoogle()}>
+                                                Sign in with Google
                                             </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent className="w-56">
-                                            <DropdownMenuGroup>
-                                                {defaultSolanaAdapters?.map((adapter: IAdapter<unknown>) => (
-                                                    <DropdownMenuItem key={adapter.name.toUpperCase()} onClick={() => handleLogin(adapter.name)}>
-                                                        <img key={adapter.name} src={`/login/${adapter.name}_icon.svg`} alt={adapter.name ?? ''} className='ml-2' style={{ width: '20px', height: '20px'}} />
-                                                        {adapter.name.charAt(0).toUpperCase() + adapter.name.slice(1)}
-                                                    </DropdownMenuItem>
-                                                ))}
-                                            </DropdownMenuGroup>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                    {/* <WalletMultiButton>
-                                        Connect 
-                                        {['phantom', 'solflare', 'backpack', 'ledger'].map(icon => (
-                                            <img key={icon} src={`/login/${icon}_icon.svg`} alt={icon} className='ml-2' style={{ width: '20px', height: '20px'}} />
-                                        ))}
-                                    </WalletMultiButton> */}
-                                    <div className='flex items-center'>
-                                        <div className='flex-grow h-px bg-gray-300'></div>
-                                        <span className='px-4 text-gray-500'>OR</span>
-                                        <div className='flex-grow h-px bg-gray-300'></div>
-                                    </div>
-                                    <Button onClick={()=>router.push('/register')} variant={'secondary'} className='w-full rounded-full hover:bg-primary hover:text-secondary hover:border-solid hover:border-2 hover:border-secondary hover:animate-pulse'>Create account</Button>
-                                </CardContent>
-                                <CardFooter className='bg-bg flex flex-col gap-2 rounded-b-xl'>
-                                    By continuing to use the Artisan you accept terms and condition
-                                </CardFooter>
-                            </Card>
-                            <Card className='bg-bg flex flex-col relative w-1/2 text-secondary overflow-hidden'>
-                            <div className='h-full w-full rounded-xl bg-[url(/products/rolex-bg.svg)] bg-contain bg-right-middle bg-no-repeat transform translate-x-[6rem] scale-[140]translate-y-10 ' />
-                            <CardHeader className='absolute bottom-0 left-0 w-1/2'>
-                                    <CardTitle className='text-xl font-bold'>Buy a fraction of your favorite asset</CardTitle>
-                                    <CardDescription className='text-md'>Democratizing Luxury one fraction at a time</CardDescription>
-                                </CardHeader>
-                            </Card>
-                        </div>
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant={'default'} className='w-full rounded-full border-secondary font-urbanist text-lg hover:bg-secondary hover:text-primary'>
+                                                    Connect 
+                                                        {['phantom', 'solflare', 'backpack', 'ledger'].map(icon => (
+                                                            <img key={icon} src={`/login/${icon}_icon.svg`} alt={icon} className='ml-2' style={{ width: '20px', height: '20px'}} />
+                                                        ))}
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent className="w-56">
+                                                    <DropdownMenuGroup>
+                                                        {defaultSolanaAdapters?.map((adapter: IAdapter<unknown>) => (
+                                                            <DropdownMenuItem key={adapter.name.toUpperCase()} onClick={() => handleLogin(adapter.name)}>
+                                                                <img key={adapter.name} src={`/login/${adapter.name}_icon.svg`} alt={adapter.name ?? ''} className='ml-2' style={{ width: '20px', height: '20px'}} />
+                                                                {adapter.name.charAt(0).toUpperCase() + adapter.name.slice(1)}
+                                                            </DropdownMenuItem>
+                                                        ))}
+                                                    </DropdownMenuGroup>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                            
+                                            <div className='flex items-center'>
+                                                <div className='flex-grow h-px bg-gray-300'></div>
+                                                <span className='px-4 text-gray-500'>OR</span>
+                                                <div className='flex-grow h-px bg-gray-300'></div>
+                                            </div>
+
+                                            <Button onClick={()=>router.push('/register')} variant={'secondary'} className='w-full rounded-full hover:bg-primary hover:text-secondary hover:border-solid hover:border-2 hover:border-secondary hover:animate-pulse'>Create account</Button>
+                                        </CardContent>
+                                        <CardFooter className='bg-bg flex flex-col gap-2 rounded-b-xl'>
+                                            By continuing to use the Artisan you accept terms and condition
+                                        </CardFooter>
+                                    </Card>
+
+                                    <Card className='hidden md:flex bg-bg flex flex-col relative w-1/2 text-secondary overflow-hidden'>
+                                        <div className='h-full w-full rounded-xl bg-[url(/products/rolex-bg.svg)] bg-contain bg-right-middle bg-no-repeat transform translate-x-[6rem] scale-[140]translate-y-10 ' />
+                                        <CardHeader className='absolute bottom-0 left-0 w-1/2'>
+                                            <CardTitle className='text-xl font-bold'>Buy a fraction of your favorite asset</CardTitle>
+                                            <CardDescription className='text-md'>Democratizing Luxury one fraction at a time</CardDescription>
+                                        </CardHeader>
+                                    </Card>
+                                </div>
                             </div>
                         </div>
                     )}

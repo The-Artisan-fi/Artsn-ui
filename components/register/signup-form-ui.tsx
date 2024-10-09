@@ -442,7 +442,7 @@ export function SignupForm({ onClose }: SignupFormProps) {
 
                         {step === 1 && (
                             <div className='flex flex-row gap-6'>
-                                <Card className='bg-primary p-8 flex flex-col text-secondary border-none w-1/2'>
+                                <Card className='bg-primary p-8 flex flex-col text-secondary border-none w-full md:w-1/2'>
                                     <h3 className="text-xl font-bold mb-4">FILL YOUR ACCOUNT INFORMATION</h3>
                                     <div className="flex flex-col gap-4 mb-4">
                                         <input
@@ -530,7 +530,7 @@ export function SignupForm({ onClose }: SignupFormProps) {
                                         </Button>
                                     </>
                                 </Card>
-                                <Card className='bg-bg flex flex-col relative w-1/2 text-secondary overflow-hidden'>
+                                <Card className='bg-bg hidden md:flex flex-col relative w-1/2 text-secondary overflow-hidden'>
                                     <div className='h-full w-full rounded-xl bg-[url(/products/rolex-bg.svg)] bg-contain bg-right-middle bg-no-repeat transform translate-x-[4rem] scale-150 translate-y-[7rem] ' />
                                     <CardHeader className='absolute bottom-0 left-0 w-1/2'>
                                         <CardTitle className='text-xl font-bold'>Buy a fraction of your favorite asset</CardTitle>
@@ -545,7 +545,7 @@ export function SignupForm({ onClose }: SignupFormProps) {
 
                         {step === 2 && (
                             <div className='flex flex-row gap-6'>
-                                <Card className='bg-primary p-8 flex flex-col text-secondary border-none w-1/2'>
+                                <Card className='bg-primary p-8 flex flex-col text-secondary border-none w-full md:w-1/2'>
                                     <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
                                         <Check className="h-8 w-8 text-white" />
                                     </div>
@@ -568,8 +568,8 @@ export function SignupForm({ onClose }: SignupFormProps) {
                                         Enter
                                     </button>
                                 </Card>
-                                <Card className='bg-bg flex flex-col relative w-1/2 text-secondary overflow-hidden'>
-                                <div className='h-full w-full rounded-xl bg-[url(/products/rolex-bg.svg)] bg-contain bg-right-middle bg-no-repeat transform translate-x-20 scale-150 translate-y-20 ' />
+                                <Card className='bg-bg hidden md:flex flex-col relative w-1/2 text-secondary overflow-hidden'>
+                                <div className='hidden md:flex h-full w-full rounded-xl bg-[url(/products/rolex-bg.svg)] bg-contain bg-right-middle bg-no-repeat transform translate-x-20 scale-150 translate-y-20 ' />
                                 <CardHeader className='absolute bottom-0 left-0 w-1/2'>
                                         <CardTitle className='text-xl font-bold'>Buy a fraction of your favorite asset</CardTitle>
                                         <CardDescription className='text-md'>Democratizing Luxury one fraction at a time</CardDescription>

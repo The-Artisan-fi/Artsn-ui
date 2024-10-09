@@ -108,7 +108,7 @@ type NavItemsProps = {
 
 const links2 = [
   { label: 'Home', path: '/' },
-  { label: 'What is Artisan?', path: '#artisan' },
+  // { label: 'What is Artisan?', path: '#artisan' },
   { label: 'About Us', path: '/about' },
 ];
 
@@ -441,10 +441,10 @@ const NavbarFeature: React.FC<NavbarProps> = ({ searchParams, links, scrollThres
           </div>
           
           
-          <div className="dark:hidden relative text-2xl capitalize font-signature text-accent group top-1">
+          <div className="relative text-2xl capitalize font-signature text-accent group top-1">
             <Link href="/">
               <Image
-                src={ isDarkMode ? '/logos/artisan-small-logo-white.svg' : '/logos/artisan-small-logo-black.svg'}
+                src={ isDarkMode ? '/logos/artisan-small-logo-black.svg' : '/logos/artisan-small-logo-black.svg'}
                 alt="Logo"
                 width={25}
                 height={25}
@@ -456,7 +456,7 @@ const NavbarFeature: React.FC<NavbarProps> = ({ searchParams, links, scrollThres
             </Link>
           </div>
           
-          {/* {navbarCollapsed && web3auth && (web3auth.connected ? <UserDropdown /> : <WalletButton style={{ width: 'fit-content', zIndex: '61'}} />)} */}
+          { !loading && !navbarCollapsed &&(userWallet && !_params ? <UserDropdown publicKey={new PublicKey(userWallet!)}/> : <LoginDialog _isOpen={_params} />) }
           <NavButton
             onClick={() => {
               setNavbarCollapsed((prev) => !prev);
@@ -464,7 +464,6 @@ const NavbarFeature: React.FC<NavbarProps> = ({ searchParams, links, scrollThres
             navbarCollapsed={navbarCollapsed}
             className="text-primary"
           />
-    
           {navbarCollapsed && (
             <LoginFeature 
               links={links}
@@ -488,7 +487,7 @@ const NavbarFeature: React.FC<NavbarProps> = ({ searchParams, links, scrollThres
         >
           
           <div className="flex flex-row gap-6">
-            <div className={`relative text-2xl capitalize font-signature text-accent group top-1 ${isDarkMode ? 'hidden dark:flex' : 'dark:hidden'}`}>
+            <div className={`relative text-2xl capitalize font-signature text-accent group top-1`}>
               <Link href="/">
                 <Image
                   src={isDarkMode ? '/logos/artisan-small-logo-white.svg' : '/logos/artisan-small-logo-black.svg'}
@@ -519,7 +518,7 @@ const NavbarFeature: React.FC<NavbarProps> = ({ searchParams, links, scrollThres
             </div>
           </div>
           
-          {/* {navbarCollapsed && (publicKey ? <UserDropdown /> : <WalletButton style={{ width: 'fit-content', zIndex: '61'}} />)} */}
+          {navbarCollapsed && (user ? <UserDropdown /> : <WalletButton style={{ width: 'fit-content', zIndex: '61'}} />)}
 
           {/* Map Links in separate div */}
           <ul className="flex flex-row items-stretch gap-6 list-style-none lg:gap-5 xl:gap-6 md:flex-row md:items-center">
@@ -534,7 +533,7 @@ const NavbarFeature: React.FC<NavbarProps> = ({ searchParams, links, scrollThres
                 Explore the Marketplace <ChevronRightIcon />
               </Link>
             </Button>
-              { loading && <div className='animate-pulse'>Loading...</div>}
+              { loading && <div className='animate-pulse'>Loading...</div> }
               {/* <LoginDialog _isOpen={true} /> */}
               { !loading && (userWallet && !_params ? <UserDropdown publicKey={new PublicKey(userWallet!)}/> : <LoginDialog _isOpen={_params} />) }
           </ul>

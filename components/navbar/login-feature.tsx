@@ -1,5 +1,6 @@
 'use client'
 import styles from '@/styles/components/Footer.module.css'
+import { useRouter } from 'next/navigation';
 import { useState } from 'react'
 import { Suspense } from 'react';
 import Image from "next/image";
@@ -65,6 +66,7 @@ export default function LoginFeature({
   links: { label: string; path: string }[];
     LoginFeatureProps: LoginFeatureProps;
 }) {
+    const router = useRouter();
     const { cluster } = useCluster();
     const [clusterSelectCollapsed, setClusterSelectCollapsed] = useState(true);
     const handleCopy = (e: string) => {
@@ -76,13 +78,13 @@ export default function LoginFeature({
     const ANIMATION_DELAY = 0.2;
     const links2 = [
         { label: 'Home', path: '/' },
-        { label: 'What is Artisan?', path: '#artisan' },
+        // { label: 'What is Artisan?', path: '#artisan' },
         { label: 'About Us', path: '/about' },
     ];
     return (
         <Suspense fallback={<div />}>
             {LoginFeatureProps.isOpen && (
-                <nav className="bg-transparent flex flex-col justify-end pb-28 items-left absolute text-sm duration-200 z-50 w-full h-screen self-center left-1/2 -translate-x-1/2 top-full h-max shadow-xl p-6 md:blocks md:static md:w-auto md:left-auto md:transform-none md:top-auto md:rounded-none md:shadow-none  md:h-auto gap-12">
+                <nav className="bg-transparent flex flex-col justify-end pb-28 items-left absolute text-sm duration-200 z-[150] w-full h-screen self-center left-1/2 -translate-x-1/2 top-full h-max shadow-xl p-6 md:blocks md:static md:w-auto md:left-auto md:transform-none md:top-auto md:rounded-none md:shadow-none  md:h-auto gap-12">
                     <ul className="flex flex-col items-stretch gap-6 list-style-none lg:gap-5 xl:gap-6 md:flex-row md:items-center">
                         {links2.map(({ label, path }, i) => (
                             <NavItem
@@ -95,10 +97,10 @@ export default function LoginFeature({
                                 {label}
                             </NavItem>
                         ))}
-                        <Button className="bg-transparent w-3/4 text-secondary rounded-full border-2 border-secondary">
+                        {/* <Button className="bg-transparent w-3/4 text-secondary rounded-full border-2 border-secondary">
                             Read the white paper 
-                        </Button>
-                        <Button className="bg-secondary text-primary w-3/4 rounded-full">
+                        </Button> */}
+                        <Button className="bg-secondary text-primary w-3/4 rounded-full" onClick={()=> router.push('/marketplace')}>
                             Explore the Marketplace
                         </Button>
                         {/* {!clusterSelectCollapsed && (
@@ -113,13 +115,14 @@ export default function LoginFeature({
                             </div>
                         </div> */}
                     </ul>
-                    <CardFooter className="flex flex-row w-full items-center gap-8 items-center justify-between ">
+                    <CardFooter className="flex flex-row w-full items-center gap-8 items-center justify-between mb-12">
                         <DarkModeButton
                             //   onClick={() => (console.log('click'))}
                             variants={slideIn({
                                 delay: ANIMATION_DELAY + (links.length + 1) / 10,
                                 direction: 'down',
                             })}
+                            className='text-secondary dark:text-primary'
                             initial="hidden"
                             animate="show"
                         />
