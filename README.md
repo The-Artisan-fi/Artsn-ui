@@ -4,7 +4,7 @@ The Artisan is a RWA marketplace where users can buy fractionalized shares of lu
 
 [Pitch Deck](https://docsend.com/view/jf8ghnmzucag9arf)
 
-[Demo Video]()
+[Demo Video](https://youtu.be/A1LGPReFXtM)
 
 ## Table of Contents
 
@@ -21,24 +21,15 @@ The Artisan is a RWA marketplace where users can buy fractionalized shares of lu
 
 - Custom Solana Program to facilitate minting and distribution of Metaplex Core NFTs
 
-<video width="320" height="240" controls>
-  <source src="./public/readme/buyflow.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+https://github.com/user-attachments/assets/9767b59a-1be8-4374-8761-b69043accb8b
 
 - Custom off-chain Database to manage asset and user details necessary for compliance
 
-<video width="320" height="240" controls>
-  <source src="./public/readme/dashboard.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+https://github.com/user-attachments/assets/a472db25-758a-46df-8e64-cbe3f1e6cfa0
 
 - Access Luxury Collections to purchase, trade, and sell fractions of available assets
 
-<video width="320" height="240" controls>
-  <source src="./public/readme/marketplace.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+https://github.com/user-attachments/assets/90dfa189-b88b-45e6-922b-932c5924e538
 
 - Track your assets via an intuitive User Dashboard
 - Refer friends to earn points and rewards
@@ -47,10 +38,7 @@ The Artisan is a RWA marketplace where users can buy fractionalized shares of lu
 
 Use your Email as a wallet and pay using Stripe or Crypto. With Web3Auth integration, users can easily access their Artisan Profile from any browser and while securely maintaining their wallet. With this feature we aim to make the transition to The Artisan simple for Web 2 native investors.
 
-<video width="320" height="240" controls>
-  <source src="./public/readme/web3auth.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+https://github.com/user-attachments/assets/1236d84e-80f2-46c5-9e1e-21cb35b5b105
 
 ### Stripe Pay
 
