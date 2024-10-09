@@ -7,14 +7,6 @@ const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || 'http://localhost:3000';
 
 export async function POST( _req: NextRequest ) {
     try {
-        // Check origin
-        const origin = _req.headers.get('origin');
-        const _ = await _req.json();
-        console.log('req', _);
-        if (origin !== ALLOWED_ORIGIN) {
-            return NextResponse.json({ error: 'Unauthorized origin' }, { status: 403 });
-        }
-
         // TODO() - Fix this, some issue with the API key
         // Check API key
         // const apiKey = _req.headers.get('x-api-key');
