@@ -241,7 +241,7 @@ export function SignupForm({ onClose }: SignupFormProps) {
                 await loginExistingUser({ publicKey: userObject.publicKey });
                 setConnected(true);
             }
-            const baseUrl = process.env.API_BASE_URL || 'http://localhost:3000';
+            const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
             console.log('baseUrl ->', baseUrl);
             const response = await fetch(`${baseUrl}/api/auth/register`, {
                 method: 'POST',
@@ -295,7 +295,7 @@ export function SignupForm({ onClose }: SignupFormProps) {
                 await loginExistingUser({ publicKey: publicKey!.toString() });
                 setConnected(true);
             }
-            const baseUrl = process.env.API_BASE_URL || 'http://localhost:3000';
+            const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
             console.log('baseUrl ->', baseUrl);
             const response = await fetch(`${baseUrl}/api/auth/register`, {
                 method: 'POST',
