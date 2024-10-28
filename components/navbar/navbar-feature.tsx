@@ -506,7 +506,7 @@ const NavbarFeature: React.FC<NavbarProps> = ({ searchParams, links, scrollThres
               <Input type="text" placeholder={`Search any fraction, product...`} className="bg-bg text-slate-400 border-none shadow-none" />
             </div> */}
             
-            <div className="flex flex-row  items-center gap-1 text-nowrap">
+            {/* <div className="flex flex-row  items-center gap-1 text-nowrap">
               <Image
                 src='/logos/sol-logo-grey.svg'
                 alt="Search"
@@ -515,7 +515,7 @@ const NavbarFeature: React.FC<NavbarProps> = ({ searchParams, links, scrollThres
                 className="cursor-pointer"
               />
               <p className="text-slate-400 w-full ">Powered by Solana</p>
-            </div>
+            </div> */}
           </div>
           
           {navbarCollapsed && (user ? <UserDropdown /> : <WalletButton style={{ width: 'fit-content', zIndex: '61'}} />)}
