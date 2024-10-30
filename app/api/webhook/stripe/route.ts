@@ -3,11 +3,14 @@ import Stripe from 'stripe';
 import { headers } from 'next/headers';
 import { connectToDatabase } from '@/lib/mongodb';
 
+// Initialize Stripe
 const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!);
 
+// Instead of using config, we'll use the following solution for raw body
 export async function POST(req: NextRequest) {
-  const body = await req.text();
-  const signature = headers().get('stripe-signature');
+  const rawBody = await req.text();
+  const headersList = headers();
+  const signature = headersList.get('stripe-signature');
 
   if (!signature) {
     return NextResponse.json(
@@ -18,7 +21,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const event = stripe.webhooks.constructEvent(
-      body,
+      rawBody,
       signature,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
@@ -27,9 +30,7 @@ export async function POST(req: NextRequest) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
         
-        // Verify the payment was successful
         if (session.payment_status === 'paid') {
-          // Extract metadata
           const { asset_id, reference_id, amount } = session.metadata || {};
           
           if (!asset_id || !reference_id || !amount) {
@@ -39,22 +40,28 @@ export async function POST(req: NextRequest) {
               { status: 400 }
             );
           }
-          const { db } = await connectToDatabase();
-          const collection = db.collection('stripe_sessions');
-          // Update your database to mark the payment as successful
-          await collection.updateOne(
-            { session_id: session.id },
-            { 
-              $set: { 
-                status: 'completed',
-                completed_at: new Date(),
-                payment_intent: session.payment_intent
-              }
-            }
-          );
 
-          // You might want to trigger the blockchain transaction here
-          // instead of waiting for the success page
+          try {
+            // Connect to MongoDB and update session status
+            const { db } = await connectToDatabase();
+            await db.collection('stripe_sessions').updateOne(
+              { session_id: session.id },
+              { 
+                $set: { 
+                  status: 'completed',
+                  completed_at: new Date(),
+                  payment_intent: session.payment_intent
+                }
+              }
+            );
+
+            // Here you could also initiate your blockchain transaction
+            // if you want to handle it in the webhook instead of the success page
+
+          } catch (dbError) {
+            console.error('Database update error:', dbError);
+            // Still return 200 to Stripe but log the error
+          }
           
           return NextResponse.json({ status: 'success' });
         }
@@ -63,13 +70,16 @@ export async function POST(req: NextRequest) {
 
       case 'checkout.session.expired': {
         const session = event.data.object as Stripe.Checkout.Session;
-        const { db } = await connectToDatabase();
-        const collection = db.collection('stripe_sessions');
-        // Clean up any pending sessions
-        await collection.updateOne(
-          { session_id: session.id },
-          { $set: { status: 'expired' } }
-        );
+        
+        try {
+          const { db } = await connectToDatabase();
+          await db.collection('stripe_sessions').updateOne(
+            { session_id: session.id },
+            { $set: { status: 'expired' } }
+          );
+        } catch (dbError) {
+          console.error('Database update error:', dbError);
+        }
         
         break;
       }
@@ -79,14 +89,11 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error('Webhook error:', err);
     return NextResponse.json(
-      { error: 'Webhook handler failed' },
+      { 
+        error: 'Webhook handler failed',
+        details: err instanceof Error ? err.message : 'Unknown error'
+      },
       { status: 400 }
     );
   }
 }
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
