@@ -9,8 +9,6 @@ export const ME_QUERY = gql`
       email
       firstName
       lastName
-      coverImageUrl
-      profilePictureUrl
       role
       createdAt
       publicKey
@@ -49,7 +47,6 @@ export const ME_QUERY = gql`
             ipRightsInfo
           }
         }
-        ipAssets
       }
       investorInfo {
         id
@@ -92,7 +89,6 @@ export const GET_USER_DASHBOARD = gql`
       email
       firstName
       lastName
-      profilePictureUrl
       role
       createdAt
       publicKey
@@ -123,7 +119,6 @@ export const GET_USER_DASHBOARD = gql`
             ipRightsInfo
           }
         }
-        ipAssets
       }
       investorInfo {
         id

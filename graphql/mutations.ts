@@ -12,7 +12,6 @@ export const REGISTER_USER = gql`
         firstName
         lastName
         role
-        profilePictureUrl
         publicKey
         createdAt
         updatedAt
@@ -26,34 +25,6 @@ export const REGISTER_USER = gql`
           bio
           createdAt
           updatedAt
-        }
-        creatorInfo {
-          detailedBio {
-            profession
-            education {
-              schools {
-                name
-                degree
-                fieldOfStudy
-                graduationYear
-              }
-              relevantCourses
-              specializedTraining
-            }
-            professionalAchievements {
-              awards
-              exhibitions
-              portfolioLinks
-            }
-            collaborators
-            employmentContracts {
-              employer
-              startDate
-              endDate
-              ipRightsInfo
-            }
-          }
-          ipAssets
         }
       }
     }
@@ -92,57 +63,4 @@ export const REQUEST_PASSWORD_RESET = gql`
   mutation RequestPasswordReset($email: String!) {
     requestPasswordReset(email: $email)
   }
-`;
-
-export const CREATE_IP = gql`
-  mutation CreateIPAsset($input: IPAssetInput!) {
-    createIPAsset(input: $input) {
-      _id
-      uuid
-      creatorId
-      name
-      description
-      videoLink
-      fileLink
-      blockchainId
-      proofHash
-      status
-      type
-      subtype
-      rightsReserved
-      publicInformation
-      creativeProcess
-      contentDeclaration
-      aiReadiness
-      commercialTerms
-      collaborators
-      tags
-      createdAt
-      updatedAt
-      totalViews
-      totalLikes
-      totalShares
-    }
-  }
-`;
-
-export const ADD_CREATOR_PROFILE = gql`
-mutation AddCreatorProfile(
-  $uuid: String!
-  $publicKey: String!
-  $creatorInfo: CreatorInfoInput!
-) {
-  addCreatorProfile(
-    uuid: $uuid
-    publicKey: $publicKey
-    creatorInfo: $creatorInfo
-  ) {
-    publicKey
-    creatorInfo {
-      detailedBio {
-        profession
-      }
-    }
-  }
-}
 `;

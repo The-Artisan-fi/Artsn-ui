@@ -16,7 +16,6 @@ const ME_QUERY = gql`
       email
       firstName
       lastName
-      profilePictureUrl
       role
       createdAt
       publicKey
@@ -55,7 +54,6 @@ const ME_QUERY = gql`
             ipRightsInfo
           }
         }
-        ipAssets
       }
       investorInfo {
         id
@@ -123,7 +121,6 @@ const LOGIN_USER = gql`
         _id
         email
         username
-        profilePictureUrl
         publicKey
         firstName
         lastName
@@ -135,7 +132,6 @@ const LOGIN_USER = gql`
           createdAt
           updatedAt
         }
-          coverImageUrl
           kycInfo {
             kycStatus
             kycCompletionDate
@@ -155,7 +151,6 @@ interface User {
   uuid: string;
   email: string;
   username: string;
-  profilePictureUrl?: string;
   publicKey: string;
   firstName?: string;
   lastName?: string;
@@ -169,7 +164,6 @@ interface User {
   isVerified: boolean;
   role: string;
   verificationToken?: string;
-  coverImageUrl?: string;
   solanaTransactionId?: string;
   phoneNumber?: string;
   kycInfo?: any;
@@ -238,7 +232,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [client]);
 
   // const loginExistingUser = useCallback(async (userObject: {email: string; publicKey: string}) => {
-    const loginExistingUser = useCallback(async (userObject: {publicKey: string}) => {
+  const loginExistingUser = useCallback(async (userObject: {publicKey: string}) => {
       console.log('Logging in existing user...', userObject);
     try {
       const result = await loginUserMutation({

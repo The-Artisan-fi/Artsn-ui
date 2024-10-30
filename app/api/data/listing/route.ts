@@ -24,7 +24,7 @@ export async function POST( _req: NextRequest ) {
 
         const collection = db.collection('listings');
         if (!collection) {
-            throw new Error('IPAsset collection not found');
+            throw new Error('Listing collection not found');
         }
 
         // Fetch IP assets with status 'registered', limit to 10

@@ -4,28 +4,22 @@ export const typeDefs = gql`
   type User {
     _id: ID!
     uuid: String!
-    email: String!
-    password: String!
+    email: String
+    password: String
     username: String
     firstName: String
     lastName: String
-    createdAt: String!
-    updatedAt: String!
+    createdAt: String
+    updatedAt: String
     lastLogin: String
-    isActive: Boolean!
+    isActive: Boolean
     role: String!
     country: String
-    acceptTerms: String
-    plan: String
-    verificationToken: String
-    isVerified: Boolean!
-    coverImageUrl: String
-    profilePictureUrl: String
+    isVerified: Boolean
     publicKey: String
     solanaTransactionId: String
     phoneNumber: String
     baseProfile: BaseProfile
-    creatorInfo: CreatorInfo
     investorInfo: InvestorInfo
     kycInfo: KYCInfo
   }
@@ -38,14 +32,6 @@ export const typeDefs = gql`
     bio: String
     createdAt: String
     updatedAt: String
-  }
-
-  type CreatorInfo {
-    id: ID
-    createdAt: String
-    updatedAt: String
-    detailedBio: DetailedBio
-    ipAssets: [String]
   }
 
   type InvestorInfo {
@@ -64,10 +50,7 @@ export const typeDefs = gql`
     type: String!
     investmentDate: String!
     amount: Float!
-    terms: String
     transactionId: String
-    creatorId: String
-    ipId: String
   }
 
   type KYCInfo {
@@ -82,40 +65,6 @@ export const typeDefs = gql`
     verificationStatus: String!
   }
 
-  type EmploymentContract {
-    employer: String!
-    startDate: String
-    endDate: String
-    ipRightsInfo: String
-  }
-
-  type School {
-    name: String!
-    degree: String
-    fieldOfStudy: String
-    graduationYear: String
-  }
-
-  type Education {
-    schools: [School]
-    relevantCourses: [String]
-    specializedTraining: [String]
-  }
-
-  type ProfessionalAchievements {
-    awards: [String]
-    exhibitions: [String]
-    portfolioLinks: [String]
-  }
-
-  type DetailedBio {
-    profession: String
-    education: Education
-    professionalAchievements: ProfessionalAchievements
-    collaborators: [String]
-    employmentContracts: [EmploymentContract]
-  }
-
   type AuthPayload {
     token: String!
     user: User!
@@ -123,14 +72,23 @@ export const typeDefs = gql`
 
   input RegisterInput {
     uuid: String!
-    email: String!
-    password: String!
-    username: String!
+    email: String
+    password: String
+    username: String
     firstName: String
     lastName: String
+    createdAt: String
+    updatedAt: String
+    lastLogin: String
+    isActive: Boolean
     role: String!
-    profilePictureUrl: String
+    country: String
+    isVerified: Boolean
     publicKey: String
+    solanaTransactionId: String
+    phoneNumber: String
+    baseProfile: UpdateBaseProfileInput
+    investorInfo: UpdateInvestorInfoInput
   }
 
   input UpdateUserInput {
@@ -138,13 +96,9 @@ export const typeDefs = gql`
     firstName: String
     lastName: String
     role: String
-    profilePictureUrl: String
     publicKey: String
     country: String
-    acceptTerms: String
-    plan: String
     baseProfile: UpdateBaseProfileInput
-    creatorInfo: UpdateCreatorInfoInput
     investorInfo: UpdateInvestorInfoInput
   }
 
@@ -153,19 +107,6 @@ export const typeDefs = gql`
     displayRole: String
     photoUrl: String
     bio: String
-  }
-
-  input UpdateCreatorInfoInput {
-    detailedBio: UpdateDetailedBioInput
-    ipAssets: [String]
-  }
-
-  input UpdateDetailedBioInput {
-    profession: String
-    education: EducationInput
-    professionalAchievements: ProfessionalAchievementsInput
-    collaborators: [String]
-    employmentContracts: [EmploymentContractInput]
   }
 
   input UpdateInvestorInfoInput {
@@ -186,34 +127,6 @@ export const typeDefs = gql`
     ipId: String
   }
 
-  type IPAsset {
-    _id: ID!
-    uuid: String!
-    creatorId: String!
-    name: String!
-    description: String!
-    videoLink: String
-    fileLink: String!
-    blockchainId: String!
-    proofHash: String!
-    status: String!
-    type: String!
-    subtype: String!
-    rightsReserved: String!
-    publicInformation: String!
-    creativeProcess: String!
-    contentDeclaration: String!
-    aiReadiness: String!
-    commercialTerms: String
-    collaborators: [String!]!
-    tags: [String!]!
-    createdAt: String!
-    updatedAt: String!
-    totalViews: Int!
-    totalLikes: Int!
-    totalShares: Int!
-  }
-
   type Listing {
     associatedId: String!
     images: [String!]
@@ -227,131 +140,17 @@ export const typeDefs = gql`
     currency: String
     description: String
     model: String
-    offerViews: String
+    totalViews: String
+    totalShares: String
+    totalLikes: String
     sold: Int
     total: Int
     mintAddress: String
     about: String
   }
 
-  input IPAssetInput {
-    creatorId: String!
-    name: String!
-    description: String!
-    videoLink: String
-    fileLink: String!
-    blockchainId: String!
-    proofHash: String!
-    status: String!
-    type: String!
-    subtype: String!
-    rightsReserved: String!
-    publicInformation: String!
-    creativeProcess: String!
-    contentDeclaration: String!
-    aiReadiness: String!
-    commercialTerms: String
-    collaborators: [String!]
-    tags: [String!]
-  }
-  enum IPAssetStatus {
-    DRAFT
-    PUBLISHED
-    ARCHIVED
-  }
-
-  enum IPAssetType {
-    ACCESSORIES
-    ARCHITECTURE
-    CRAFT
-    DIGITAL
-    FASHION
-    FILM
-    FINE_ART
-    INTERIORS
-    JEWELRY
-    PHOTOGRAPHY
-    PRODUCT
-    TEXTILES
-    VISUAL_COMMUNICATION
-  }
-
-  enum RightsReservedType {
-    ALL_RIGHTS_RESERVED
-    SOME_RIGHTS_RESERVED
-  }
-
-  enum PublicInformationType {
-    NO_PUBLIC_INFORMATION
-    ONLY_REGISTRATION_INFO
-    WITH_PREVIEW
-    WITH_ORIGINAL_DOWNLOAD
-    WITH_INFO_DOWNLOAD
-  }
-
-  enum CreativeProcessType {
-    NOT_DECLARED
-    HUMAN_CREATION
-    AI_CREATION
-    AI_ASSISTED
-  }
-
-  enum ContentDeclarationType {
-    NOT_DECLARED
-    REAL_CONTENT
-    FICTIONAL_CONTENT
-  }
-
-  enum AIReadinessType {
-    NOT_DECLARED
-    NOT_AVAILABLE
-    AVAILABLE_WITH_AGREEMENT
-    FREELY_AVAILABLE
-  }
-
-  input CreatorInfoInput {
-    detailedBio: DetailedBioInput!
-    ipAssets: [String]
-  }
-
-  input DetailedBioInput {
-    profession: String
-    education: EducationInput
-    professionalAchievements: ProfessionalAchievementsInput
-    collaborators: [String]
-    employmentContracts: EmploymentContractInput
-  }
-
-  input EducationInput {
-    schools: [SchoolInput]
-    relevantCourses: [String]
-    specializedTraining: [String]
-  }
-
-  input SchoolInput {
-    name: String
-    degree: String
-    fieldOfStudy: String
-    graduationYear: String
-  }
-
-  input ProfessionalAchievementsInput {
-    awards: [String]
-    exhibitions: [String]
-    portfolioLinks: [String]
-  }
-
-  input EmploymentContractInput {
-    employer: String
-    startDate: String
-    endDate: String
-    ipRightsInfo: String
-  }
-
   type Query {
     me: User
-    getIP(uuid: String!): IPAsset
-    getAllIPs: [IPAsset!]!
     isUserRegistered(publicKey: String!): Boolean!
     checkEmail(email: String!): User
     getListing(associatedId: String!): Listing
@@ -362,14 +161,11 @@ export const typeDefs = gql`
 
     updateUser(input: UpdateUserInput!): User!
 
-    addCreatorProfile(uuid: String!, publicKey: String!, creatorInfo: CreatorInfoInput!): User!
-
     login(publicKey: String!, password: String!): AuthPayload!
 
     resetPassword(token: String!, newPassword: String!): Boolean!
     
     requestPasswordReset(email: String!): Boolean!
 
-    createIPAsset(input: IPAssetInput!): IPAsset!
   }
 `;

@@ -335,7 +335,7 @@ const NavbarFeature: React.FC<NavbarProps> = ({ searchParams, links, scrollThres
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="end"
-          className="w-72 p-4 bg-white dark:bg-zinc-800 rounded-3xl border border-zinc-300 dark:border-zinc-700"
+          className="w-72 p-4 bg-white dark:bg-white rounded-3xl border border-zinc-300 dark:border-zinc-700"
         >
           <div className="flex items-center space-x-4 mb-4">
             <Avatar className="w-16 h-16">
@@ -357,7 +357,7 @@ const NavbarFeature: React.FC<NavbarProps> = ({ searchParams, links, scrollThres
               </div>
             </div>
           </div>
-          <div className="mb-4 p-4 bg-zinc-100 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-600 rounded-3xl">
+          <div className="mb-4 p-4 bg-transparent border border-zinc-300 dark:border-zinc-600 rounded-3xl">
             <div className="flex justify-between items-center">
               <div className="text-secondary">Buying power</div>
               <div className="text-xl text-secondary font-bold">$128.42</div>
@@ -379,7 +379,7 @@ const NavbarFeature: React.FC<NavbarProps> = ({ searchParams, links, scrollThres
               <div className="text-zinc-500">=$124</div>
             </div>
           </div>
-          <DropdownMenuItem className="cursor-pointer text-secondary mt-4">
+          <DropdownMenuItem className="cursor-pointer text-secondary mt-4" onClick={()=> router.push('/dashboard/settings')}>
             <Settings2 className="mr-2 h-4 w-4" />
             <span className="text-sm font-semibold">Edit profile</span>
           </DropdownMenuItem>
@@ -387,10 +387,10 @@ const NavbarFeature: React.FC<NavbarProps> = ({ searchParams, links, scrollThres
               <ListOrdered className="mr-2 h-4 w-4" />
               <span className="text-sm font-semibold">My orders</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer text-secondary">
+          {/* <DropdownMenuItem className="cursor-pointer text-secondary">
             <EggFried className="mr-2 h-4 w-4" />
             <span className="text-sm font-semibold">Refer your friends</span>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuItem className="cursor-pointer text-secondary" onClick={()=>{handleLogout()}}>
             <LogOut className="mr-2 h-4 w-4" />
             <span className="text-sm font-semibold">Logout</span>

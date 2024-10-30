@@ -69,9 +69,9 @@ const LoginDialog: React.FC<DialogProps> = ({ _isOpen }) => {
                 console.log('returned idToken:', idToken, 'from adapter:', adapterName, 'with accounts:', accounts[0]);
                 const _isRegistered = await checkUserRegistration(accounts[0]);
                 console.log('isRegistered:', _isRegistered);
-                if (!_isRegistered) {
-                   router.push('/register');
-                }
+                // if (!_isRegistered) {
+                //    router.push('/register');
+                // }
                 await loginExistingUser({ publicKey: accounts[0] });
                 await checkAuth();
                 handleClose();

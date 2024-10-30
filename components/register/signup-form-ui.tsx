@@ -240,34 +240,34 @@ export function SignupForm({ onClose }: SignupFormProps) {
                 setIsRegistered(true);
                 await loginExistingUser({ publicKey: userObject.publicKey });
                 setConnected(true);
-            }
-            const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
-            console.log('baseUrl ->', baseUrl);
-            const response = await fetch(`${baseUrl}/api/auth/register`, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    firstName: formData.firstName,
-                    lastName: formData.lastName,
-                    country: formData.country,
-                    profilePictureUrl: userObject.profilePictureUrl || '',
-                    email: userObject.email || '',
-                    password: userObject.publicKey,
-                    publicKey: userObject.publicKey
-                }),
-              });
-              const data = await response.json();
-              console.log('data ->', data);
-              // If registration is successful, log the user in
-              await loginExistingUser({ 
-                publicKey: userObject.publicKey,
-              });
+            } else {
+                const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
+                console.log('baseUrl ->', baseUrl);
+                const response = await fetch(`${baseUrl}/api/auth/register`, {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        firstName: formData.firstName,
+                        lastName: formData.lastName,
+                        country: formData.country,
+                        email: userObject.email || '',
+                        password: userObject.publicKey,
+                        publicKey: userObject.publicKey
+                    }),
+                });
+                const data = await response.json();
+                console.log('data ->', data);
+                // If registration is successful, log the user in
+                await loginExistingUser({ 
+                    publicKey: userObject.publicKey,
+                });
+            
         
-    
-            setLoginData(userObject);
-            setIsRegistered(_isRegistered.data.isUserRegistered);
+                setLoginData(userObject);
+                setIsRegistered(_isRegistered.data.isUserRegistered);
+            }
         } catch (error) {
             console.error("Error fetching user info:", error);
             setError("Failed to fetch user information. Please try logging in again.");
@@ -294,33 +294,34 @@ export function SignupForm({ onClose }: SignupFormProps) {
                 setIsRegistered(true);
                 await loginExistingUser({ publicKey: publicKey!.toString() });
                 setConnected(true);
-            }
-            const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
-            console.log('baseUrl ->', baseUrl);
-            const response = await fetch(`${baseUrl}/api/auth/register`, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    firstName: formData.firstName,
-                    lastName: formData.lastName,
-                    country: formData.country,
-                    profilePictureUrl: userObject.profilePictureUrl,
-                    password: userObject.publicKey,
-                    publicKey: userObject.publicKey
-                }),
-              });
-              const data = await response.json();
-              console.log('data ->', data);
-              // If registration is successful, log the user in
-              await loginExistingUser({ 
-                publicKey: userObject.publicKey,
-              });
+            } else {
+                const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
+                console.log('baseUrl ->', baseUrl);
+                const response = await fetch(`${baseUrl}/api/auth/register`, {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        firstName: formData.firstName,
+                        lastName: formData.lastName,
+                        country: formData.country,
+                        profilePictureUrl: userObject.profilePictureUrl,
+                        password: userObject.publicKey,
+                        publicKey: userObject.publicKey
+                    }),
+                });
+                const data = await response.json();
+                console.log('data ->', data);
+                // If registration is successful, log the user in
+                await loginExistingUser({ 
+                    publicKey: userObject.publicKey,
+                });
+            
         
-    
-            setLoginData(userObject);
-            setIsRegistered(_isRegistered.data.isUserRegistered);
+                setLoginData(userObject);
+                setIsRegistered(_isRegistered.data.isUserRegistered);
+            }
         } catch (error) {
             console.error("Error fetching user info:", error);
             setError("Failed to fetch user information. Please try logging in again.");
