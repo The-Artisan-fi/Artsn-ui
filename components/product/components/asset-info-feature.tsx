@@ -156,14 +156,17 @@ export default function AssetInfo({ asset }: { asset: any }) {
   async function buyStripeListing(amount: string) {
     try {
         if (!user) {
-          const tx = await buyStripeTx(asset.onChainData.id, asset.offChainData.reference, user!.publicKey, +amount);
-          const signature = await signTransaction(tx!);
-          console.log('signature ->', signature);
-          toast({
-              title: 'Transaction sent',
-              description: 'Transaction has been sent to the blockchain',
-          });
+            console.error('User not found');
+            return;
         }
+        const tx = await buyStripeTx(asset.onChainData.id, asset.offChainData.reference, user!.publicKey, +amount);
+        const signature = await signTransaction(tx!);
+        console.log('signature ->', signature);
+        toast({
+            title: 'Transaction sent',
+            description: 'Transaction has been sent to the blockchain',
+        });
+        
     } catch (error) {
         console.error('Error sending transaction', error);
     } finally {

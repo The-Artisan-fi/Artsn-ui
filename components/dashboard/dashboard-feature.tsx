@@ -204,7 +204,9 @@ export default function DashboardFeature() {
   }, []);
 
   useEffect(() => {
+    console.log('checking for authUser', authUser)
     if (authUser) {
+      console.log('fetching user assets');
       fetchUserAssets(authUser.publicKey);
       getBalance().then((balance) => {
         console.log('balance', balance);
