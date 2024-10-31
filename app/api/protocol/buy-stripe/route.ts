@@ -45,7 +45,7 @@ export async function POST(request: Request) {
   console.log('route pinged');
   const wallet = Keypair.generate();
   const connection = new Connection(
-    process.env.NEXT_PUBLIC_HELIUS_DEVNET!,
+    'https://soft-cold-energy.solana-devnet.quiknode.pro/ad0dda04b536ff45a76465f9ceee5eea6a048a8f',
     'confirmed'
   );
   // @ts-expect-error - wallet is dummy variable, signing is not needed
@@ -57,45 +57,63 @@ export async function POST(request: Request) {
     const req = await request.json();
     const buyer_publicKey = new PublicKey(req.publicKey);
     const id = req.id;
-
+    console.log('incoming req ->', req);
     // VARIABLES
     const reference = req.reference;
     const amount = req.amount;
     const sessionId = req.sessionId;
+    const uri = decodeURI(req.uri);
+    console.log('uri ->', uri);
     const watch = PublicKey.findProgramAddressSync(
-      [Buffer.from('watch'), Buffer.from(reference)],
+      [Buffer.from('object'), Buffer.from(reference)],
       program.programId
     )[0];
-    const listing = PublicKey.findProgramAddressSync(
-      [
-        Buffer.from('listing'),
-        watch.toBuffer(),
-        new anchor.BN(id).toBuffer('le', 8),
-      ],
-      program.programId
-    )[0];
+
+    console.log('watch ->', watch.toString());
+
+    // const listing = PublicKey.findProgramAddressSync(
+    //   [
+    //     Buffer.from('listing'),
+    //     watch.toBuffer(),
+    //     new anchor.BN(id).toBuffer('le', 8),
+    //   ],
+    //   program.programId
+    // )[0];
+    const listing = new PublicKey(id);
+    console.log('listing ->', listing.toString());
 
     const listingCurrencyAta = getAssociatedTokenAddressSync(
       USDC_DEV,
       listing,
       true
     );
+
+    console.log('listingCurrencyAta ->', listingCurrencyAta.toString());
+
     const buyerCurrencyAta = getAssociatedTokenAddressSync(
       USDC_DEV,
       buyer_publicKey
     );
 
-    const feeKey = process.env.SIGNING_AUTHORITY!;
+    console.log('buyerCurrencyAta ->', buyerCurrencyAta.toString());
+
+    const sigKey = process.env.SIGNING_AUTHORITY!;
+    const sigPayer = Keypair.fromSecretKey(b58.decode(sigKey));
+    const feeKey = process.env.PRIVATE_KEY!;
     const feePayer = Keypair.fromSecretKey(b58.decode(feeKey));
+    console.log('feePayer ->', feePayer.publicKey.toString());
 
     const message = intToBytes(amount);
     const stringBytes = stringToBytes(sessionId); // Convert string to bytes
     const combinedBytes = concatenateUint8Arrays(message, stringBytes); // Concatenate the byte arrays
+
+    console.log('combinedBytes ->', combinedBytes);
   
     const ed25519Ix = Ed25519Program.createInstructionWithPrivateKey({
-      privateKey: feePayer.secretKey,
+      privateKey: sigPayer.secretKey,
       message: combinedBytes,
     });
+    console.log('preparing to buy', amount, 'shares of', listing.toString(), 'going to', buyer_publicKey.toString());
     const buyer_profile = PublicKey.findProgramAddressSync([Buffer.from('profile'), buyer_publicKey.toBuffer()], program.programId)[0];
     const fraction = Keypair.generate();
     const buyShareIx = await program.methods
@@ -105,18 +123,9 @@ export async function POST(request: Request) {
           buyer: buyer_publicKey,
           payer: feePayer.publicKey,
           mint: USDC_MINT,
-          buyerAta: buyerCurrencyAta,
-          listingAta: listingCurrencyAta,
-          manager,
-          buyerProfile: buyer_profile,
           listing,
           object: watch,
           fraction: fraction.publicKey,
-          instructions: SYSVAR_INSTRUCTIONS_PUBKEY,
-          associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-          tokenProgram: TOKEN_PROGRAM_ID,
-          mplCoreProgram: mplCoreProgram,
-          systemProgram: anchor.web3.SystemProgram.programId,
       })
       .signers([feePayer, fraction])
       .instruction();
@@ -131,6 +140,8 @@ export async function POST(request: Request) {
       transaction.add(ed25519Ix).add(buyShareIx);
     }
     transaction.partialSign(feePayer);
+    transaction.partialSign(fraction);
+
     const serializedTransaction = transaction.serialize({
       requireAllSignatures: false,
     });

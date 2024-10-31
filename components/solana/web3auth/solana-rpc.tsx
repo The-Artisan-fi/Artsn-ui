@@ -111,26 +111,29 @@ import { getAccount, getAssociatedTokenAddress, getAssociatedTokenAddressSync } 
         const connection = new Connection("https://soft-cold-energy.solana-devnet.quiknode.pro/ad0dda04b536ff45a76465f9ceee5eea6a048a8f");
         const { blockhash } = await connection.getLatestBlockhash("finalized");
   
-        const umi = createUmi('https://api.devnet.solana.com');
+        const umi = createUmi('https://soft-cold-energy.solana-devnet.quiknode.pro/ad0dda04b536ff45a76465f9ceee5eea6a048a8f');
         const UMI_KEY: string = process.env.NEXT_PUBLIC_UMI_KEY!;
         const UMI_KEY_JSON = JSON.parse(UMI_KEY);
         let keypair = umi.eddsa.createKeypairFromSecretKey(new Uint8Array(UMI_KEY_JSON));
+        console.log('UMI KEYPAIR ->', keypair.publicKey.toString());
         const _signer = createSignerFromKeypair(umi, keypair);
         umi.use(signerIdentity(_signer));
   
-        const signedTx = await this.solanaWallet.signTransaction(tx);
+        const signedTx = await this.solanaWallet.signAndSendTransaction(tx);
         console.log('signedTx:', signedTx);
         // Convert the signed transaction to a format compatible with Umi
-        const umiTx = umi.transactions.deserialize(signedTx.serialize());
-        
-        const signature = await umi.rpc.sendTransaction(umiTx, {
-        skipPreflight: true,
-        });
-        const confirmResult = await umi.rpc.confirmTransaction(signature, {
-        strategy: { type: 'blockhash', ...(await umi.rpc.getLatestBlockhash()) },
-        })
+        // const umiTx = umi.transactions.deserialize(signedTx.serialize());
+        // console.log('umiTx:', umiTx);
+        // const signature = await umi.rpc.sendTransaction(umiTx, {
+        //   skipPreflight: true,
+        // });
+        const signature = signedTx.signature;
+        console.log('SIGNATURE ->', signature);
+        // const confirmResult = await umi.rpc.confirmTransaction(signature, {
+        // strategy: { type: 'blockhash', ...(await umi.rpc.getLatestBlockhash()) },
+        // })
 
-        console.log('Transaction confirmed:', confirmResult);
+        // console.log('Transaction confirmed:', confirmResult);
         
         return signature.toString() || "";
       } catch (error) {

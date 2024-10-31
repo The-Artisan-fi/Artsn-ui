@@ -104,12 +104,18 @@ export default function AssetInfo({ asset }: { asset: any }) {
   async function buyStripe() {
     try {
         const idempotencyKey = generateUUID();
+        // encode the asset.onChainData.watchUri into something we can pass to the backend
+        const encodedUri = encodeURIComponent(asset.onChainData.watchUri);
+        console.log('encodedUri ->', encodedUri);
         const stripe = await asyncStripe;
         const res = await fetch("/api/stripe", {
             method: "POST",
             body: JSON.stringify({
                 amount,
-                id: asset.offChainData.associatedId
+                id: asset.offChainData.associatedId,
+                objectReference: asset.offChainData.reference,
+                object: asset.offChainData.mintAddress,
+                uri: encodedUri,
             }),
             headers: { 
                 "Content-Type": "application/json",

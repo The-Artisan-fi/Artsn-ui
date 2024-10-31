@@ -67,7 +67,9 @@ import Stripe from 'stripe';
 interface PaymentBody {
   amount: number;
   id: string;
+  objectReference: string;
   metadata?: Record<string, string>;
+  uri: any;
 }
 
 export async function POST(req: NextRequest) {
@@ -111,7 +113,8 @@ export async function POST(req: NextRequest) {
     // Generate reference ID
     const date = new Date();
     const referenceId = `INV-${date.getFullYear()}${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}-${date.getTime().toString().slice(-6)}`;
-
+    const objectReference = body.objectReference;
+    const encodedUri = body.uri;
     // Create session with enhanced metadata
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -140,7 +143,7 @@ export async function POST(req: NextRequest) {
         created_at: date.toISOString(),
         ...body.metadata
       },
-      success_url: `${host}/stripe/success?session_id={CHECKOUT_SESSION_ID}&asset_id=${body.id}&amount=${body.amount}&ref=${referenceId}`,
+      success_url: `${host}/stripe/success?session_id={CHECKOUT_SESSION_ID}&asset_id=${body.id}&amount=${body.amount}&ref=${referenceId}&object_ref=${objectReference}&uri=${encodedUri}`,
       cancel_url: `${host}/product/${body.id}?cancelled=true`,
       expires_at: Math.floor(Date.now() / 1000) + (30 * 60), // 30 minutes
     }, {
