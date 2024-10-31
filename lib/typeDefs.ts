@@ -50,6 +50,7 @@ export const typeDefs = gql`
     type: String!
     investmentDate: String!
     amount: Float!
+    terms: String!
     transactionId: String
   }
 

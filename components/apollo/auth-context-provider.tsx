@@ -28,33 +28,6 @@ const ME_QUERY = gql`
         createdAt
         updatedAt
       }
-      creatorInfo {
-        detailedBio {
-          profession
-          education {
-            schools {
-              name
-              degree
-              fieldOfStudy
-              graduationYear
-            }
-            relevantCourses
-            specializedTraining
-          }
-          professionalAchievements {
-            awards
-            exhibitions
-            portfolioLinks
-          }
-          collaborators
-          employmentContracts {
-            employer
-            startDate
-            endDate
-            ipRightsInfo
-          }
-        }
-      }
       investorInfo {
         id
         createdAt
@@ -67,8 +40,6 @@ const ME_QUERY = gql`
           amount
           terms
           transactionId
-          creatorId
-          ipId
         }
         portfolioSize
         riskTolerance
