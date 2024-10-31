@@ -15,6 +15,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/shadcn/carousel-ui"
 import { Badge } from "@/components/ui/shadcn/badge-ui"
+import TagMonaco from '../three/tag-monaco';
 // import { motion, MotionProps } from 'framer-motion';
 interface DefaultProps {
   id?: string;
@@ -22,25 +23,25 @@ interface DefaultProps {
 }
 
 const cards = [
-  {
-    primaryText: 'You invest into',
-    secondaryText: 'the asset of your choice',
-    image: '/products/watch.svg'
-  },
+  // {
+  //   primaryText: 'You invest into',
+  //   secondaryText: 'the asset of your choice',
+  //   image: '/products/watch.svg'
+  // },
   {
     primaryText: 'Industry experts',
     secondaryText: 'select the right asset',
     image: '/assets/home/checkmark.svg'
   },
   {
-    primaryText: 'We securely buy and store',
-    secondaryText: 'the asset',
-    image: '/assets/home/safe.svg'
-  },
-  {
     primaryText: 'We tokeneize the asset',
     secondaryText: 'generating fractions',
     image: '/assets/home/fractions.svg'
+  },
+  {
+    primaryText: 'We securely buy and store',
+    secondaryText: 'the asset',
+    image: '/assets/home/safe.svg'
   }
 ]
 
@@ -64,22 +65,44 @@ const ExpertiseCard = (
           className="thumbs-swiper"
         >
           <SwiperSlide className="border-gray rounded-2xl p-2 w-1/4"></SwiperSlide>
+          <SwiperSlide className="border-gray rounded-2xl p-2 ">
+              <Card>
+                <CardContent className="flex flex-col aspect-square items-center justify-center p-6">
+                  {/* <div className={styles.header}>
+                    <p className="text-secondary text-xl mb-4 font-bold">
+                      {1}
+                    </p>
+                  </div> */}
+                  <div className='flex h-80'>
+                    <TagMonaco />
+                  </div>
+                  <div className={styles.footer}>
+                    <p className="text-secondary text-xl font-bold">
+                      {cards[0].primaryText}
+                    </p>
+                    <p className="text-slate-500 text-xl">
+                      {cards[0].secondaryText}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </SwiperSlide>
           {cards.map((card, index) => (
             <SwiperSlide key={index} className="border-gray rounded-2xl p-2 ">
               <Card>
                 <CardContent className="flex flex-col aspect-square items-center justify-center p-6">
-                  <div className={styles.header}>
+                  {/* <div className={styles.header}>
                     <p className="text-secondary text-xl mb-4 font-bold">
                       {index + 1}
                     </p>
-                  </div>
-                  <div className={styles.body}>
+                  </div> */}
+                  <div className='flex h-80'>
                     <Image
                       src={card.image}
                       width={249}
                       height={252}
                       alt={card.primaryText}
-                      className={styles.image}
+                      className='h-full'
                     />
                   </div>
                   <div className={styles.footer}>

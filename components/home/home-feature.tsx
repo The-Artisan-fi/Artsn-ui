@@ -15,6 +15,7 @@ import PerformanceCard from '../cards/performance-card-feature';
 import OfferCard from '../cards/offer-card-feature';
 import DesignedCard from '../cards/designed-card-feature';
 import { useHorizontalScroll } from '@/hooks/use-horizontal-scroll';
+import TagMonaco from '../three/tag-monaco';
 export default function HomeFeature() {
     const [selected, setSelected] = useState(0);
     const canScrollVertically = useHorizontalScroll();
@@ -140,7 +141,6 @@ export default function HomeFeature() {
                 <Card2 className='mx-4 h-60 justify-between md:w-1/3 md:self-center'/>
                 <Card3 className='mx-4 h-60 justify-between md:w-1/3 md:self-center'/>
             </div>
-            
             <Wrapper
                 id="design"
                 className='bg-bg flex flex-col items-center justify-between'
