@@ -1,6 +1,5 @@
-import { StringKeyValueType } from '@/helpers/types';
 
-export const socialLinks: StringKeyValueType = {
+export const socialLinks: any = {
   twitter: 'https://twitter.com/ArtsnFi',
   linkedin: 'https://www.linkedin.com/company/the-artisan-nft/',
 };
@@ -28,6 +27,7 @@ export const seoData = {
     'Brian Frederiksen',
     'Paolo Piana',
     'Craig Pollock',
+    'Macarena Segura',
     'Domenico Fava',
     'Matt Weichel',
     'Formula Equal',
