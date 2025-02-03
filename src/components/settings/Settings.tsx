@@ -375,7 +375,7 @@ const Settings = () => {
       setFormData({
         firstName: user.firstName || '',
         lastName: user.lastName || '',
-        country: user.country || '',
+        country: user?.country || '',
         email: user.email || '',
         // phoneNumber: user.phoneNumber || "",
         // social: {

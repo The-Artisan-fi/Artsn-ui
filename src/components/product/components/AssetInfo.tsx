@@ -477,7 +477,8 @@ export default function AssetInfo({ asset }: { asset: AssetInfo }) {
                   {/* Login Prompt */}
                   {!currentUser && (
                     <div className="flex w-full flex-col items-center gap-2 rounded-2xl bg-red-500/20 py-2">
-                      <LoginSecondary className="w-full" />
+                      {/* <LoginSecondary className="w-full" /> */}
+                      Please login to continue
                     </div>
                   )}
                 </div>

@@ -32,8 +32,6 @@ export function LoginSecondary({ className }: LoginDialogProps) {
     isAuthenticated,
     loading,
     user,
-    injectedAdapters,
-    loginUserWithAdapter,
   } = useAuth()
 
   if (user) {
@@ -48,7 +46,7 @@ export function LoginSecondary({ className }: LoginDialogProps) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <div className={className}>
-        <div className="w-full">
+        {/* <div className="w-full">
           <div className="flex flex-col gap-6">
             <Card className="z-[301] flex w-full flex-col border-none bg-transparent text-secondary">
               <CardHeader className="rounded-t-xl bg-transparent">
@@ -129,7 +127,7 @@ export function LoginSecondary({ className }: LoginDialogProps) {
               </CardFooter>
             </Card>
           </div>
-        </div>
+        </div> */}
       </div>
     </Suspense>
   )

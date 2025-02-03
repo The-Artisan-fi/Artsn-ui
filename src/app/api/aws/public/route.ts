@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
-import crypto from 'crypto'
 
 // Initialize S3 client
 const s3Client = new S3Client({

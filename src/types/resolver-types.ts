@@ -10,6 +10,7 @@ export interface User {
   publicKey: string
   firstName?: string
   lastName?: string
+  country?: string
   investorInfo?: any
   baseProfile?: any
   createdAt: string

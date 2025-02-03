@@ -209,8 +209,9 @@ export async function POST(request: Request) {
       })
       .instruction()
 
-    //@ts-ignore expects snake case instead of camel case, but is working fine
+    
     const ix2 = await program.methods
+    //@ts-ignore expects snake case instead of camel case, but is working fine
       .createFractionalizedListing(createFractionalizedListingArgs)
       .accountsPartial({
         admin: signer,
