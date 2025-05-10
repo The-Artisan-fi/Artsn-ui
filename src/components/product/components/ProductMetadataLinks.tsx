@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { Link } from 'lucide-react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 type MetadataLinksProps = {
   mintAddress: string
@@ -13,7 +13,7 @@ export default function MetadataLinks({
   return (
     <div className="border-gray mb-5 rounded-3xl bg-white p-5">
       <h2 className="mb-4 text-xl font-bold">Metadatas</h2>
-      <section className="flex flex-col gap-2 md:flex-row">
+      <section className="flex flex-col gap-2 lg:flex-row">
         <Button
           className="border-gray flex items-center gap-2 rounded-full px-4 py-2 text-sm font-normal"
           asChild
@@ -21,6 +21,7 @@ export default function MetadataLinks({
           <Link
             href={`https://solscan.io/account/${mintAddress}?cluster=devnet`}
             className="flex items-center gap-2"
+            target="_blank"
           >
             <svg
               width="20"
@@ -67,6 +68,7 @@ export default function MetadataLinks({
           <Link
             href={`https://solscan.io/account/${mintAddress}?cluster=devnet`}
             className="flex items-center gap-2"
+            target="_blank"
           >
             <svg
               width="20"

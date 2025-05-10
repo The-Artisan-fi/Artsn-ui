@@ -18,7 +18,7 @@ import { CustomChainConfig, IProvider } from '@web3auth/base'
 import { SolanaWallet } from '@web3auth/solana-provider'
 import * as b58 from 'bs58'
 import { TOKEN_PROGRAM_ID, getAssociatedTokenAddress } from '@solana/spl-token'
-import { rpcManager } from '@/lib/rpc/rpc-manager'
+import { rpcManager } from '../../lib/rpc/rpc-manager'
 
 interface RequestCache {
   timestamp: number

@@ -40,7 +40,10 @@ export function useArtisanProgram() {
 
   const listingDetails = useQuery({
     queryKey: ['listing-details', 'all', { cluster }],
-    queryFn: () => {},
+    queryFn: () => {
+      // Return an empty array as default to avoid undefined
+      return []
+    },
   })
 
   const watches = useQuery({

@@ -35,3 +35,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+*.lock
+src/hooks/use-web3-auth.ts
+src/hooks/use-para-auth.ts

@@ -1,5 +1,6 @@
-import Product from '@/components/product/Product'
+import ProductFeature from '@/components/product/Product'
 
-export default function ProductPage({ params }: { params: { id: string } }) {
-  return <Product params={params} />
+export default async function ProductPage(props: { params: Promise<{ id: string }> }) {
+  const { id } = await props.params;
+  return <ProductFeature productId={id} />
 }

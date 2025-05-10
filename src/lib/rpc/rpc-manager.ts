@@ -2,9 +2,12 @@ import {
   Connection,
   GetProgramAccountsConfig,
   PublicKey,
+  VersionedTransaction,
 } from '@solana/web3.js'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
 import { dasApi } from '@metaplex-foundation/digital-asset-standard-api'
+import { IProvider } from '@web3auth/base'
+import { SolanaWallet } from '@web3auth/solana-provider'
 
 interface RpcConfig {
   url: string
@@ -28,6 +31,7 @@ export class RpcManager {
   private readonly CACHE_DURATION = 5000 // 5 seconds
   private readonly RATE_LIMIT_WINDOW = 1000 // 1 second
   private readonly MAX_REQUESTS_PER_WINDOW = 5
+  private provider: IProvider | null = null
 
   constructor() {
     this.rpcs = [
@@ -169,6 +173,29 @@ export class RpcManager {
       setTimeout(() => {
         rpc.isHealthy = true
       }, 60000) // Reset after 1 minute
+    }
+  }
+
+  public setProvider(provider: IProvider): void {
+    this.provider = provider;
+  }
+
+  public getProvider(): IProvider | null {
+    return this.provider;
+  }
+
+  public async signTransaction(transaction: VersionedTransaction): Promise<VersionedTransaction | undefined> {
+    if (!this.provider) {
+      throw new Error('Provider not set. Call setProvider before signing transactions.');
+    }
+    
+    try {
+      const solanaWallet = new SolanaWallet(this.provider);
+      const signedTx = await solanaWallet.signTransaction(transaction);
+      return signedTx as VersionedTransaction;
+    } catch (error) {
+      console.error('Error signing transaction:', error);
+      throw error;
     }
   }
 }

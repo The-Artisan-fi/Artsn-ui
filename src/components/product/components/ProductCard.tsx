@@ -34,6 +34,12 @@ const ProductCard = ({
         width={300}
         height={300}
         className="bg-gray mb-4 h-auto w-full rounded-2xl object-contain"
+        priority={false}
+        loading="lazy"
+        quality={75}
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        placeholder="blur"
+        blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+P+/HgAFeAJcI9oNPAAAAABJRU5ErkJggg=="
       />
       <div className="flex items-center justify-between">
         <div>

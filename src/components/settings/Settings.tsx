@@ -7,11 +7,6 @@ import { Label } from '@/components/ui/label'
 import { Camera, Loader2, AlertTriangle } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { motion, AnimatePresence } from 'framer-motion'
-import { UPDATE_USER } from '@/graphql/mutations/user'
-import * as z from 'zod'
-import { useMutation } from '@apollo/client'
-import { useAuth } from '@/providers/Web3AuthProvider'
 import { Textarea } from '../ui/textarea'
 import {
   Select,
@@ -22,41 +17,19 @@ import {
 } from '../ui/select'
 import { FormControl } from '../ui/form'
 import { countries } from '@/lib/countries'
-
-// Animation variants remain the same
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      duration: 0.3,
-    },
-  },
-}
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.4,
-      ease: 'easeOut',
-    },
-  },
-}
-
-const itemVariants = {
-  hidden: { opacity: 0, x: -20 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: {
-      duration: 0.3,
-    },
-  },
-}
+import { useAuthStore } from '@/lib/stores/useAuthStore'
+import * as z from 'zod'
+import { useMutation } from '@apollo/client'
+import { UPDATE_USER ,DELETE_USER} from '@/graphql/mutations/user'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { useRouter } from 'next/navigation'
 
 // Updated Validation schema
 // const socialSchema = z.object({
@@ -70,12 +43,6 @@ const userSchema = z.object({
   lastName: z.string().min(2, 'Last name must be at least 2 characters'),
   country: z.string().min(2, 'Country must be at least 2 characters'),
   //   social: socialSchema,
-  baseProfile: z.object({
-    displayName: z.string().optional(),
-    displayRole: z.string().optional(),
-    bio: z.string().optional(),
-    photoUrl: z.string().optional(),
-  }),
   investorInfo: z.object({
     investmentPreferences: z.array(z.string()).optional(),
     investmentHistory: z.array(z.string()).optional(),
@@ -124,15 +91,24 @@ class ErrorBoundary extends React.Component<
   }
 }
 
-const Settings = () => {
+// Removed onClose from props interface
+interface SettingProps {}
+
+// Removed onClose from component props
+const Setting: React.FC<SettingProps> = () => {
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
   const [validationErrors, setValidationErrors] = useState<{
     [key: string]: string
   }>({})
   const [updateUser] = useMutation(UPDATE_USER)
-  const { user } = useAuth()
+  const [deleteUser] = useMutation(DELETE_USER)
+  const { currentUser } = useAuthStore()
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const router = useRouter()
+
   // Initial form state
   const [formData, setFormData] = useState({
     firstName: '',
@@ -144,19 +120,7 @@ const Settings = () => {
     //   twitter: "",
     //   instagram: "",
     //   website: ""
-    // },
-    baseProfile: {
-      displayName: '',
-      displayRole: '',
-      bio: '',
-      photoUrl: '',
-    },
-    investorInfo: {
-      investmentPreferences: [],
-      investmentHistory: [],
-      riskTolerance: '',
-      preferredInvestmentDuration: '',
-    },
+    // }
   })
 
   // Validate single field
@@ -210,115 +174,47 @@ const Settings = () => {
 
     validateField(name, value)
   }
+  
 
-  // Handle image upload
-  const handleImageUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-    field: 'coverImageUrl' | 'profilePictureUrl' | 'photoUrl'
-  ) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-
-    // Validate file
-    const validTypes = ['image/jpeg', 'image/png', 'image/webp']
-    if (!validTypes.includes(file.type)) {
-      toast({
-        title: 'Invalid file type',
-        description: 'Please upload a JPEG, PNG, or WebP image',
-        variant: 'destructive',
-      })
-      return
-    }
-
-    try {
-      setIsUploading(true)
-
-      // Create FormData
-      const formData = new FormData()
-      formData.append('files', file)
-      formData.append('userId', user!.publicKey)
-      const baseUrl = process.env.NEXT_PUBLIC_HOST || 'http://localhost:3000'
-      // Upload to public S3 bucket
-      const response = await fetch(`${baseUrl}/api/aws/public`, {
-        method: 'POST',
-        body: formData,
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to upload image')
-      }
-
-      const result = await response.json()
-      const imageUrl = result.uploads[0].url
-      console.log('Uploaded image URL:', imageUrl)
-      // Update the appropriate field in formData
-      if (field === 'photoUrl') {
-        setFormData((prev) => ({
-          ...prev,
-          baseProfile: {
-            ...prev.baseProfile,
-            photoUrl: imageUrl,
-          },
-        }))
-      } else {
-        console.log('field is ->', field)
-        console.log('formData is ->', formData)
-        setFormData((prev) => ({
-          ...prev,
-          [field]: imageUrl,
-        }))
-      }
-
-      // Log the updated formData for debugging
-      console.log('Updated form data after image upload:', {
-        field,
-        imageUrl,
-        formData,
-      })
-
-      toast({
-        title: 'Success',
-        description: 'Image uploaded successfully',
-      })
-    } catch (error) {
-      console.error('Error uploading image:', error)
-      toast({
-        title: 'Error',
-        description: 'Failed to upload image',
-        variant: 'destructive',
-      })
-    } finally {
-      setIsUploading(false)
-    }
-  }
-
-  // Handle copy to clipboard
-  const handleCopyClick = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text)
-      toast({
-        title: 'Copied to clipboard',
-        duration: 2000,
-      })
-    } catch (err) {
-      toast({
-        title: 'Failed to copy',
-        variant: 'destructive',
-        duration: 2000,
-      })
-    }
-  }
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault()
     setIsLoading(true)
 
     try {
-      console.log('user ->', user)
+      console.log('currentUser ->', currentUser)
+      
+      // Get the paraSession from the auth store
+      const paraSession = useAuthStore.getState().authToken
+      
+      if (!paraSession) {
+        toast({
+          title: 'Authentication error',
+          description: 'Your session has expired. Please log in again.',
+          variant: 'destructive',
+        })
+        setIsLoading(false)
+        return
+      }
+
+      if (!currentUser || (!currentUser._id && !currentUser.uuid)) {
+        toast({
+          title: 'Authentication error',
+          description: 'User information is missing. Please log in again.',
+          variant: 'destructive',
+        })
+        setIsLoading(false)
+        return
+      }
+
+      // Log the paraSession for debugging
+      console.log('Using paraSession:', paraSession.substring(0, 20) + '...')
+      console.log('currentUser object:', JSON.stringify(currentUser, null, 2))
+      console.log('User ID being used:', currentUser!._id || currentUser!.uuid)
 
       const result = await updateUser({
         variables: {
-          _id: user!._id,
+          id: currentUser!._id || currentUser!.uuid,
           input: {
             ...formData,
           },
@@ -340,6 +236,22 @@ const Settings = () => {
             })),
             networkError: error.networkError,
           })
+          
+          // Check if the error is due to authentication
+          if (error.message.includes('Not authenticated') || 
+              error.message.includes('Authentication failed')) {
+            toast({
+              title: 'Authentication error',
+              description: 'Your session has expired. Please log in again.',
+              variant: 'destructive',
+            })
+          } else {
+            toast({
+              title: 'Error updating profile',
+              description: error.message,
+              variant: 'destructive',
+            })
+          }
         },
       }).catch((error) => {
         console.error('Caught in mutation catch block:', error)
@@ -369,56 +281,109 @@ const Settings = () => {
     }
   }
 
+  const handleDeleteAccount = async () => {
+    setIsDeleting(true)
+    try {
+      const paraSession = useAuthStore.getState().authToken
+      
+      if (!paraSession) {
+        toast({
+          title: 'Authentication error',
+          description: 'Your session has expired. Please log in again.',
+          variant: 'destructive',
+        })
+        return
+      }
+
+      if (!currentUser || (!currentUser._id && !currentUser.uuid)) {
+        toast({
+          title: 'Authentication error',
+          description: 'User information is missing. Please log in again.',
+          variant: 'destructive',
+        })
+        return
+      }
+
+      // Use _id if available, otherwise use uuid
+      const userId = currentUser._id || currentUser.uuid;
+      
+      // Log the user ID for debugging
+      console.log('Attempting to delete user with ID:', userId);
+
+      const result = await deleteUser({
+        variables: {
+          id: userId,
+        }
+      })
+
+      if (result.data?.deleteUser) {
+        toast({
+          title: "Account deleted",
+          description: "Your account has been successfully deleted.",
+        })
+        
+        // Reset all auth state and clear storage
+        useAuthStore.getState().resetAuth()
+        localStorage.clear()
+        
+        // Make logout request to Para API
+        await fetch('https://api.beta.getpara.com/logout', {
+          method: 'GET',
+        });
+        
+        window.location.href = '/';
+      } else {
+        throw new Error('Failed to delete account')
+      }
+    } catch (error: any) {
+      console.error('Error deleting account:', error)
+      toast({
+        title: "Error",
+        description: error.message || "Failed to delete account. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsDeleting(false)
+      setDeleteDialogOpen(false)
+    }
+  }
+
   useEffect(() => {
-    if (user) {
-      console.log('User data:', user)
+    if (currentUser) {
+      console.log('User data:', currentUser)
       setFormData({
-        firstName: user.firstName || '',
-        lastName: user.lastName || '',
-        country: user?.country || '',
-        email: user.email || '',
+        firstName: currentUser?.firstName || '',
+        lastName: currentUser?.lastName || '',
+        country: currentUser?.country || '',
+        email: currentUser?.email || '',
         // phoneNumber: user.phoneNumber || "",
-        // social: {
-        //   twitter: user.social?.twitter || "",
-        //   instagram: user.social?.instagram || "",
-        //   website: user.social?.website || ""
-        // },
-        baseProfile: {
-          displayName: user.baseProfile?.displayName || '',
-          displayRole: user.baseProfile?.displayRole || '',
-          bio: user.baseProfile?.bio || '',
-          photoUrl: user.baseProfile?.photoUrl || '',
-        },
-        investorInfo: {
-          investmentPreferences: user.investorInfo?.investmentPreferences || [],
-          investmentHistory: user.investorInfo?.investmentHistory || [],
-          riskTolerance: user.investorInfo?.riskTolerance || '',
-          preferredInvestmentDuration:
-            user.investorInfo?.preferredInvestmentDuration || '',
-        },
       })
     }
-  }, [user])
+  }, [currentUser])
 
   return (
     <ErrorBoundary>
-      <motion.div
-        className="mx-auto mt-20 w-full max-w-3xl p-4"
-        initial="hidden"
-        animate="visible"
-        variants={containerVariants}
+      <div
+        className="mx-auto w-full"
       >
         <form onSubmit={handleSubmit}>
-          <motion.div variants={cardVariants}>
-            <Card className="w-full">
+          <div>
+            <Card className="w-full border-none shadow-none">
               <CardHeader>
                 <CardTitle>Edit Profile</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* Basic Information */}
-                <motion.div variants={itemVariants} className="space-y-4">
-                  <h3 className="text-lg font-medium">Basic Information</h3>
-
+                <div className="space-y-4">
+                  {/* Role field alone at the top */}
+                  <div className="space-y-2">
+                    <Label htmlFor="role">Role</Label>
+                    <div className="p-2 border rounded bg-gray-100">
+                      {currentUser?.role || 'No role assigned'}
+                    </div>
+                  </div>
+                  
+                  {/* Other inputs in a grid */}
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="space-y-2">
                       <Label htmlFor="firstName">First name</Label>
@@ -444,8 +409,14 @@ const Settings = () => {
                     <div className="space-y-2">
                       <Label htmlFor="country">Country</Label>
                       <Select
-                        onValueChange={() => handleChange}
-                        defaultValue={formData.country}
+                        value={formData.country || currentUser?.country || ''}
+                        onValueChange={(value) => {
+                          setFormData(prev => ({
+                            ...prev,
+                            country: value
+                          }));
+                          validateField('country', value);
+                        }}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select country" />
@@ -468,63 +439,8 @@ const Settings = () => {
                         onChange={handleChange}
                       />
                     </div>
-                    {/* <div className="space-y-2">
-                      <Label htmlFor="phoneNumber">Phone Number</Label>
-                      <Input 
-                        id="phoneNumber"
-                        name="phoneNumber"
-                        value={formData.phoneNumber}
-                        onChange={handleChange}
-                      />
-                    </div> */}
                   </div>
-                </motion.div>
-
-                {/* Profile Information */}
-                <motion.div variants={itemVariants} className="space-y-4">
-                  <h3 className="text-lg font-medium">Profile Information</h3>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="displayName">Display Name</Label>
-                    <Input
-                      id="displayName"
-                      name="baseProfile.displayName"
-                      value={formData.baseProfile.displayName}
-                      onChange={handleChange}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="displayName">Profile Picture</Label>
-                    <Input
-                      id="coverImage"
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleImageUpload(e, 'photoUrl')}
-                      className="mt-1"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="displayRole">Display Role</Label>
-                    <Input
-                      id="displayRole"
-                      name="baseProfile.displayRole"
-                      value={formData.baseProfile.displayRole}
-                      onChange={handleChange}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="bio">Bio</Label>
-                    <Textarea
-                      id="bio"
-                      name="baseProfile.bio"
-                      value={formData.baseProfile.bio}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </motion.div>
+                </div>
 
                 {/* Social Links */}
                 {/* <motion.div variants={itemVariants} className="space-y-4">
@@ -564,43 +480,28 @@ const Settings = () => {
                   </div>
                 </motion.div> */}
 
-                {/* Investor Information */}
-                <motion.div variants={itemVariants} className="space-y-4">
-                  <h3 className="text-lg font-medium">Investor Preferences</h3>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="riskTolerance">Risk Tolerance</Label>
-                    <Input
-                      id="riskTolerance"
-                      name="investorInfo.riskTolerance"
-                      value={formData.investorInfo.riskTolerance}
-                      onChange={handleChange}
-                    />
-                  </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="preferredInvestmentDuration">
-                      Preferred Investment Duration
-                    </Label>
-                    <Input
-                      id="preferredInvestmentDuration"
-                      name="investorInfo.preferredInvestmentDuration"
-                      value={formData.investorInfo.preferredInvestmentDuration}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </motion.div>
+
+    
 
                 {/* Submit Button */}
-                <motion.div
-                  variants={itemVariants}
-                  className="flex justify-end pt-4"
+                <div
+                  className="flex justify-between gap-4 pt-4"
                 >
+                  <Button
+                    type="button"
+                    className="bg-red-500 text-black hover:bg-red-600"
+                    onClick={() => setDeleteDialogOpen(true)}
+                  >
+                    Delete Account
+                  </Button>
                   <Button
                     type="submit"
                     disabled={
                       isLoading || Object.keys(validationErrors).length > 0
                     }
+                    className="text-white bg-secondary"
                   >
                     {isLoading ? (
                       <>
@@ -611,14 +512,49 @@ const Settings = () => {
                       'Save Changes'
                     )}
                   </Button>
-                </motion.div>
+                </div>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
         </form>
-      </motion.div>
+
+        {/* Delete Account Confirmation Dialog */}
+        <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Delete Account</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to delete your account? This action cannot be undone.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="flex justify-between">
+              <Button 
+                variant="outline" 
+                onClick={() => setDeleteDialogOpen(false)}
+                disabled={isDeleting}
+              >
+                Cancel
+              </Button>
+              <Button 
+                variant="destructive" 
+                onClick={handleDeleteAccount}
+                disabled={isDeleting}
+              >
+                {isDeleting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Deleting...
+                  </>
+                ) : (
+                  'Delete Account'
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
     </ErrorBoundary>
   )
 }
 
-export default Settings
+export default Setting

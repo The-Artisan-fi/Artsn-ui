@@ -23,6 +23,31 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
     }
   }
 
+  // Get color code for color name
+  const getColorCode = (colorName: string): string => {
+    const colorMap: Record<string, string> = {
+      black: 'bg-black',
+      white: 'bg-white border border-gray-300',
+      gold: 'bg-yellow-500',
+      silver: 'bg-gray-300',
+      blue: 'bg-blue-900',
+      green: 'bg-green-900',
+      red: 'bg-red-900',
+      yellow: 'bg-yellow-500',
+      rose: 'bg-rose-400',
+      gray: 'bg-gray-500',
+      brown: 'bg-amber-800',
+      // Add more color mappings as needed
+    }
+    return colorMap[colorName.toLowerCase()] || 'bg-gray-500';
+  }
+
+  // Fallback colors in case no colors are available
+  const fallbackColors = ['black', 'white', 'gold', 'blue', 'green', 'red'];
+  
+  // Fallback movements in case no movements are available
+  const fallbackMovements = ['Automatic', 'Manual Winding', 'Quartz'];
+
   const handleObjectTypeChange = (type: ObjectType) => {
     onFilterChange({ objectType: type })
   }
@@ -62,7 +87,7 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
 
       {/* Brand/Model Filter */}
       {availableFilters.models.length > 0 && (
-        <div className="mb-8">
+        <div className="mb-8 bg-gray-100 p-4 rounded-2xl">
           <h3 className="mb-4 text-base font-medium">Brand/Model</h3>
           <div className="space-y-3">
             {availableFilters.models.map((model: string) => (
@@ -86,25 +111,28 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
       )}
 
       {/* Color Filter */}
-      {availableFilters.colors.length > 0 && (
-        <div className="mb-8">
+      {(availableFilters.colors.length > 0 || true) && (
+        <div className="mb-8 bg-gray-100 p-4 rounded-2xl">
           <h3 className="mb-4 text-base font-medium">Color</h3>
-          <div className="space-y-3">
-            {availableFilters.colors.map((color: string) => (
-              <label key={color} className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={filters.color.includes(color)}
-                  onChange={() => {
-                    const newColors = filters.color.includes(color)
-                      ? filters.color.filter((c: string) => c !== color)
-                      : [...filters.color, color]
-                    onFilterChange({ color: newColors })
-                  }}
-                  className="form-checkbox h-4 w-4 border-gray-300 text-black"
-                />
-                <span className="ml-3 text-sm">{color}</span>
-              </label>
+          <div className="flex flex-wrap gap-2">
+            {(availableFilters.colors.length > 0 ? availableFilters.colors : fallbackColors).map((color: string) => (
+              <button
+                key={color}
+                className={`w-8 h-8 rounded-full ${getColorCode(color)} flex items-center justify-center ${
+                  filters.color.includes(color) ? 'ring-2 ring-offset-2 ring-black' : ''
+                }`}
+                onClick={() => {
+                  const newColors = filters.color.includes(color)
+                    ? filters.color.filter((c: string) => c !== color)
+                    : [...filters.color, color]
+                  onFilterChange({ color: newColors })
+                }}
+                title={color}
+              >
+                {filters.color.includes(color) && (
+                  <span className={`text-xs ${color.toLowerCase() === 'white' ? 'text-black' : 'text-white'}`}>✓</span>
+                )}
+              </button>
             ))}
           </div>
         </div>
@@ -112,11 +140,11 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
 
       {/* Movement Filter - Only show for watches */}
       {filters.objectType !== 'diamond' &&
-        availableFilters.movements.length > 0 && (
-          <div className="mb-8">
+        (availableFilters.movements.length > 0 || true) && (
+          <div className="mb-8 bg-gray-100 p-4 rounded-2xl">
             <h3 className="mb-4 text-base font-medium">Movement</h3>
             <div className="space-y-3">
-              {availableFilters.movements.map((movement: string) => (
+              {(availableFilters.movements.length > 0 ? availableFilters.movements : fallbackMovements).map((movement: string) => (
                 <label key={movement} className="flex items-center">
                   <input
                     type="checkbox"
@@ -137,7 +165,7 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({
         )}
 
       {/* Price Range */}
-      <div className="mb-8">
+      <div className="mb-8 bg-gray-100 p-4 rounded-2xl">
         <h3 className="mb-4 text-base font-medium">Price Range</h3>
         <div className="space-y-4">
           <div>

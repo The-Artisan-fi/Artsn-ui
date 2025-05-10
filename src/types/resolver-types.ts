@@ -1,6 +1,7 @@
 // src/types/resolver-types.ts
 import { NextRequest } from 'next/server'
 import { Db } from 'mongodb'
+import mongoose from 'mongoose'
 
 export interface User {
   _id?: string
@@ -12,7 +13,6 @@ export interface User {
   lastName?: string
   country?: string
   investorInfo?: any
-  baseProfile?: any
   createdAt: string
   updatedAt: string
   lastLogin?: string
@@ -23,39 +23,22 @@ export interface User {
   solanaTransactionId?: string
   phoneNumber?: string
   kycInfo?: any
+  paraSession?: string
 }
 
-export interface CreateUserInput {
-  email: string
-  publicKey: string
-  password: string
-  country: string
-  username: string
-  firstName?: string
-  lastName?: string
-  investorInfo?: any
-  baseProfile?: any
-  createdAt: string
-  updatedAt: string
-  lastLogin?: string
-  isActive: boolean
-  isVerified: boolean
-  role: string
-  verificationToken?: string
-  solanaTransactionId?: string
-  phoneNumber?: string
-  kycInfo?: any
-}
 
 export interface Context {
   req: NextRequest
+  res?: Response
   db: Db
-  user: User | null
+  user?: User
+  mongoose: typeof mongoose
 }
 
 export interface AuthPayload {
   token: string
   user: User
+  response?: any
 }
 
 export interface ListingType {

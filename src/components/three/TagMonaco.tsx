@@ -4,57 +4,22 @@ import { motion, useTime } from 'framer-motion-3d'
 import { useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { useDrag } from '@use-gesture/react'
 import { MathUtils, Mesh } from 'three'
+import { Suspense } from 'react'
 
-export default function TagMonaco() {
+// Helper components defined first
+function LoadingFallback() {
   return (
-    <div className="flex h-full w-full items-center justify-center">
-      <Canvas
-        shadows
-        dpr={[1, 1.5]}
-        camera={{ position: [-2.5, 0, 4], fov: 50 }}
-      >
-        <ambientLight intensity={0.5} />
-        <spotLight
-          position={[10, 10, 10]}
-          angle={0.15}
-          penumbra={1}
-          shadow-mapSize={[512, 512]}
-          castShadow
-        />
-        <BouncyControls>
-          {/* <Watch
-                initial={{ scale: 0.002 }}
-                animate={{ scale: 0.003 }}
-                whileHover={{ scale: 0.004 }}
-                position={[0, 0.25, 0]}
-                transition={{ type: 'spring', stiffness: 300, damping: 10, restDelta: 0.0000001 }}
-                /> */}
-          <Watch
-            initial={{ scale: 0.003 }}
-            animate={{ scale: 0.004 }}
-            whileHover={{ scale: 0.005 }}
-            position={[-0.3, 0.25, 0]}
-            transition={{
-              type: 'spring',
-              stiffness: 300,
-              damping: 10,
-              restDelta: 0.0000001,
-            }}
-          />
-        </BouncyControls>
-        <ContactShadows
-          rotation-x={Math.PI / 2}
-          position={[0, -1.4, 0]}
-          opacity={0.75}
-          width={10}
-          height={10}
-          blur={2.6}
-          far={2}
-        />
-        <Environment preset="city" />
-      </Canvas>
-    </div>
+    <mesh>
+      <boxGeometry args={[1, 1, 1]} />
+      <meshStandardMaterial color="gray" wireframe />
+    </mesh>
   )
+}
+
+const settings = {
+  damping: 20,
+  stiffness: 1000,
+  restDelta: 0.0000001,
 }
 
 function BouncyControls({ children }: any) {
@@ -88,7 +53,8 @@ function Watch(props: any) {
   const rotateZ = useTransform(time, (t) => -0.2 - (1 + Math.sin(t / 1.5)) / 20)
   const y = 0 ///useTransform(time, (t) => (1 + Math.sin(t / 1.5)) / 10)
 
-  const { nodes, materials } = useGLTF('/three/tag-monaco.glb')
+  // Lazy load the GLTF model
+  const { nodes, materials } = useGLTF('/three/tag-monaco.glb', true) // true disables preloading
 
   return (
     <motion.group
@@ -124,8 +90,50 @@ function Watch(props: any) {
   )
 }
 
-const settings = {
-  damping: 20,
-  stiffness: 1000,
-  restDelta: 0.0000001,
+// Main component defined last
+export default function TagMonaco() {
+  return (
+    <div className="flex h-full w-full items-center justify-center">
+      <Canvas
+        shadows
+        dpr={[1, 1.5]}
+        camera={{ position: [-2.5, 0, 4], fov: 50 }}
+      >
+        <ambientLight intensity={0.5} />
+        <spotLight
+          position={[10, 10, 10]}
+          angle={0.15}
+          penumbra={1}
+          shadow-mapSize={[512, 512]}
+          castShadow
+        />
+        <BouncyControls>
+          <Suspense fallback={<LoadingFallback />}>
+            <Watch
+              initial={{ scale: 0.003 }}
+              animate={{ scale: 0.004 }}
+              whileHover={{ scale: 0.005 }}
+              position={[-0.3, 0.25, 0]}
+              transition={{
+                type: 'spring',
+                stiffness: 300,
+                damping: 10,
+                restDelta: 0.0000001,
+              }}
+            />
+          </Suspense>
+        </BouncyControls>
+        <ContactShadows
+          rotation-x={Math.PI / 2}
+          position={[0, -1.4, 0]}
+          opacity={0.75}
+          width={10}
+          height={10}
+          blur={2.6}
+          far={2}
+        />
+        <Environment files="/hdri/potsdamer_platz_1k.hdr" />
+      </Canvas>
+    </div>
+  )
 }

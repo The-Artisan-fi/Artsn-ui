@@ -11,10 +11,11 @@ const OfferCard = () => {
         <div className="absolute left-0 right-0 top-0 z-[2] h-full w-full bg-gradient-to-b from-black to-transparent p-6 opacity-60" />
         <div className="absolute right-0 top-[10px] z-[1] flex w-full flex-col items-end">
           <Image
-            src="/products/watch.svg"
+            src="/products/watch.png"
             alt="Luxury Watch"
             width={300}
             height={300}
+            quality={100}
             className="w-45 h-auto -rotate-[5deg] md:w-1/2 md:scale-100"
           />
         </div>

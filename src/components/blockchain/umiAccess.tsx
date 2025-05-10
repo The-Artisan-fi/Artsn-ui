@@ -31,14 +31,9 @@ interface ListingResult {
 
 export const fetchAssets = async (
   owner: string
-): Promise<HeliusMplCoreAsset[]> => {
+): Promise<{nftAssets: HeliusMplCoreAsset[], usdcBalance: number}> => {
   try {
     console.log('fetching assets for ->', owner)
-
-    // const assetsByOwner = await fetchAssetsByOwner(umi, owner, {
-    //   skipDerivePlugins: false,
-    // });
-    // console.log('assetsByOwner', assetsByOwner);
 
     const getAssetsByOwner = async () => {
       const response = await fetch(helius, {
@@ -54,6 +49,9 @@ export const fetchAssets = async (
             ownerAddress: owner,
             page: 1, // Starts at 1
             limit: 1000,
+            displayOptions: {
+              showFungible: true //return both fungible and non-fungible tokens
+            }
           },
         }),
       })
@@ -64,24 +62,48 @@ export const fetchAssets = async (
     }
     const assetsByOwner = await getAssetsByOwner()
 
-    const filteredAccounts: HeliusMplCoreAsset[] = assetsByOwner.filter(
-      (asset: HeliusMplCoreAsset) => {
-        if (
-          asset.authorities[0].address ===
-          'GC1ebi99yrcurrTJMEhCp4oCmMg8CNrhAsKFJ3arQeg1'
-        ) {
-          console.log('asset match ->', asset)
-          return true
-        }
-        return false
-      }
-    )
+    // Separate NFT assets from tokens
+    const nftAssets: HeliusMplCoreAsset[] = [];
+    let usdcBalance = 0;
 
-    console.log('filteredAccounts', filteredAccounts)
-    return filteredAccounts
+    // Process all assets to extract NFTs and USDC
+    assetsByOwner.forEach((asset: any) => {
+      try {
+        // Check for USDC on devnet (using the devnet USDC mint address)
+        if (asset.id === 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v' || // Mainnet USDC
+            asset.id === '4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU') { // Devnet USDC
+          // Handle FungibleAsset structure from Helius API 
+          if (asset.interface === 'FungibleAsset' && asset.token_info) {
+            usdcBalance = parseFloat(asset.token_info.balance) / Math.pow(10, asset.token_info.decimals || 6);
+            console.log('USDC balance found:', usdcBalance, 'from token_info.balance:', asset.token_info.balance);
+          }
+          // Also handle older TokenAsset structure as fallback
+          else if (asset.tokenAmount) {
+            usdcBalance = parseFloat(asset.tokenAmount.amount) / Math.pow(10, asset.tokenAmount.decimals || 6);
+            console.log('USDC balance found from tokenAmount:', usdcBalance);
+          }
+        }
+        
+        // Check for NFTs with the specific authority
+        if (asset.authorities && 
+            asset.authorities[0] && 
+            asset.authorities[0].address === 'GC1ebi99yrcurrTJMEhCp4oCmMg8CNrhAsKFJ3arQeg1') {
+          console.log('asset match ->', asset);
+          nftAssets.push(asset);
+        }
+      } catch (error) {
+        console.warn('Error processing asset:', asset.id, error);
+      }
+    });
+
+    console.log('Filtered NFT assets:', nftAssets);
+    console.log('USDC balance:', usdcBalance);
+    
+    // Return both the NFT assets and USDC balance
+    return { nftAssets, usdcBalance };
   } catch (error) {
     console.error(error)
-    return []
+    return { nftAssets: [], usdcBalance: 0 }
   }
 }
 

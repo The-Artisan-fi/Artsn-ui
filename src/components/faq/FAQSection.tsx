@@ -95,9 +95,9 @@ export default function FAQSection() {
   }
 
   return (
-    <div className="z-[20] mx-auto mt-12 w-full rounded-2xl bg-bg px-[10vw] py-16">
+    <div className="z-[20] mx-auto mt-12 w-11/12 rounded-2xl bg-bg pb-16">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 1, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="space-y-8"
       >

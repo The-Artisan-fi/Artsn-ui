@@ -23,10 +23,10 @@ const config: Config = {
         signature: ['agustina', 'sans-serif'],
         sans: ['Urbanist', 'sans-serif'],
         mono: ['Roboto Mono', 'monospace'],
-        syne: ['Syne', 'sans-serif'],
+        syne: ['var(--font-syne)', 'Syne', 'sans-serif'],
         urbanist: ['Urbanist', 'sans-serif'],
         poppins: ['Poppins', 'sans-serif'],
-        cormorant: ['Cormorant Infant', 'serif'],
+        cormorant: ['var(--font-cormorant-infant)', 'Cormorant Infant', 'serif'],
       },
      
       colors: {

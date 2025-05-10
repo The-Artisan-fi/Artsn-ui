@@ -160,6 +160,45 @@ With Metaplex Core we are able to dynamically create any Luxury Asset into a fra
 - `/types/*` - TypeScript type definitions
 - `/graphql/*` - GraphQL schemas and operations
 
+### Authentication Architecture
+
+The application uses a simplified authentication architecture centered around the Para SDK:
+
+#### Para Context Provider
+
+The authentication system is built around a centralized React Context provider (`Para.tsx`) that:
+
+- Initializes the Para SDK on the client side
+- Manages authentication state (tokens, sessions)
+- Provides authentication methods to the entire application
+- Renders the Para authentication modal
+
+This approach offers several advantages:
+- **Centralized State Management**: Single source of truth for authentication
+- **Simplified Component Access**: Easy access to authentication state via the `usePara()` hook
+- **Reduced Bundle Size**: Direct SDK initialization without unnecessary abstractions
+- **Improved Performance**: Optimized loading of Para SDK components
+
+The Para provider integrates with existing authentication stores through bridge hooks, allowing for a gradual transition to the simplified architecture without breaking existing functionality.
+
+#### Iron Session Implementation
+
+The application uses [iron-session](https://github.com/vvo/iron-session) for secure, stateless, cookie-based sessions. This implementation provides several benefits:
+
+- **Secure**: The session data is encrypted and sealed using Iron, which provides cryptographic guarantees.
+- **Stateless**: No server-side session storage is required, reducing complexity and infrastructure needs.
+- **Simple API**: Easy to use with both API routes and server components.
+
+##### Environment Variables
+
+To enable the authentication system, you need to set the following environment variable:
+
+```bash
+SECRET_COOKIE_PASSWORD
+```
+
+This password is used to encrypt the session cookies. It should be at least 32 characters long for security.
+
 ### Key Workflows
 
 1. **User Authentication**

@@ -74,7 +74,7 @@ const bugReportSchema = z.object({
 
 type BugReportType = z.infer<typeof bugReportSchema>
 
-export function BugReport({ className }: { className?: string }) {
+export const BugReport = ({ className }: { className?: string }) => {
   const [open, setOpen] = useState(false)
   const { toast } = useToast()
   const form = useForm<BugReportType>({
@@ -273,8 +273,8 @@ export function BugReport({ className }: { className?: string }) {
                   <FormControl>
                     <Textarea
                       placeholder="1. Navigate to...
-2. Click on...
-3. Observe that..."
+                                  2. Click on...
+                                  3. Observe that..."
                       className="h-24"
                       {...field}
                     />

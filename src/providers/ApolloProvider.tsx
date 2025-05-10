@@ -9,12 +9,11 @@ import {
   from,
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
-
 import { onError } from '@apollo/client/link/error'
 
 const httpLink = createHttpLink({
   uri: '/api/graphql',
-  credentials: 'same-origin',
+  credentials: 'include',
 })
 
 // Error handling link
@@ -24,6 +23,12 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
       console.error(
         `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
       )
+      
+      // Handle authentication errors
+      if (message === 'Not authenticated') {
+        // Clear auth state
+        useAuthStore.getState().clearAuth();
+      }
     })
   }
   if (networkError) {
@@ -31,17 +36,20 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   }
 })
 
-// Auth link for adding token
+// Auth link for adding paraSession
 const authLink = setContext((_, { headers }) => {
   const storedAuth = useAuthStore.getState()
-  const token = storedAuth.authToken
-  console.log('Token:', token)
-  // Return the headers to the context so httpLink can read them
+  
+  const newHeaders = {
+    ...headers,
+    'x-capsule-session': storedAuth.authToken || '',
+    'Content-Type': 'application/json',
+    'x-apollo-operation-name': 'GraphQLRequest',
+    'apollo-require-preflight': 'true'
+  };
+    
   return {
-    headers: {
-      ...headers,
-      authorization: token ? `Bearer ${token}` : '',
-    },
+    headers: newHeaders,
   }
 })
 

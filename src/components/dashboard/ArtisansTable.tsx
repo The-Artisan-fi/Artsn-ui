@@ -16,6 +16,8 @@ import { Card, CardContent } from '@/components/ui/card'
 import { getListingByWatch } from '@/components/blockchain/umiAccess'
 import { set } from '@metaplex-foundation/umi/serializers'
 import { useRouter } from 'next/navigation'
+import { HeliusMplCoreAsset } from '@/types'
+
 // Sample data
 const artisans = [
   {
@@ -48,70 +50,100 @@ const artisans = [
 ]
 
 type TableProps = {
-  assets?: any
+  assets?: HeliusMplCoreAsset[] | undefined
+  isLoading?: boolean
 }
 
-const ArtisansTable = ({ assets }: TableProps) => {
+const ArtisansTable = ({ assets, isLoading }: TableProps) => {
   const [data] = useState(artisans)
   const [sortedAssets, setSortedAssets] = useState<
     { asset: any; quantity: number }[]
   >([])
+  const [localLoading, setLocalLoading] = useState(true)
   console.log('table ** assets ->', assets)
   const router = useRouter()
+  
   // incoming assets need to be sorted because there are duplicates, so we need to into an array of objects { asset, quatity } and increment the quantity if the asset is already in the array
   //sort the array by asset name
   //return the sorted array
-  const sortAssets = async (assets: any) => {
-    const listingArray: any[] = []
-
-    for (let i = 0; i < assets.length; i++) {
-      const listing = await getListingByWatch(assets[i].grouping[0].group_value)
-
-      if (!listing) {
-        continue
+  const sortAssets = async (assets: HeliusMplCoreAsset[]) => {
+    try {
+      setLocalLoading(true)
+      if (!assets || assets.length === 0) {
+        setSortedAssets([])
+        setLocalLoading(false)
+        return
       }
 
-      if (listingArray.find((item) => item.associatedId === listing.listing)) {
-        const index = listingArray.findIndex(
-          (item) => item.associatedId === listing.listing
-        )
-        listingArray[index].quantity += 1
-        continue
+      const listingArray: any[] = []
+
+      for (let i = 0; i < assets.length; i++) {
+        try {
+          const listing = await getListingByWatch(assets[i].grouping[0].group_value)
+
+          if (!listing) {
+            continue
+          }
+
+          if (listingArray.find((item) => item.associatedId === listing.listing)) {
+            const index = listingArray.findIndex(
+              (item) => item.associatedId === listing.listing
+            )
+            listingArray[index].quantity += 1
+            continue
+          }
+
+          listingArray.push({
+            ...assets[i],
+            shares: listing.shares,
+            sharesSold: listing.sharesSold,
+            associatedId: listing.listing,
+            price: listing.price,
+            quantity: 1,
+          })
+        } catch (error) {
+          console.error('Error processing asset:', error)
+          // Continue with next asset rather than failing completely
+          continue
+        }
       }
 
-      listingArray.push({
-        ...assets[i],
-        shares: listing.shares,
-        sharesSold: listing.sharesSold,
-        associatedId: listing.listing,
-        price: listing.price,
-        quantity: 1,
+      listingArray.sort((a, b) => {
+        if (!a.associatedId || !b.associatedId) return 0
+        return a.associatedId.localeCompare(b.associatedId)
       })
+
+      console.log('sortedAssets', listingArray)
+      setSortedAssets(listingArray)
+    } catch (error) {
+      console.error('Error sorting assets:', error)
+      setSortedAssets([])
+    } finally {
+      setLocalLoading(false)
     }
-
-    listingArray.sort((a, b) => {
-      if (!a.associatedId || !b.associatedId) return 0
-      return a.associatedId.localeCompare(b.associatedId)
-    })
-
-    console.log('sortedAssets', listingArray)
-    setSortedAssets(listingArray)
   }
 
   useEffect(() => {
     if (assets) {
       sortAssets(assets)
+    } else {
+      setLocalLoading(false)
     }
   }, [assets])
+  
+  const showLoading = isLoading || localLoading
+  
   return (
     <>
-      {sortedAssets.length > 0 ? (
+      {showLoading ? (
+        <SkeletonCard />
+      ) : sortedAssets.length > 0 ? (
         <Card className="w-ful rounded-3xl border-zinc-300 bg-bg text-secondary dark:border-zinc-700">
           <CardContent className="p-6">
             <div className="w-full bg-bg text-secondary">
               <div className="mb-4 flex items-center gap-2">
-                <h2 className="text-2xl font-semibold">My Items</h2>
-                <span className="text-sm text-zinc-300">{assets.length}</span>
+                <h2 className="text-2xl font-semibold">Assets</h2>
+                <span className="text-sm text-zinc-300">{assets?.length || 0}</span>
               </div>
               <Table>
                 <TableHeader>
@@ -138,7 +170,7 @@ const ArtisansTable = ({ assets }: TableProps) => {
                             src={`https://artisan-solana.s3.eu-central-1.amazonaws.com/${asset.associatedId}-0.jpg`}
                           />
                           <AvatarFallback>
-                            {asset.content.metadata.name.charAt(0)}
+                            {asset.content?.metadata?.name?.charAt(0) || 'A'}
                           </AvatarFallback>
                         </Avatar>
                         <div>
@@ -180,8 +212,16 @@ const ArtisansTable = ({ assets }: TableProps) => {
           </CardContent>
         </Card>
       ) : (
-        <SkeletonCard />
-      )}
+          <Card className="w-ful rounded-3xl border-zinc-300 bg-bg text-secondary dark:border-zinc-700">
+            <CardContent className="p-6">
+              <div className="w-full bg-bg text-secondary">
+                <div className="py-6 text-center text-gray-500">
+                  No assets found. Your assets will appear here once you have some.
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
     </>
   )
 }
@@ -193,7 +233,7 @@ const SkeletonCard = () => {
         <div className="w-full bg-bg text-secondary">
           <div className="mb-4 flex items-center gap-2">
             <h2 className="animate-pulse text-2xl font-semibold">
-              Loading Items...
+              Loading Assets...
             </h2>
           </div>
           <Table>

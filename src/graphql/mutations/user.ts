@@ -1,61 +1,46 @@
 import { gql } from '@apollo/client'
 
-export const CREATE_USER = gql`
-  mutation CreateUser($input: CreateUserInput!) {
-    createUser(input: $input) {
-      _id
-      uuid
-      email
-      publicKey
-      username
-      firstName
-      lastName
-      country
-      role
-      isActive
-      isVerified
-      baseProfile {
-        id
-        displayName
-        displayRole
-      }
-      investorInfo {
-        id
-        portfolioSize
-        totalSpend
-      }
-      kycInfo {
-        kycStatus
-      }
-    }
-  }
-`
 
 export const REGISTER_USER = gql`
-  mutation RegisterUser($input: RegisterInput!) {
-    register(input: $input) {
+  mutation Register(
+    $email: String
+    $firstName: String
+    $lastName: String
+    $country: String
+    $acceptTerms: String
+  ) {
+    register(
+      email: $email
+      firstName: $firstName
+      lastName: $lastName
+      country: $country
+      acceptTerms: $acceptTerms
+    ) {
       token
       user {
         _id
         uuid
         email
+        publicKey
         username
         firstName
         lastName
-        role
-        publicKey
+        country
         createdAt
         updatedAt
+        lastLogin
         isActive
+        role
         isVerified
-        baseProfile {
+        phoneNumber
+        paraSession
+        kycInfo {
+          kycStatus
+        }
+        investorInfo {
           id
-          displayName
-          displayRole
-          photoUrl
-          bio
-          createdAt
-          updatedAt
+          portfolioSize
+          totalSpend
         }
       }
     }
@@ -63,8 +48,8 @@ export const REGISTER_USER = gql`
 `
 
 export const UPDATE_USER = gql`
-  mutation UpdateUser($input: UpdateUserInput!) {
-    updateUser(input: $input) {
+  mutation UpdateUser($id: ID!, $input: UpdateUserInput!) {
+    updateUser(id: $id, input: $input) {
       _id
       uuid
       email
@@ -78,15 +63,6 @@ export const UPDATE_USER = gql`
       isVerified
       createdAt
       updatedAt
-      baseProfile {
-        id
-        displayName
-        displayRole
-        photoUrl
-        bio
-        createdAt
-        updatedAt
-      }
       investorInfo {
         id
         investmentPreferences
@@ -106,9 +82,15 @@ export const UPDATE_USER = gql`
   }
 `
 
+export const DELETE_USER = gql`
+  mutation DeleteUser($id: ID!) {
+    deleteUser(id: $id)
+  }
+`
+
 export const LOGIN_USER = gql`
-  mutation LoginUser($publicKey: String!, $password: String!) {
-    login(publicKey: $publicKey, password: $password) {
+  mutation Login {
+    login {
       token
       user {
         _id
@@ -119,26 +101,14 @@ export const LOGIN_USER = gql`
         firstName
         lastName
         country
-        role
-        isActive
-        isVerified
         createdAt
         updatedAt
-        baseProfile {
-          id
-          displayName
-          displayRole
-          photoUrl
-          bio
-        }
-        investorInfo {
-          id
-          investmentPreferences
-          portfolioSize
-          riskTolerance
-          preferredInvestmentDuration
-          totalSpend
-        }
+        lastLogin
+        isActive
+        role
+        isVerified
+        phoneNumber
+        paraSession
         kycInfo {
           idvId
           kycStatus
@@ -148,3 +118,18 @@ export const LOGIN_USER = gql`
     }
   }
 `
+
+export const CHECK_USER_QUERY = gql`
+    query IsUserRegistered($publicKey: String!) {
+      isUserRegistered(publicKey: $publicKey)
+    }
+`;
+
+export const SUBSCRIBE_EMAIL = gql`
+  mutation SubscribeEmail($email: String!) {
+    subscribeEmail(email: $email) {
+      success
+      message
+    }
+  }
+`;

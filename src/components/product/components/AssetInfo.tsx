@@ -3,21 +3,17 @@
 import { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { VersionedTransaction } from '@solana/web3.js'
-import { loadStripe } from '@stripe/stripe-js'
+import { VersionedTransaction, Transaction } from '@solana/web3.js'
+//import { loadStripe } from '@stripe/stripe-js'
 import { v4 as uuid } from 'uuid'
 import { CreditCard } from 'lucide-react'
+import bs58 from 'bs58'
 import { useHandleShare } from '@/hooks/use-handle-share'
-import {
-  // useWeb3,
-  useWeb3Auth,
-} from '@/hooks/use-web3-auth'
 import { useAuthStore } from '@/lib/stores/useAuthStore'
-import { usePaymentStore } from '@/lib/stores/usePaymentStore'
+//import { usePaymentStore } from '@/lib/stores/usePaymentStore'
 import { useToast } from '@/hooks/use-toast'
-import { LoginSecondary } from '@/components/login/LoginSecondary'
-import { useRateLimitedBalance } from '@/hooks/use-rate-limited-balance'
-import RPC from '@/components/blockchain/solana-rpc'
+//import { useRateLimitedBalance } from '@/hooks/use-rate-limited-balance'
+import { rpcManager } from '@/lib/rpc/rpc-manager'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -32,6 +28,10 @@ import {
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
+import { useWallet } from '@solana/wallet-adapter-react'
+import { usePara } from '@/providers/Para'
+
+
 
 interface AssetInfo {
   onChainData: {
@@ -59,65 +59,134 @@ interface AssetInfo {
 
 export default function AssetInfo({ asset }: { asset: AssetInfo }) {
   const router = useRouter()
+  const { isConnected, wallet, signTransaction } = usePara();
+  const { publicKey, sendTransaction } = useWallet();
   const { toast } = useToast()
   const { handleCopy, copied } = useHandleShare()
-  const { provider, web3auth, rpc } = useWeb3Auth()
-  // Auth store
-  const { currentUser } = useAuthStore()
-  const { isLoading: balanceLoading } = useRateLimitedBalance(
-    currentUser?.publicKey
-  )
-  // Payment store - only use balance, not setBalance
-  const { balance } = usePaymentStore()
-  console.log('USER BALANCE', balance)
-  // Web3 utilities
-  // const { rpc, signTransaction } = useWeb3()
-
+  const { currentUser ,isAuthenticated} = useAuthStore()
+  const { openModal } = usePara();
   // Local state
   const [amount, setAmount] = useState(1)
   const [isAlertOpen, setIsAlertOpen] = useState(false)
   const [isBuying, setIsBuying] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
   const [isComplete, setIsComplete] = useState(false)
-
+  const connection = rpcManager.getConnection()
   const increment = () => amount < 4 && setAmount(amount + 1)
   const decrement = () => amount > 1 && setAmount(amount - 1)
 
-  // Memoized balance fetcher
-  // const fetchBalance = useCallback(async () => {
-  //   if (!currentUser?.publicKey || !rpc || !getBalance) return
+  // Check and fix Para session if needed
+  const verifyParaSession = async () => {
+    if (!isConnected || !wallet) {
+      console.log('Attempting to restore Para session...');
+      
+      // Try opening Para modal to restore session
+      if (openModal) {
+        toast({
+          title: 'Wallet Connection',
+          description: 'Please connect your wallet to continue'
+        });
+        
+        openModal();
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        
+        // Check if connection is restored
+        const isParaConnected = isConnected && wallet;
+        console.log('Para connection status after restore attempt:', isParaConnected);
+        
+        // setHasTriedParaFix(true);
+        return isParaConnected;
+      }
+    }
+    
+    return isConnected && wallet;
+  };
 
-  //   try {
-  //     const newBalance = await getBalance()
-  //     // Instead of using payment store, handle balance updates through the Web3 provider
-  //     if (newBalance) {
-  //       // Only update if balance has changed
-  //       if (JSON.stringify(newBalance) !== JSON.stringify(balance)) {
-  //         // Update balance through proper store action/dispatch
-  //         usePaymentStore.getState().setBalance(newBalance)
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching balance:', error)
-  //   }
-  // }, [currentUser?.publicKey, rpc, getBalance])
-
-  // // Single effect for initial balance fetch
-  // useEffect(() => {
-  //   fetchBalance()
-  //   // Set up polling interval for balance updates
-  //   const intervalId = setInterval(fetchBalance, 30000) // Poll every 30 seconds
-
-  //   return () => clearInterval(intervalId)
-  // }, [fetchBalance])
+  // Function to perform transaction with the selected wallet
+  const signWithWallet = async (transaction: VersionedTransaction, extraRetries = 3): Promise<Buffer> => {
+    // console.log(`Attempting to sign transaction with ${signingMethod === 'wallet-adapter' ? 'Phantom' : 'Para'} wallet (retries left: ${extraRetries})`);
+    
+    try {
+      // Phantom is preferred if available
+      if (publicKey && sendTransaction) {
+        // setSigningMethod("wallet-adapter");
+        console.log(`Using Phantom wallet ${publicKey.toString()} for signing`);
+        try {
+          // Use the transaction object directly with Phantom's sendTransaction
+          const signature = await sendTransaction(transaction, connection, { skipPreflight: false });
+          console.log('Phantom signing successful:', signature);
+          return Buffer.from(transaction.serialize());
+        } catch (phantomError) {
+          console.error('Phantom signing failed:', phantomError);
+          // Fall back to Para if Phantom fails
+          console.log('Falling back to Para wallet after Phantom failure');
+        }
+      }
+      
+      // Para wallet signing (either as primary or fallback)
+      if (wallet && signTransaction) {
+        // setSigningMethod('para');
+        console.log(`Using Para wallet ${wallet} for signing`);
+        
+        // Verify Para session before attempting to sign
+        // if (!hasTriedParaFix && extraRetries > 0) {
+        //   const paraSessionValid = await verifyParaSession();
+        //   console.log('Para session verification before signing:', paraSessionValid);
+        //   // setHasTriedParaFix(true);
+        // }
+        
+        try {
+          const signedTx = await signTransaction(transaction);
+          console.log('Para signing successful', signedTx);
+          return Buffer.from(transaction.serialize());
+        } catch (paraError) {
+          console.error('Para direct signing failed:', paraError);
+          
+          // Check if we should retry
+          if (extraRetries > 0) {
+            console.log(`Retrying Para signing (${extraRetries} attempts left)...`);
+            await new Promise(resolve => setTimeout(resolve, 500)); // Small delay before retry
+            return signWithWallet(transaction, extraRetries - 1);
+          } else {
+            throw new Error(`Para wallet signing failed after retries: ${paraError instanceof Error ? paraError.message : 'Unknown error'}`);
+          }
+        }
+      }
+      
+      // If we reach here, no wallet was able to sign
+      const errorMsg = 'No wallet available for signing';
+      console.error(errorMsg);
+      throw new Error(errorMsg);
+    } catch (error) {
+      console.error('Signing error:', error);
+      throw error;
+    }
+  };
 
   // Buy with crypto - Memoized to prevent recreations
   const buyTx = useCallback(async () => {
     try {
+      // Check if Para is still connected
+      if (!isConnected) {
+        toast({
+          title: 'Connection Error',
+          description: 'Please ensure your wallet is connected',
+          variant: 'destructive',
+        })
+        return
+      }
+
       toast({
         title: 'Preparing transaction...',
       })
 
+      // Verify wallet address is available
+      if (!wallet && !publicKey) {
+        throw new Error('Wallet address not found')
+      }
+      console.log('wallet ->', wallet)
+      setIsBuying(true)
+      console.log(' 🚨asset info ', asset.offChainData.reference)
       const response = await fetch('/api/protocol/buy', {
         method: 'POST',
         headers: {
@@ -125,146 +194,85 @@ export default function AssetInfo({ asset }: { asset: AssetInfo }) {
         },
         body: JSON.stringify({
           id: Number(asset.onChainData.id),
-          reference: asset.offChainData.reference,
-          publicKey: currentUser?.publicKey,
+          reference: '15202ST.OO.1240ST.06', // asset.offChainData.reference 
+          publicKey: publicKey ? publicKey.toString() : wallet,
           amount: amount,
           uri: asset.onChainData.watchUri,
         }),
       })
 
-      const { transaction } = await response.json()
-      return VersionedTransaction.deserialize(
-        Buffer.from(transaction, 'base64')
-      )
-    } catch (error) {
-      console.error('Error sending transaction:', error)
-      throw error
-    }
-  }, [asset, currentUser?.publicKey, amount, toast])
-
-  // const handleBuy = useCallback(async () => {
-  //   if (isBuying) return // Prevent multiple calls
-
-  //   setIsBuying(true)
-  //   try {
-  //     if (!rpc || !currentUser) {
-  //       throw new Error('Web3 provider not initialized')
-  //     }
-
-  //     const tx = await buyTx()
-  //     if (!tx) {
-  //       throw new Error('No transaction to sign')
-  //     }
-
-  //     setIsProcessing(true)
-  //     const signature = await signTransaction(tx)
-
-  //     if (!signature) {
-  //       throw new Error('Failed to sign transaction')
-  //     }
-
-  //     toast({
-  //       title: 'Transaction sent',
-  //       description: 'Transaction has been sent to the blockchain',
-  //     })
-
-  //     setIsComplete(true)
-  //   } catch (error) {
-  //     console.error('Buy transaction failed:', error)
-  //     toast({
-  //       title: 'Transaction Failed',
-  //       description:
-  //         error instanceof Error
-  //           ? error.message
-  //           : 'Failed to process transaction',
-  //       variant: 'destructive',
-  //     })
-  //   } finally {
-  //     setIsBuying(false)
-  //     setIsProcessing(false)
-  //   }
-  // }, [isBuying, rpc, currentUser, buyTx, signTransaction, toast])
-
-  const handleBuy = async () => {
-    console.log('handleBuy ->', web3auth)
-    if (!web3auth || !web3auth.provider) {
-      console.log('Web3 provider not initialized')
-      return
-    }
-    setIsBuying(true)
-    const rpc = new RPC(web3auth.provider!)
-    console.log('rpc ->', rpc)
-    const getAccounts = async () => {
-      const accounts = await rpc.getAccounts()
-      console.log('accounts ->', accounts)
-      return accounts
-    }
-
-    if (web3auth && web3auth.connected && web3auth.provider) {
-      const rpc = new RPC(web3auth.provider)
-      const accounts = await getAccounts()
-      console.log('userAccounts ->', accounts)
-      if (!accounts) {
-        console.error('No accounts found')
-        return
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.message || 'Failed to create transaction')
       }
-      const tx = await buyTx()
-      console.log('tx ->', tx) // VersionedTransaction
-      if (tx) {
-        setIsProcessing(true)
-        const signature = await rpc!.signVersionedTransaction({ tx })
-        console.log('signature ->', signature)
+
+      const { transaction } = await response.json()
+      console.log('transaction ->', transaction)
+      
+      // Convert the base64 transaction to a Buffer and deserialize as VersionedTransaction
+      const serializedTx = Buffer.from(transaction, 'base64')
+      const _txn = VersionedTransaction.deserialize(serializedTx)
+      console.log('deserialized transaction ->', _txn)
+      setIsProcessing(true)
+      if (!publicKey) {
+
+          try {
+            const sign = await signTransaction(_txn)
+            console.log('🚨 signed res ->', sign)
+            if (sign !== undefined) {
+              console.log('sign successful ->', sign)
+              const tx = await rpcManager.getConnection().sendTransaction(sign as VersionedTransaction)
+              console.log('tx ->', tx)
+            } else {
+              console.log('sign is undefined ->', sign)
+              const sim = await rpcManager.getConnection().simulateTransaction(_txn)
+              console.log('sim ->', sim)
+              setIsBuying(false)
+              setIsProcessing(false)
+              throw new Error('Transaction failed, please try again')
+            }
+          } catch (signError) {
+            console.error(`error signing txn`, signError)
+            throw signError
+          }
+        
+
         toast({
           title: 'Transaction sent',
           description: 'Transaction has been sent to the blockchain',
         })
+
         setIsBuying(false)
         setIsProcessing(false)
         setIsComplete(true)
+
+        return 
       } else {
-        console.error('Transaction is undefined')
+        console.log('publicKey ->', publicKey!.toString())
+        const sign = await sendTransaction?.(_txn, connection)
+        console.log('sign successful ->', sign)
+
+        toast({
+          title: 'Transaction sent',
+          description: 'Transaction has been sent to the blockchain',
+        })
+  
+        setIsBuying(false)
+        setIsProcessing(false)
+        setIsComplete(true)
+        return sign
       }
-    }
-  }
-
-  // Buy with Stripe
-  const asyncStripe = loadStripe(
-    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
-  )
-
-  const buyStripe = async () => {
-    try {
-      const idempotencyKey = uuid()
-      const encodedUri = encodeURIComponent(asset.onChainData.watchUri)
-
-      const stripe = await asyncStripe
-      const res = await fetch('/api/stripe', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Idempotency-Key': idempotencyKey,
-        },
-        body: JSON.stringify({
-          amount,
-          id: asset.offChainData.associatedId,
-          objectReference: asset.offChainData.reference,
-          object: asset.offChainData.mintAddress,
-          uri: encodedUri,
-        }),
-      })
-
-      const { sessionId } = await res.json()
-      sessionStorage.setItem('sessionId', sessionId)
-      await stripe?.redirectToCheckout({ sessionId })
     } catch (error) {
-      console.error('Stripe transaction failed:', error)
+      console.error('Error in buyTx:', error)
       toast({
-        title: 'Payment Failed',
-        description: 'Failed to process payment. Please try again.',
+        title: 'Transaction Failed',
+        description: error instanceof Error ? error.message : 'Failed to process transaction',
         variant: 'destructive',
       })
+      throw error
     }
-  }
+  }, [asset, wallet, amount, isConnected, signTransaction, toast])
+
 
   return (
     <section className="border-gray mb-5 rounded-3xl bg-white p-5">
@@ -354,28 +362,31 @@ export default function AssetInfo({ asset }: { asset: AssetInfo }) {
         </div>
 
         {/* Purchase Dialog */}
-        <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
-          <AlertDialogTrigger className="w-full rounded-2xl bg-black py-3 text-white md:w-2/3">
-            {`Buy ${amount} Fractions`}
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>
-                <div className="flex w-full flex-row items-center justify-between gap-4">
-                  <p className="text-lg font-semibold text-secondary">
-                    {!isComplete ? 'Confirm Purchase' : 'Thanks for buying'}
-                  </p>
-                  <AlertDialogCancel className="w-fit rounded-xl bg-primary text-secondary hover:bg-secondary hover:text-primary">
-                    X
-                  </AlertDialogCancel>
-                </div>
-              </AlertDialogTitle>
+        {isAuthenticated ? (
+          <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
+            <AlertDialogTrigger className="w-full rounded-2xl bg-black py-3 text-white md:w-2/3">
+              {`Buy ${amount} Fractions`}
+            </AlertDialogTrigger>
+            <AlertDialogContent className="w-[95%] rounded-lg">
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  <div className="flex w-full flex-row items-center justify-between gap-4">
+                    <p className="text-lg font-semibold text-secondary">
+                      {!isComplete ? 'Confirm Purchase' : 'Thanks for buying'}
+                    </p>
+                    <AlertDialogCancel className="w-fit rounded-xl bg-primary text-secondary hover:bg-secondary hover:text-primary">
+                      X
+                    </AlertDialogCancel>
+                  </div>
+                </AlertDialogTitle>
 
               {!isComplete ? (
-                <AlertDialogDescription>
+                <div className="space-y-4">
                   {/* Purchase Summary */}
-                  This action will purchase you {amount} fractions of the asset.
-                  Are you sure you want to continue?
+                  <div className="text-sm text-neutral-500 dark:text-neutral-400">
+                    This action will purchase you {amount} fractions of the asset.
+                    Are you sure you want to continue?
+                  </div>
                   <Separator className="my-2 bg-slate-300" />
                   {/* Asset Preview */}
                   <div className="flex flex-row items-center justify-between gap-4 px-4">
@@ -388,52 +399,52 @@ export default function AssetInfo({ asset }: { asset: AssetInfo }) {
                         className="border-gray mt-5 rounded-3xl border border-solid"
                       />
                       <div className="flex flex-col gap-2">
-                        <p className="text-lg font-semibold text-secondary">
+                        <div className="text-lg font-semibold text-secondary">
                           {asset.attributes[0].value} -{' '}
                           {asset.attributes[1].value}
-                        </p>
-                        <p className="text-sm text-secondary">
+                        </div>
+                        <div className="text-sm text-secondary">
                           x {amount} Fractions
-                        </p>
+                        </div>
                       </div>
                     </div>
-                    <p className="text-sm text-gray-500">
+                    <div className="text-sm text-gray-500">
                       ${Number(asset.onChainData.price)}
-                    </p>
+                    </div>
                   </div>
                   {/* Cost Breakdown */}
                   <Separator className="my-2 bg-slate-300" />
                   <div className="flex w-full flex-col items-center justify-between px-4">
                     <div className="flex w-full flex-row items-center justify-between gap-4 px-4">
-                      <p className="text-md text-secondary">Subtotal</p>
-                      <p className="text-md text-secondary">
+                      <div className="text-md text-secondary">Subtotal</div>
+                      <div className="text-md text-secondary">
                         ${amount * Number(asset.onChainData.price)}
-                      </p>
+                      </div>
                     </div>
                     <div className="flex w-full flex-row items-center justify-between gap-4 px-4">
-                      <p className="text-md text-secondary">Processing Fee</p>
-                      <p className="text-md text-secondary">
+                      <div className="text-md text-secondary">Processing Fee</div>
+                      <div className="text-md text-secondary">
                         ${amount * Number(asset.onChainData.price) * 0.04}
-                      </p>
+                      </div>
                     </div>
                     <div className="flex w-full flex-row items-center justify-between gap-4 px-4">
-                      <p className="text-md font-semibold text-secondary">
+                      <div className="text-md font-semibold text-secondary">
                         Purchase Total
-                      </p>
-                      <p className="text-md font-semibold text-secondary">
+                      </div>
+                      <div className="text-md font-semibold text-secondary">
                         $
                         {amount * Number(asset.onChainData.price) * 0.04 +
                           amount * Number(asset.onChainData.price)}
-                      </p>
+                      </div>
                     </div>
                   </div>
-                </AlertDialogDescription>
+                </div>
               ) : (
-                <AlertDialogDescription>
+                <div className="text-sm text-neutral-500 dark:text-neutral-400">
                   You just bought x {amount} Fractions of{' '}
                   {asset.attributes[0].value} - {asset.attributes[1].value}.
                   Welcome to the Artisan family!
-                </AlertDialogDescription>
+                </div>
               )}
             </AlertDialogHeader>
 
@@ -456,56 +467,62 @@ export default function AssetInfo({ asset }: { asset: AssetInfo }) {
                   <Separator className="bg-slate-300" />
                   <Button
                     className="w-full rounded-xl bg-secondary text-primary hover:bg-primary hover:text-secondary"
-                    onClick={handleBuy}
+                    onClick={buyTx}
                     // disabled={
                     //   !currentUser ||
                     //   balance.usdc < amount * Number(asset.onChainData.price)
                     // }
                   >
-                    Pay with crypto ( save $
-                    {amount * Number(asset.onChainData.price) * 0.04} )
+                    Buy
                   </Button>
-                  <Button
+                  {/*<Button
                     disabled={!currentUser}
                     className="w-full rounded-xl bg-secondary text-primary hover:bg-primary hover:text-secondary"
                     onClick={buyStripe}
                   >
                     <CreditCard className="mr-2" />
                     Pay with card
-                  </Button>
+                  </Button>*/}
 
                   {/* Login Prompt */}
                   {!currentUser && (
                     <div className="flex w-full flex-col items-center gap-2 rounded-2xl bg-red-500/20 py-2">
-                      {/* <LoginSecondary className="w-full" /> */}
                       Please login to continue
                     </div>
                   )}
                 </div>
               )}
 
-              {/* Post-Purchase Actions */}
-              {isComplete && (
-                <div className="flex w-full flex-col items-center justify-between gap-2 px-4">
-                  <div className="flex w-full flex-row items-center gap-4">
-                    <AlertDialogCancel
-                      className="w-1/3 rounded-xl bg-primary text-secondary hover:bg-primary hover:text-secondary"
-                      onClick={() => setIsComplete(false)}
-                    >
-                      Buy more
-                    </AlertDialogCancel>
-                    <AlertDialogAction
-                      className="w-2/3 rounded-xl bg-secondary text-primary hover:bg-primary hover:text-secondary"
-                      onClick={() => router.push('/dashboard')}
-                    >
-                      Take me to my dashboard
-                    </AlertDialogAction>
+                {/* Post-Purchase Actions */}
+                {isComplete && (
+                  <div className="flex w-full flex-col items-center justify-between gap-2 px-4">
+                    <div className="flex w-full flex-row items-center gap-4">
+                      <AlertDialogCancel
+                        className="w-1/3 rounded-xl bg-primary text-secondary hover:bg-primary hover:text-secondary"
+                        onClick={() => setIsComplete(false)}
+                      >
+                        Buy more
+                      </AlertDialogCancel>
+                      <AlertDialogAction
+                        className="w-2/3 rounded-xl bg-secondary text-primary hover:bg-primary hover:text-secondary"
+                        onClick={() => router.push('/dashboard')}
+                      >
+                        Take me to my dashboard
+                      </AlertDialogAction>
+                    </div>
                   </div>
-                </div>
-              )}
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+                )}
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        ) : (
+          <button 
+          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-black py-3 text-white md:w-2/3 hover:bg-gray-800"
+          onClick={() => openModal()}
+        >
+          Login to continue
+        </button>
+        )}
       </div>
     </section>
   )

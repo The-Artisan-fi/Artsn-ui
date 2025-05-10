@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, forwardRef } from 'react'
+import { useState, useEffect, forwardRef, Suspense, lazy } from 'react'
 import styles from '@/styles/cards/ExpertiseCard.module.css'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
@@ -15,8 +15,12 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel'
 import { Badge } from '@/components/ui/badge'
-import TagMonaco from '../three/TagMonaco'
-// import { motion, MotionProps } from 'framer-motion';
+import { Loader2 } from 'lucide-react'
+import { motion } from 'framer-motion'
+
+// Lazy load the TagMonaco component
+//const TagMonaco = lazy(() => import('../three/TagMonaco'))
+
 interface DefaultProps {
   id?: string
   className?: string
@@ -24,25 +28,25 @@ interface DefaultProps {
 }
 
 const cards = [
-  // {
-  //   primaryText: 'You invest into',
-  //   secondaryText: 'the asset of your choice',
-  //   image: '/products/watch.svg'
-  // },
+  {
+    primaryText: 'Expert Selection',
+    secondaryText: 'curated rare assets',
+    image: '/products/freak-watch.png'
+  },
   {
     primaryText: 'Authentication & Verification',
     secondaryText: 'certified by experts',
-    image: '/assets/home/checkmark.svg',
+    image: '/assets/home/checkmark.png',
   },
   {
     primaryText: 'Digital Transformation',
     secondaryText: 'divided into tradeable shares',
-    image: '/assets/home/fractions.svg',
+    image: '/assets/home/fractions.png',
   },
   {
     primaryText: 'Secure Storage',
     secondaryText: 'insured & stored in our vaults',
-    image: '/assets/home/safe.svg',
+    image: '/assets/home/safe.png',
   },
 ]
 
@@ -55,7 +59,7 @@ const ExpertiseCard = forwardRef((props: DefaultProps, ref: any) => {
       <Badge className="w-fit self-center border-zinc-200">
         <span className="text-2xl text-secondary">How it Works</span>
       </Badge>
-      <div className="swiper-container relative mb-5 hidden md:block">
+      <div className="swiper-container relative min-[420px]:mb-5 hidden md:block">
         <Swiper
           onSwiper={setThumbsSwiper} // Store the instance of the thumbs swiper in the state
           spaceBetween={15}
@@ -64,16 +68,22 @@ const ExpertiseCard = forwardRef((props: DefaultProps, ref: any) => {
           className="thumbs-swiper"
         >
           {/* <SwiperSlide className="border-gray rounded-2xl p-2 w-1/4"></SwiperSlide> */}
-          <SwiperSlide className="border-gray rounded-2xl p-2">
-            <Card className="h-[500px]">
+         {/*  <SwiperSlide className="border-gray rounded-2xl pt-2">
+            <Card className="h-[520px]">
               <CardContent className="flex aspect-square flex-col items-center justify-center p-6">
                 {/* <div className={styles.header}>
                   <p className="text-secondary text-xl mb-4 font-bold">
                     {1}
                   </p>
-                </div> */}
+                </div> 
                 <div className="mb-6 flex h-80">
-                  <TagMonaco />
+                  <Suspense fallback={
+                    <div className="flex h-full w-full items-center justify-center">
+                      <Loader2 className="h-12 w-12 animate-spin text-secondary" />
+                    </div>
+                  }>
+                    <TagMonaco />
+                  </Suspense>
                 </div>
                 <div className={styles.footer}>
                   <p className="text-xl font-bold text-secondary">
@@ -84,31 +94,41 @@ const ExpertiseCard = forwardRef((props: DefaultProps, ref: any) => {
                   </p>
                 </div>
               </CardContent>
-            </Card>
-          </SwiperSlide>
+            </Card> 
+          </SwiperSlide>*/}
           {cards.map((card, index) => (
-            <SwiperSlide key={index} className="border-gray rounded-2xl p-2">
-              <Card className="h-[500px]">
+            <SwiperSlide key={index} className="border-gray rounded-2xl pt-2">
+              <Card className="h-[520px]">
                 <CardContent className="flex aspect-square flex-col items-center justify-center p-6">
-                  {/* <div className={styles.header}>
-                    <p className="text-secondary text-xl mb-4 font-bold">
-                      {index + 1}
-                    </p>
-                  </div> */}
                   <div className="mb-6 flex h-80">
-                    <Image
-                      src={card.image}
-                      width={249}
-                      height={252}
-                      alt={card.primaryText}
-                      className="h-full"
-                    />
+                    <div className="flex h-full w-full items-center justify-center">
+                      <motion.div
+                        initial={{ scale: 1 }}
+                        whileHover={{ scale: index === 0 ? 1.2 : 1.15 }}
+                        transition={{
+                          type: 'spring',
+                          stiffness: 400,
+                          damping: 15,
+                          restDelta: 0.0000001,
+                        }}
+                      >
+                        <Image
+                          src={card.image}
+                          width={249}
+                          height={252}
+                          alt={card.primaryText}
+                          className="h-auto"
+                          sizes="(max-width: 768px) 100vw, 249px"
+                          quality={100}
+                        />
+                      </motion.div>
+                    </div>
                   </div>
-                  <div className={styles.footer}>
-                    <p className="text-xl font-bold text-secondary">
+                  <div className={`${styles.footer} text-center`}>
+                    <p className="text-center text-xl font-bold text-secondary">
                       {card.primaryText}
                     </p>
-                    <p className="text-xl text-slate-500">
+                    <p className="text-center text-xl text-slate-500">
                       {card.secondaryText}
                     </p>
                   </div>
@@ -118,7 +138,7 @@ const ExpertiseCard = forwardRef((props: DefaultProps, ref: any) => {
           ))}
         </Swiper>
       </div>
-      <div className="swiper-container relative mb-5 md:hidden">
+      <div className="swiper-container relative min-[420px]:mb-5 md:hidden">
         <Swiper
           onSwiper={setThumbsSwiper} // Store the instance of the thumbs swiper in the state
           spaceBetween={15}
@@ -126,50 +146,38 @@ const ExpertiseCard = forwardRef((props: DefaultProps, ref: any) => {
           watchSlidesProgress // Keep track of which thumbnail is active
           className="thumbs-swiper"
         >
-          <SwiperSlide className="border-gray rounded-2xl p-2">
-            <Card>
-              <CardContent className="flex aspect-square flex-col items-center justify-center p-6">
-                {/* <div className={styles.header}>
-                  <p className="text-secondary text-xl mb-4 font-bold">
-                    {1}
-                  </p>
-                </div> */}
-                <div className="flex h-80">
-                  <TagMonaco />
-                </div>
-                <div className="flex flex-col">
-                  <p className="text-center text-xl font-bold text-secondary">
-                    {'Expert Selection'}
-                  </p>
-                  <p className="text-center text-xl font-bold text-slate-500">
-                    {'curated rare assets'}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </SwiperSlide>
           {cards.map((card, index) => (
             <SwiperSlide
               key={index}
               className="border-gray rounded-2xl p-2 font-bold"
             >
               <Card>
-                <CardContent className="flex aspect-square flex-col items-center justify-center p-6">
-                  {/* <div className={styles.header}>
-                    <p className="text-secondary text-xl mb-4">
-                      {index + 1}
-                    </p>
-                  </div> */}
+                <CardContent className="flex aspect-square flex-col items-center justify-center p-6 gap-7 sm:gap-13 md:gap-7">
                   <div className="flex h-80">
-                    <Image
-                      src={card.image}
-                      width={249}
-                      height={252}
-                      alt={card.primaryText}
-                      className="h-full"
-                    />
+                    <div className="flex h-full w-full items-center justify-center">
+                      <motion.div
+                        initial={{ scale: 1 }}
+                        whileHover={{ scale: 1.3 }}
+                        transition={{
+                          type: 'spring',
+                          stiffness: 400,
+                          damping: 15,
+                          restDelta: 0.0000001,
+                        }}
+                      >
+                        <Image
+                          src={card.image}
+                          width={324}
+                          height={328}
+                          alt={card.primaryText}
+                          className="h-auto"
+                          sizes="(max-width: 768px) 100vw, 324px"
+                          quality={100}
+                        />
+                      </motion.div>
+                    </div>
                   </div>
-                  <div className={styles.footer}>
+                  <div className={`${styles.footer} text-center`}>
                     <p className="text-center text-xl font-bold text-secondary">
                       {card.primaryText}
                     </p>

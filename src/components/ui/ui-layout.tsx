@@ -16,7 +16,9 @@ import { NavbarWrapper } from '../navbar/NavbarWrapper'
 //   ExplorerLink,
 // } from '../cluster/cluster-ui';
 // import toast, { Toaster } from 'react-hot-toast';
-export function UiLayout({
+
+// Create a separate component that uses useSearchParams
+function UiLayoutContent({
   children,
   links,
 }: {
@@ -41,22 +43,34 @@ export function UiLayout({
 
   return (
     <div className="overflow-none flex h-full w-full flex-col items-center bg-bg">
-      {/* <Navbar searchParams={searchParams} links={links} scrollThreshold={1} blurAmount={400} /> */}
-      <NavbarWrapper links={links} searchParams={searchParams as any} />
-      <div className="mx-4 w-full flex-grow lg:mx-auto">
-        <Suspense
-          fallback={
-            <div className="my-32 text-center">
-              <span className="loading loading-spinner loading-lg"></span>
-            </div>
-          }
-        >
+      <NavbarWrapper links={links} />
+      <div className="mx-4 w-full flex-grow lg:mx-auto">       
           {children}
-        </Suspense>
         {/* <Toaster position="bottom-right" /> */}
       </div>
       <Footer />
     </div>
+  )
+}
+
+// Main UiLayout component that wraps the content in Suspense
+export function UiLayout({
+  children,
+  links,
+}: {
+  children: ReactNode
+  links: { label: string; path: string }[]
+}) {
+  return (
+    <Suspense
+      fallback={
+        <div className="my-32 text-center">
+          <span className="loading loading-spinner loading-lg"></span>
+        </div>
+      }
+    >
+      <UiLayoutContent links={links}>{children}</UiLayoutContent>
+    </Suspense>
   )
 }
 

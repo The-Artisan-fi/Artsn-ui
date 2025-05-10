@@ -28,11 +28,11 @@ type SocialIcon = {
   label: string
 }
 
-const MotionCard = motion(Card)
-const MotionAvatar = motion(Avatar)
+const MotionCard = motion.create(Card)
+const MotionAvatar = motion.create(Avatar)
 
 const MemberCard = ({ member, index }: { member: Member; index: number }) => {
-  const MotionLink = motion('a')
+  const MotionLink = motion.create('a')
 
   return (
     <motion.div

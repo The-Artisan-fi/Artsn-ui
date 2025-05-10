@@ -94,33 +94,8 @@ interface DefaultProps {
 }
 
 const ChartC = (props: DefaultProps) => {
-  const [timeRange, setTimeRange] = useState('5Y')
-
-  // Memoize filtered data
-  const filteredData = useMemo(() => {
-    return chartData.filter((item) => {
-      const date = new Date(item.date)
-      const now = new Date()
-      let yearsToSubtract = 5
-
-      switch (timeRange) {
-        case '1Y':
-          yearsToSubtract = 1
-          break
-        case '3Y':
-          yearsToSubtract = 3
-          break
-        case 'ALL':
-          return true
-        default:
-          yearsToSubtract = 5
-      }
-
-      const cutoffDate = new Date()
-      cutoffDate.setFullYear(cutoffDate.getFullYear() - yearsToSubtract)
-      return date >= cutoffDate
-    })
-  }, [timeRange])
+  // Remove timeRange state and use all data directly
+  const filteredData = useMemo(() => chartData, []);
 
   // Memoize tooltip formatter
   const tooltipFormatter = useCallback((value: any, name: any) => {
@@ -140,161 +115,108 @@ const ChartC = (props: DefaultProps) => {
     }
   }, [])
 
-  // Memoize ChartTooltipContent
-  const tooltipContent = useMemo(
-    () => (
-      <ChartTooltipContent
-        labelFormatter={tooltipLabelFormatter}
-        formatter={tooltipFormatter}
-        indicator="dot"
-        style={{
-          backgroundColor: 'rgba(255, 255, 255, 0.95)',
-          border: '1px solid #E5E7EB',
-          borderRadius: '6px',
-          padding: '8px 12px',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-        }}
-      />
-    ),
-    [tooltipFormatter]
-  )
-
-  // Memoize ChartLegendContent
-  const legendContent = useMemo(
-    () => (
-      <ChartLegendContent>
-        <div style={{ color: '#D4AF37' }}>Watches</div>
-        <div style={{ color: '#3B3B3D' }}>Cars</div>
-        <div style={{ color: '#936B45' }}>S&P 500</div>
-      </ChartLegendContent>
-    ),
-    []
-  )
   return (
-    <Card className={`${props.className}`}>
-      <CardHeader>
-        <CardTitle className="justify-left items-left mb-4 flex w-full flex-col gap-4 text-left text-secondary">
-          <p>{`Luxury Asset Performance Comparison (2018-2024)`}</p>
-          <div className="flex w-full flex-row items-center justify-between">
-            <div className="flex flex-col">
-              <p className="text-xs">Current Market Value</p>
-              <p className="text-xl">
-                $35B
-                <span className="mx-2 text-xs">Total Market</span>
-              </p>
-              <p className="text-xl">
-                +$3B
-                <span className="mx-2 text-xs">Previous Year</span>
-              </p>
+    <Card className={`${props.className} overflow-hidden border-0 shadow-md bg-white/90 backdrop-blur-sm`}>
+      <CardHeader className="pb-0">
+        <div className="flex justify-between items-start w-full">
+          <CardTitle className="justify-left items-left mb-4 flex w-full flex-col gap-2 text-left">
+            <p className="text-xl font-bold text-secondary tracking-tight">Luxury Asset Performance Comparison</p>
+            <p className="text-sm font-medium text-muted-foreground">2018-2024</p>
+          </CardTitle>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
+          <div className="flex flex-col p-3 rounded-lg bg-gray-50">
+            <p className="text-xs text-muted-foreground">Current Market Value</p>
+            <div className="flex items-baseline">
+              <p className="text-xl font-bold">$35B</p>
+              <span className="mx-2 text-xs text-muted-foreground">Total Market</span>
             </div>
-            <div className="flex flex-col">
-              <p className="text-xs">Market Performance </p>
-              <p className="text-xl">
-                +20%
-                <span className="mx-2 text-xs">Annual Growth</span>
-              </p>
-              <p className="text-xl">
-                +207%
-                <span className="mx-2 text-xs">Since 2018</span>
-              </p>
-            </div>
-            <div className="flex flex-col">
-              <p className="text-xs">Top performing segments</p>
-              <p className="text-xl">Premium Timepieces</p>
-              <p className="text-sm">(Patek Philippe & Rolex)</p>
+            <div className="flex items-baseline">
+              <p className="text-lg font-semibold text-emerald-600">+$3B</p>
+              <span className="mx-2 text-xs text-muted-foreground">Previous Year</span>
             </div>
           </div>
-        </CardTitle>
-        {/* <CardDescription>January - June 2024</CardDescription> */}
+          <div className="flex flex-col p-3 rounded-lg bg-gray-50">
+            <p className="text-xs text-muted-foreground">Market Performance</p>
+            <div className="flex items-baseline">
+              <p className="text-xl font-bold text-emerald-600">+20%</p>
+              <span className="mx-2 text-xs text-muted-foreground">Annual Growth</span>
+            </div>
+            <div className="flex items-baseline">
+              <p className="text-lg font-semibold text-emerald-600">+207%</p>
+              <span className="mx-2 text-xs text-muted-foreground">Since 2018</span>
+            </div>
+          </div>
+          <div className="flex flex-col p-3 rounded-lg bg-gray-50">
+            <p className="text-xs text-muted-foreground">Top Performing Segments</p>
+            <p className="text-xl font-bold">Premium Timepieces</p>
+            <p className="text-sm text-muted-foreground">(Patek Philippe & Rolex)</p>
+          </div>
+        </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-6">
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[105px] w-full md:h-[220px]"
+          className="aspect-auto h-[180px] w-full md:h-[300px]"
         >
           <AreaChart data={filteredData}>
             <defs>
               <linearGradient id="fillWatches" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#D4AF37" stopOpacity={0.2} />
-                <stop offset="95%" stopColor="#D4AF37" stopOpacity={0.05} />
+                <stop offset="5%" stopColor="#D4AF37" stopOpacity={0.4} />
+                <stop offset="95%" stopColor="#D4AF37" stopOpacity={0.01} />
               </linearGradient>
               <linearGradient id="fillCars" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#3B3B3D" stopOpacity={0.2} />
-                <stop offset="95%" stopColor="#3B3B3D" stopOpacity={0.05} />
+                <stop offset="5%" stopColor="#3B3B3D" stopOpacity={0.4} />
+                <stop offset="95%" stopColor="#3B3B3D" stopOpacity={0.01} />
               </linearGradient>
               <linearGradient id="fillStocks" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#936B45" stopOpacity={0.2} />
-                <stop offset="95%" stopColor="#936B45" stopOpacity={0.05} />
+                <stop offset="5%" stopColor="#936B45" stopOpacity={0.4} />
+                <stop offset="95%" stopColor="#936B45" stopOpacity={0.01} />
               </linearGradient>
+              <filter id="shadow" height="200%">
+                <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#000" floodOpacity="0.1" />
+              </filter>
             </defs>
-            <CartesianGrid vertical={false} />
+            <CartesianGrid vertical={false} strokeDasharray="5 5" stroke="rgba(0,0,0,0.05)" />
             <XAxis
               dataKey="date"
               tickLine={false}
-              axisLine={true}
+              axisLine={{ stroke: "rgba(0,0,0,0.1)" }}
               tickMargin={12}
               minTickGap={50}
               tickFormatter={dateFormatter}
               style={{
                 fontSize: '12px',
+                fontWeight: 500,
                 fontFamily: 'Inter, sans-serif',
                 color: '#6B7280',
               }}
             />
             <YAxis
               tickLine={false}
-              axisLine={true}
-              // axisLineColor="#E5E7EB"
+              axisLine={{ stroke: "rgba(0,0,0,0.1)" }}
               tickMargin={8}
               tickFormatter={(value) => `${value}%`}
               style={{
                 fontSize: '12px',
+                fontWeight: 500,
                 fontFamily: 'Inter, sans-serif',
                 color: '#6B7280',
               }}
             />
             <ChartTooltip
-              cursor={false}
+              cursor={{ stroke: 'rgba(0,0,0,0.1)', strokeWidth: 1, strokeDasharray: '3 3' }}
               content={
                 <ChartTooltipContent
-                  labelFormatter={(value) => {
-                    const date = new Date(value)
-                    return date.toLocaleDateString('en-US', {
-                      month: 'long',
-                      year: 'numeric',
-                    })
-                  }}
-                  formatter={(value, name) => {
-                    // Calculate percentage from baseline (100)
-                    const baselineValue = 100
-                    const percentageChange =
-                      ((Number(value) - baselineValue) / baselineValue) * 100
-
-                    // Format based on asset type
-                    switch (name) {
-                      case 'Watches':
-                        return [
-                          `${percentageChange.toFixed(1)}%`,
-                          'Watches Performance',
-                        ]
-                      case 'Cars':
-                        return [
-                          `${percentageChange.toFixed(1)}%`,
-                          'Classic Cars',
-                        ]
-                      case 'stocks':
-                        return [`${percentageChange.toFixed(1)}%`, 'S&P 500']
-                      default:
-                        return [`${percentageChange.toFixed(1)}%`, name]
-                    }
-                  }}
+                  labelFormatter={tooltipLabelFormatter}
+                  formatter={tooltipFormatter}
                   indicator="dot"
                   style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                    border: '1px solid #E5E7EB',
-                    borderRadius: '6px',
-                    padding: '8px 12px',
-                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.98)',
+                    border: '1px solid rgba(0,0,0,0.05)',
+                    borderRadius: '12px',
+                    padding: '10px 14px',
+                    boxShadow: '0 8px 20px rgba(0,0,0,0.08)',
                   }}
                 />
               }
@@ -302,118 +224,146 @@ const ChartC = (props: DefaultProps) => {
 
             <ReferenceLine
               x="2020-03"
-              stroke="#CBD5E1"
+              stroke="rgba(203, 213, 225, 0.5)"
               strokeDasharray="3 3"
               label={{
                 value: 'COVID Impact',
                 position: 'top',
-                style: { fontSize: '12px', fill: '#6B7280' },
+                style: { fontSize: '12px', fill: '#6B7280', fontWeight: 500 },
               }}
             />
 
             <ReferenceDot
               x="2022-06"
-              y={347}
-              r={4}
+              y={270}
+              r={6}
               fill="#D4AF37"
-              stroke="none"
+              stroke="white"
+              strokeWidth={2}
+              filter="url(#shadow)"
               label={{
                 value: 'Peak Performance',
                 position: 'top',
-                style: { fontSize: '12px', fill: '#6B7280' },
+                style: { fontSize: '12px', fill: '#6B7280', fontWeight: 500 },
               }}
             />
 
-            {/* <Area
-              dataKey="watches"
-              type="monotone" // Changed from natural for smoother lines
-              fill="url(#fillWatches)"
-              stroke="#D4AF37"
-              strokeWidth={2}
-              activeDot={{
-                r: 6,
-                stroke: "#D4AF37",
-                strokeWidth: 2,
-                fill: "white"
-              }}
-            /> */}
             <Area
               dataKey="watches"
-              type="monotone"
+              type="natural"
               fill="url(#fillWatches)"
               stroke="#D4AF37"
-              strokeWidth={2}
-              isAnimationActive={false}
+              strokeWidth={3}
+              animationDuration={2000}
+              animationEasing="ease-in-out"
               activeDot={{
-                r: 6,
+                r: 8,
                 stroke: '#D4AF37',
                 strokeWidth: 2,
                 fill: 'white',
+                strokeDasharray: '',
+                filter: 'url(#shadow)'
               }}
               name="Watches"
             />
             <Area
               dataKey="cars"
-              type="monotone"
+              type="natural"
               fill="url(#fillCars)"
               stroke="#3B3B3D"
-              strokeWidth={2}
-              isAnimationActive={false}
+              strokeWidth={3}
+              animationDuration={2000}
+              animationBegin={300}
+              animationEasing="ease-in-out"
               activeDot={{
-                r: 6,
+                r: 8,
                 stroke: '#3B3B3D',
                 strokeWidth: 2,
                 fill: 'white',
+                strokeDasharray: '',
+                filter: 'url(#shadow)'
               }}
               name="Cars"
             />
             <Area
               dataKey="stocks"
-              type="monotone"
+              type="natural"
               fill="url(#fillStocks)"
               stroke="#936B45"
-              strokeWidth={2}
-              isAnimationActive={false}
+              strokeWidth={3}
+              animationDuration={2000}
+              animationBegin={600}
+              animationEasing="ease-in-out"
               activeDot={{
-                r: 6,
+                r: 8,
                 stroke: '#936B45',
                 strokeWidth: 2,
                 fill: 'white',
+                strokeDasharray: '',
+                filter: 'url(#shadow)'
               }}
               name="S&P 500"
             />
             <ChartLegend
+              verticalAlign="top"
+              align="right"
+              iconSize={14}
+              iconType="circle"
+              wrapperStyle={{ paddingBottom: '20px' }}
               content={
                 <ChartLegendContent>
-                  <div style={{ color: '#D4AF37' }}>Watches</div>
-                  <div style={{ color: '#3B3B3D' }}>Cars</div>
-                  <div style={{ color: '#936B45' }}>S&P 500</div>
+                  <div className="flex gap-6 px-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: '#D4AF37' }}></div>
+                      <span className="text-sm font-medium">Watches</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: '#3B3B3D' }}></div>
+                      <span className="text-sm font-medium">Cars</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: '#936B45' }}></div>
+                      <span className="text-sm font-medium">S&P 500</span>
+                    </div>
+                  </div>
                 </ChartLegendContent>
               }
             />
           </AreaChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="mt-4 flex flex-col gap-4">
-        <div className="grid grid-cols-3 gap-4">
-          <div className="text-center">
-            <p className="text-sm font-medium">Best Performer</p>
-            <p className="text-2xl font-bold text-[#D4AF37]">+207%</p>
-            <p className="text-xs text-gray-500">Premium Watches</p>
+      <CardFooter className="mt-4 flex flex-col gap-6 border-t pt-6">
+        <div className="grid grid-cols-3 gap-6">
+          <div className="flex flex-col items-center text-center">
+            <p className="text-sm font-medium text-muted-foreground">Best Performer</p>
+            <p className="text-3xl font-bold text-[#D4AF37]">+207%</p>
+            <p className="text-xs text-muted-foreground">Premium Watches</p>
           </div>
-          <div className="text-center">
-            <p className="text-sm font-medium">Market Size</p>
-            <p className="text-2xl font-bold">$35B</p>
-            <p className="text-xs text-gray-500">Total Value</p>
+          <div className="flex flex-col items-center text-center">
+            <div className="hidden md:block">
+              <p className="text-sm font-medium text-muted-foreground">Market Size</p>
+            </div>
+            <div className="block md:hidden">
+              <p className="text-sm font-medium text-muted-foreground">Market</p>
+              <p className="text-sm font-medium text-muted-foreground">Cap Size</p>
+            </div>
+            <p className="text-3xl font-bold">$35B</p>
+            <p className="text-xs text-muted-foreground">Total Value</p>
           </div>
-          <div className="text-center">
-            <p className="text-sm font-medium">Annual Growth</p>
-            <p className="text-2xl font-bold">+20%</p>
-            <p className="text-xs text-gray-500">Year over Year</p>
+          <div className="flex flex-col items-center text-center">
+            <div className="hidden md:block">
+              <p className="text-sm font-medium text-muted-foreground">Annual Growth</p>
+            </div>
+            <div className="block md:hidden">
+              <p className="text-sm font-medium text-muted-foreground">Annual</p>
+              <p className="text-sm font-medium text-muted-foreground">Growth</p>
+            </div>
+            <p className="text-3xl font-bold text-emerald-600">+20%</p>
+            <p className="text-xs text-muted-foreground">Year over Year</p>
           </div>
         </div>
 
-        <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
+        <div className="w-full flex items-center justify-between text-xs text-muted-foreground">
           <p>Data sources: Knight Frank Luxury Investment Index, HAGI Index</p>
           <p>* Past performance does not guarantee future returns</p>
         </div>

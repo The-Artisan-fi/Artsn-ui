@@ -1,20 +1,37 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { connectToDatabase } from '@/config/mongodb'
+import { getDb } from '@/config/mongodb'
 import { ObjectId } from 'mongodb'
 
-export async function POST(_req: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    // Check origin
-    const _ = await _req.json()
+    // Check if request body exists
+    if (!req.body) {
+      return NextResponse.json(
+        { error: 'Request body is required' },
+        { status: 400 }
+      )
+    }
 
-    // TODO() - Fix this, some issue with the API key
-    // Check API key
-    // const apiKey = _req.headers.get('x-api-key');
-    // if (apiKey !== API_KEY) {
-    //     return NextResponse.json({ error: 'Invalid API key' }, { status: 401 });
-    // }
+    // Parse request body
+    let body
+    try {
+      body = await req.json()
+    } catch (error) {
+      return NextResponse.json(
+        { error: 'Invalid JSON in request body' },
+        { status: 400 }
+      )
+    }
 
-    const { db } = await connectToDatabase()
+    // Validate required fields
+    if (!body.id) {
+      return NextResponse.json(
+        { error: 'id is required in request body' },
+        { status: 400 }
+      )
+    }
+
+    const db = await getDb()
     if (!db) {
       throw new Error('Database connection not available')
     }
@@ -25,12 +42,11 @@ export async function POST(_req: NextRequest) {
     }
 
     // Fetch IP assets with status 'registered', limit to 10
-    const _asset = await collection.findOne({ associatedId: _.id })
+    const _asset = await collection.findOne({ associatedId: body.id })
 
     if (!_asset) {
       return NextResponse.json({ error: 'Asset not found' }, { status: 404 })
     }
-    console.log('asset', _asset)
 
     return NextResponse.json({ asset: _asset }, { status: 200 })
   } catch (error) {

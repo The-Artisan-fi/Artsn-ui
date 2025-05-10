@@ -1,5 +1,5 @@
 import { motion, MotionProps } from 'framer-motion'
-import { ElementType, HTMLAttributes, ReactNode } from 'react'
+import { ElementType, HTMLAttributes, ReactNode, createElement } from 'react'
 
 interface Props extends HTMLAttributes<HTMLElement> {
   as?: ElementType
@@ -19,12 +19,12 @@ const Wrapper = ({
 }: Props & MotionProps) => {
   if (animate) {
     // @ts-ignore
-    const MotionTag = motion(as)
+    const MotionTag = motion.create(as)
 
     return (
       <MotionTag
         id={id}
-        className={`flex flex-col justify-center md:py-16 ${className}`}
+        className={`flex flex-col justify-center md:py-0 lg:py-16 ${className}`}
         {...rest}
       >
         {children}
@@ -44,16 +44,14 @@ const Wrapper = ({
     )
   }
 
-  const CustomTag = `${as}` as ElementType
-
-  return (
-    <CustomTag
-      id={id}
-      className={`flex flex-col justify-center py-24 md:py-32 ${className}`}
-      {...rest}
-    >
-      {children}
-    </CustomTag>
+  return createElement(
+    as,
+    {
+      id,
+      className: `flex flex-col justify-center py-24 md:py-32 ${className}`,
+      ...rest
+    },
+    children
   )
 }
 

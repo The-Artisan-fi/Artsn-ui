@@ -19,14 +19,14 @@ interface ProductData {
   attributes: any[]
 }
 
-const ProductFeature: React.FC<{ params: { id: string } }> = ({ params }) => {
+const ProductFeature: React.FC<{ productId: string }> = ({ productId }) => {
   const [onChainData, setOnChainData] = useState<any>(null)
   const [offChainData, setOffChainData] = useState<any>(null)
   const [attributes, setAttributes] = useState<any[]>([])
   const [productData, setProductData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const { listingQuery, loading: isListingLoading } = useArtisanProgramAccount({
-    account: new PublicKey(params.id),
+    account: new PublicKey(productId),
   })
 
   const fetchOffChainData = async (id: string) => {
@@ -54,10 +54,10 @@ const ProductFeature: React.FC<{ params: { id: string } }> = ({ params }) => {
   }
 
   useEffect(() => {
-    if (params.id) {
-      fetchOffChainData(params.id)
+    if (productId) {
+      fetchOffChainData(productId)
     }
-  }, [params.id])
+  }, [productId])
 
   useEffect(() => {
     if (!isListingLoading && listingQuery.data) {

@@ -35,15 +35,15 @@ const PerformanceCard = () => {
         </p>
       </TransparentCard>
 
-      {/* <div className='flex flex-col w-full gap-12 md:gap-0 md:w-8/12 self-center items-center md:flex-row'>
+       <div className='flex flex-col w-full gap-12 md:gap-0 md:w-11/12 self-center items-center md:flex-row'>
             
-            <Card1 className='sm:w-11/12 md:w-1/2 h-96 mx-auto self-center justify-between flex flex-col'/> 
+            <Card1 className='w-11/12 md:w-1/2 h-96 self-center justify-between flex flex-col'/> 
 
             <TopPerformerCard className='w-11/12 md:w-1/4 h-96 self-center min-h-max justify-center items-center flex flex-col mx-2'/>
             <TopPerformer2Card className='w-11/12 md:w-1/4 h-96 self-center min-h-max justify-center items-center flex flex-col mx-2'/>
-        </div> */}
+        </div>
 
-      <ChartC className="h-120 w-11/12 self-center overflow-hidden md:w-8/12" />
+      <ChartC className="h-120 w-11/12 self-center overflow-hidden" />
     </TransparentCard>
   )
 }
@@ -64,8 +64,10 @@ const TopPerformerCard = (props: DefaultProps) => {
           src={'/products/patek-cubitus.jpg'}
           width={200}
           height={200}
-          alt="top performer icon"
+          alt="Patek Philippe luxury watch"
           className="h-full w-full object-contain"
+          sizes="(max-width: 768px) 100vw, 200px"
+          quality={100}
         />
       </CardContent>
       <CardFooter className="flex h-1/4 flex-col items-center justify-center">
@@ -89,7 +91,8 @@ const TopPerformer2Card = (props: DefaultProps) => {
           width={100}
           height={100}
           className="h-full w-full object-contain"
-          alt="top performer icon"
+          alt="Ferrari luxury car"
+          sizes="(max-width: 768px) 100vw, 100px"
         />
       </CardContent>
       <CardFooter className="flex h-1/4 flex-col items-center justify-center">
@@ -115,11 +118,12 @@ const PastPerformanceChartCard = (props: DefaultProps) => {
         </CardHeader> */}
       <CardContent className="flex flex-col items-center justify-center gap-4 py-4">
         <Image
-          src={'/products/car.svg'}
+          src={'/products/car2.svg'}
           width={400}
           height={400}
-          alt="top performer icon"
+          alt="Super Car performance chart"
           className="pt-12"
+          sizes="(max-width: 768px) 100vw, 400px"
         />
       </CardContent>
       <CardFooter className="flex flex-col items-center justify-center">

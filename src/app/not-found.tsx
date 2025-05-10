@@ -1,6 +1,5 @@
-// import "@/styles/404.scss";
-import Image from 'next/image'
-import dynamic from 'next/dynamic'
+import "@/styles/404.css";
+import Link from 'next/link'
 
 export default function Custom404() {
   return (
@@ -12,6 +11,9 @@ export default function Custom404() {
             <span className="heading-primary--sub">Page not found</span>
           </h1>
         </div>
+        <Link href="/" className="not-found__button">
+          Return to Home
+        </Link>
       </div>
     </div>
   )

@@ -19,8 +19,10 @@ interface AuthState {
 
   // User state
   currentUser: User | null
-  authToken: string | null
+  authToken: string | null  // Para session
+  jwtToken: string | null  // JWT token
   isAuthenticated: boolean
+  showRegisterForm: { publicKey: string; userInfo: { email?: string } } | null
 
   // Loading states
   loading: boolean
@@ -31,6 +33,7 @@ interface AuthState {
   setProvider: (provider: IProvider | null) => void
   setUserInfo: (info: AuthState['userInfo']) => void
   setPublicKey: (key: string | null) => void
+  setIsAuthenticated: (isAuthenticated: boolean) => void
   setCurrentUser: (user: User | null) => void
   setAuthToken: (token: string | null) => void
   setLoading: (loading: boolean) => void
@@ -44,6 +47,7 @@ interface AuthState {
   logout: () => void
   resetAuth: () => void
   clearAuth: () => void
+  setShowRegisterForm: (data: { publicKey: string; userInfo: { email?: string } } | null) => void
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -57,11 +61,15 @@ export const useAuthStore = create<AuthState>()(
       userInfo: null,
       currentUser: null,
       authToken: null,
+      jwtToken: null,
       isAuthenticated: false,
+      paraSession: null,
       loading: false,
       error: null,
+      showRegisterForm: null,
 
       // Actions
+      setShowRegisterForm: (data) => set({ showRegisterForm: data }),
       setWeb3Auth: (web3auth) => set({ web3auth }),
       setProvider: (provider) => set({ provider }),
       setUserInfo: (info) => set({ userInfo: info }),
@@ -74,6 +82,7 @@ export const useAuthStore = create<AuthState>()(
       setAuthToken: (token) => set({ authToken: token }),
       setLoading: (loading) => set({ loading }),
       setError: (error) => set({ error }),
+      setIsAuthenticated: (isAuthenticated) => set({ isAuthenticated }),
       setWeb3AuthState: (state) =>
         set((prev) => ({
           ...prev,
@@ -92,13 +101,15 @@ export const useAuthStore = create<AuthState>()(
           return
         }
         const { token, user } = auth
-        set({
-          authToken: token,
+        set((state) => ({
+          // Preserve the existing authToken (Para session) and store JWT token separately
+          authToken: state.authToken,  // Keep the Para session
+          jwtToken: token,  // Store JWT token separately
           currentUser: user,
           isAuthenticated: true,
           loggedIn: true,
           publicKey: user.publicKey,
-        })
+        }))
       },
       logout: () => {
         localStorage.removeItem('authToken')
@@ -110,6 +121,7 @@ export const useAuthStore = create<AuthState>()(
           userInfo: null,
           currentUser: null,
           authToken: null,
+          jwtToken: null,
           isAuthenticated: false,
           loggedIn: false,
           error: null,
@@ -121,21 +133,23 @@ export const useAuthStore = create<AuthState>()(
           userInfo: null,
           currentUser: null,
           authToken: null,
+          jwtToken: null,
           isAuthenticated: false,
           loggedIn: false,
           error: null,
         }),
-      clearAuth: () => set({ currentUser: null, authToken: null }),
+      clearAuth: () => set({ currentUser: null, authToken: null, jwtToken: null }),
     }),
     {
       name: 'auth-storage',
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         authToken: state.authToken,
+        jwtToken: state.jwtToken,
         currentUser: state.currentUser,
         publicKey: state.publicKey,
         userInfo: state.userInfo,
-        loggedIn: state.loggedIn, // Added to persisted state
+        loggedIn: state.loggedIn,
       }),
     }
   )

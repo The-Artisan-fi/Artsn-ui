@@ -13,14 +13,7 @@ const User = new mongoose.Schema({
   isVerified: Boolean,
   createdAt: Date,
   updatedAt: Date,
-  baseProfile: {
-    displayName: String,
-    displayRole: String,
-    photoUrl: String,
-    bio: String,
-    createdAt: Date,
-    updatedAt: Date,
-  },
+  paraSession: String,
   kycInfo: {
     idvId: String,
     kycStatus: String,
@@ -35,4 +28,7 @@ const User = new mongoose.Schema({
   },
 })
 
-export const UserModel = mongoose.model('User', User)
+// Prevent model recompilation in development mode
+const UserModel = mongoose.models.User || mongoose.model('User', User)
+
+export { UserModel }

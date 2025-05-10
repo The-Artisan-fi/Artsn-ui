@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+/*import React, { useState, useEffect } from 'react'
 import { useSolanaPrice } from '@/hooks/use-solana-price'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -64,7 +64,7 @@ const SolanaConverter = () => {
           <div className="text-red-500">Error: {error.message}</div>
         ) : (
           <>
-            {/* Current Price */}
+            {/* Current Price 
             <div className="space-y-2">
               <div className="text-3xl font-bold">
                 {currentPrice ? formatUsd(currentPrice) : '-'}
@@ -92,7 +92,7 @@ const SolanaConverter = () => {
               </div>
             </div>
 
-            {/* Converter */}
+            {/* Converter 
             <div className="space-y-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium">SOL Amount</label>
@@ -118,7 +118,7 @@ const SolanaConverter = () => {
               </div>
             </div>
 
-            {/* 24h Range */}
+            {/* 24h Range 
             <div className="space-y-2">
               <div className="text-sm font-medium">24h Range</div>
               <div className="flex justify-between text-sm">
@@ -127,7 +127,7 @@ const SolanaConverter = () => {
               </div>
             </div>
 
-            {/* Last Update */}
+            {/* Last Update 
             {lastUpdate && (
               <div className="text-xs text-gray-500">
                 Last updated: {lastUpdate.toLocaleTimeString()}
@@ -141,3 +141,4 @@ const SolanaConverter = () => {
 }
 
 export default SolanaConverter
+*/

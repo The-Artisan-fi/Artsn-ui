@@ -1,4 +1,5 @@
 'use client'
+
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Suspense } from 'react'
@@ -19,6 +20,9 @@ import { useTheme } from '@/hooks/use-theme'
 import { fadeIn, slideIn } from '@/styles/animations'
 import { motion } from 'framer-motion'
 import { Label } from '@/components/ui/label'
+import { useAuthStore } from '@/lib/stores/useAuthStore'
+import { usePara } from '@/providers/Para'
+
 type NavItemsProps = {
   href?: string
   children: React.ReactNode
@@ -48,9 +52,7 @@ const NavItem = ({ href, children, onClick, index, delay }: NavItemsProps) => {
       <Button
         className="block p-2 duration-500 hover:text-accent"
         variant={'ghost'}
-        onClick={() => {
-          onClick
-        }}
+        onClick={onClick}
       >
         <Label className="text-lg text-secondary">{children}</Label>
       </Button>
@@ -66,66 +68,98 @@ export default function MobileNavbar({
   LoginFeatureProps: LoginFeatureProps
 }) {
   const router = useRouter()
-  const { isDarkMode, toggle } = useTheme()
+  const { isDarkMode } = useTheme()
+  const { isAuthenticated } = useAuthStore();
+  const { openModal } = usePara();
+
   const ANIMATION_DELAY = 0.2
   const links2 = [
-    { label: 'Home', path: '/' },
-    // { label: 'What is Artisan?', path: '#artisan' },
+
+
     { label: 'About Us', path: '/about' },
+    { label: 'Assets', path: '/marketplace' },
   ]
   return (
     <Suspense fallback={<div />}>
       {LoginFeatureProps.isOpen && (
-        <nav className="items-left md:blocks absolute left-1/2 top-full z-[150] flex h-screen w-full -translate-x-1/2 flex-col justify-end gap-12 self-center bg-white p-6 pb-28 text-sm shadow-xl duration-200 md:static md:left-auto md:top-auto md:h-auto md:w-auto md:transform-none md:rounded-none md:shadow-none">
-          <ul className="list-style-none flex flex-col items-stretch gap-6 md:flex-row md:items-center lg:gap-5 xl:gap-6">
+        <nav className="fixed inset-0 top-0 left-0 right-0 z-[200] flex h-screen w-full flex-col justify-end gap-12 self-center bg-white p-6 pb-20 text-sm duration-200">
+          <Image
+            src={'/logos/logo-blur.svg'}
+            alt="Logo"
+            layout="fill"
+            objectFit="cover"
+            quality={100}
+            className='-z-200 opacity-30
+            transform translate-x-10
+            '
+          />
+          <ul className="list-style-none z-[500] flex flex-col items-stretch gap-6 md:flex-row md:items-center lg:gap-5 xl:gap-6">
             {links2.map(({ label, path }, i) => (
               <NavItem
                 key={i}
                 href={path}
                 index={i}
                 delay={ANIMATION_DELAY}
-                onClick={() => {
-                  LoginFeatureProps.onClose(), router.push(path)
+                onClick={(e) => {
+                  e.preventDefault();
+                  LoginFeatureProps.onClose();
+                  router.push(path);
                 }}
               >
                 {label}
               </NavItem>
             ))}
-            {/* <Button className="bg-transparent w-3/4 text-secondary rounded-full border-2 border-secondary">
-                            Read the white paper 
-                        </Button> */}
-            <Button
-              className="w-3/4 rounded-full bg-secondary text-primary"
-              onClick={() => {
-                LoginFeatureProps.onClose(), router.push('/marketplace')
-              }}
-            >
-              Explore the Marketplace
-            </Button>
-            {/* {!clusterSelectCollapsed && (
-                            <ClusterUiSelect /> 
-                        )}
-                        <div className="flex flex-col items-center justify-between gap-5 xl:gap-6">
-                            <div className="flex flex-row items-center gap-5">
-                                <p className="text-bgsecondary">Current RPC:</p>            
-                                <Button className='bg-secondary text-bgsecondary' onClick={()=> setClusterSelectCollapsed(!clusterSelectCollapsed)}>
-                                    {cluster.name}
-                                </Button>
-                            </div>
-                        </div> */}
+            
+            {isAuthenticated ? (
+              <>
+                <NavItem
+                  href="/settings"
+                  index={links2.length}
+                  delay={ANIMATION_DELAY}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    LoginFeatureProps.onClose();
+                    router.push('/settings');
+                  }}
+                >
+                  Settings
+                </NavItem>
+                <NavItem
+                  href="/dashboard"
+                  index={links2.length + 1}
+                  delay={ANIMATION_DELAY}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    LoginFeatureProps.onClose();
+                    router.push('/dashboard');
+                  }}
+                >
+                  My Assets
+                </NavItem>
+                
+                <Button
+                  className="w-3/4 rounded-full bg-secondary text-white"
+                  onClick={() => openModal()}
+                >
+                  Account
+                </Button>
+              </>
+            ) : (
+              <Button
+                className="w-3/4 rounded-full bg-black text-white"
+                onClick={(e) => {
+                  e.preventDefault();
+                  LoginFeatureProps.onClose();
+                  openModal();
+                }}
+              >
+                Login
+              </Button>
+            )}
+            
           </ul>
-          <CardFooter className="mb-12 flex w-full flex-row items-center justify-between gap-8">
-            {/* <DarkModeButton
-                            //   onClick={() => (console.log('click'))}
-                            variants={slideIn({
-                                delay: ANIMATION_DELAY + (links.length + 1) / 10,
-                                direction: 'down',
-                            })}
-                            className='text-secondary dark:text-primary'
-                            initial="hidden"
-                            animate="show"
-                        /> */}
-            <div className="flex flex-row gap-2">
+          <CardFooter className=" flex w-full flex-row items-center justify-center p-0 mt-14 mb-4 ">
+            <div className="flex flex-row gap-2 justify-center">
               <Image
                 src={'/logos/sol-logo-grey.svg'}
                 width={25}

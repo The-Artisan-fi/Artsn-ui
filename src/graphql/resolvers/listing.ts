@@ -1,4 +1,4 @@
-import { connectToDatabase } from '@/config/mongodb'
+import { getDb } from '@/config/mongodb'
 import { Context } from '@/types/resolver-types'
 import { IResolvers } from '@graphql-tools/utils'
 import { Sort } from 'mongodb'
@@ -16,7 +16,7 @@ export const listingResolvers: IResolvers<any, Context> = {
       _parent: any,
       { associatedId }: { associatedId: string }
     ) => {
-      const { db } = await connectToDatabase()
+      const db = await getDb()
       const listing = await db.collection('listings').findOne({ associatedId })
       return listing
     },
@@ -25,7 +25,7 @@ export const listingResolvers: IResolvers<any, Context> = {
       _parent: any,
       { sort, limit, offset }: ListingQueryOptions = {}
     ) => {
-      const { db } = await connectToDatabase()
+      const db = await getDb()
       let query = db.collection('listings').find()
 
       // Apply sorting if provided
@@ -49,7 +49,7 @@ export const listingResolvers: IResolvers<any, Context> = {
       _parent: any,
       { limit, offset }: { limit?: number; offset?: number } = {}
     ) => {
-      const { db } = await connectToDatabase()
+      const db = await getDb()
       let query = db
         .collection('listings')
         .find()
@@ -69,7 +69,7 @@ export const listingResolvers: IResolvers<any, Context> = {
       _parent: any,
       { limit, offset }: { limit?: number; offset?: number } = {}
     ) => {
-      const { db } = await connectToDatabase()
+      const db = await getDb()
       let query = db
         .collection('listings')
         .find()
@@ -89,7 +89,7 @@ export const listingResolvers: IResolvers<any, Context> = {
       _parent: any,
       { limit, offset }: { limit?: number; offset?: number } = {}
     ) => {
-      const { db } = await connectToDatabase()
+      const db = await getDb()
       let query = db
         .collection('listings')
         .find()

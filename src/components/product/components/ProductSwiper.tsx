@@ -3,17 +3,12 @@
 import { Swiper as SwiperType } from 'swiper' // Import the Swiper type
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Thumbs } from 'swiper/modules'
+import Image from 'next/image'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/thumbs'
 import { useState, useRef } from 'react'
 
-const watchImages = [
-  '/images/product.png',
-  '/images/product.png',
-  '/images/product.png',
-  '/images/product.png',
-]
 
 const ProductSwiper = ({ images }: { images: string[] }) => {
   // Initialize thumbsSwiper as SwiperType | null
@@ -55,7 +50,15 @@ const ProductSwiper = ({ images }: { images: string[] }) => {
       >
         {images.map((image, index) => (
           <SwiperSlide key={index} className="border-gray rounded-2xl p-12">
-            <img src={image} alt={`Watch ${index}`} className="main-image" />
+            <Image 
+              src={image} 
+              alt={`Watch ${index}`} 
+              className="main-image"
+              width={500}
+              height={500} 
+              style={{ width: '100%', height: 'auto' }}
+              priority={index === 0} // Prioritize loading the first image
+            />
           </SwiperSlide>
         ))}
       </Swiper>
@@ -112,10 +115,13 @@ const ProductSwiper = ({ images }: { images: string[] }) => {
       >
         {images.map((image, index) => (
           <SwiperSlide key={index} className="border-gray rounded-2xl p-2">
-            <img
+            <Image
               src={image}
               alt={`Thumbnail ${index}`}
               className="thumb-image"
+              width={100}
+              height={100}
+              style={{ width: '100%', height: 'auto' }}
             />
           </SwiperSlide>
         ))}

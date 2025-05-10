@@ -69,13 +69,13 @@
 //   {
 //     name: "Patek Philippe",
 //     price: "$1",
-//     imageUrl: "/products/car7.svg",
+//     imageUrl: "/products/car7.png",
 //     icon: "/icons/car-icon.svg",
 //   },
 //   {
 //     name: "Patek Philippe",
 //     price: "$1",
-//     imageUrl: "/products/diamonds2.svg",
+//     imageUrl: "/products/diamonds2.png",
 //     icon: "/icons/diamond-icon.svg",
 //   },
 // ];
@@ -185,7 +185,7 @@
 //   );
 // }
 
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import Breadcrumb from './components/Breadcrumb'
 import SidebarFilter from './components/Sidebar'
 import ProductCard from '@/components/product/components/ProductCard'
@@ -226,6 +226,11 @@ const Marketplace = () => {
   const { listings } = useArtisanProgram()
   const [loading, setLoading] = useState(true)
   const [products, setProducts] = useState<any[]>([])
+  const [error, setError] = useState<string | null>(null)
+  const [pageSize, setPageSize] = useState(12)
+  const [visibleProducts, setVisibleProducts] = useState<any[]>([])
+  const loadMoreRef = useRef<HTMLDivElement>(null)
+  
   const [filters, setFilters] = useState<FilterState>({
     objectType: 'all',
     model: [],
@@ -244,37 +249,147 @@ const Marketplace = () => {
       ),
     []
   )
+  
+  // Define filtered products
+  const filteredProducts = useMemo(() => {
+    return products.filter((product) => {
+      // Apply objectType filter
+      if (
+        filters.objectType !== 'all' &&
+        getObjectType(product.account.objectType) !== filters.objectType
+      ) {
+        return false
+      }
 
-  // Fetch product details
+      // Apply model filter
+      if (
+        filters.model.length > 0 &&
+        !filters.model.includes(product.details?.model || '')
+      ) {
+        return false
+      }
+
+      // Apply color filter
+      if (
+        filters.color.length > 0 &&
+        !filters.color.includes(product.details?.color || '')
+      ) {
+        return false
+      }
+
+      // Apply movement filter
+      if (
+        filters.movement.length > 0 &&
+        !filters.movement.includes(product.details?.movement || '')
+      ) {
+        return false
+      }
+
+      // Apply price filter
+      if (
+        Number(product.account.price.toString()) < filters.priceRange.min ||
+        (filters.priceRange.max !== Infinity &&
+          Number(product.account.price.toString()) > filters.priceRange.max)
+      ) {
+        return false
+      }
+
+      return true
+    })
+  }, [products, filters])
+
+  // Initialize visibleProducts when filteredProducts changes
+  useEffect(() => {
+    setVisibleProducts(filteredProducts.slice(0, pageSize))
+  }, [filteredProducts, pageSize])
+
+  // Implement intersection observer for infinite scrolling
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && filteredProducts.length > visibleProducts.length) {
+          setVisibleProducts(prev => [
+            ...prev, 
+            ...filteredProducts.slice(prev.length, prev.length + pageSize)
+          ])
+        }
+      },
+      { threshold: 0.1 }
+    )
+
+    // Store the current value of the ref in a variable
+    const currentRef = loadMoreRef.current
+    
+    if (currentRef) {
+      observer.observe(currentRef)
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef)
+      }
+    }
+  }, [filteredProducts, visibleProducts.length, pageSize])
+
+  // Fetch product details with batching and error handling
   useEffect(() => {
     const fetchProductDetails = async () => {
       if (!listings.data) return
 
       try {
-        const productPromises = listings.data.map(async (listing: any) => {
-          const productDetails = await fetchCollectionV1(
-            umi,
-            publicKey(listing.account.object.toString())
-          )
-
-          return {
-            ...listing,
-            details: productDetails,
-            type: listing.account.objectType,
-          }
-        })
-
-        const productsWithDetails = await Promise.all(productPromises)
-        setProducts(productsWithDetails)
+        setLoading(true)
+        setError(null)
+        
+        // Process in batches of 10 to avoid overwhelming the network
+        const batchSize = 10
+        const batches: any[][] = []
+        
+        for (let i = 0; i < listings.data.length; i += batchSize) {
+          batches.push(listings.data.slice(i, i + batchSize))
+        }
+        
+        let allProducts: any[] = []
+        
+        for (const batch of batches) {
+          const productPromises = batch.map(async (listing: any) => {
+            try {
+              const productDetails = await fetchCollectionV1(
+                umi,
+                publicKey(listing.account.object.toString())
+              )
+  
+              return {
+                ...listing,
+                details: productDetails,
+                type: listing.account.objectType,
+              }
+            } catch (err) {
+              console.error('Error fetching product details:', err)
+              return null
+            }
+          })
+  
+          const batchResults = await Promise.all(productPromises)
+          allProducts = [...allProducts, ...batchResults.filter((product: any) => product !== null)]
+          
+          // Update products incrementally as each batch completes
+          setProducts(prevProducts => [...prevProducts, ...batchResults.filter((product: any) => product !== null)])
+        }
+        
         setLoading(false)
       } catch (error) {
         console.error('Error fetching product details:', error)
+        setError('Failed to load products. Please try again later.')
         setLoading(false)
       }
     }
 
+    // Reset products when listings change
+    setProducts([])
+    setVisibleProducts([])
     fetchProductDetails()
   }, [listings.data, umi])
+
   const getObjectType = (objectType: any): string => {
     if (objectType?.watch !== undefined) return 'watch'
     if (objectType?.diamond !== undefined) return 'diamond'
@@ -329,62 +444,6 @@ const Marketplace = () => {
     return initialFilters
   }, [products])
 
-  // Update the filtering logic
-  const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
-      // Get the correct object type
-      const productType = getObjectType(product.account.objectType)
-
-      const attributes =
-        product.details?.attributeList?.reduce((acc: any, attr: any) => {
-          acc[attr.key] = attr.value
-          return acc
-        }, {}) || {}
-
-      // Category filter
-      if (filters.objectType !== 'all' && productType !== filters.objectType) {
-        return false
-      }
-
-      // Brand/Model filter
-      if (
-        filters.model.length > 0 &&
-        !filters.model.includes(attributes.brand)
-      ) {
-        return false
-      }
-
-      // Color filter
-      if (filters.color.length > 0) {
-        const colorValue =
-          productType === 'watch' ? attributes.dialColor : attributes.color
-        if (!filters.color.includes(colorValue)) {
-          return false
-        }
-      }
-
-      // Movement filter (watches only)
-      if (
-        productType === 'watch' &&
-        filters.movement.length > 0 &&
-        !filters.movement.includes(attributes.movement)
-      ) {
-        return false
-      }
-
-      // Price filter
-      const price = Number(product.account.price.toString())
-      if (
-        price < filters.priceRange.min ||
-        (filters.priceRange.max !== Infinity && price > filters.priceRange.max)
-      ) {
-        return false
-      }
-
-      return true
-    })
-  }, [products, filters])
-
   const handleFilterChange = (newFilters: Partial<FilterState>) => {
     console.log('Applying filters:', newFilters)
     setFilters((prev) => ({
@@ -406,19 +465,54 @@ const Marketplace = () => {
           />
           </div> */}
 
-          <div className="grid w-full grid-cols-1 gap-3 md:w-full md:grid-cols-3 lg:grid-cols-3">
-            {filteredProducts.map((product, index) => (
-              <React.Fragment key={product.publicKey.toString()}>
-                {index === 2 && <ReferralCard />}
-                <ProductCard
-                  image={product.publicKey}
-                  account={product.account.object}
-                  listing={product.account}
-                  productDetails={product.details}
-                />
-              </React.Fragment>
-            ))}
-          </div>
+          {error && (
+            <div className="w-full rounded-md bg-red-50 p-4 text-center text-red-600">
+              {error}
+              <button 
+                onClick={() => window.location.reload()} 
+                className="ml-2 underline"
+              >
+                Try again
+              </button>
+            </div>
+          )}
+
+          {loading && products.length === 0 ? (
+            <div className="flex w-full justify-center py-20">
+              <div className="h-10 w-10 animate-spin rounded-full border-b-2 border-t-2 border-black"></div>
+            </div>
+          ) : (
+            <>
+              <div className="grid w-full grid-cols-1 gap-3 md:w-full md:grid-cols-3 lg:grid-cols-4">
+                {visibleProducts.map((product, index) => (
+                  <React.Fragment key={`${product.publicKey.toString()}-${index}`}>
+                    {index === 2 && <ReferralCard />}
+                    <ProductCard
+                      image={product.publicKey}
+                      account={product.account.object}
+                      listing={product.account}
+                      productDetails={product.details}
+                    />
+                  </React.Fragment>
+                ))}
+              </div>
+              
+              {visibleProducts.length < filteredProducts.length && (
+                <div 
+                  ref={loadMoreRef} 
+                  className="mt-8 flex w-full justify-center py-4"
+                >
+                  <div className="h-10 w-10 animate-spin rounded-full border-b-2 border-t-2 border-black"></div>
+                </div>
+              )}
+              
+              {visibleProducts.length === 0 && !loading && (
+                <div className="flex w-full justify-center py-10 text-gray-500">
+                  No products match your filters.
+                </div>
+              )}
+            </>
+          )}
         </div>
       </div>
     </div>

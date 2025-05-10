@@ -1,19 +1,11 @@
 'use client'
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
+//import Image from 'next/image'
 import { Check } from 'lucide-react'
 import { countries } from '@/lib/countries'
-import { REGISTER_USER, CREATE_USER } from '@/graphql/mutations/user'
-import { IS_USER_REGISTERED } from '@/graphql/queries/user'
-import { useLazyQuery, useMutation } from '@apollo/client'
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-} from '@/components/ui/dropdownMenu'
+import { REGISTER_USER } from '@/graphql/mutations/user'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import {
@@ -23,20 +15,17 @@ import {
   CardDescription,
 } from '@/components/ui/card'
 import { useToast } from '@/hooks/use-toast'
-import { LoadingSpinner } from '@/components/loading/LoadingSpinner'
-import { useWeb3Auth } from '@/hooks/use-web3-auth'
-import { IAdapter } from '@web3auth/base'
 import { useAuthStore } from '@/lib/stores/useAuthStore'
-import { v4 as uuidv4 } from 'uuid'
-import RPC from '@/components/blockchain/solana-rpc'
+import { cn } from '@/lib/utils'
+import { client } from '@/providers/ApolloProvider'
 
 interface RegisterFormProps {
   initialData: {
     publicKey: string
     userInfo: {
       email?: string
-      name?: string
-      profileImage?: string
+      //name?: string
+      //profileImage?: string
     }
   }
   onClose: () => void
@@ -46,33 +35,28 @@ export function RegisterForm({ initialData, onClose }: RegisterFormProps) {
   const router = useRouter()
   const { toast } = useToast()
   const [step, setStep] = useState(1)
-  const { setCurrentUser } = useAuthStore()
-  // Use the web3auth hook
-  const {
-    web3auth,
-    provider,
-    loading: web3Loading,
-    injectedAdapters,
-    login,
-    loginWithAdapter,
-  } = useWeb3Auth()
+  const [isLoading, setIsLoading] = useState(false)
+  const { setCurrentUser, setShowRegisterForm } = useAuthStore()
 
-  // GraphQL mutations and queries
-  const [checkRegistration] = useLazyQuery(IS_USER_REGISTERED)
-  // const [registerUser] = useMutation(REGISTER_USER)
-  const [registerUser] = useMutation(CREATE_USER)
+  const [formErrors, setFormErrors] = useState({
+    email: '',
+  })
 
   // Form state
   const [formData, setFormData] = useState({
     email: initialData?.userInfo?.email || '',
-    username: '',
     publicKey: initialData?.publicKey || '',
-    firstName: initialData?.userInfo?.name?.split(' ')[0] || '',
-    lastName: initialData?.userInfo?.name?.split(' ')[1] || '',
+    firstName: '',
+    lastName: '',
     country: 'CH',
     acceptTerms: new Date().toISOString(),
-    plan: '',
   })
+
+  // Email validation function
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+    return emailRegex.test(email)
+  }
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -82,34 +66,49 @@ export function RegisterForm({ initialData, onClose }: RegisterFormProps) {
       ...prev,
       [name]: type === 'checkbox' ? Date.now() : value,
     }))
+    
+    // Validate email in real time
+    if (name === 'email') {
+      if (!value) {
+        setFormErrors(prev => ({ ...prev, email: 'Email is required' }))
+      } else if (!validateEmail(value)) {
+        setFormErrors(prev => ({ ...prev, email: 'Please enter a valid email address' }))
+      } else {
+        setFormErrors(prev => ({ ...prev, email: '' }))
+      }
+    }
+    
+    console.log("Form data:", formData);
   }
 
-  const handleLogin = useCallback(
-    async (adapterName: string) => {
-      try {
-        await loginWithAdapter(adapterName)
-        toast({
-          title: 'Connected',
-          description: 'Successfully connected wallet',
-        })
-      } catch (error) {
-        console.error('Login error:', error)
-        toast({
-          title: 'Connection Failed',
-          description: 'Failed to connect wallet',
-          variant: 'destructive',
-        })
-      }
-    },
-    [loginWithAdapter, toast]
-  )
+  const isFormValid = useMemo(() => {
+    return (
+      !!formData.firstName &&
+      !!formData.lastName &&
+      !!formData.country &&
+      !!formData.publicKey &&
+      !!formData.email &&
+      validateEmail(formData.email) // Add email validation here
+    )
+  }, [formData.firstName, formData.lastName, formData.country, formData.publicKey, formData.email])
 
   const handleRegistration = async () => {
+    // Add email validation before submission
+    if (!validateEmail(formData.email)) {
+      toast({
+        title: 'Invalid Email',
+        description: 'Please enter a valid email address',
+        variant: 'destructive',
+      })
+      return
+    }
+    
     if (
       !formData.firstName ||
       !formData.lastName ||
       !formData.country ||
-      !formData.publicKey
+      !formData.publicKey ||
+      !formData.email
     ) {
       toast({
         title: 'Missing Information',
@@ -120,58 +119,34 @@ export function RegisterForm({ initialData, onClose }: RegisterFormProps) {
       return
     }
 
+    setIsLoading(true)
     try {
-      const baseUrl =
-        process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000'
-      const response = await fetch(`${baseUrl}/api/auth/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.publicKey, // Using publicKey as password
-          publicKey: formData.publicKey,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          country: formData.country,
-          profilePictureUrl: initialData?.userInfo?.profileImage || '',
-        }),
-      })
+        console.log('Registering new user with Para session');
+        const { data: registerData } = await client.mutate({
+          mutation: REGISTER_USER,
+          variables: {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            country: formData.country,
+            acceptTerms: new Date().toISOString(),
+            email: formData.email,
+          },
+        });
+        console.log("Register data:", registerData);
+        
+        // Get the user data from the registration response
+        const userData = registerData.register.user;
+        console.log("User data from registration:", userData);
 
-      const data = await response.json()
+        // Set the current user with the data from the server
+        setCurrentUser(userData);
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Registration failed')
-      }
+        toast({
+          title: 'Registration Successful',
+          description: 'Your account has been created successfully',
+        })
 
-      setCurrentUser({
-        _id: data.userId,
-        uuid: data.uuid,
-        publicKey: formData.publicKey,
-        email: formData.email,
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        username: `user_${formData.publicKey.slice(-4)}`,
-        isActive: true,
-        isVerified: false,
-        role: 'USER',
-        baseProfile: {
-          displayName: `${formData.firstName} ${formData.lastName}`,
-          displayRole: 'USER',
-          photoUrl: initialData?.userInfo?.profileImage || '',
-          bio: '',
-        },
-      })
-
-      toast({
-        title: 'Registration Successful',
-        description: 'Your account has been created successfully',
-      })
-
-      setStep(2)
+        setStep(2)
     } catch (error) {
       console.error('Registration error:', error)
       toast({
@@ -180,23 +155,20 @@ export function RegisterForm({ initialData, onClose }: RegisterFormProps) {
           error instanceof Error ? error.message : 'Failed to register user',
         variant: 'destructive',
       })
+    } finally {
+      setIsLoading(false)
     }
   }
 
-  if (web3Loading) {
-    return <LoadingSpinner />
+  const handleClose = () => {
+    setShowRegisterForm(null)
+    onClose()
   }
 
   return (
     <div className="fixed inset-0 z-[100] flex h-full items-center justify-center bg-black bg-opacity-100">
       <div className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50" />
       <div className="relative z-20 w-full max-w-4xl rounded-lg bg-transparent p-6">
-        <Button
-          onClick={() => router.push('/')}
-          className="absolute -top-10 right-2 z-30"
-        >
-          Close
-        </Button>
 
         <Progress
           className="my-6 w-full rounded-full bg-gradient-to-r from-primary to-secondary shadow-sm"
@@ -211,6 +183,8 @@ export function RegisterForm({ initialData, onClose }: RegisterFormProps) {
               </h3>
 
               <div className="mb-4 flex flex-col gap-4">
+              
+  
                 <input
                   type="text"
                   name="firstName"
@@ -231,6 +205,23 @@ export function RegisterForm({ initialData, onClose }: RegisterFormProps) {
                   required
                 />
 
+                {(!initialData?.userInfo?.email || initialData.userInfo.email === '') && (
+                  <div className="flex flex-col gap-1">
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className={`rounded border p-2 ${formErrors.email ? 'border-red-500' : ''}`}
+                      required
+                    />
+                    {formErrors.email && (
+                      <p className="text-sm text-red-500">{formErrors.email}</p>
+                    )}
+                  </div>
+                )}
+
                 <select
                   name="country"
                   value={formData.country}
@@ -245,73 +236,19 @@ export function RegisterForm({ initialData, onClose }: RegisterFormProps) {
                     </option>
                   ))}
                 </select>
-
-                <div className="mt-4">
-                  <h3 className="mb-2 text-xl font-bold">CONNECT A WALLET</h3>
-                  <div className="mb-4 flex flex-col justify-evenly gap-4">
-                    <Button
-                      variant="outline"
-                      className="w-full rounded-full border-none font-urbanist text-lg hover:bg-secondary hover:text-primary"
-                      onClick={() => login()}
-                      disabled={!!formData.publicKey}
-                    >
-                      Google
-                    </Button>
-
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="default"
-                          className="w-full rounded-full border-secondary font-urbanist text-lg hover:bg-secondary hover:text-primary"
-                          disabled={!!formData.publicKey}
-                        >
-                          Connect Wallet
-                          <div className="ml-2 flex">
-                            {['phantom', 'solflare', 'backpack', 'ledger'].map(
-                              (icon) => (
-                                <img
-                                  key={icon}
-                                  src={`/login/${icon}_icon.svg`}
-                                  alt={icon}
-                                  className="h-5 w-5"
-                                />
-                              )
-                            )}
-                          </div>
-                        </Button>
-                      </DropdownMenuTrigger>
-
-                      <DropdownMenuContent className="z-[201] w-56">
-                        <DropdownMenuGroup>
-                          {injectedAdapters?.map(
-                            (adapter: IAdapter<unknown>) => (
-                              <DropdownMenuItem
-                                key={adapter.name}
-                                onClick={() => handleLogin(adapter.name)}
-                              >
-                                <img
-                                  src={`/login/${adapter.name.toLowerCase()}_icon.svg`}
-                                  alt={adapter.name}
-                                  className="mr-2 h-5 w-5"
-                                />
-                                {adapter.name.charAt(0).toUpperCase() +
-                                  adapter.name.slice(1)}
-                              </DropdownMenuItem>
-                            )
-                          )}
-                        </DropdownMenuGroup>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                </div>
               </div>
 
               <Button
-                disabled={!formData.publicKey}
+                disabled={!isFormValid || isLoading}
                 onClick={handleRegistration}
-                className="rounded bg-secondary px-4 py-2 text-primary hover:text-secondary"
+                className={cn(
+                  "rounded bg-secondary px-4 py-2",
+                  isFormValid && !isLoading
+                    ? "text-primary hover:text-secondary" 
+                    : "opacity-50 cursor-not-allowed bg-gray-400"
+                )}
               >
-                Next
+                {isLoading ? 'Creation...' : 'Next'}
               </Button>
 
               <div className="mt-4 text-sm text-gray-600">
@@ -352,12 +289,11 @@ export function RegisterForm({ initialData, onClose }: RegisterFormProps) {
 
               <Button
                 onClick={() => {
-                  onClose()
-                  router.push('/dashboard')
+                  handleClose()
                 }}
                 className="rounded bg-black px-4 py-2 text-white"
               >
-                Enter Dashboard
+                Homepage
               </Button>
             </Card>
 

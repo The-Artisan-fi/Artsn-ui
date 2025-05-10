@@ -53,7 +53,7 @@ const TrendingUp = () => {
         <h2 className="text-xl font-semibold text-secondary">Trending Up</h2>
 
         <Image
-          src={trendingListing.images?.[0] || '/products/watch.svg'}
+          src={trendingListing.images?.[0] || '/products/watch.png'}
           alt={trendingListing.assetDetails || 'Trending Item'}
           width={200}
           height={200}

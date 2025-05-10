@@ -29,6 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useAuthStore } from '@/lib/stores/useAuthStore'
 
 // Form validation schema
 const kycFormSchema = z.object({
@@ -64,16 +65,17 @@ interface KYCVerificationProps {
 }
 
 const KycForm = ({ onComplete, className }: KYCVerificationProps) => {
+  const { currentUser } = useAuthStore()
   const { startKYCVerification, kycStatus, loading, verificationUrl } = useKYC()
   const form = useForm<KYCFormValues>({
     resolver: zodResolver(kycFormSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
+      firstName: currentUser?.firstName || '',
+      lastName: currentUser?.lastName || '',
+      email: currentUser?.email || '',
       dateOfBirth: '',
       phoneNumber: '',
-      countryCode: '',
+      countryCode: currentUser?.country || '',
     },
   })
 

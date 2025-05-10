@@ -2,7 +2,7 @@
 import { NextResponse } from 'next/server'
 import { MongoClient, ObjectId } from 'mongodb'
 import { headers } from 'next/headers'
-import { connectToDatabase } from '@/config/mongodb'
+import { getDb } from '@/config/mongodb'
 
 interface OndatoWebhookPayload {
   id: string
@@ -58,7 +58,7 @@ export async function POST(request: Request) {
       throw new Error('MONGODB_URI is not defined')
     }
 
-    const { db } = await connectToDatabase()
+    const db = await getDb()
     const collection = db.collection('users')
 
     // Find user by KYC ID

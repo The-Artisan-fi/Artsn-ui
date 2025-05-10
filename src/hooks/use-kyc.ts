@@ -1,8 +1,8 @@
 import { useState, useCallback } from 'react'
-import { useAuth } from '@/providers/Web3AuthProvider'
 import { useToast } from '@/hooks/use-toast'
 import { UPDATE_USER } from '@/graphql/mutations/user'
 import { useMutation } from '@apollo/client'
+import { useAuthStore } from '@/lib/stores/useAuthStore'
 
 interface KYCRegistration {
   dateOfBirth: string
@@ -49,7 +49,7 @@ export const useKYC = (): UseKYCReturn => {
       },
     })
 
-  const { user } = useAuth()
+  const { currentUser: user } = useAuthStore()
   const { toast } = useToast()
 
   const startKYCVerification = useCallback(

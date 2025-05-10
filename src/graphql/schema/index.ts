@@ -1,6 +1,8 @@
 import { gql } from 'graphql-tag'
 
 export const typeDefs = gql`
+  scalar JSON
+
   type User {
     _id: ID
     uuid: String
@@ -20,25 +22,15 @@ export const typeDefs = gql`
     solanaTransactionId: String
     phoneNumber: String
     socialLinks: SocialLinks
-    baseProfile: BaseProfile
     investorInfo: InvestorInfo
     kycInfo: KYCInfo
+    paraSession: String
   }
 
   type SocialLinks {
     twitter: String
     instagram: String
     website: String
-  }
-
-  type BaseProfile {
-    id: String!
-    displayName: String!
-    displayRole: String!
-    photoUrl: String
-    bio: String
-    createdAt: String!
-    updatedAt: String!
   }
 
   type InvestorInfo {
@@ -78,28 +70,12 @@ export const typeDefs = gql`
   type AuthPayload {
     token: String!
     user: User!
+    response: JSON
   }
 
-  input CreateUserInput {
-    uuid: String!
-    email: String
-    password: String
-    username: String
-    firstName: String
-    lastName: String
-    createdAt: String
-    updatedAt: String
-    lastLogin: String
-    isActive: Boolean
-    role: String!
-    country: String
-    isVerified: Boolean
-    publicKey: String
-    solanaTransactionId: String
-    phoneNumber: String
-    baseProfile: UpdateBaseProfileInput
-    investorInfo: UpdateInvestorInfoInput
-    kycInfo: UpdateKYCInfoInput
+  type SubscriptionResponse {
+    success: Boolean!
+    message: String!
   }
 
   input RegisterInput {
@@ -119,8 +95,8 @@ export const typeDefs = gql`
     publicKey: String
     solanaTransactionId: String
     phoneNumber: String
-    baseProfile: UpdateBaseProfileInput
     investorInfo: UpdateInvestorInfoInput
+    kycInfo: UpdateKYCInfoInput
   }
 
   input UpdateUserInput {
@@ -130,23 +106,16 @@ export const typeDefs = gql`
     publicKey: String
     country: String
     email: String
-    baseProfile: UpdateBaseProfileInput
     investorInfo: UpdateInvestorInfoInput
     kycInfo: UpdateKYCInfoInput
     socialLinks: UpdateSocialLinksInput
   }
 
   input UpdateSocialLinksInput {
-    twitter: String
     instagram: String
+    twitter: String
+    linkedin: String
     website: String
-  }
-
-  input UpdateBaseProfileInput {
-    displayName: String
-    displayRole: String
-    photoUrl: String
-    bio: String
   }
 
   input UpdateInvestorInfoInput {
@@ -216,13 +185,22 @@ export const typeDefs = gql`
     getMostSoldListings(limit: Int, offset: Int): [Listing!]!
   }
 
+  input LoginInput {
+    session: String!
+  }
+
   type Mutation {
-    register(input: RegisterInput!): AuthPayload!
-
-    updateUser(input: UpdateUserInput!): User!
-
-    login(publicKey: String!, password: String!): AuthPayload!
-
-    createUser(input: CreateUserInput!): User!
+    updateUser(id: ID!, input: UpdateUserInput!): User
+    deleteUser(id: ID!): Boolean
+    login: AuthPayload
+    register(
+      email: String
+      firstName: String
+      lastName: String
+      country: String
+      acceptTerms: String
+    ): AuthPayload
+    updateParaSession: User
+    subscribeEmail(email: String!): SubscriptionResponse!
   }
 `

@@ -10,7 +10,7 @@ import {
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui'
 import { ReactNode, useCallback, useMemo } from 'react'
 import { Connection, Keypair } from '@solana/web3.js'
-
+import { ParaProvider } from './Para'
 export const WalletButton = dynamic(
   async () =>
     (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton,
@@ -24,11 +24,13 @@ export function SolanaProvider({ children }: { children: ReactNode }) {
   }, [])
 
   return (
-    <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={[]} onError={onError} autoConnect={true}>
-        <WalletModalProvider>{children}</WalletModalProvider>
-      </WalletProvider>
-    </ConnectionProvider>
+    <ParaProvider>
+      <ConnectionProvider endpoint={endpoint}>
+        <WalletProvider wallets={[]} onError={onError} autoConnect={true}>
+          <WalletModalProvider>{children}</WalletModalProvider>
+        </WalletProvider>
+      </ConnectionProvider>
+    </ParaProvider>
   )
 }
 

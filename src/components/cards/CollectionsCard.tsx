@@ -34,7 +34,7 @@ const CollectionsCard = (props: DefaultProps) => {
     // every time the CarouselItem changes, we need to update the progress bar value
     // 1 * 100 / slides.length
     setProgressAmount((1 * 100) / slides.length)
-  }, [CarouselItem])
+  }, [slides.length])
   return (
     <div className={`${props.className}`}>
       <Badge className="w-fit self-center border-zinc-200">
@@ -51,7 +51,7 @@ const CollectionsCard = (props: DefaultProps) => {
           <SwiperSlide className="border-gray w-1/4 rounded-2xl p-2"></SwiperSlide>
           {slides.map((image, index) => (
             <SwiperSlide key={index} className="border-gray rounded-2xl p-2">
-              <Card className="flex h-96 h-full flex-col justify-between p-1">
+              <Card className="flex h-full flex-col justify-between p-1">
                 <CardContent className="flex h-full flex-col items-center justify-center p-6">
                   <div className={styles.header}>
                     <Button variant="ghost" size="icon">
@@ -80,10 +80,10 @@ const CollectionsCard = (props: DefaultProps) => {
                         index == 0
                           ? '/products/rolex-bg.svg'
                           : index == 1
-                            ? '/products/car7.svg'
+                            ? '/products/car7.png'
                             : index == 2
                               ? '/products/diamond.svg'
-                              : '/products/whisky2.svg'
+                              : '/products/whisky2.png'
                       }
                       width={200}
                       height={200}
@@ -116,7 +116,7 @@ const CollectionsCard = (props: DefaultProps) => {
         >
           {slides.map((image, index) => (
             <SwiperSlide key={index} className="border-gray rounded-2xl p-2">
-              <Card className="flex h-96 h-full flex-col justify-between p-1">
+              <Card className="flex h-full flex-col justify-between p-1">
                 <CardContent className="flex h-full flex-col items-center justify-center p-6">
                   <div className={styles.header}>
                     <Button variant="ghost" size="icon">
@@ -145,10 +145,10 @@ const CollectionsCard = (props: DefaultProps) => {
                         index == 0
                           ? '/products/rolex-bg.svg'
                           : index == 1
-                            ? '/products/car7.svg'
+                            ? '/products/car7.png'
                             : index == 2
                               ? '/products/diamond.svg'
-                              : '/products/whisky2.svg'
+                              : '/products/whisky2.png'
                       }
                       width={200}
                       height={200}

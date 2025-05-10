@@ -30,9 +30,6 @@ export const useAddToWaitlist = () => {
       console.log('entry:', entry)
       const response = await fetch('/api/waitlist/add', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(entry),
       })
 
