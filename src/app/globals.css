@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: var(--font-syne), Arial, Helvetica, sans-serif;
+}
+
+/* Add heading styles to use Cormorant Infant */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-cormorant-infant), serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+  }
+}
+
+/* Hide scrollbars but keep functionality */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+/* For WebKit browsers (Chrome, Safari, newer Edge) */
+*::-webkit-scrollbar {
+  display: none;
+}
+
+.button-hover:hover {
+  opacity: 0.65;
+}

@@ -3,9 +3,10 @@ import type { Config } from "tailwindcss";
 const config: Config = {
   darkMode: ["class"],
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/layouts/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
@@ -22,10 +23,10 @@ const config: Config = {
         signature: ['agustina', 'sans-serif'],
         sans: ['Urbanist', 'sans-serif'],
         mono: ['Roboto Mono', 'monospace'],
-        syne: ['Syne', 'sans-serif'],
+        syne: ['var(--font-syne)', 'Syne', 'sans-serif'],
         urbanist: ['Urbanist', 'sans-serif'],
         poppins: ['Poppins', 'sans-serif'],
-        cormorant: ['Cormorant Infant', 'serif'],
+        cormorant: ['var(--font-cormorant-infant)', 'Cormorant Infant', 'serif'],
       },
      
       colors: {

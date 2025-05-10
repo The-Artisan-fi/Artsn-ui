@@ -1,9 +1,0 @@
-/* Built for mobile first */
-.navbar-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: #ffffff0e
-}
-
