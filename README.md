@@ -92,3 +92,6 @@ With Metaplex Core we are able to dynamically create any Luxury Asset into a fra
 ## License
 
 See the [LICENSE.md](LICENSE.md) file for details.
+
+
+updated: 10.5.2025
